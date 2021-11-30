@@ -1,0 +1,389 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */; };
+		D91061B32755F0B400EA8A03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
+		D91061BF2755F23700EA8A03 /* map.json in Resources */ = {isa = PBXBuildFile; fileRef = D91061BE2755F23700EA8A03 /* map.json */; };
+		D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegion.swift */; };
+		D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C22755F24100EA8A03 /* MapDescription.swift */; };
+		D91061C62755F24100EA8A03 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C32755F24100EA8A03 /* MapNode.swift */; };
+		D91061CE2755F27600EA8A03 /* Keycode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C72755F27600EA8A03 /* Keycode.swift */; };
+		D91061CF2755F27600EA8A03 /* Atlases.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C82755F27600EA8A03 /* Atlases.swift */; };
+		D91061D02755F27600EA8A03 /* CharacterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C92755F27600EA8A03 /* CharacterComponent.swift */; };
+		D91061D12755F27600EA8A03 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CA2755F27600EA8A03 /* Functions.swift */; };
+		D91061D22755F27600EA8A03 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CB2755F27600EA8A03 /* GameView.swift */; };
+		D91061D32755F27600EA8A03 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
+		D91061D42755F27600EA8A03 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CD2755F27600EA8A03 /* GameScene.swift */; };
+		D91061D62755F2D900EA8A03 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D91061D52755F2D900EA8A03 /* Info.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D91061AB2755F0B200EA8A03 /* CiderKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CiderKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKitApp.swift; sourceTree = "<group>"; };
+		D91061B22755F0B400EA8A03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D91061B72755F0B400EA8A03 /* CiderKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit.entitlements; sourceTree = "<group>"; };
+		D91061BE2755F23700EA8A03 /* map.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = map.json; sourceTree = "<group>"; };
+		D91061C12755F24100EA8A03 /* MapRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapRegion.swift; sourceTree = "<group>"; };
+		D91061C22755F24100EA8A03 /* MapDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDescription.swift; sourceTree = "<group>"; };
+		D91061C32755F24100EA8A03 /* MapNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapNode.swift; sourceTree = "<group>"; };
+		D91061C72755F27600EA8A03 /* Keycode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keycode.swift; sourceTree = "<group>"; };
+		D91061C82755F27600EA8A03 /* Atlases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atlases.swift; sourceTree = "<group>"; };
+		D91061C92755F27600EA8A03 /* CharacterComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharacterComponent.swift; sourceTree = "<group>"; };
+		D91061CA2755F27600EA8A03 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		D91061CB2755F27600EA8A03 /* GameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		D91061CC2755F27600EA8A03 /* Atlas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atlas.swift; sourceTree = "<group>"; };
+		D91061CD2755F27600EA8A03 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		D91061D52755F2D900EA8A03 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D91061A82755F0B200EA8A03 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D91061A22755F0B200EA8A03 = {
+			isa = PBXGroup;
+			children = (
+				D91061AD2755F0B200EA8A03 /* CiderKit */,
+				D91061AC2755F0B200EA8A03 /* Products */,
+				D91061BD2755F1D600EA8A03 /* Resources */,
+			);
+			sourceTree = "<group>";
+		};
+		D91061AC2755F0B200EA8A03 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D91061AB2755F0B200EA8A03 /* CiderKit.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D91061AD2755F0B200EA8A03 /* CiderKit */ = {
+			isa = PBXGroup;
+			children = (
+				D91061B22755F0B400EA8A03 /* Assets.xcassets */,
+				D91061CC2755F27600EA8A03 /* Atlas.swift */,
+				D91061C82755F27600EA8A03 /* Atlases.swift */,
+				D91061C92755F27600EA8A03 /* CharacterComponent.swift */,
+				D91061B72755F0B400EA8A03 /* CiderKit.entitlements */,
+				D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */,
+				D91061CA2755F27600EA8A03 /* Functions.swift */,
+				D91061CD2755F27600EA8A03 /* GameScene.swift */,
+				D91061CB2755F27600EA8A03 /* GameView.swift */,
+				D91061D52755F2D900EA8A03 /* Info.plist */,
+				D91061C72755F27600EA8A03 /* Keycode.swift */,
+				D91061C02755F24100EA8A03 /* Map */,
+			);
+			path = CiderKit;
+			sourceTree = "<group>";
+		};
+		D91061BD2755F1D600EA8A03 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D91061BE2755F23700EA8A03 /* map.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D91061C02755F24100EA8A03 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				D91061C12755F24100EA8A03 /* MapRegion.swift */,
+				D91061C22755F24100EA8A03 /* MapDescription.swift */,
+				D91061C32755F24100EA8A03 /* MapNode.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D91061AA2755F0B200EA8A03 /* CiderKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D91061BA2755F0B400EA8A03 /* Build configuration list for PBXNativeTarget "CiderKit" */;
+			buildPhases = (
+				D91061A72755F0B200EA8A03 /* Sources */,
+				D91061A82755F0B200EA8A03 /* Frameworks */,
+				D91061A92755F0B200EA8A03 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CiderKit;
+			productName = CiderKit;
+			productReference = D91061AB2755F0B200EA8A03 /* CiderKit.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D91061A32755F0B200EA8A03 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1310;
+				LastUpgradeCheck = 1310;
+				TargetAttributes = {
+					D91061AA2755F0B200EA8A03 = {
+						CreatedOnToolsVersion = 13.1;
+					};
+				};
+			};
+			buildConfigurationList = D91061A62755F0B200EA8A03 /* Build configuration list for PBXProject "CiderKit" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D91061A22755F0B200EA8A03;
+			productRefGroup = D91061AC2755F0B200EA8A03 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D91061AA2755F0B200EA8A03 /* CiderKit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D91061A92755F0B200EA8A03 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D91061BF2755F23700EA8A03 /* map.json in Resources */,
+				D91061B32755F0B400EA8A03 /* Assets.xcassets in Resources */,
+				D91061D62755F2D900EA8A03 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D91061A72755F0B200EA8A03 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D91061C62755F24100EA8A03 /* MapNode.swift in Sources */,
+				D91061CE2755F27600EA8A03 /* Keycode.swift in Sources */,
+				D91061D02755F27600EA8A03 /* CharacterComponent.swift in Sources */,
+				D91061D12755F27600EA8A03 /* Functions.swift in Sources */,
+				D91061D22755F27600EA8A03 /* GameView.swift in Sources */,
+				D91061D42755F27600EA8A03 /* GameScene.swift in Sources */,
+				D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */,
+				D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */,
+				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
+				D91061CF2755F27600EA8A03 /* Atlases.swift in Sources */,
+				D91061D32755F27600EA8A03 /* Atlas.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		D91061B82755F0B400EA8A03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.6;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D91061B92755F0B400EA8A03 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.6;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		D91061BB2755F0B400EA8A03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CiderKit/CiderKit.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5L9YG7YEUA;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xhaleera.CiderKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D91061BC2755F0B400EA8A03 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CiderKit/CiderKit.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5L9YG7YEUA;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xhaleera.CiderKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D91061A62755F0B200EA8A03 /* Build configuration list for PBXProject "CiderKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D91061B82755F0B400EA8A03 /* Debug */,
+				D91061B92755F0B400EA8A03 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D91061BA2755F0B400EA8A03 /* Build configuration list for PBXNativeTarget "CiderKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D91061BB2755F0B400EA8A03 /* Debug */,
+				D91061BC2755F0B400EA8A03 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D91061A32755F0B200EA8A03 /* Project object */;
+}

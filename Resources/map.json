@@ -1,0 +1,55 @@
+{
+    "spriteRepository": {
+        "tiles": [
+            { "spriteName": "default_tile" }
+        ],
+        "leftElevations": [
+            { "spriteName": "default_elevation_left" }
+        ],
+        "rightElevations": [
+            { "spriteName": "default_elevation_right" }
+        ],
+        "defaultSprites": {
+            "tile": 0,
+            "leftElevation": 0,
+            "rightElevation": 0
+        }
+    },
+    "regions": [
+        {
+            "x": 2,
+            "y": 0,
+            "width": 4,
+            "height": 4,
+            "elevation": 3
+        },
+        {
+            "x": 4,
+            "y": 4,
+            "width": 2,
+            "height": 2,
+            "elevation": 5
+        },
+        {
+            "x": 2,
+            "y": 4,
+            "width": 2,
+            "height": 2,
+            "elevation": 4
+        },
+        {
+            "x": 0,
+            "y": 0,
+            "width": 2,
+            "height": 3,
+            "elevation": 4
+        },
+        {
+            "x": 0,
+            "y": 3,
+            "width": 2,
+            "height": 3,
+            "elevation": 6
+        }
+    ]
+}
