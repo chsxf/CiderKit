@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "grid_tile.png",
+      "filename" : "grid_tile_TopLeft.png",
       "idiom" : "universal"
     }
   ],
