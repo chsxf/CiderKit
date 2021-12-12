@@ -19,6 +19,8 @@ class GameView: SKView, SKSceneDelegate {
     
     private var lastTime: TimeInterval?
     
+    private var lastMiddleMousePosition: NSPoint = NSPoint()
+    
     private var pressedArrows: [Keycode:Bool] = [
         .leftArrow: false,
         .rightArrow: false,
@@ -159,6 +161,48 @@ class GameView: SKView, SKSceneDelegate {
         default:
             break
         }
+    }
+    
+    override func otherMouseDown(with event: NSEvent) {
+        guard
+            let window = self.window,
+            event.buttonNumber == 2
+        else {
+            return
+        }
+        lastMiddleMousePosition = window.mouseLocationOutsideOfEventStream
+        NSCursor.closedHand.push()
+    }
+    
+    override func otherMouseDragged(with event: NSEvent) {
+        guard
+            let window = self.window,
+            let contentView = window.contentView,
+            let scene = scene,
+            let camera = scene.camera,
+            event.buttonNumber == 2
+        else {
+            return
+        }
+        
+        let mousePosition = window.mouseLocationOutsideOfEventStream
+        let diff = mousePosition.applying(CGAffineTransform(translationX: lastMiddleMousePosition.x, y: lastMiddleMousePosition.y).inverted())
+
+        let contentViewSize = contentView.visibleRect.size
+        let sceneSize = scene.size
+        let viewToSceneMultipliers = CGPoint(
+            x: sceneSize.width / contentViewSize.width,
+            y: sceneSize.height / contentViewSize.height
+        )
+        
+        let worldDiff = diff.applying(CGAffineTransform.init(scaleX: viewToSceneMultipliers.x, y: viewToSceneMultipliers.y))
+        camera.position = camera.position.applying(CGAffineTransform(translationX: worldDiff.x, y: worldDiff.y).inverted())
+        
+        lastMiddleMousePosition = mousePosition
+    }
+    
+    override func otherMouseUp(with event: NSEvent) {
+        NSCursor.pop()
     }
     
 }
