@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "grid_tile_BottomLeft.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

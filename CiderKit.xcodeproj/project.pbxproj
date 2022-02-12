@@ -21,6 +21,9 @@
 		D91061D32755F27600EA8A03 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
 		D91061D42755F27600EA8A03 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CD2755F27600EA8A03 /* GameScene.swift */; };
 		D91061D62755F2D900EA8A03 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D91061D52755F2D900EA8A03 /* Info.plist */; };
+		D9730B1527B795A40007513C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
+		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
+		D9FBC5732765EA6A004A30BB /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +43,9 @@
 		D91061CC2755F27600EA8A03 /* Atlas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atlas.swift; sourceTree = "<group>"; };
 		D91061CD2755F27600EA8A03 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		D91061D52755F2D900EA8A03 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9730B1427B795A40007513C /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
+		D9CC420F276163700081A464 /* WorldGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldGrid.swift; sourceTree = "<group>"; };
+		D9FBC5722765EA6A004A30BB /* SpritePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpritePool.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +91,9 @@
 				D91061D52755F2D900EA8A03 /* Info.plist */,
 				D91061C72755F27600EA8A03 /* Keycode.swift */,
 				D91061C02755F24100EA8A03 /* Map */,
+				D9730B1427B795A40007513C /* Math.swift */,
+				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
+				D9CC420F276163700081A464 /* WorldGrid.swift */,
 			);
 			path = CiderKit;
 			sourceTree = "<group>";
@@ -181,14 +190,17 @@
 				D91061C62755F24100EA8A03 /* MapNode.swift in Sources */,
 				D91061CE2755F27600EA8A03 /* Keycode.swift in Sources */,
 				D91061D02755F27600EA8A03 /* CharacterComponent.swift in Sources */,
+				D9730B1527B795A40007513C /* Math.swift in Sources */,
 				D91061D12755F27600EA8A03 /* Functions.swift in Sources */,
 				D91061D22755F27600EA8A03 /* GameView.swift in Sources */,
 				D91061D42755F27600EA8A03 /* GameScene.swift in Sources */,
 				D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */,
 				D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */,
+				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
 				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
 				D91061CF2755F27600EA8A03 /* Atlases.swift in Sources */,
 				D91061D32755F27600EA8A03 /* Atlas.swift in Sources */,
+				D9FBC5732765EA6A004A30BB /* SpritePool.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

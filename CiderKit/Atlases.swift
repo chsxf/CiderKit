@@ -29,17 +29,21 @@ final class Atlases {
             throw AtlasesError.alreadyPreloading
         }
         
+        var atlasesToPreload = [Atlas]()
+        
         preloading = true
         preloadCallback = completionHandler
-        remainingToPreload = 0
         for (key, name) in atlases {
             if loadedAtlases[key] == nil {
-                remainingToPreload += 1
-                
                 let atlas = Atlas(named: name)
+                atlasesToPreload.append(atlas)
                 loadedAtlases[key] = atlas
-                atlas.preload(completionHandler: self.atlasPreloadedCallback)
             }
+        }
+        
+        remainingToPreload = atlasesToPreload.count
+        for atlas in atlasesToPreload {
+            atlas.preload(completionHandler: self.atlasPreloadedCallback)
         }
     }
     
