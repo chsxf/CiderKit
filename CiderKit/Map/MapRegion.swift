@@ -35,29 +35,29 @@ class MapRegion : SKNode {
             for y in 0..<Int(regionDescription.rect.height) {
                 let mapY = y + Int(regionDescription.rect.minY)
                 
-                let isoX = MapNode.halfWidth * (mapX + mapY)
-                let isoY = MapNode.halfHeight * (mapY - mapX) + (regionDescription.elevation * MapNode.elevationHeight)
+                let isoX = MapNode.halfWidth * (mapX - mapY)
+                let isoY = (regionDescription.elevation * MapNode.elevationHeight) - MapNode.halfHeight * (mapY + mapX)
                 
                 let leftElevationCount = map!.getLeftVisibleElevation(forX: mapX, andY: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<leftElevationCount {
                     let sprite = SKSpriteNode(texture: leftElevationTexture)
-                    sprite.anchorPoint = CGPoint(x: 0, y: 1)
-                    sprite.position = CGPoint(x: isoX, y: isoY + MapNode.halfHeight - (i * MapNode.elevationHeight))
+                    sprite.anchorPoint = CGPoint(x: 1, y: 1)
+                    sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -2
                     addChild(sprite)
                 }
-                
+
                 let rightElevationCount = map!.getRightVisibleElevation(forX: mapX, andY: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<rightElevationCount {
                     let sprite = SKSpriteNode(texture: rightElevationTexture)
                     sprite.anchorPoint = CGPoint(x: 0, y: 1)
-                    sprite.position = CGPoint(x: isoX + MapNode.halfWidth, y: isoY + MapNode.halfHeight - (i * MapNode.elevationHeight))
+                    sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -1
                     addChild(sprite)
                 }
                 
                 let sprite = SKSpriteNode(texture: texture)
-                sprite.anchorPoint = CGPoint()
+                sprite.anchorPoint = CGPoint(x: 0.5, y: 1)
                 sprite.position = CGPoint(x: isoX, y: isoY)
                 addChild(sprite)
             }

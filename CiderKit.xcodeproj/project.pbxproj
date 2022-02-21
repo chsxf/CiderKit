@@ -19,7 +19,6 @@
 		D91061D12755F27600EA8A03 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CA2755F27600EA8A03 /* Functions.swift */; };
 		D91061D22755F27600EA8A03 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CB2755F27600EA8A03 /* GameView.swift */; };
 		D91061D32755F27600EA8A03 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
-		D91061D42755F27600EA8A03 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CD2755F27600EA8A03 /* GameScene.swift */; };
 		D91061D62755F2D900EA8A03 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D91061D52755F2D900EA8A03 /* Info.plist */; };
 		D9730B1527B795A40007513C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
@@ -41,7 +40,6 @@
 		D91061CA2755F27600EA8A03 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		D91061CB2755F27600EA8A03 /* GameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		D91061CC2755F27600EA8A03 /* Atlas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atlas.swift; sourceTree = "<group>"; };
-		D91061CD2755F27600EA8A03 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		D91061D52755F2D900EA8A03 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9730B1427B795A40007513C /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		D9CC420F276163700081A464 /* WorldGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldGrid.swift; sourceTree = "<group>"; };
@@ -86,7 +84,6 @@
 				D91061B72755F0B400EA8A03 /* CiderKit.entitlements */,
 				D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */,
 				D91061CA2755F27600EA8A03 /* Functions.swift */,
-				D91061CD2755F27600EA8A03 /* GameScene.swift */,
 				D91061CB2755F27600EA8A03 /* GameView.swift */,
 				D91061D52755F2D900EA8A03 /* Info.plist */,
 				D91061C72755F27600EA8A03 /* Keycode.swift */,
@@ -193,7 +190,6 @@
 				D9730B1527B795A40007513C /* Math.swift in Sources */,
 				D91061D12755F27600EA8A03 /* Functions.swift in Sources */,
 				D91061D22755F27600EA8A03 /* GameView.swift in Sources */,
-				D91061D42755F27600EA8A03 /* GameScene.swift in Sources */,
 				D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */,
 				D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */,
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,

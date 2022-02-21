@@ -39,7 +39,7 @@ class GameView: SKView, SKSceneDelegate {
         ignoresSiblingOrder = true
         allowsTransparency = true
         
-        //let mapDescription: MapDescription = Functions.load("map.json")
+        let mapDescription: MapDescription = Functions.load("map.json")
         
         try? Atlases.preload(atlases: [
             "main": "Main Atlas",
@@ -58,7 +58,8 @@ class GameView: SKView, SKSceneDelegate {
             self.worldGrid = WorldGrid()
             scene.addChild(self.worldGrid!)
             
-            //cam.position = scene.getMapCenter()
+            let map = MapNode(description: mapDescription)
+            scene.addChild(map)
             
             //self.initCharacter()
             //self.initDebug()

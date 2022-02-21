@@ -49,7 +49,7 @@ class WorldGrid: SKNode {
         super.init()
         
         addChild(triaxis)
-        triaxis.zPosition = 1
+        triaxis.zPosition = 10000
     }
     
     required init?(coder aDecoder: NSCoder) {

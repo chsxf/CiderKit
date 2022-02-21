@@ -29,7 +29,8 @@ class MapNode: SKNode {
         
         sortRegions()
         buildRegions()
-        buildMiniMap()
+        
+        zPosition = 2
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -42,13 +43,13 @@ class MapNode: SKNode {
             let regionsOverlapOnY = (region1.regionDescription.rect.maxY > region2.regionDescription.rect.minY && region1.regionDescription.rect.minY < region2.regionDescription.rect.maxY)
             
             if regionsOverlapOnX {
-                return region1.regionDescription.rect.maxY > region2.regionDescription.rect.maxY
+                return region1.regionDescription.rect.maxY < region2.regionDescription.rect.maxY
             }
             else if regionsOverlapOnY {
                 return region1.regionDescription.rect.minX < region2.regionDescription.rect.minX
             }
             else {
-                return region1.regionDescription.rect.maxY > region2.regionDescription.rect.maxY
+                return region1.regionDescription.rect.maxY < region2.regionDescription.rect.maxY
             }
         }
         
@@ -65,40 +66,10 @@ class MapNode: SKNode {
         }
     }
     
-    private func buildMiniMap() {
-        let node = SKNode()
-        node.position = CGPoint(x: -100, y: -100)
-        node.zPosition = 100
-        
-        let texture = Atlases.main["tile-from-top"]
-        
-        for x in 0..<6 {
-            for y in 0..<6 {
-                let cellNode = SKSpriteNode(texture: texture)
-                cellNode.position = CGPoint(x: 16 * x, y: 16 * y)
-                let xOdd = (x % 2) != 0
-                let yOdd = (y % 2) != 0
-                if xOdd != yOdd {
-                    cellNode.color = NSColor.black
-                    cellNode.colorBlendFactor = 0.5
-                }
-                node.addChild(cellNode)
-            }
-        }
-        
-        let minimapMarker = SKShapeNode(circleOfRadius: 4)
-        minimapMarker.zPosition = 101
-        minimapMarker.name = "MinimapMarker"
-        minimapMarker.fillColor = NSColor.red
-        node.addChild(minimapMarker)
-        
-        addChild(node)
-    }
-    
     func getLeftVisibleElevation(forX x: Int, andY y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
         guard
             let cellElevation = getCellElevation(forX: x, andY: y),
-            let leftCellElevation = getCellElevation(forX: x, andY: y - 1)
+            let leftCellElevation = getCellElevation(forX: x, andY: y + 1)
         else {
             return defaultElevation
         }
