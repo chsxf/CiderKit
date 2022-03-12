@@ -24,9 +24,10 @@ class WorldGrid: SKNode {
     private let triaxis: SKSpriteNode
     
     private var gridTileTextures = [GridElement:SKTexture]()
-    private let gridTileSize: CGSize
-    private let halfGridTileSize: CGSize
-    private let gridBlockSize: CGSize
+    
+    let gridTileSize: CGSize
+    let halfGridTileSize: CGSize
+    let gridBlockSize: CGSize
     
     private var spritePools = [GridElement:SpritePool]()
     

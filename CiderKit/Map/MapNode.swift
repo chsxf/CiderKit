@@ -92,7 +92,7 @@ class MapNode: SKNode {
     
     func getCellElevation(forX x: Int, andY y: Int) -> Int? {
         for region in regions {
-            if region.contains(x: x, y: y) {
+            if region.containsMapCoordinates(x: x, y: y) {
                 return region.regionDescription.elevation
             }
         }

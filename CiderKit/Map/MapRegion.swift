@@ -6,15 +6,26 @@
 //
 
 import SpriteKit
+import GameplayKit
 
-class MapRegion : SKNode {
+class MapRegion : SKNode, Identifiable {
+    
+    private static var nextRegionId: Int = 1
+    
+    private let _id: Int;
+    var id: Int { _id }
     
     let regionDescription: MapRegionDescription
     let spriteRepository: SpriteRepository
     
     private weak var map: MapNode?
     
+    var cellEntities: [GKEntity] = []
+    
     init(forMap map: MapNode, description: MapRegionDescription, spriteRepository: SpriteRepository) {
+        _id = MapRegion.nextRegionId
+        MapRegion.nextRegionId += 1
+        
         self.regionDescription = description
         self.spriteRepository = spriteRepository
         
@@ -60,6 +71,12 @@ class MapRegion : SKNode {
                 sprite.anchorPoint = CGPoint(x: 0.5, y: 1)
                 sprite.position = CGPoint(x: isoX, y: isoY)
                 addChild(sprite)
+                
+                let entity = GKEntity()
+                entity.addComponent(GKSKNodeComponent(node: sprite))
+                let cell = MapCellComponent(region: self, mapX: mapX, mapY: mapY, elevation: regionDescription.elevation)
+                entity.addComponent(cell)
+                cellEntities.append(entity)
             }
         }
     }
@@ -68,7 +85,7 @@ class MapRegion : SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func contains(x: Int, y: Int) -> Bool {
+    func containsMapCoordinates(x: Int, y: Int) -> Bool {
         return (x >= Int(regionDescription.rect.minX) && x < Int(regionDescription.rect.maxX)
                 && y >= Int(regionDescription.rect.minY) && y < Int(regionDescription.rect.maxY))
     }

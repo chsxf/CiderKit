@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import SwiftUI
 
 @main
 class CiderKitApp: NSObject, NSApplicationDelegate {
@@ -15,13 +16,24 @@ class CiderKitApp: NSObject, NSApplicationDelegate {
     }
     
     static private func setup() -> Void {
-        let rect = NSRect(x: 100, y: 100, width: 640, height: 360)
-        
-        let window = NSWindow(contentRect: rect, styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
-        window.title = "SKTetris"
-        window.contentView = GameView(frame: rect)
+        let windowRect = NSRect(x: 100, y: 100, width: 640, height: 360)
+        let window = NSWindow(contentRect: windowRect, styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
+        window.acceptsMouseMovedEvents = true
+        window.title = "The Untitled Project"
+        let gameView = GameView(frame: windowRect)
+        window.contentView = gameView
         window.makeKeyAndOrderFront(nil)
         window.toggleFullScreen(nil)
+        
+        let panelRect = NSRect(x: 100, y: 100, width: 200, height: 600)
+        let panel = NSPanel(contentRect: panelRect, styleMask: [.utilityWindow, .titled], backing: .buffered, defer: false)
+        panel.title = "Test"
+        panel.isFloatingPanel = true
+        panel.becomesKeyOnlyIfNeeded = true
+        
+        let inspectorView = InspectorView().environmentObject(gameView.selectionModel)
+        panel.contentView = NSHostingView(rootView: inspectorView)
+        panel.orderFront(nil)
     }
     
     static private func setupMainMenu() -> Void {
