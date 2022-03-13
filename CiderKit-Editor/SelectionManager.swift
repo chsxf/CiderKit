@@ -119,7 +119,7 @@ class SelectionManager: NSResponder {
         let sceneCoordinates = editorGameView.convert(event.locationInWindow, to: editorGameView.scene!)
         
         selectionModel.hoveredCell = nil
-        for region in editorGameView.map.regions {
+        for region in editorGameView.map {
             if region.calculateAccumulatedFrame().contains(sceneCoordinates) {
                 for cell in region.cellEntities {
                     if cell.component(ofType: MapCellComponent.self)!.containsScenePosition(sceneCoordinates) {

@@ -61,11 +61,22 @@ struct MapRegionDescription: Codable {
     private var width: Int
     private var height: Int
     
-    var rect: CGRect {
-        CGRect(x: x, y: y, width: width, height: height)
-    }
-    
     var elevation: Int
     
     var defaultSprites: DefaultSprites?
+    
+    var area: MapArea { MapArea(x: x, y: y, width: width, height: height) }
+    
+    init(x: Int, y: Int, width: Int, height: Int, elevation: Int) {
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.elevation = elevation
+    }
+    
+    init(area: MapArea, elevation: Int) {
+        self.init(x: area.minX, y: area.minY, width: area.width, height: area.height, elevation: elevation)
+    }
+    
 }

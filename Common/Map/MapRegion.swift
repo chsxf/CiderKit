@@ -8,14 +8,14 @@
 import SpriteKit
 import GameplayKit
 
-class MapRegion : SKNode, Identifiable {
+class MapRegion : SKNode, Identifiable, Comparable {
     
     private static var nextRegionId: Int = 1
     
     private let _id: Int;
     var id: Int { _id }
     
-    let regionDescription: MapRegionDescription
+    var regionDescription: MapRegionDescription
     let spriteRepository: SpriteRepository
     
     private weak var map: MapNode?
@@ -35,16 +35,19 @@ class MapRegion : SKNode, Identifiable {
     }
     
     func build() {
+        cellEntities.removeAll()
+        removeAllChildren()
+        
         let defaultSprites = regionDescription.defaultSprites ?? spriteRepository.defaultSprites
         let texture = spriteRepository.getTile(withIndex: defaultSprites.tile)
         let leftElevationTexture = spriteRepository.getLeftElevation(withIndex: defaultSprites.leftElevation)
         let rightElevationTexture = spriteRepository.getRightElevation(withIndex: defaultSprites.rightElevation)
         
-        for x in 0..<Int(regionDescription.rect.width) {
-            let mapX = x + Int(regionDescription.rect.minX)
+        for x in 0..<Int(regionDescription.area.width) {
+            let mapX = x + Int(regionDescription.area.minX)
             
-            for y in 0..<Int(regionDescription.rect.height) {
-                let mapY = y + Int(regionDescription.rect.minY)
+            for y in 0..<Int(regionDescription.area.height) {
+                let mapY = y + Int(regionDescription.area.minY)
                 
                 let isoX = MapNode.halfWidth * (mapX - mapY)
                 let isoY = (regionDescription.elevation * MapNode.elevationHeight) - MapNode.halfHeight * (mapY + mapX)
@@ -86,8 +89,99 @@ class MapRegion : SKNode, Identifiable {
     }
     
     func containsMapCoordinates(x: Int, y: Int) -> Bool {
-        return (x >= Int(regionDescription.rect.minX) && x < Int(regionDescription.rect.maxX)
-                && y >= Int(regionDescription.rect.minY) && y < Int(regionDescription.rect.maxY))
+        return (x >= Int(regionDescription.area.minX) && x < Int(regionDescription.area.maxX)
+                && y >= Int(regionDescription.area.minY) && y < Int(regionDescription.area.maxY))
+    }
+    
+    static func < (lhs: MapRegion, rhs: MapRegion) -> Bool {
+        let regionsOverlapOnX = (lhs.regionDescription.area.maxX > rhs.regionDescription.area.minX && lhs.regionDescription.area.minX < rhs.regionDescription.area.maxX)
+        let regionsOverlapOnY = (lhs.regionDescription.area.maxY > rhs.regionDescription.area.minY && lhs.regionDescription.area.minY < rhs.regionDescription.area.maxY)
+        
+        var result: Bool
+        if regionsOverlapOnX {
+            result = lhs.regionDescription.area.minY < rhs.regionDescription.area.minY
+        }
+        else if regionsOverlapOnY {
+            result = lhs.regionDescription.area.minX < rhs.regionDescription.area.minX
+        }
+        else {
+            result = lhs.regionDescription.area.minY < rhs.regionDescription.area.minY
+        }
+        return result
     }
     
 }
+
+#if CIDERKIT_EDITOR
+extension MapRegion {
+    
+    func increaseElevation() -> Bool {
+        regionDescription.elevation += 1
+        return true
+    }
+    
+    func decreaseElevation() -> Bool {
+        var needsRebuilding = false
+        if regionDescription.elevation > 0 {
+            regionDescription.elevation -= 1
+            needsRebuilding = true
+        }
+        return needsRebuilding
+    }
+    
+    func subdivide(subArea: MapArea) -> (mainSubdivision: MapRegion, otherSubdivisions: [MapRegion])? {
+        guard let intersection = regionDescription.area.intersection(subArea) else {
+            return nil
+        }
+        
+        let hasLeftSubdiv = intersection.minX > regionDescription.area.minX
+        let hasRightSubdiv = intersection.maxX < regionDescription.area.maxX
+        let hasBottomSubdiv = intersection.minY > regionDescription.area.minY
+        let hasTopSubdiv = intersection.maxY < regionDescription.area.maxY
+        
+        var mainSubdivDescription = MapRegionDescription(area: intersection, elevation: regionDescription.elevation)
+        mainSubdivDescription.defaultSprites = regionDescription.defaultSprites
+        let mainSubdivision = MapRegion(forMap: map!, description: mainSubdivDescription, spriteRepository: spriteRepository)
+        
+        var otherSubdivisions = [MapRegion]()
+        
+        if hasLeftSubdiv {
+            var area = regionDescription.area
+            area.width = intersection.minX - area.minX
+            var otherSubdivDescription = MapRegionDescription(area: area, elevation: regionDescription.elevation)
+            otherSubdivDescription.defaultSprites = regionDescription.defaultSprites
+            let otherMapRegion = MapRegion(forMap: map!, description: otherSubdivDescription, spriteRepository: spriteRepository)
+            otherSubdivisions.append(otherMapRegion)
+        }
+        
+        if hasRightSubdiv {
+            var area = regionDescription.area
+            area.width = area.maxX - intersection.maxX
+            area.x = intersection.maxX
+            var otherSubdivDescription = MapRegionDescription(area: area, elevation: regionDescription.elevation)
+            otherSubdivDescription.defaultSprites = regionDescription.defaultSprites
+            let otherMapRegion = MapRegion(forMap: map!, description: otherSubdivDescription, spriteRepository: spriteRepository)
+            otherSubdivisions.append(otherMapRegion)
+        }
+        
+        if hasTopSubdiv {
+            let area = MapArea(x: intersection.minX, y: intersection.maxY, width: intersection.width, height: regionDescription.area.maxY - intersection.maxY)
+            var otherSubdivDescription = MapRegionDescription(area: area, elevation: regionDescription.elevation)
+            otherSubdivDescription.defaultSprites = regionDescription.defaultSprites
+            let otherMapRegion = MapRegion(forMap: map!, description: otherSubdivDescription, spriteRepository: spriteRepository)
+            otherSubdivisions.append(otherMapRegion)
+        }
+        
+        if hasBottomSubdiv {
+            let area = MapArea(x: intersection.minX, y: regionDescription.area.minY, width: intersection.width, height: intersection.minY - regionDescription.area.minY)
+            var otherSubdivDescription = MapRegionDescription(area: area, elevation: regionDescription.elevation)
+            otherSubdivDescription.defaultSprites = regionDescription.defaultSprites
+            let otherMapRegion = MapRegion(forMap: map!, description: otherSubdivDescription, spriteRepository: spriteRepository)
+            otherSubdivisions.append(otherMapRegion)
+        }
+        
+        return (mainSubdivision, otherSubdivisions)
+    }
+    
+}
+#endif

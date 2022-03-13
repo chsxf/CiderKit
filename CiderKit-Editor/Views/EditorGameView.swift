@@ -9,7 +9,7 @@ import CoreFoundation
 import SpriteKit
 import GameplayKit
 
-class EditorGameView: GameView {
+class EditorGameView: GameView, ToolsDelegate {
     
     private(set) var worldGrid: WorldGrid!
     
@@ -101,6 +101,22 @@ class EditorGameView: GameView {
     override func otherMouseUp(with event: NSEvent) {
         if event.buttonNumber == 2 {
             NSCursor.pop()
+        }
+    }
+    
+    func increaseElevation(area: MapArea?) {
+        map.increaseElevation(area: area)
+        
+        if area != nil {
+            selectionModel.selectedCell = map.getMapCellEntity(atX: area!.x, y: area!.y)
+        }
+    }
+    
+    func decreaseElevation(area: MapArea?) {
+        map.decreaseElevation(area: area)
+        
+        if area != nil {
+            selectionModel.selectedCell = map.getMapCellEntity(atX: area!.x, y: area!.y)
         }
     }
     

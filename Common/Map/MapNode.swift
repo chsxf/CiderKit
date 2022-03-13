@@ -6,19 +6,35 @@
 //
 
 import SpriteKit
+import GameplayKit
 
-class MapNode: SKNode {
+class MapNode: SKNode, Collection {
     
     static let elevationHeight: Int = 10
     
     static let halfWidth: Int = 24
     static let halfHeight: Int = 12
     
-    var regions: [MapRegion] = [MapRegion]()
+    private var regions: [MapRegion] = [MapRegion]()
+    
+    private let mapDescription: MapDescription
     
     var layerCount:Int { 3 } // Temporary code
     
+    var startIndex: Int { regions.startIndex }
+    var endIndex: Int { regions.endIndex }
+    
+    subscript(position: Int) -> MapRegion {
+        return regions[position]
+    }
+    
+    override required init() {
+        fatalError("init() has not been implemented")
+    }
+    
     init(description mapDescription: MapDescription) {
+        self.mapDescription = mapDescription
+        
         super.init()
         
         for regionDescription in mapDescription.regions {
@@ -37,21 +53,10 @@ class MapNode: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func index(after i: Int) -> Int { regions.index(after: i) }
+    
     private func sortRegions() {
-        regions.sort { region1, region2 in
-            let regionsOverlapOnX = (region1.regionDescription.rect.maxX > region2.regionDescription.rect.minX && region1.regionDescription.rect.minX < region2.regionDescription.rect.maxX)
-            let regionsOverlapOnY = (region1.regionDescription.rect.maxY > region2.regionDescription.rect.minY && region1.regionDescription.rect.minY < region2.regionDescription.rect.maxY)
-            
-            if regionsOverlapOnX {
-                return region1.regionDescription.rect.maxY < region2.regionDescription.rect.maxY
-            }
-            else if regionsOverlapOnY {
-                return region1.regionDescription.rect.minX < region2.regionDescription.rect.minX
-            }
-            else {
-                return region1.regionDescription.rect.maxY < region2.regionDescription.rect.maxY
-            }
-        }
+        regions.sort()
         
         var index = 0
         for region in regions {
@@ -75,7 +80,7 @@ class MapNode: SKNode {
         }
         
         let diff = cellElevation - leftCellElevation
-        return max(diff, 0)
+        return Swift.max(diff, 0)
     }
     
     func getRightVisibleElevation(forX x: Int, andY y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
@@ -87,7 +92,7 @@ class MapNode: SKNode {
         }
         
         let diff = cellElevation - rightCellElevation
-        return max(diff, 0)
+        return Swift.max(diff, 0)
     }
     
     func getCellElevation(forX x: Int, andY y: Int) -> Int? {
@@ -110,4 +115,115 @@ class MapNode: SKNode {
         return CGPoint(x: isoX, y: isoY)
     }
     
+    func getMapCellEntity(atX x: Int, y: Int) -> GKEntity? {
+        for region in regions {
+            for cell in region.cellEntities {
+                guard let cellComponent = cell.component(ofType: MapCellComponent.self) else {
+                    continue
+                }
+                if cellComponent.mapX == x && cellComponent.mapY == y {
+                    return cell
+                }
+            }
+        }
+        return nil
+    }
+    
 }
+
+#if CIDERKIT_EDITOR
+extension MapNode {
+    
+    func increaseElevation(area: MapArea?) {
+        var appliedOnRegion = false
+        
+        var needsRebuilding = false
+        let previousRegionCount = regions.count
+        
+        var regionsToRemove = [MapRegion]()
+        var newRegions = [MapRegion]()
+        
+        for region in regions {
+            if area == nil || area!.contains(region.regionDescription.area) {
+                appliedOnRegion = true
+                if region.increaseElevation() {
+                    needsRebuilding = true
+                }
+            }
+            else if area != nil {
+                guard let subdivisions = region.subdivide(subArea: area!) else {
+                    continue
+                }
+                
+                appliedOnRegion = true
+                regionsToRemove.append(region)
+                newRegions.append(contentsOf: subdivisions.otherSubdivisions)
+                newRegions.append(subdivisions.mainSubdivision)
+                let _ = subdivisions.mainSubdivision.increaseElevation()
+                needsRebuilding = true
+            }
+        }
+        
+        if !appliedOnRegion {
+            let newDescription = MapRegionDescription(area: area!, elevation: 1)
+            let newRegion = MapRegion(forMap: self, description: newDescription, spriteRepository: mapDescription.spriteRepository)
+            newRegions.append(newRegion)
+            needsRebuilding = true
+        }
+        
+        regions.removeAll(where: { regionsToRemove.contains($0) })
+        regionsToRemove.forEach({ $0.removeFromParent() })
+        regions.append(contentsOf: newRegions)
+        newRegions.forEach({ addChild($0) })
+        
+        if previousRegionCount < regions.count {
+            sortRegions()
+        }
+        
+        if needsRebuilding {
+            buildRegions()
+        }
+    }
+    
+    func decreaseElevation(area: MapArea?) {
+        var needsRebuilding = false
+        let previousRegionCount = regions.count
+        
+        var regionsToRemove = [MapRegion]()
+        var newRegions = [MapRegion]()
+        
+        for region in regions {
+            if area == nil || area!.contains(region.regionDescription.area) {
+                if region.decreaseElevation() {
+                    needsRebuilding = true
+                }
+            }
+            else if area != nil {
+                guard let subdivisions = region.subdivide(subArea: area!) else {
+                    continue
+                }
+                
+                regionsToRemove.append(region)
+                newRegions.append(contentsOf: subdivisions.otherSubdivisions)
+                newRegions.append(subdivisions.mainSubdivision)
+                let _ = subdivisions.mainSubdivision.decreaseElevation()
+                needsRebuilding = true
+            }
+        }
+        
+        regions.removeAll(where: { regionsToRemove.contains($0) })
+        regionsToRemove.forEach({ $0.removeFromParent() })
+        regions.append(contentsOf: newRegions)
+        newRegions.forEach({ addChild($0) })
+        
+        if previousRegionCount < regions.count {
+            sortRegions()
+        }
+        
+        if needsRebuilding {
+            buildRegions()
+        }
+    }
+    
+}
+#endif

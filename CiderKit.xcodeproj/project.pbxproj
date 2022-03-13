@@ -20,6 +20,7 @@
 		D91061D22755F27600EA8A03 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CB2755F27600EA8A03 /* GameView.swift */; };
 		D91061D32755F27600EA8A03 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
 		D91061D62755F2D900EA8A03 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D91061D52755F2D900EA8A03 /* Info.plist */; };
+		D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91ED91227E7AA520016D818 /* EditorAssets.xcassets */; };
 		D936185C27E71ACE009A14E2 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C32755F24100EA8A03 /* MapNode.swift */; };
 		D936185D27E71ACE009A14E2 /* Keycode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C72755F27600EA8A03 /* Keycode.swift */; };
 		D936185E27E71ACE009A14E2 /* CharacterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C92755F27600EA8A03 /* CharacterComponent.swift */; };
@@ -42,12 +43,27 @@
 		D9730B1527B795A40007513C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
 		D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7E827DDEBBC00AC2465 /* InspectorView.swift */; };
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
+		D985E7ED27DE903700AC2465 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EC27DE903700AC2465 /* ToolsView.swift */; };
 		D9A87A8327DD320B0079C831 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
 		D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
+		D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
+		D9B8557427EFC1A000D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
+		D9B8558627F0C8CD00D605F4 /* MapAreaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */; };
+		D9B8558727F0CD3100D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
 		D9CECB2827E91DB0000E8CC7 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CECB2627E91DB0000E8CC7 /* Screen.swift */; };
 		D9FBC5732765EA6A004A30BB /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D9B8557D27F0C86F00D605F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D91061A32755F0B200EA8A03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D91061AA2755F0B200EA8A03;
+			remoteInfo = "CiderKit-Editor";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		D91061AB2755F0B200EA8A03 /* CiderKit-Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CiderKit-Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +81,7 @@
 		D91061CB2755F27600EA8A03 /* GameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		D91061CC2755F27600EA8A03 /* Atlas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atlas.swift; sourceTree = "<group>"; };
 		D91061D52755F2D900EA8A03 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D91ED91227E7AA520016D818 /* EditorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = EditorAssets.xcassets; sourceTree = "<group>"; };
 		D936187527E71ACE009A14E2 /* TUP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D936187827E71CE5009A14E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D936187927E71CEB009A14E2 /* TUP.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUP.entitlements; sourceTree = "<group>"; };
@@ -74,8 +91,12 @@
 		D9730B1427B795A40007513C /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		D985E7EA27DE38D300AC2465 /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
+		D985E7EC27DE903700AC2465 /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		D9A87A8227DD320B0079C831 /* MapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCellComponent.swift; sourceTree = "<group>"; };
 		D9A87A8727DD43F10079C831 /* HoverShader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = HoverShader.fsh; sourceTree = "<group>"; };
+		D9B8557227EFC1A000D605F4 /* MapArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapArea.swift; sourceTree = "<group>"; };
+		D9B8557927F0C86F00D605F4 /* CiderKit-EditorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CiderKit-EditorTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAreaTests.swift; sourceTree = "<group>"; };
 		D9CC420F276163700081A464 /* WorldGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldGrid.swift; sourceTree = "<group>"; };
 		D9CECB2627E91DB0000E8CC7 /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
 		D9FBC5722765EA6A004A30BB /* SpritePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpritePool.swift; sourceTree = "<group>"; };
@@ -96,17 +117,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D9B8557627F0C86F00D605F4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		D91061A22755F0B200EA8A03 = {
 			isa = PBXGroup;
 			children = (
-				D91061AD2755F0B200EA8A03 /* Common */,
 				D936187627E71B10009A14E2 /* CiderKit-Editor */,
-				D936187727E71CC3009A14E2 /* TUP */,
-				D91061BD2755F1D600EA8A03 /* Resources */,
+				D9B8557A27F0C86F00D605F4 /* CiderKit-EditorTests */,
+				D91061AD2755F0B200EA8A03 /* Common */,
 				D91061AC2755F0B200EA8A03 /* Products */,
+				D91061BD2755F1D600EA8A03 /* Resources */,
+				D936187727E71CC3009A14E2 /* TUP */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,6 +144,7 @@
 			children = (
 				D91061AB2755F0B200EA8A03 /* CiderKit-Editor.app */,
 				D936187527E71ACE009A14E2 /* TUP.app */,
+				D9B8557927F0C86F00D605F4 /* CiderKit-EditorTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -153,6 +183,7 @@
 				D91061C22755F24100EA8A03 /* MapDescription.swift */,
 				D91061C32755F24100EA8A03 /* MapNode.swift */,
 				D91061C12755F24100EA8A03 /* MapRegion.swift */,
+				D9B8557227EFC1A000D605F4 /* MapArea.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -165,6 +196,7 @@
 				D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */,
 				D985E7EA27DE38D300AC2465 /* SelectionModel.swift */,
 				D9CC420F276163700081A464 /* WorldGrid.swift */,
+				D91ED91227E7AA520016D818 /* EditorAssets.xcassets */,
 				D985E7E727DDEBAA00AC2465 /* Views */,
 				D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */,
 			);
@@ -194,6 +226,7 @@
 			children = (
 				D985E7E827DDEBBC00AC2465 /* InspectorView.swift */,
 				D936187A27E71D77009A14E2 /* EditorGameView.swift */,
+				D985E7EC27DE903700AC2465 /* ToolsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -204,6 +237,22 @@
 				D9A87A8727DD43F10079C831 /* HoverShader.fsh */,
 			);
 			path = Shaders;
+			sourceTree = "<group>";
+		};
+		D9B8557A27F0C86F00D605F4 /* CiderKit-EditorTests */ = {
+			isa = PBXGroup;
+			children = (
+				D9B8558427F0C8CD00D605F4 /* Map */,
+			);
+			path = "CiderKit-EditorTests";
+			sourceTree = "<group>";
+		};
+		D9B8558427F0C8CD00D605F4 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -243,6 +292,24 @@
 			productReference = D936187527E71ACE009A14E2 /* TUP.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D9B8557827F0C86F00D605F4 /* CiderKit-EditorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9B8557F27F0C86F00D605F4 /* Build configuration list for PBXNativeTarget "CiderKit-EditorTests" */;
+			buildPhases = (
+				D9B8557527F0C86F00D605F4 /* Sources */,
+				D9B8557627F0C86F00D605F4 /* Frameworks */,
+				D9B8557727F0C86F00D605F4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D9B8557E27F0C86F00D605F4 /* PBXTargetDependency */,
+			);
+			name = "CiderKit-EditorTests";
+			productName = "CiderKit-EditorTests";
+			productReference = D9B8557927F0C86F00D605F4 /* CiderKit-EditorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -250,11 +317,16 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1310;
-				LastUpgradeCheck = 1320;
+				LastSwiftUpdateCheck = 1330;
+				LastUpgradeCheck = 1330;
 				TargetAttributes = {
 					D91061AA2755F0B200EA8A03 = {
 						CreatedOnToolsVersion = 13.1;
+					};
+					D9B8557827F0C86F00D605F4 = {
+						CreatedOnToolsVersion = 13.3;
+						LastSwiftMigration = 1330;
+						TestTargetID = D91061AA2755F0B200EA8A03;
 					};
 				};
 			};
@@ -273,6 +345,7 @@
 			targets = (
 				D91061AA2755F0B200EA8A03 /* CiderKit-Editor */,
 				D936185A27E71ACE009A14E2 /* TUP */,
+				D9B8557827F0C86F00D605F4 /* CiderKit-EditorTests */,
 			);
 		};
 /* End PBXProject section */
@@ -286,6 +359,7 @@
 				D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */,
 				D91061B32755F0B400EA8A03 /* Assets.xcassets in Resources */,
 				D91061D62755F2D900EA8A03 /* Info.plist in Resources */,
+				D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,6 +373,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D9B8557727F0C86F00D605F4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -308,6 +389,7 @@
 			files = (
 				D91061C62755F24100EA8A03 /* MapNode.swift in Sources */,
 				D91061CE2755F27600EA8A03 /* Keycode.swift in Sources */,
+				D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */,
 				D91061D02755F27600EA8A03 /* CharacterComponent.swift in Sources */,
 				D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */,
 				D9730B1527B795A40007513C /* Math.swift in Sources */,
@@ -317,6 +399,7 @@
 				D96809A627E9283E001D2C04 /* Screen.swift in Sources */,
 				D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */,
 				D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */,
+				D985E7ED27DE903700AC2465 /* ToolsView.swift in Sources */,
 				D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */,
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
 				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
@@ -334,6 +417,7 @@
 			files = (
 				D936185C27E71ACE009A14E2 /* MapNode.swift in Sources */,
 				D936185D27E71ACE009A14E2 /* Keycode.swift in Sources */,
+				D9B8557427EFC1A000D605F4 /* MapArea.swift in Sources */,
 				D936185E27E71ACE009A14E2 /* CharacterComponent.swift in Sources */,
 				D936186027E71ACE009A14E2 /* Math.swift in Sources */,
 				D936186127E71ACE009A14E2 /* Functions.swift in Sources */,
@@ -349,7 +433,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D9B8557527F0C86F00D605F4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9B8558627F0C8CD00D605F4 /* MapAreaTests.swift in Sources */,
+				D9B8558727F0CD3100D605F4 /* MapArea.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D9B8557E27F0C86F00D605F4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D91061AA2755F0B200EA8A03 /* CiderKit-Editor */;
+			targetProxy = D9B8557D27F0C86F00D605F4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		D91061B82755F0B400EA8A03 /* Debug */ = {
@@ -575,6 +676,55 @@
 			};
 			name = Release;
 		};
+		D9B8558027F0C86F00D605F4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5L9YG7YEUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-EditorTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CiderKit-Editor.app/Contents/MacOS/CiderKit-Editor";
+			};
+			name = Debug;
+		};
+		D9B8558127F0C86F00D605F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5L9YG7YEUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-EditorTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CiderKit-Editor.app/Contents/MacOS/CiderKit-Editor";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -601,6 +751,15 @@
 			buildConfigurations = (
 				D936187327E71ACE009A14E2 /* Debug */,
 				D936187427E71ACE009A14E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D9B8557F27F0C86F00D605F4 /* Build configuration list for PBXNativeTarget "CiderKit-EditorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9B8558027F0C86F00D605F4 /* Debug */,
+				D9B8558127F0C86F00D605F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
