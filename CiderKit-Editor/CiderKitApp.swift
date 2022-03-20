@@ -19,8 +19,8 @@ class CiderKitApp: NSObject, NSApplicationDelegate {
         let windowRect = NSRect(x: 100, y: 100, width: 640, height: 360)
         let window = NSWindow(contentRect: windowRect, styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         window.acceptsMouseMovedEvents = true
-        window.title = "The Untitled Project"
-        let gameView = GameView(frame: windowRect)
+        window.title = "Cider Kit Editor"
+        let gameView = EditorGameView(frame: windowRect)
         window.contentView = gameView
         window.makeKeyAndOrderFront(nil)
         window.toggleFullScreen(nil)
