@@ -37,12 +37,14 @@
 		D936187027E71ACE009A14E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
 		D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187A27E71D77009A14E2 /* EditorGameView.swift */; };
 		D936187D27E71D8C009A14E2 /* TheUntitledProjectApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187C27E71D8C009A14E2 /* TheUntitledProjectApp.swift */; };
+		D96809A627E9283E001D2C04 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CECB2627E91DB0000E8CC7 /* Screen.swift */; };
 		D9730B1527B795A40007513C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
 		D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7E827DDEBBC00AC2465 /* InspectorView.swift */; };
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
 		D9A87A8327DD320B0079C831 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
 		D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
+		D9CECB2827E91DB0000E8CC7 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CECB2627E91DB0000E8CC7 /* Screen.swift */; };
 		D9FBC5732765EA6A004A30BB /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +75,7 @@
 		D9A87A8227DD320B0079C831 /* MapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCellComponent.swift; sourceTree = "<group>"; };
 		D9A87A8727DD43F10079C831 /* HoverShader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = HoverShader.fsh; sourceTree = "<group>"; };
 		D9CC420F276163700081A464 /* WorldGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldGrid.swift; sourceTree = "<group>"; };
+		D9CECB2627E91DB0000E8CC7 /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
 		D9FBC5722765EA6A004A30BB /* SpritePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpritePool.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,6 +127,7 @@
 				D91061CB2755F27600EA8A03 /* GameView.swift */,
 				D91061C72755F27600EA8A03 /* Keycode.swift */,
 				D9730B1427B795A40007513C /* Math.swift */,
+				D9CECB2627E91DB0000E8CC7 /* Screen.swift */,
 				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
 				D91061B22755F0B400EA8A03 /* Assets.xcassets */,
 				D91061C02755F24100EA8A03 /* Map */,
@@ -299,6 +303,7 @@
 				D91061D12755F27600EA8A03 /* Functions.swift in Sources */,
 				D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */,
 				D91061D22755F27600EA8A03 /* GameView.swift in Sources */,
+				D96809A627E9283E001D2C04 /* Screen.swift in Sources */,
 				D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */,
 				D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */,
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
@@ -322,6 +327,7 @@
 				D936186127E71ACE009A14E2 /* Functions.swift in Sources */,
 				D936186327E71ACE009A14E2 /* GameView.swift in Sources */,
 				D936187D27E71D8C009A14E2 /* TheUntitledProjectApp.swift in Sources */,
+				D9CECB2827E91DB0000E8CC7 /* Screen.swift in Sources */,
 				D936186427E71ACE009A14E2 /* MapRegion.swift in Sources */,
 				D936186527E71ACE009A14E2 /* MapDescription.swift in Sources */,
 				D936186827E71ACE009A14E2 /* Atlases.swift in Sources */,

@@ -16,7 +16,9 @@ class CiderKitApp: NSObject, NSApplicationDelegate {
     }
     
     static private func setup() -> Void {
-        let windowRect = NSRect(x: 100, y: 100, width: 640, height: 360)
+        let sceneSize = Screen.getBestMatchingSceneSizeOnMainScreen(CGSize(width: 640, height: 360))
+        
+        let windowRect = NSRect(x: 100, y: 100, width: sceneSize.width, height: sceneSize.height)
         let window = NSWindow(contentRect: windowRect, styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         window.acceptsMouseMovedEvents = true
         window.title = "The Untitled Project"
