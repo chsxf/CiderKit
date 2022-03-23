@@ -12,7 +12,7 @@ class GameView: SKView, SKSceneDelegate {
 
     internal var gameScene: SKScene!
     
-    internal var map: MapNode!
+    private(set) var map: MapNode!
     
     private var character: GKEntity!
     private var characterComponent: CharacterComponent!
