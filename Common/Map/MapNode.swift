@@ -38,7 +38,7 @@ class MapNode: SKNode, Collection {
         super.init()
         
         for regionDescription in mapDescription.regions {
-            let region = MapRegion(forMap: self, description: regionDescription, spriteRepository: mapDescription.spriteRepository)
+            let region = MapRegion(forMap: self, description: regionDescription)
             regions.append(region)
             addChild(region)
         }
@@ -166,7 +166,7 @@ extension MapNode {
         
         if !appliedOnRegion {
             let newDescription = MapRegionDescription(area: area!, elevation: 1)
-            let newRegion = MapRegion(forMap: self, description: newDescription, spriteRepository: mapDescription.spriteRepository)
+            let newRegion = MapRegion(forMap: self, description: newDescription)
             newRegions.append(newRegion)
             needsRebuilding = true
         }

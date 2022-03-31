@@ -1,20 +1,4 @@
 {
-    "spriteRepository": {
-        "tiles": [
-            { "spriteName": "default_tile" }
-        ],
-        "leftElevations": [
-            { "spriteName": "default_elevation_left" }
-        ],
-        "rightElevations": [
-            { "spriteName": "default_elevation_right" }
-        ],
-        "defaultSprites": {
-            "tile": 0,
-            "leftElevation": 0,
-            "rightElevation": 0
-        }
-    },
     "regions": [
         {
             "x": 2,
