@@ -9,6 +9,10 @@ import Foundation
 
 struct MapDescription: Codable {
     var regions: [MapRegionDescription]
+    
+    init() {
+        regions = []
+    }
 }
 
 struct MapRegionDescription: Codable {

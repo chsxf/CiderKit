@@ -19,14 +19,6 @@ class EditorGameView: GameView, ToolsDelegate {
     
     override init(frame frameRect: CGRect) {
         super.init(frame: frameRect)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func didCompleteInitialization() {
-        super.didCompleteInitialization()
         
         worldGrid = WorldGrid()
         scene!.addChild(worldGrid)
@@ -35,6 +27,10 @@ class EditorGameView: GameView, ToolsDelegate {
             self.selectionManager = SelectionManager(editorGameView: self)
             self.nextResponder = self.selectionManager
         }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func update(_ currentTime: TimeInterval, for scene: SKScene) {
@@ -118,6 +114,16 @@ class EditorGameView: GameView, ToolsDelegate {
         if area != nil {
             selectionModel.selectedCell = map.getMapCellEntity(atX: area!.x, y: area!.y)
         }
+    }
+    
+    override func unloadMap(removePreviousMap: Bool = true) {
+        super.unloadMap(removePreviousMap: removePreviousMap)
+        selectionModel.clear()
+    }
+    
+    override func loadMap(file: URL) {
+        super.loadMap(file: file)
+        selectionModel.clear()
     }
     
 }

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */; };
 		D91061B32755F0B400EA8A03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
-		D91061BF2755F23700EA8A03 /* map.json in Resources */ = {isa = PBXBuildFile; fileRef = D91061BE2755F23700EA8A03 /* map.json */; };
 		D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegion.swift */; };
 		D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C22755F24100EA8A03 /* MapDescription.swift */; };
 		D91061C62755F24100EA8A03 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C32755F24100EA8A03 /* MapNode.swift */; };
@@ -19,7 +18,6 @@
 		D91061D12755F27600EA8A03 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CA2755F27600EA8A03 /* Functions.swift */; };
 		D91061D22755F27600EA8A03 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CB2755F27600EA8A03 /* GameView.swift */; };
 		D91061D32755F27600EA8A03 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
-		D91061D62755F2D900EA8A03 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D91061D52755F2D900EA8A03 /* Info.plist */; };
 		D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91ED91227E7AA520016D818 /* EditorAssets.xcassets */; };
 		D936185C27E71ACE009A14E2 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C32755F24100EA8A03 /* MapNode.swift */; };
 		D936185D27E71ACE009A14E2 /* Keycode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C72755F27600EA8A03 /* Keycode.swift */; };
@@ -33,7 +31,6 @@
 		D936186927E71ACE009A14E2 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
 		D936186A27E71ACE009A14E2 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
 		D936186B27E71ACE009A14E2 /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
-		D936186E27E71ACE009A14E2 /* map.json in Resources */ = {isa = PBXBuildFile; fileRef = D91061BE2755F23700EA8A03 /* map.json */; };
 		D936186F27E71ACE009A14E2 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
 		D936187027E71ACE009A14E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
 		D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187A27E71D77009A14E2 /* EditorGameView.swift */; };
@@ -44,6 +41,7 @@
 		D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7E827DDEBBC00AC2465 /* InspectorView.swift */; };
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
 		D985E7ED27DE903700AC2465 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EC27DE903700AC2465 /* ToolsView.swift */; };
+		D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */; };
 		D9A87A8327DD320B0079C831 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
 		D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
 		D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
@@ -70,7 +68,7 @@
 		D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKitApp.swift; sourceTree = "<group>"; };
 		D91061B22755F0B400EA8A03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D91061B72755F0B400EA8A03 /* CiderKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit.entitlements; sourceTree = "<group>"; };
-		D91061BE2755F23700EA8A03 /* map.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = map.json; sourceTree = "<group>"; };
+		D91061BE2755F23700EA8A03 /* map.ckmap */ = {isa = PBXFileReference; explicitFileType = text.json; fileEncoding = 4; path = map.ckmap; sourceTree = "<group>"; };
 		D91061C12755F24100EA8A03 /* MapRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapRegion.swift; sourceTree = "<group>"; };
 		D91061C22755F24100EA8A03 /* MapDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDescription.swift; sourceTree = "<group>"; };
 		D91061C32755F24100EA8A03 /* MapNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapNode.swift; sourceTree = "<group>"; };
@@ -92,6 +90,7 @@
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		D985E7EA27DE38D300AC2465 /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
 		D985E7EC27DE903700AC2465 /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
+		D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorFunctions.swift; sourceTree = "<group>"; };
 		D9A87A8227DD320B0079C831 /* MapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCellComponent.swift; sourceTree = "<group>"; };
 		D9A87A8727DD43F10079C831 /* HoverShader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = HoverShader.fsh; sourceTree = "<group>"; };
 		D9B8557227EFC1A000D605F4 /* MapArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapArea.swift; sourceTree = "<group>"; };
@@ -170,7 +169,7 @@
 		D91061BD2755F1D600EA8A03 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D91061BE2755F23700EA8A03 /* map.json */,
+				D91061BE2755F23700EA8A03 /* map.ckmap */,
 				D9A87A8427DD43770079C831 /* Shaders */,
 			);
 			path = Resources;
@@ -194,11 +193,12 @@
 				D91061B72755F0B400EA8A03 /* CiderKit.entitlements */,
 				D91061D52755F2D900EA8A03 /* Info.plist */,
 				D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */,
+				D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */,
+				D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */,
 				D985E7EA27DE38D300AC2465 /* SelectionModel.swift */,
 				D9CC420F276163700081A464 /* WorldGrid.swift */,
 				D91ED91227E7AA520016D818 /* EditorAssets.xcassets */,
 				D985E7E727DDEBAA00AC2465 /* Views */,
-				D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */,
 			);
 			path = "CiderKit-Editor";
 			sourceTree = "<group>";
@@ -355,10 +355,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D91061BF2755F23700EA8A03 /* map.json in Resources */,
 				D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */,
 				D91061B32755F0B400EA8A03 /* Assets.xcassets in Resources */,
-				D91061D62755F2D900EA8A03 /* Info.plist in Resources */,
 				D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -367,7 +365,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D936186E27E71ACE009A14E2 /* map.json in Resources */,
 				D936186F27E71ACE009A14E2 /* HoverShader.fsh in Resources */,
 				D936187027E71ACE009A14E2 /* Assets.xcassets in Resources */,
 			);
@@ -389,6 +386,7 @@
 			files = (
 				D91061C62755F24100EA8A03 /* MapNode.swift in Sources */,
 				D91061CE2755F27600EA8A03 /* Keycode.swift in Sources */,
+				D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */,
 				D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */,
 				D91061D02755F27600EA8A03 /* CharacterComponent.swift in Sources */,
 				D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */,
@@ -581,6 +579,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "CiderKit-Editor/Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -608,6 +607,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "CiderKit-Editor/Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -635,6 +635,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TUP/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -662,6 +663,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TUP/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

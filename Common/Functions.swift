@@ -6,21 +6,16 @@
 //
 
 import Foundation
-import Combine
 
 class Functions {
-    static func load<T: Decodable>(_ filename: String) -> T {
+    static func load<T: Decodable>(_ url: URL) -> T {
         let data: Data
         
-        guard let file = Bundle.main.url(forResource: filename, withExtension: nil) else {
-            fatalError("Could not find \(filename) in the bundle")
-        }
-        
         do {
-            data = try Data(contentsOf: file)
+            data = try Data(contentsOf: url)
         }
         catch {
-            fatalError("Couldn't load \(filename) from main bundle:\n\(error)")
+            fatalError("Couldn't load \(url):\n\(error)")
         }
         
         do {
@@ -28,7 +23,7 @@ class Functions {
             return try decoder.decode(T.self, from: data)
         }
         catch {
-            fatalError("Couldn't parse \(filename) as \(T.self):\n\(error)")
+            fatalError("Couldn't parse \(url) as \(T.self):\n\(error)")
         }
     }
 }

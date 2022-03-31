@@ -37,35 +37,24 @@ class GameView: SKView, SKSceneDelegate {
         ignoresSiblingOrder = true
         allowsTransparency = true
         
-        try? Atlases.preload(atlases: [
-            "main": "Main Atlas",
-            "grid": "Grid Atlas"
-        ]) {
-            let scene = SKScene(size: frameRect.size)
-            self.gameScene = scene
-            scene.delegate = self
-            
-            self.didCompleteInitialization()
-        }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func didCompleteInitialization() {
+        let scene = SKScene(size: frameRect.size)
+        self.gameScene = scene
+        scene.delegate = self
+        
         let cam = SKCameraNode()
         gameScene.camera = cam
         gameScene.addChild(cam)
         
         presentScene(gameScene)
-      
-        let mapDescription: MapDescription = Functions.load("map.json")
-        map = MapNode(description: mapDescription)
-        gameScene.addChild(map)
         
+        unloadMap(removePreviousMap: false)
+      
         //self.initCharacter()
         initDebug()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 //    func initCharacter() {
@@ -168,6 +157,24 @@ class GameView: SKView, SKSceneDelegate {
         default:
             break
         }
+    }
+    
+    func loadMap(file: URL) {
+        unloadMap()
+        
+        let mapDescription: MapDescription = Functions.load(file)
+        map = MapNode(description: mapDescription)
+        gameScene.addChild(map!)
+    }
+    
+    func unloadMap(removePreviousMap: Bool = true) {
+        if removePreviousMap {
+            map.removeFromParent()
+        }
+        
+        let mapDescription = MapDescription()
+        map = MapNode(description: mapDescription)
+        gameScene.addChild(map)
     }
     
 }

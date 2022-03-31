@@ -25,4 +25,9 @@ class SelectionModel: ObservableObject {
         selectedCell = cell
     }
     
+    func clear() {
+        hoveredCell = nil
+        selectedCell = nil
+    }
+    
 }

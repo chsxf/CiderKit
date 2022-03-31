@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class MapNode: SKNode, Collection {
+class MapNode: SKNode, Collection, ObservableObject {
     
     static let elevationHeight: Int = 10
     
@@ -23,6 +23,8 @@ class MapNode: SKNode, Collection {
     
     var startIndex: Int { regions.startIndex }
     var endIndex: Int { regions.endIndex }
+    
+    @Published private(set) var dirty: Bool = false
     
     subscript(position: Int) -> MapRegion {
         return regions[position]
@@ -54,6 +56,14 @@ class MapNode: SKNode, Collection {
     }
     
     func index(after i: Int) -> Int { regions.index(after: i) }
+    
+    func toMapDescription() -> MapDescription {
+        var mapDescription = MapDescription()
+        for region in regions {
+            mapDescription.regions.append(region.regionDescription)
+        }
+        return mapDescription
+    }
     
     private func sortRegions() {
         regions.sort()
@@ -182,6 +192,7 @@ extension MapNode {
         
         if needsRebuilding {
             buildRegions()
+            dirty = true
         }
     }
     
@@ -222,7 +233,12 @@ extension MapNode {
         
         if needsRebuilding {
             buildRegions()
+            dirty = true
         }
+    }
+    
+    func clearDirtyFlag() {
+        dirty = false
     }
     
 }
