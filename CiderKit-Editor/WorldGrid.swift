@@ -163,6 +163,7 @@ class WorldGrid: SKNode {
                 if spriteIsVisible(atCoordinates: position, inRect: viewport) {
                     let sprite = getSprite(withElement: element)!
                     sprite.position = position
+                    sprite.zPosition = -10
                     addChild(sprite)
                 }
             }

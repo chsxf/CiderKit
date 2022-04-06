@@ -65,9 +65,7 @@ class MapNode: SKNode, Collection, ObservableObject {
         return mapDescription
     }
     
-    private func sortRegions() {
-        regions.sort()
-        
+    private func updateRegionsZPosition() {
         var index = 0
         for region in regions {
             region.zPosition = CGFloat(index)
@@ -75,10 +73,16 @@ class MapNode: SKNode, Collection, ObservableObject {
         }
     }
     
+    private func sortRegions() {
+        regions.sort()
+        updateRegionsZPosition()
+    }
+    
     private func buildRegions() {
         for region in regions {
             region.build()
         }
+        updateRegionsZPosition()
     }
     
     func getLeftVisibleElevation(forX x: Int, andY y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
@@ -181,10 +185,11 @@ extension MapNode {
             needsRebuilding = true
         }
         
+        regions.forEach({ $0.removeFromParent() })
         regions.removeAll(where: { regionsToRemove.contains($0) })
-        regionsToRemove.forEach({ $0.removeFromParent() })
         regions.append(contentsOf: newRegions)
-        newRegions.forEach({ addChild($0) })
+        mergeRegions()
+        regions.forEach({ addChild($0) })
         
         if previousRegionCount < regions.count {
             sortRegions()
@@ -222,10 +227,11 @@ extension MapNode {
             }
         }
         
+        regions.forEach({ $0.removeFromParent() })
         regions.removeAll(where: { regionsToRemove.contains($0) })
-        regionsToRemove.forEach({ $0.removeFromParent() })
         regions.append(contentsOf: newRegions)
-        newRegions.forEach({ addChild($0) })
+        mergeRegions()
+        regions.forEach({ addChild($0) })
         
         if previousRegionCount < regions.count {
             sortRegions()
@@ -235,6 +241,32 @@ extension MapNode {
             buildRegions()
             dirty = true
         }
+    }
+    
+    private func mergeRegions() {
+        guard regions.count > 1 else {
+            return
+        }
+        
+        var regionsHaveChanged: Bool
+        repeat {
+            regionsHaveChanged = false
+            var i = 0
+            while i < regions.count-1 {
+                let region = regions[i]
+                for i2 in i+1..<regions.count {
+                    let region2 = regions[i2]
+                    if let newRegionDescription = region.regionDescription.merge(with: region2.regionDescription) {
+                        let newRegion = MapRegion(forMap: self, description: newRegionDescription)
+                        regions[i] = newRegion
+                        regions.remove(at: i2)
+                        regionsHaveChanged = true
+                        break
+                    }
+                }
+                i += 1
+            }
+        } while regionsHaveChanged
     }
     
     func clearDirtyFlag() {

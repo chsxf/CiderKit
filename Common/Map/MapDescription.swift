@@ -39,3 +39,36 @@ struct MapRegionDescription: Codable {
     }
     
 }
+
+#if CIDERKIT_EDITOR
+extension MapRegionDescription {
+    func merge(with other: MapRegionDescription) -> MapRegionDescription? {
+        guard elevation == other.elevation else {
+            return nil
+        }
+        
+        if area.width == other.area.width && area.minX == other.area.minX
+                    && (area.maxY == other.area.minY || other.area.maxY == area.minY) {
+            return MapRegionDescription(
+                x: area.minX,
+                y: min(area.minY, other.area.minY),
+                width: area.width,
+                height: area.height + other.area.height,
+                elevation: elevation
+            )
+        }
+        else if area.height == other.area.height && area.minY == other.area.minY
+                    && (area.maxX == other.area.minX || other.area.maxX == area.minX) {
+            return MapRegionDescription(
+                x: min(area.minX, other.area.minX),
+                y: area.minY,
+                width: area.width + other.area.width,
+                height: area.height,
+                elevation: elevation
+            )
+        }
+        
+        return nil
+    }
+}
+#endif
