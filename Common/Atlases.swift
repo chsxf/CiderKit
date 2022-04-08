@@ -12,7 +12,7 @@ enum AtlasesError: Error {
     case alreadyPreloading
 }
 
-final class Atlases {
+final public class Atlases {
     
     private static let MAIN_ATLAS_KEY = "main"
     
@@ -24,7 +24,7 @@ final class Atlases {
     private static var remainingToPreload: Int = 0
     private static var preloadCallback: (() -> Void)? = nil
     
-    static func preload(atlases: [String: String], completionHandler: @escaping () -> Void) throws {
+    static public func preload(atlases: [String: String], completionHandler: @escaping () -> Void) throws {
         if preloading {
             throw AtlasesError.alreadyPreloading
         }

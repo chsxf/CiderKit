@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameView: SKView, SKSceneDelegate {
+public class GameView: SKView, SKSceneDelegate {
 
     internal var gameScene: SKScene!
     
@@ -28,7 +28,7 @@ class GameView: SKView, SKSceneDelegate {
         .downArrow: false
     ]
     
-    override init(frame frameRect: CGRect) {
+    override public init(frame frameRect: CGRect) {
         super.init(frame: frameRect)
 
         showsFPS = true
@@ -86,7 +86,7 @@ class GameView: SKView, SKSceneDelegate {
         gameScene.camera!.addChild(debugNode)
     }
     
-    func update(_ currentTime: TimeInterval, for scene: SKScene) {
+    public func update(_ currentTime: TimeInterval, for scene: SKScene) {
 //        guard let lastTime = lastTime else {
 //            lastTime = currentTime
 //            return
@@ -128,7 +128,7 @@ class GameView: SKView, SKSceneDelegate {
 //        debugNode.text = debugMessage
     }
     
-    override func keyDown(with event: NSEvent) {
+    override public func keyDown(with event: NSEvent) {
         guard
             !event.isARepeat,
             let keycode = Keycode(rawValue: event.keyCode)
@@ -145,7 +145,7 @@ class GameView: SKView, SKSceneDelegate {
         }
     }
     
-    override func keyUp(with event: NSEvent) {
+    override public func keyUp(with event: NSEvent) {
         guard let keycode = Keycode(rawValue: event.keyCode) else {
             return
         }
@@ -159,7 +159,7 @@ class GameView: SKView, SKSceneDelegate {
         }
     }
     
-    func loadMap(file: URL) {
+    public func loadMap(file: URL) {
         unloadMap()
         
         let mapDescription: MapDescription = Functions.load(file)
@@ -167,7 +167,7 @@ class GameView: SKView, SKSceneDelegate {
         gameScene.addChild(map!)
     }
     
-    func unloadMap(removePreviousMap: Bool = true) {
+    public func unloadMap(removePreviousMap: Bool = true) {
         if removePreviousMap {
             map.removeFromParent()
         }

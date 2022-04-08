@@ -8,9 +8,9 @@
 import Foundation
 import AppKit
 
-class Screen {
+public class Screen {
     
-    class func getBestMatchingSceneSizeOnMainScreen(_ size: CGSize) -> CGSize {
+    public class func getBestMatchingSceneSizeOnMainScreen(_ size: CGSize) -> CGSize {
         guard let mainScreen = NSScreen.main else {
             return size
         }

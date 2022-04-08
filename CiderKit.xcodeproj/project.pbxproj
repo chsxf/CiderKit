@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D90047BB28017AC3003CE96C /* map.ckmap in Resources */ = {isa = PBXBuildFile; fileRef = D91061BE2755F23700EA8A03 /* map.ckmap */; };
+		D90047BC28017B63003CE96C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
 		D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */; };
 		D91061B32755F0B400EA8A03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
 		D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegion.swift */; };
@@ -19,22 +21,28 @@
 		D91061D22755F27600EA8A03 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CB2755F27600EA8A03 /* GameView.swift */; };
 		D91061D32755F27600EA8A03 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
 		D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91ED91227E7AA520016D818 /* EditorAssets.xcassets */; };
-		D936185C27E71ACE009A14E2 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C32755F24100EA8A03 /* MapNode.swift */; };
-		D936185D27E71ACE009A14E2 /* Keycode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C72755F27600EA8A03 /* Keycode.swift */; };
-		D936185E27E71ACE009A14E2 /* CharacterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C92755F27600EA8A03 /* CharacterComponent.swift */; };
-		D936186027E71ACE009A14E2 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
-		D936186127E71ACE009A14E2 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CA2755F27600EA8A03 /* Functions.swift */; };
-		D936186327E71ACE009A14E2 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CB2755F27600EA8A03 /* GameView.swift */; };
-		D936186427E71ACE009A14E2 /* MapRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegion.swift */; };
-		D936186527E71ACE009A14E2 /* MapDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C22755F24100EA8A03 /* MapDescription.swift */; };
-		D936186827E71ACE009A14E2 /* Atlases.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C82755F27600EA8A03 /* Atlases.swift */; };
-		D936186927E71ACE009A14E2 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
-		D936186A27E71ACE009A14E2 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
-		D936186B27E71ACE009A14E2 /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
-		D936186F27E71ACE009A14E2 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
-		D936187027E71ACE009A14E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
 		D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187A27E71D77009A14E2 /* EditorGameView.swift */; };
-		D936187D27E71D8C009A14E2 /* TheUntitledProjectApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187C27E71D8C009A14E2 /* TheUntitledProjectApp.swift */; };
+		D93C4C932800CBD6000955E1 /* CiderKit_Engine.docc in Sources */ = {isa = PBXBuildFile; fileRef = D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */; };
+		D93C4C992800CBD6000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
+		D93C4C9E2800CBD6000955E1 /* CiderKit_EngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C4C9D2800CBD6000955E1 /* CiderKit_EngineTests.swift */; };
+		D93C4C9F2800CBD6000955E1 /* CiderKit_Engine.h in Headers */ = {isa = PBXBuildFile; fileRef = D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93C4CA62800CBE0000955E1 /* Atlases.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C82755F27600EA8A03 /* Atlases.swift */; };
+		D93C4CA72800CBE0000955E1 /* CharacterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C92755F27600EA8A03 /* CharacterComponent.swift */; };
+		D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
+		D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CA2755F27600EA8A03 /* Functions.swift */; };
+		D93C4CAB2800CBE0000955E1 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CECB2627E91DB0000E8CC7 /* Screen.swift */; };
+		D93C4CAC2800CBE0000955E1 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
+		D93C4CAD2800CBE0000955E1 /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
+		D93C4CAE2800CBE0000955E1 /* Keycode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C72755F27600EA8A03 /* Keycode.swift */; };
+		D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C22755F24100EA8A03 /* MapDescription.swift */; };
+		D93C4CB02800CBE8000955E1 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
+		D93C4CB12800CBE8000955E1 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C32755F24100EA8A03 /* MapNode.swift */; };
+		D93C4CB22800CBE8000955E1 /* MapRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegion.swift */; };
+		D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
+		D93C4CB42800CBED000955E1 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CB2755F27600EA8A03 /* GameView.swift */; };
+		D93C4CBC2800CC18000955E1 /* CiderKit_PlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C4CBB2800CC18000955E1 /* CiderKit_PlayerApp.swift */; };
+		D93C4CC92800CC25000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
+		D93C4CCA2800CC25000955E1 /* CiderKit_Engine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D96809A627E9283E001D2C04 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CECB2627E91DB0000E8CC7 /* Screen.swift */; };
 		D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */; };
 		D9730B1527B795A40007513C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
@@ -45,15 +53,27 @@
 		D9A87A8327DD320B0079C831 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
 		D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
 		D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
-		D9B8557427EFC1A000D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
 		D9B8558627F0C8CD00D605F4 /* MapAreaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */; };
 		D9B8558727F0CD3100D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
-		D9CECB2827E91DB0000E8CC7 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CECB2627E91DB0000E8CC7 /* Screen.swift */; };
 		D9FBC5732765EA6A004A30BB /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D93C4C9A2800CBD6000955E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D91061A32755F0B200EA8A03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D93C4C8E2800CBD6000955E1;
+			remoteInfo = "CiderKit-Engine";
+		};
+		D93C4CCB2800CC25000955E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D91061A32755F0B200EA8A03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D93C4C8E2800CBD6000955E1;
+			remoteInfo = "CiderKit-Engine";
+		};
 		D9B8557D27F0C86F00D605F4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D91061A32755F0B200EA8A03 /* Project object */;
@@ -62,6 +82,20 @@
 			remoteInfo = "CiderKit-Editor";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D93C4CCD2800CC25000955E1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D93C4CCA2800CC25000955E1 /* CiderKit_Engine.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D91061AB2755F0B200EA8A03 /* CiderKit-Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CiderKit-Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,11 +114,16 @@
 		D91061CC2755F27600EA8A03 /* Atlas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atlas.swift; sourceTree = "<group>"; };
 		D91061D52755F2D900EA8A03 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D91ED91227E7AA520016D818 /* EditorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = EditorAssets.xcassets; sourceTree = "<group>"; };
-		D936187527E71ACE009A14E2 /* TUP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TUP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D936187827E71CE5009A14E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D936187927E71CEB009A14E2 /* TUP.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TUP.entitlements; sourceTree = "<group>"; };
 		D936187A27E71D77009A14E2 /* EditorGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorGameView.swift; sourceTree = "<group>"; };
-		D936187C27E71D8C009A14E2 /* TheUntitledProjectApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheUntitledProjectApp.swift; sourceTree = "<group>"; };
+		D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CiderKit_Engine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CiderKit_Engine.h; sourceTree = "<group>"; };
+		D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = CiderKit_Engine.docc; sourceTree = "<group>"; };
+		D93C4C982800CBD6000955E1 /* CiderKit-EngineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CiderKit-EngineTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D93C4C9D2800CBD6000955E1 /* CiderKit_EngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKit_EngineTests.swift; sourceTree = "<group>"; };
+		D93C4CB92800CC18000955E1 /* CiderKit-Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CiderKit-Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D93C4CBB2800CC18000955E1 /* CiderKit_PlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKit_PlayerApp.swift; sourceTree = "<group>"; };
+		D93C4CC42800CC1B000955E1 /* CiderKit_Player.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit_Player.entitlements; sourceTree = "<group>"; };
 		D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionManager.swift; sourceTree = "<group>"; };
 		D9730B1427B795A40007513C /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
@@ -109,10 +148,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D936186C27E71ACE009A14E2 /* Frameworks */ = {
+		D93C4C8C2800CBD6000955E1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D93C4C952800CBD6000955E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D93C4C992800CBD6000955E1 /* CiderKit_Engine.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D93C4CB62800CC18000955E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D93C4CC92800CC25000955E1 /* CiderKit_Engine.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,9 +187,12 @@
 				D936187627E71B10009A14E2 /* CiderKit-Editor */,
 				D9B8557A27F0C86F00D605F4 /* CiderKit-EditorTests */,
 				D91061AD2755F0B200EA8A03 /* Common */,
+				D93C4C902800CBD6000955E1 /* CiderKit-Engine */,
+				D93C4C9C2800CBD6000955E1 /* CiderKit-EngineTests */,
+				D93C4CBA2800CC18000955E1 /* CiderKit-Player */,
 				D91061AC2755F0B200EA8A03 /* Products */,
 				D91061BD2755F1D600EA8A03 /* Resources */,
-				D936187727E71CC3009A14E2 /* TUP */,
+				D93C4CC82800CC25000955E1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,8 +200,10 @@
 			isa = PBXGroup;
 			children = (
 				D91061AB2755F0B200EA8A03 /* CiderKit-Editor.app */,
-				D936187527E71ACE009A14E2 /* TUP.app */,
 				D9B8557927F0C86F00D605F4 /* CiderKit-EditorTests.xctest */,
+				D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */,
+				D93C4C982800CBD6000955E1 /* CiderKit-EngineTests.xctest */,
+				D93C4CB92800CC18000955E1 /* CiderKit-Player.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -203,14 +263,38 @@
 			path = "CiderKit-Editor";
 			sourceTree = "<group>";
 		};
-		D936187727E71CC3009A14E2 /* TUP */ = {
+		D93C4C902800CBD6000955E1 /* CiderKit-Engine */ = {
 			isa = PBXGroup;
 			children = (
-				D936187927E71CEB009A14E2 /* TUP.entitlements */,
-				D936187827E71CE5009A14E2 /* Info.plist */,
-				D936187C27E71D8C009A14E2 /* TheUntitledProjectApp.swift */,
+				D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */,
+				D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */,
 			);
-			path = TUP;
+			path = "CiderKit-Engine";
+			sourceTree = "<group>";
+		};
+		D93C4C9C2800CBD6000955E1 /* CiderKit-EngineTests */ = {
+			isa = PBXGroup;
+			children = (
+				D93C4C9D2800CBD6000955E1 /* CiderKit_EngineTests.swift */,
+			);
+			path = "CiderKit-EngineTests";
+			sourceTree = "<group>";
+		};
+		D93C4CBA2800CC18000955E1 /* CiderKit-Player */ = {
+			isa = PBXGroup;
+			children = (
+				D93C4CC42800CC1B000955E1 /* CiderKit_Player.entitlements */,
+				D936187827E71CE5009A14E2 /* Info.plist */,
+				D93C4CBB2800CC18000955E1 /* CiderKit_PlayerApp.swift */,
+			);
+			path = "CiderKit-Player";
+			sourceTree = "<group>";
+		};
+		D93C4CC82800CC25000955E1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		D96BDEC627EBD5B80097A0BD /* Views */ = {
@@ -257,6 +341,17 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		D93C4C8A2800CBD6000955E1 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D93C4C9F2800CBD6000955E1 /* CiderKit_Engine.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		D91061AA2755F0B200EA8A03 /* CiderKit-Editor */ = {
 			isa = PBXNativeTarget;
@@ -275,21 +370,59 @@
 			productReference = D91061AB2755F0B200EA8A03 /* CiderKit-Editor.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D936185A27E71ACE009A14E2 /* TUP */ = {
+		D93C4C8E2800CBD6000955E1 /* CiderKit-Engine */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D936187227E71ACE009A14E2 /* Build configuration list for PBXNativeTarget "TUP" */;
+			buildConfigurationList = D93C4CA42800CBD6000955E1 /* Build configuration list for PBXNativeTarget "CiderKit-Engine" */;
 			buildPhases = (
-				D936185B27E71ACE009A14E2 /* Sources */,
-				D936186C27E71ACE009A14E2 /* Frameworks */,
-				D936186D27E71ACE009A14E2 /* Resources */,
+				D93C4C8A2800CBD6000955E1 /* Headers */,
+				D93C4C8B2800CBD6000955E1 /* Sources */,
+				D93C4C8C2800CBD6000955E1 /* Frameworks */,
+				D93C4C8D2800CBD6000955E1 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = TUP;
-			productName = CiderKit;
-			productReference = D936187527E71ACE009A14E2 /* TUP.app */;
+			name = "CiderKit-Engine";
+			productName = "CiderKit-Engine";
+			productReference = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D93C4C972800CBD6000955E1 /* CiderKit-EngineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D93C4CA52800CBD6000955E1 /* Build configuration list for PBXNativeTarget "CiderKit-EngineTests" */;
+			buildPhases = (
+				D93C4C942800CBD6000955E1 /* Sources */,
+				D93C4C952800CBD6000955E1 /* Frameworks */,
+				D93C4C962800CBD6000955E1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D93C4C9B2800CBD6000955E1 /* PBXTargetDependency */,
+			);
+			name = "CiderKit-EngineTests";
+			productName = "CiderKit-EngineTests";
+			productReference = D93C4C982800CBD6000955E1 /* CiderKit-EngineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D93C4CB82800CC18000955E1 /* CiderKit-Player */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D93C4CC52800CC1B000955E1 /* Build configuration list for PBXNativeTarget "CiderKit-Player" */;
+			buildPhases = (
+				D93C4CB52800CC18000955E1 /* Sources */,
+				D93C4CB62800CC18000955E1 /* Frameworks */,
+				D93C4CB72800CC18000955E1 /* Resources */,
+				D93C4CCD2800CC25000955E1 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D93C4CCC2800CC25000955E1 /* PBXTargetDependency */,
+			);
+			name = "CiderKit-Player";
+			productName = "CiderKit-Player";
+			productReference = D93C4CB92800CC18000955E1 /* CiderKit-Player.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D9B8557827F0C86F00D605F4 /* CiderKit-EditorTests */ = {
@@ -323,6 +456,15 @@
 					D91061AA2755F0B200EA8A03 = {
 						CreatedOnToolsVersion = 13.1;
 					};
+					D93C4C8E2800CBD6000955E1 = {
+						CreatedOnToolsVersion = 13.3;
+					};
+					D93C4C972800CBD6000955E1 = {
+						CreatedOnToolsVersion = 13.3;
+					};
+					D93C4CB82800CC18000955E1 = {
+						CreatedOnToolsVersion = 13.3;
+					};
 					D9B8557827F0C86F00D605F4 = {
 						CreatedOnToolsVersion = 13.3;
 						LastSwiftMigration = 1330;
@@ -344,8 +486,10 @@
 			projectRoot = "";
 			targets = (
 				D91061AA2755F0B200EA8A03 /* CiderKit-Editor */,
-				D936185A27E71ACE009A14E2 /* TUP */,
 				D9B8557827F0C86F00D605F4 /* CiderKit-EditorTests */,
+				D93C4C8E2800CBD6000955E1 /* CiderKit-Engine */,
+				D93C4C972800CBD6000955E1 /* CiderKit-EngineTests */,
+				D93C4CB82800CC18000955E1 /* CiderKit-Player */,
 			);
 		};
 /* End PBXProject section */
@@ -361,12 +505,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D936186D27E71ACE009A14E2 /* Resources */ = {
+		D93C4C8D2800CBD6000955E1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D936186F27E71ACE009A14E2 /* HoverShader.fsh in Resources */,
-				D936187027E71ACE009A14E2 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D93C4C962800CBD6000955E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D93C4CB72800CC18000955E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D90047BC28017B63003CE96C /* Assets.xcassets in Resources */,
+				D90047BB28017AC3003CE96C /* map.ckmap in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,25 +567,41 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D936185B27E71ACE009A14E2 /* Sources */ = {
+		D93C4C8B2800CBD6000955E1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D936185C27E71ACE009A14E2 /* MapNode.swift in Sources */,
-				D936185D27E71ACE009A14E2 /* Keycode.swift in Sources */,
-				D9B8557427EFC1A000D605F4 /* MapArea.swift in Sources */,
-				D936185E27E71ACE009A14E2 /* CharacterComponent.swift in Sources */,
-				D936186027E71ACE009A14E2 /* Math.swift in Sources */,
-				D936186127E71ACE009A14E2 /* Functions.swift in Sources */,
-				D936186327E71ACE009A14E2 /* GameView.swift in Sources */,
-				D936187D27E71D8C009A14E2 /* TheUntitledProjectApp.swift in Sources */,
-				D9CECB2827E91DB0000E8CC7 /* Screen.swift in Sources */,
-				D936186427E71ACE009A14E2 /* MapRegion.swift in Sources */,
-				D936186527E71ACE009A14E2 /* MapDescription.swift in Sources */,
-				D936186827E71ACE009A14E2 /* Atlases.swift in Sources */,
-				D936186927E71ACE009A14E2 /* Atlas.swift in Sources */,
-				D936186A27E71ACE009A14E2 /* MapCellComponent.swift in Sources */,
-				D936186B27E71ACE009A14E2 /* SpritePool.swift in Sources */,
+				D93C4CB22800CBE8000955E1 /* MapRegion.swift in Sources */,
+				D93C4CB12800CBE8000955E1 /* MapNode.swift in Sources */,
+				D93C4CA72800CBE0000955E1 /* CharacterComponent.swift in Sources */,
+				D93C4CB02800CBE8000955E1 /* MapCellComponent.swift in Sources */,
+				D93C4CB42800CBED000955E1 /* GameView.swift in Sources */,
+				D93C4C932800CBD6000955E1 /* CiderKit_Engine.docc in Sources */,
+				D93C4CA62800CBE0000955E1 /* Atlases.swift in Sources */,
+				D93C4CAC2800CBE0000955E1 /* Math.swift in Sources */,
+				D93C4CAE2800CBE0000955E1 /* Keycode.swift in Sources */,
+				D93C4CAD2800CBE0000955E1 /* SpritePool.swift in Sources */,
+				D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */,
+				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
+				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
+				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,
+				D93C4CAB2800CBE0000955E1 /* Screen.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D93C4C942800CBD6000955E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D93C4C9E2800CBD6000955E1 /* CiderKit_EngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D93C4CB52800CC18000955E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D93C4CBC2800CC18000955E1 /* CiderKit_PlayerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,6 +617,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D93C4C9B2800CBD6000955E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D93C4C8E2800CBD6000955E1 /* CiderKit-Engine */;
+			targetProxy = D93C4C9A2800CBD6000955E1 /* PBXContainerItemProxy */;
+		};
+		D93C4CCC2800CC25000955E1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D93C4C8E2800CBD6000955E1 /* CiderKit-Engine */;
+			targetProxy = D93C4CCB2800CC25000955E1 /* PBXContainerItemProxy */;
+		};
 		D9B8557E27F0C86F00D605F4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D91061AA2755F0B200EA8A03 /* CiderKit-Editor */;
@@ -622,57 +806,155 @@
 			};
 			name = Release;
 		};
-		D936187327E71ACE009A14E2 /* Debug */ = {
+		D93C4CA02800CBD6000955E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 5L9YG7YEUA;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-Engine";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D93C4CA12800CBD6000955E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 5L9YG7YEUA;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-Engine";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		D93C4CA22800CBD6000955E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5L9YG7YEUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-EngineTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D93C4CA32800CBD6000955E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5L9YG7YEUA;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-EngineTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		D93C4CC62800CC1B000955E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = TUP/TUP.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "CiderKit-Player/CiderKit_Player.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TUP/Info.plist;
+				INFOPLIST_FILE = "CiderKit-Player/Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.xhaleera.TUP;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		D936187427E71ACE009A14E2 /* Release */ = {
+		D93C4CC72800CC1B000955E1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = TUP/TUP.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "CiderKit-Player/CiderKit_Player.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TUP/Info.plist;
+				INFOPLIST_FILE = "CiderKit-Player/Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.xhaleera.TUP;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-Player";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -748,11 +1030,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D936187227E71ACE009A14E2 /* Build configuration list for PBXNativeTarget "TUP" */ = {
+		D93C4CA42800CBD6000955E1 /* Build configuration list for PBXNativeTarget "CiderKit-Engine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D936187327E71ACE009A14E2 /* Debug */,
-				D936187427E71ACE009A14E2 /* Release */,
+				D93C4CA02800CBD6000955E1 /* Debug */,
+				D93C4CA12800CBD6000955E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D93C4CA52800CBD6000955E1 /* Build configuration list for PBXNativeTarget "CiderKit-EngineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D93C4CA22800CBD6000955E1 /* Debug */,
+				D93C4CA32800CBD6000955E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D93C4CC52800CC1B000955E1 /* Build configuration list for PBXNativeTarget "CiderKit-Player" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D93C4CC62800CC1B000955E1 /* Debug */,
+				D93C4CC72800CC1B000955E1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
