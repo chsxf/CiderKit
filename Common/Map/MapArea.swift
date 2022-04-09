@@ -7,45 +7,45 @@
 
 import Foundation
 
-struct MapArea: Equatable {
+public struct MapArea: Equatable {
     
-    var x: Int
-    var y: Int
+    public var x: Int
+    public var y: Int
     
-    var width: Int
-    var height: Int
+    public var width: Int
+    public var height: Int
     
-    var minX: Int { x }
-    var maxX: Int { x + width }
+    public var minX: Int { x }
+    public var maxX: Int { x + width }
     
-    var minY: Int { y }
-    var maxY: Int { y + height }
+    public var minY: Int { y }
+    public var maxY: Int { y + height }
     
-    var rect: CGRect { CGRect(x: x, y: y, width: width, height: height) }
+    public var rect: CGRect { CGRect(x: x, y: y, width: width, height: height) }
     
-    init(x: Int, y: Int, width: Int, height: Int) {
+    public init(x: Int, y: Int, width: Int, height: Int) {
         self.x = x
         self.y = y
         self.width = width
         self.height = height
     }
     
-    init(from rect: CGRect) {
+    public init(from rect: CGRect) {
         let integral = rect.integral
         self.init(x: Int(integral.minX), y: Int(integral.minY), width: Int(integral.width), height: Int(integral.height))
     }
     
-    func contains(_ other: MapArea) -> Bool {
+    public func contains(_ other: MapArea) -> Bool {
         return minX <= other.minX && maxX >= other.maxX && minY <= other.minY && maxY >= other.maxY
     }
     
-    func intersects(_ other: MapArea) -> Bool {
+    public func intersects(_ other: MapArea) -> Bool {
         let overlapsOnX = (maxX > other.minX && minX < other.maxX)
         let overlapsOnY = (maxY > other.minY && minY < other.maxY)
         return overlapsOnX && overlapsOnY
     }
     
-    func intersection(_ other: MapArea) -> MapArea? {
+    public func intersection(_ other: MapArea) -> MapArea? {
         var intersectionArea: MapArea? = nil
         
         if intersects(other) {

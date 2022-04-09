@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import CiderKit_Engine
 
 class MapAreaTests: XCTestCase {
 

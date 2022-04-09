@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D90047BB28017AC3003CE96C /* map.ckmap in Resources */ = {isa = PBXBuildFile; fileRef = D91061BE2755F23700EA8A03 /* map.ckmap */; };
 		D90047BC28017B63003CE96C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
+		D90047BD28017D29003CE96C /* MapAreaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */; };
 		D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */; };
 		D91061B32755F0B400EA8A03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
 		D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegion.swift */; };
@@ -53,8 +54,6 @@
 		D9A87A8327DD320B0079C831 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
 		D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
 		D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
-		D9B8558627F0C8CD00D605F4 /* MapAreaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */; };
-		D9B8558727F0CD3100D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
 		D9FBC5732765EA6A004A30BB /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
 /* End PBXBuildFile section */
@@ -275,6 +274,7 @@
 		D93C4C9C2800CBD6000955E1 /* CiderKit-EngineTests */ = {
 			isa = PBXGroup;
 			children = (
+				D9B8558427F0C8CD00D605F4 /* Map */,
 				D93C4C9D2800CBD6000955E1 /* CiderKit_EngineTests.swift */,
 			);
 			path = "CiderKit-EngineTests";
@@ -326,7 +326,6 @@
 		D9B8557A27F0C86F00D605F4 /* CiderKit-EditorTests */ = {
 			isa = PBXGroup;
 			children = (
-				D9B8558427F0C8CD00D605F4 /* Map */,
 			);
 			path = "CiderKit-EditorTests";
 			sourceTree = "<group>";
@@ -594,6 +593,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D93C4C9E2800CBD6000955E1 /* CiderKit_EngineTests.swift in Sources */,
+				D90047BD28017D29003CE96C /* MapAreaTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -609,8 +609,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9B8558627F0C8CD00D605F4 /* MapAreaTests.swift in Sources */,
-				D9B8558727F0CD3100D605F4 /* MapArea.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
