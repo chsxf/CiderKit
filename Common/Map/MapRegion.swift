@@ -29,9 +29,9 @@ class MapRegion : SKNode, Identifiable, Comparable {
         cellEntities.removeAll()
         removeAllChildren()
         
-        let texture = Atlases.main["default_tile"]
-        let leftElevationTexture = Atlases.main["default_elevation_left"]
-        let rightElevationTexture = Atlases.main["default_elevation_right"]
+        let groundMaterial = try! Materials["default_ground"]
+        let leftElevationMaterial = try! Materials["default_elevation_left"]
+        let rightElevationMaterial = try! Materials["default_elevation_right"]
         
         for x in 0..<Int(regionDescription.area.width) {
             let mapX = x + Int(regionDescription.area.minX)
@@ -42,27 +42,32 @@ class MapRegion : SKNode, Identifiable, Comparable {
                 let isoX = MapNode.halfWidth * (mapX - mapY)
                 let isoY = (regionDescription.elevation * MapNode.elevationHeight) - MapNode.halfHeight * (mapY + mapX)
                 
+                leftElevationMaterial.reset()
                 let leftElevationCount = map!.getLeftVisibleElevation(forX: mapX, andY: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<leftElevationCount {
-                    let sprite = SKSpriteNode(texture: leftElevationTexture)
+                    let sprite = SKSpriteNode(texture: nil)
                     sprite.anchorPoint = CGPoint(x: 1, y: 1)
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -2
+                    leftElevationMaterial.applyOn(spriteNode: sprite)
                     addChild(sprite)
                 }
 
+                rightElevationMaterial.reset()
                 let rightElevationCount = map!.getRightVisibleElevation(forX: mapX, andY: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<rightElevationCount {
-                    let sprite = SKSpriteNode(texture: rightElevationTexture)
+                    let sprite = SKSpriteNode(texture: nil)
                     sprite.anchorPoint = CGPoint(x: 0, y: 1)
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -1
+                    rightElevationMaterial.applyOn(spriteNode: sprite)
                     addChild(sprite)
                 }
-                
-                let sprite = SKSpriteNode(texture: texture)
+            
+                let sprite = SKSpriteNode(texture: nil)
                 sprite.anchorPoint = CGPoint(x: 0.5, y: 1)
                 sprite.position = CGPoint(x: isoX, y: isoY)
+                groundMaterial.applyOn(spriteNode: sprite)
                 addChild(sprite)
                 
                 let entity = GKEntity()

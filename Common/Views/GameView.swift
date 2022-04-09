@@ -44,6 +44,7 @@ public class GameView: SKView, SKSceneDelegate {
       
         //self.initCharacter()
         initDebug()
+        initDefaultMaterials()
     }
     
     required init?(coder: NSCoder) {
@@ -77,6 +78,17 @@ public class GameView: SKView, SKSceneDelegate {
         debugNode.horizontalAlignmentMode = .left
 
         gameScene.camera!.addChild(debugNode)
+    }
+    
+    func initDefaultMaterials() {
+        let defaultGroundMaterial = BaseMaterial(sprite: Atlases.main["default_tile"])
+        try! Materials.register(material: defaultGroundMaterial, forName: "default_ground")
+        
+        let defaultLeftElevationMaterial = BaseMaterial(sprite: Atlases.main["default_elevation_left"])
+        try! Materials.register(material: defaultLeftElevationMaterial, forName: "default_elevation_left")
+        
+        let defaultRightElevationMaterial = BaseMaterial(sprite: Atlases.main["default_elevation_right"])
+        try! Materials.register(material: defaultRightElevationMaterial, forName: "default_elevation_right")
     }
     
     public func update(_ currentTime: TimeInterval, for scene: SKScene) {

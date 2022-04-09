@@ -10,9 +10,7 @@ final class Atlas {
     }
     
     func preload(completionHandler: @escaping () -> Void) {
-        atlas.preload {
-            completionHandler()
-        }
+        atlas.preload(completionHandler: completionHandler)
     }
     
     subscript(textureName: String) -> SKTexture {

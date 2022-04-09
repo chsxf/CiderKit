@@ -23,6 +23,12 @@
 		D91061D32755F27600EA8A03 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
 		D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91ED91227E7AA520016D818 /* EditorAssets.xcassets */; };
 		D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187A27E71D77009A14E2 /* EditorGameView.swift */; };
+		D93C24F42801EBBE0023FE7A /* RandomizedMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */; };
+		D93C24F52801EBBE0023FE7A /* BaseMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */; };
+		D93C24F62801EBBE0023FE7A /* SequenceMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C2832801903800B17CD0 /* SequenceMaterial.swift */; };
+		D93C24F82801EBC90023FE7A /* CellRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */; };
+		D93C24FA280227500023FE7A /* Materials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24F9280227500023FE7A /* Materials.swift */; };
+		D93C24FB280227690023FE7A /* Materials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24F9280227500023FE7A /* Materials.swift */; };
 		D93C4C932800CBD6000955E1 /* CiderKit_Engine.docc in Sources */ = {isa = PBXBuildFile; fileRef = D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */; };
 		D93C4C992800CBD6000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
 		D93C4C9F2800CBD6000955E1 /* CiderKit_Engine.h in Headers */ = {isa = PBXBuildFile; fileRef = D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -54,6 +60,10 @@
 		D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
 		D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
+		D9E2C28028018EB600B17CD0 /* CellRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */; };
+		D9E2C28228018F3D00B17CD0 /* BaseMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */; };
+		D9E2C2842801903800B17CD0 /* SequenceMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C2832801903800B17CD0 /* SequenceMaterial.swift */; };
+		D9E2C286280192FC00B17CD0 /* RandomizedMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */; };
 		D9FBC5732765EA6A004A30BB /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
 /* End PBXBuildFile section */
 
@@ -114,6 +124,7 @@
 		D91ED91227E7AA520016D818 /* EditorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = EditorAssets.xcassets; sourceTree = "<group>"; };
 		D936187827E71CE5009A14E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D936187A27E71D77009A14E2 /* EditorGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorGameView.swift; sourceTree = "<group>"; };
+		D93C24F9280227500023FE7A /* Materials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Materials.swift; sourceTree = "<group>"; };
 		D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CiderKit_Engine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CiderKit_Engine.h; sourceTree = "<group>"; };
 		D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = CiderKit_Engine.docc; sourceTree = "<group>"; };
@@ -134,6 +145,10 @@
 		D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAreaTests.swift; sourceTree = "<group>"; };
 		D9CC420F276163700081A464 /* WorldGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldGrid.swift; sourceTree = "<group>"; };
 		D9CECB2627E91DB0000E8CC7 /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
+		D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellRenderer.swift; sourceTree = "<group>"; };
+		D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMaterial.swift; sourceTree = "<group>"; };
+		D9E2C2832801903800B17CD0 /* SequenceMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceMaterial.swift; sourceTree = "<group>"; };
+		D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizedMaterial.swift; sourceTree = "<group>"; };
 		D9FBC5722765EA6A004A30BB /* SpritePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpritePool.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -183,13 +198,13 @@
 			children = (
 				D936187627E71B10009A14E2 /* CiderKit-Editor */,
 				D9B8557A27F0C86F00D605F4 /* CiderKit-EditorTests */,
-				D91061AD2755F0B200EA8A03 /* Common */,
 				D93C4C902800CBD6000955E1 /* CiderKit-Engine */,
 				D93C4C9C2800CBD6000955E1 /* CiderKit-EngineTests */,
 				D93C4CBA2800CC18000955E1 /* CiderKit-Player */,
+				D91061AD2755F0B200EA8A03 /* Common */,
+				D93C4CC82800CC25000955E1 /* Frameworks */,
 				D91061AC2755F0B200EA8A03 /* Products */,
 				D91061BD2755F1D600EA8A03 /* Resources */,
-				D93C4CC82800CC25000955E1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -210,6 +225,7 @@
 			children = (
 				D91061CC2755F27600EA8A03 /* Atlas.swift */,
 				D91061C82755F27600EA8A03 /* Atlases.swift */,
+				D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */,
 				D91061C92755F27600EA8A03 /* CharacterComponent.swift */,
 				D91061CA2755F27600EA8A03 /* Functions.swift */,
 				D91061C72755F27600EA8A03 /* Keycode.swift */,
@@ -218,6 +234,7 @@
 				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
 				D91061B22755F0B400EA8A03 /* Assets.xcassets */,
 				D91061C02755F24100EA8A03 /* Map */,
+				D9E2C27E28018E9D00B17CD0 /* Materials */,
 				D96BDEC627EBD5B80097A0BD /* Views */,
 			);
 			path = Common;
@@ -235,11 +252,11 @@
 		D91061C02755F24100EA8A03 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				D9B8557227EFC1A000D605F4 /* MapArea.swift */,
 				D9A87A8227DD320B0079C831 /* MapCellComponent.swift */,
 				D91061C22755F24100EA8A03 /* MapDescription.swift */,
 				D91061C32755F24100EA8A03 /* MapNode.swift */,
 				D91061C12755F24100EA8A03 /* MapRegion.swift */,
-				D9B8557227EFC1A000D605F4 /* MapArea.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -333,6 +350,17 @@
 				D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */,
 			);
 			path = Map;
+			sourceTree = "<group>";
+		};
+		D9E2C27E28018E9D00B17CD0 /* Materials */ = {
+			isa = PBXGroup;
+			children = (
+				D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */,
+				D93C24F9280227500023FE7A /* Materials.swift */,
+				D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */,
+				D9E2C2832801903800B17CD0 /* SequenceMaterial.swift */,
+			);
+			path = Materials;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -549,12 +577,17 @@
 				D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */,
 				D91061D22755F27600EA8A03 /* GameView.swift in Sources */,
 				D96809A627E9283E001D2C04 /* Screen.swift in Sources */,
+				D9E2C2842801903800B17CD0 /* SequenceMaterial.swift in Sources */,
 				D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */,
 				D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */,
 				D985E7ED27DE903700AC2465 /* ToolsView.swift in Sources */,
+				D93C24FA280227500023FE7A /* Materials.swift in Sources */,
 				D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */,
+				D9E2C28228018F3D00B17CD0 /* BaseMaterial.swift in Sources */,
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
 				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
+				D9E2C286280192FC00B17CD0 /* RandomizedMaterial.swift in Sources */,
+				D9E2C28028018EB600B17CD0 /* CellRenderer.swift in Sources */,
 				D91061CF2755F27600EA8A03 /* Atlases.swift in Sources */,
 				D91061D32755F27600EA8A03 /* Atlas.swift in Sources */,
 				D9A87A8327DD320B0079C831 /* MapCellComponent.swift in Sources */,
@@ -571,8 +604,10 @@
 				D93C4CB12800CBE8000955E1 /* MapNode.swift in Sources */,
 				D93C4CA72800CBE0000955E1 /* CharacterComponent.swift in Sources */,
 				D93C4CB02800CBE8000955E1 /* MapCellComponent.swift in Sources */,
+				D93C24F52801EBBE0023FE7A /* BaseMaterial.swift in Sources */,
 				D93C4CB42800CBED000955E1 /* GameView.swift in Sources */,
 				D93C4C932800CBD6000955E1 /* CiderKit_Engine.docc in Sources */,
+				D93C24F82801EBC90023FE7A /* CellRenderer.swift in Sources */,
 				D93C4CA62800CBE0000955E1 /* Atlases.swift in Sources */,
 				D93C4CAC2800CBE0000955E1 /* Math.swift in Sources */,
 				D93C4CAE2800CBE0000955E1 /* Keycode.swift in Sources */,
@@ -581,7 +616,10 @@
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,
+				D93C24FB280227690023FE7A /* Materials.swift in Sources */,
 				D93C4CAB2800CBE0000955E1 /* Screen.swift in Sources */,
+				D93C24F42801EBBE0023FE7A /* RandomizedMaterial.swift in Sources */,
+				D93C24F62801EBBE0023FE7A /* SequenceMaterial.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
