@@ -1,10 +1,3 @@
-//
-//  Math.swift
-//  CiderKit
-//
-//  Created by Christophe SAUVEUR on 12/02/2022.
-//
-
 import Foundation
 
 final class Math {

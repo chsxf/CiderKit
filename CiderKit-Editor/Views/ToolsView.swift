@@ -1,10 +1,3 @@
-//
-//  ToolsView.swift
-//  CiderKit
-//
-//  Created by Christophe SAUVEUR on 13/03/2022.
-//
-
 import SwiftUI
 
 struct ToolData: Identifiable {

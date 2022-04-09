@@ -1,10 +1,3 @@
-//
-//  Functions.swift
-//  SKTestIsoMap
-//
-//  Created by Christophe SAUVEUR on 12/10/2021.
-//
-
 import Foundation
 
 class Functions {

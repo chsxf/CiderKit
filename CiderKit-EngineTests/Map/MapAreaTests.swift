@@ -1,10 +1,3 @@
-//
-//  MapAreaTests.swift
-//  CiderKit-EditorTests
-//
-//  Created by Christophe SAUVEUR on 27/03/2022.
-//
-
 import XCTest
 import CiderKit_Engine
 

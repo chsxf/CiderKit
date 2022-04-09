@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  SKTestIsoMap
-//
-//  Created by Christophe on 17/07/2021.
-//
-
 import Cocoa
 import SwiftUI
 import UniformTypeIdentifiers

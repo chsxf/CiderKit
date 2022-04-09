@@ -1,10 +1,3 @@
-//
-//  MapArea.swift
-//  CiderKit
-//
-//  Created by Christophe SAUVEUR on 26/03/2022.
-//
-
 import Foundation
 
 public struct MapArea: Equatable {

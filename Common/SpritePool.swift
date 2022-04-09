@@ -1,10 +1,3 @@
-//
-//  SpritePool.swift
-//  CiderKit
-//
-//  Created by Christophe SAUVEUR on 12/12/2021.
-//
-
 import SpriteKit
 
 final class SpritePool {

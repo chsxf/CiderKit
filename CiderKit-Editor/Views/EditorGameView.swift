@@ -1,10 +1,3 @@
-//
-//  EditorGameView.swift
-//  CiderKit-Editor
-//
-//  Created by Christophe on 20/03/2022.
-//
-
 import CoreFoundation
 import SpriteKit
 import GameplayKit

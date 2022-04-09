@@ -1,10 +1,3 @@
-//
-//  GameView.swift
-//  SKTestIsoMap
-//
-//  Created by Christophe SAUVEUR on 17/07/2021.
-//
-
 import SpriteKit
 import GameplayKit
 

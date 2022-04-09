@@ -1,10 +1,3 @@
-//
-//  SelectionModel.swift
-//  CiderKit
-//
-//  Created by Christophe SAUVEUR on 13/03/2022.
-//
-
 import Foundation
 import GameplayKit
 

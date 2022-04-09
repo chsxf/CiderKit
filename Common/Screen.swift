@@ -1,10 +1,3 @@
-//
-//  Screen.swift
-//  CiderKit
-//
-//  Created by Christophe on 21/03/2022.
-//
-
 import Foundation
 import AppKit
 

@@ -1,10 +1,3 @@
-//
-//  CharacterComponent.swift
-//  SKTestIsoMap
-//
-//  Created by Christophe on 21/08/2021.
-//
-
 import GameplayKit
 
 class CharacterComponent: GKComponent {

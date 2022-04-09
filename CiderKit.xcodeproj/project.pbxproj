@@ -25,7 +25,6 @@
 		D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187A27E71D77009A14E2 /* EditorGameView.swift */; };
 		D93C4C932800CBD6000955E1 /* CiderKit_Engine.docc in Sources */ = {isa = PBXBuildFile; fileRef = D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */; };
 		D93C4C992800CBD6000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
-		D93C4C9E2800CBD6000955E1 /* CiderKit_EngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C4C9D2800CBD6000955E1 /* CiderKit_EngineTests.swift */; };
 		D93C4C9F2800CBD6000955E1 /* CiderKit_Engine.h in Headers */ = {isa = PBXBuildFile; fileRef = D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D93C4CA62800CBE0000955E1 /* Atlases.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C82755F27600EA8A03 /* Atlases.swift */; };
 		D93C4CA72800CBE0000955E1 /* CharacterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C92755F27600EA8A03 /* CharacterComponent.swift */; };
@@ -119,7 +118,6 @@
 		D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CiderKit_Engine.h; sourceTree = "<group>"; };
 		D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = CiderKit_Engine.docc; sourceTree = "<group>"; };
 		D93C4C982800CBD6000955E1 /* CiderKit-EngineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CiderKit-EngineTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D93C4C9D2800CBD6000955E1 /* CiderKit_EngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKit_EngineTests.swift; sourceTree = "<group>"; };
 		D93C4CB92800CC18000955E1 /* CiderKit-Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CiderKit-Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93C4CBB2800CC18000955E1 /* CiderKit_PlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKit_PlayerApp.swift; sourceTree = "<group>"; };
 		D93C4CC42800CC1B000955E1 /* CiderKit_Player.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit_Player.entitlements; sourceTree = "<group>"; };
@@ -275,7 +273,6 @@
 			isa = PBXGroup;
 			children = (
 				D9B8558427F0C8CD00D605F4 /* Map */,
-				D93C4C9D2800CBD6000955E1 /* CiderKit_EngineTests.swift */,
 			);
 			path = "CiderKit-EngineTests";
 			sourceTree = "<group>";
@@ -592,7 +589,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D93C4C9E2800CBD6000955E1 /* CiderKit_EngineTests.swift in Sources */,
 				D90047BD28017D29003CE96C /* MapAreaTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

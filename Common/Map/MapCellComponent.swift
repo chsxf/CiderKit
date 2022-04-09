@@ -1,10 +1,3 @@
-//
-//  MapCellComponent.swift
-//  CiderKit
-//
-//  Created by Christophe SAUVEUR on 12/03/2022.
-//
-
 import GameplayKit
 
 class MapCellComponent: GKComponent

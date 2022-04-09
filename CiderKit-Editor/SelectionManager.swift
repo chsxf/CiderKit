@@ -1,10 +1,3 @@
-//
-//  SelectionManager.swift
-//  CiderKit-Editor
-//
-//  Created by Christophe on 23/03/2022.
-//
-
 import Foundation
 import AppKit
 import SpriteKit

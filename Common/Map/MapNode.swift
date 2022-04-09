@@ -1,10 +1,3 @@
-//
-//  Map.swift
-//  SKTestIsoMap
-//
-//  Created by Christophe SAUVEUR on 18/07/2021.
-//
-
 import SpriteKit
 import GameplayKit
 

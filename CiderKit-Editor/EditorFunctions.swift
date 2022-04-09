@@ -1,10 +1,3 @@
-//
-//  EditorFunctions.swift
-//  CiderKit-Editor
-//
-//  Created by Christophe on 02/04/2022.
-//
-
 import Foundation
 
 class EditorFunctions {

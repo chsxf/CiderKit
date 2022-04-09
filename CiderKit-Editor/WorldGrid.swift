@@ -1,10 +1,3 @@
-//
-//  WorldGrid.swift
-//  CiderKit
-//
-//  Created by Christophe SAUVEUR on 08/12/2021.
-//
-
 import SpriteKit
 
 class WorldGrid: SKNode {
