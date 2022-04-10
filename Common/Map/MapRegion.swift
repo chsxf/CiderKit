@@ -29,9 +29,21 @@ class MapRegion : SKNode, Identifiable, Comparable {
         cellEntities.removeAll()
         removeAllChildren()
         
-        let groundMaterial = try! Materials["default_ground"]
-        let leftElevationMaterial = try! Materials["default_elevation_left"]
-        let rightElevationMaterial = try! Materials["default_elevation_right"]
+        let defaultRenderer = try! CellRenderers["default_cell"]
+        
+        let groundMaterial = try! defaultRenderer.groundMaterial
+        let leftElevationMaterial = try! defaultRenderer.leftElevationMaterial
+        let rightElevationMaterial = try! defaultRenderer.rightElevationMaterial
+        
+        if defaultRenderer.groundMaterialResetPolicy == .resetWithEachRegion {
+            groundMaterial.reset()
+        }
+        if defaultRenderer.leftElevationMaterialResetPolicy == .resetWithEachRegion {
+            leftElevationMaterial.reset()
+        }
+        if defaultRenderer.rightElevationMaterialResetPolicy == .resetWithEachRegion {
+            rightElevationMaterial.reset()
+        }
         
         for x in 0..<Int(regionDescription.area.width) {
             let mapX = x + Int(regionDescription.area.minX)
@@ -42,9 +54,15 @@ class MapRegion : SKNode, Identifiable, Comparable {
                 let isoX = MapNode.halfWidth * (mapX - mapY)
                 let isoY = (regionDescription.elevation * MapNode.elevationHeight) - MapNode.halfHeight * (mapY + mapX)
                 
-                leftElevationMaterial.reset()
+                if defaultRenderer.leftElevationMaterialResetPolicy == .resetWithEachCell {
+                    leftElevationMaterial.reset()
+                }
                 let leftElevationCount = map!.getLeftVisibleElevation(forX: mapX, andY: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<leftElevationCount {
+                    if defaultRenderer.leftElevationMaterialResetPolicy == .resetAlways {
+                        leftElevationMaterial.reset()
+                    }
+                    
                     let sprite = SKSpriteNode(texture: nil)
                     sprite.anchorPoint = CGPoint(x: 1, y: 1)
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
@@ -53,9 +71,15 @@ class MapRegion : SKNode, Identifiable, Comparable {
                     addChild(sprite)
                 }
 
-                rightElevationMaterial.reset()
+                if defaultRenderer.rightElevationMaterialResetPolicy == .resetWithEachCell {
+                    rightElevationMaterial.reset()
+                }
                 let rightElevationCount = map!.getRightVisibleElevation(forX: mapX, andY: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<rightElevationCount {
+                    if defaultRenderer.rightElevationMaterialResetPolicy == .resetAlways {
+                        rightElevationMaterial.reset()
+                    }
+                    
                     let sprite = SKSpriteNode(texture: nil)
                     sprite.anchorPoint = CGPoint(x: 0, y: 1)
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
@@ -64,6 +88,10 @@ class MapRegion : SKNode, Identifiable, Comparable {
                     addChild(sprite)
                 }
             
+                let groundMaterialResetPolicy = defaultRenderer.groundMaterialResetPolicy
+                if groundMaterialResetPolicy == .resetAlways || groundMaterialResetPolicy == .resetWithEachCell {
+                    groundMaterial.reset()
+                }
                 let sprite = SKSpriteNode(texture: nil)
                 sprite.anchorPoint = CGPoint(x: 0.5, y: 1)
                 sprite.position = CGPoint(x: isoX, y: isoY)

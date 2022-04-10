@@ -28,14 +28,14 @@ public class GameView: SKView, SKSceneDelegate {
         
         unloadMap(removePreviousMap: false)
       
-        initDefaultMaterials()
+        registerDefaultMaterialsAndRenderers()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func initDefaultMaterials() {
+    func registerDefaultMaterialsAndRenderers() {
         let defaultGroundMaterial = BaseMaterial(sprite: Atlases.main["default_tile"])
         try! Materials.register(material: defaultGroundMaterial, forName: "default_ground")
         
@@ -44,6 +44,13 @@ public class GameView: SKView, SKSceneDelegate {
         
         let defaultRightElevationMaterial = BaseMaterial(sprite: Atlases.main["default_elevation_right"])
         try! Materials.register(material: defaultRightElevationMaterial, forName: "default_elevation_right")
+        
+        let defaultRenderer = CellRenderer(
+            groundMaterialName: "default_ground",
+            leftElevationMaterialName: "default_elevation_left",
+            rightElevationMaterialName: "default_elevation_right"
+        )
+        try! CellRenderers.register(cellRenderer: defaultRenderer, forName: "default_cell")
     }
     
     public func update(_ currentTime: TimeInterval, for scene: SKScene) { }

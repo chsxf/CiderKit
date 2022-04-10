@@ -29,6 +29,8 @@
 		D93C24F82801EBC90023FE7A /* CellRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */; };
 		D93C24FA280227500023FE7A /* Materials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24F9280227500023FE7A /* Materials.swift */; };
 		D93C24FB280227690023FE7A /* Materials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24F9280227500023FE7A /* Materials.swift */; };
+		D93C24FD2802E2680023FE7A /* CellRenderers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24FC2802E2680023FE7A /* CellRenderers.swift */; };
+		D93C24FE2802E2680023FE7A /* CellRenderers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24FC2802E2680023FE7A /* CellRenderers.swift */; };
 		D93C4C932800CBD6000955E1 /* CiderKit_Engine.docc in Sources */ = {isa = PBXBuildFile; fileRef = D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */; };
 		D93C4C992800CBD6000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
 		D93C4C9F2800CBD6000955E1 /* CiderKit_Engine.h in Headers */ = {isa = PBXBuildFile; fileRef = D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -125,6 +127,7 @@
 		D936187827E71CE5009A14E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D936187A27E71D77009A14E2 /* EditorGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorGameView.swift; sourceTree = "<group>"; };
 		D93C24F9280227500023FE7A /* Materials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Materials.swift; sourceTree = "<group>"; };
+		D93C24FC2802E2680023FE7A /* CellRenderers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellRenderers.swift; sourceTree = "<group>"; };
 		D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CiderKit_Engine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CiderKit_Engine.h; sourceTree = "<group>"; };
 		D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = CiderKit_Engine.docc; sourceTree = "<group>"; };
@@ -226,6 +229,7 @@
 				D91061CC2755F27600EA8A03 /* Atlas.swift */,
 				D91061C82755F27600EA8A03 /* Atlases.swift */,
 				D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */,
+				D93C24FC2802E2680023FE7A /* CellRenderers.swift */,
 				D91061C92755F27600EA8A03 /* CharacterComponent.swift */,
 				D91061CA2755F27600EA8A03 /* Functions.swift */,
 				D91061C72755F27600EA8A03 /* Keycode.swift */,
@@ -586,6 +590,7 @@
 				D9E2C28228018F3D00B17CD0 /* BaseMaterial.swift in Sources */,
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
 				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
+				D93C24FD2802E2680023FE7A /* CellRenderers.swift in Sources */,
 				D9E2C286280192FC00B17CD0 /* RandomizedMaterial.swift in Sources */,
 				D9E2C28028018EB600B17CD0 /* CellRenderer.swift in Sources */,
 				D91061CF2755F27600EA8A03 /* Atlases.swift in Sources */,
@@ -620,6 +625,7 @@
 				D93C4CAB2800CBE0000955E1 /* Screen.swift in Sources */,
 				D93C24F42801EBBE0023FE7A /* RandomizedMaterial.swift in Sources */,
 				D93C24F62801EBBE0023FE7A /* SequenceMaterial.swift in Sources */,
+				D93C24FE2802E2680023FE7A /* CellRenderers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
