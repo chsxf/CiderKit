@@ -4,14 +4,11 @@ import AppKit
 public class Screen {
     
     public class func getBestMatchingSceneSizeOnMainScreen(_ size: CGSize) -> CGSize {
-        guard let mainScreen = NSScreen.main else {
-            return size
-        }
-        
         let baseAspectRatio = size.width / size.height
         
-        let mainScreenSize = mainScreen.frame.size
-        let screenAspectRatio = mainScreenSize.width / mainScreenSize.height
+        let menuBarScreen = NSScreen.screens[0]
+        let menuBarScreenSize = menuBarScreen.frame.size
+        let screenAspectRatio = menuBarScreenSize.width / menuBarScreenSize.height
         
         var resultSize = size
         if screenAspectRatio > baseAspectRatio {
