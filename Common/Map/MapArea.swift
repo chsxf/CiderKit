@@ -1,6 +1,6 @@
 import Foundation
 
-public struct MapArea: Equatable {
+public struct MapArea: Equatable, CustomStringConvertible {
     
     public var x: Int
     public var y: Int
@@ -15,6 +15,8 @@ public struct MapArea: Equatable {
     public var maxY: Int { y + height }
     
     public var rect: CGRect { CGRect(x: x, y: y, width: width, height: height) }
+    
+    public var description: String { "MapArea(x: \(x), y: \(y), w: \(width), h: \(height))" }
     
     public init(x: Int, y: Int, width: Int, height: Int) {
         self.x = x

@@ -143,9 +143,7 @@ extension MapNode {
     
     func increaseElevation(area: MapArea?) {
         var appliedOnRegion = false
-        
         var needsRebuilding = false
-        let previousRegionCount = regions.count
         
         var regionsToRemove = [MapRegion]()
         var newRegions = [MapRegion]()
@@ -184,11 +182,8 @@ extension MapNode {
         mergeRegions()
         regions.forEach({ addChild($0) })
         
-        if previousRegionCount < regions.count {
-            sortRegions()
-        }
-        
         if needsRebuilding {
+            sortRegions()
             buildRegions()
             dirty = true
         }
@@ -196,7 +191,6 @@ extension MapNode {
     
     func decreaseElevation(area: MapArea?) {
         var needsRebuilding = false
-        let previousRegionCount = regions.count
         
         var regionsToRemove = [MapRegion]()
         var newRegions = [MapRegion]()
@@ -226,11 +220,8 @@ extension MapNode {
         mergeRegions()
         regions.forEach({ addChild($0) })
         
-        if previousRegionCount < regions.count {
-            sortRegions()
-        }
-        
         if needsRebuilding {
+            sortRegions()
             buildRegions()
             dirty = true
         }
