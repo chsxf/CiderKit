@@ -73,4 +73,23 @@ public class GameView: SKView, SKSceneDelegate {
         gameScene.addChild(map)
     }
     
+    override public func viewDidEndLiveResize() {
+        let sceneSize = getBestMatchingSceneSize(CGSize(width: 640, height: 360))
+        scene?.size = sceneSize
+    }
+    
+    public func getBestMatchingSceneSize(_ size: CGSize) -> CGSize {
+        let baseAspectRatio = size.width / size.height
+        let viewAspectRatio = frame.width / frame.height
+        
+        var resultSize = size
+        if viewAspectRatio > baseAspectRatio {
+            resultSize.width = (resultSize.height * viewAspectRatio).rounded(.awayFromZero)
+        }
+        else {
+            resultSize.height = (resultSize.width / viewAspectRatio).rounded(.awayFromZero)
+        }
+        return resultSize
+    }
+    
 }

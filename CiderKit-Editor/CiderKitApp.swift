@@ -3,18 +3,33 @@ import SwiftUI
 import UniformTypeIdentifiers
 import Combine
 
+private extension NSToolbarItem.Identifier {
+    static let increaseElevation = NSToolbarItem.Identifier(rawValue: "increase_elevation")
+    static let decreaseElevation = NSToolbarItem.Identifier(rawValue: "decrease_elevation")
+}
+
 @main
-class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate {
+class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarDelegate {
 
     private static let baseWindowTitle = "CiderKit Editor"
     
     private var window: NSWindow!
     private var gameView: EditorGameView!
-    private var toolsDelegate: ToolsDelegate?
     
     private var currentMapURL: URL? = nil
     
-    private var cancellable: AnyCancellable?
+    private var mapDirtyFlagCancellable: AnyCancellable?
+    private var selectionModelCancellable: AnyCancellable?
+    
+    private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
+        .increaseElevation, .decreaseElevation
+    ]
+    
+    private let defaultToolbarIdentifiers: [NSToolbarItem.Identifier] = [
+        .increaseElevation, .decreaseElevation
+    ]
+    
+    private var definedToolbarItems: [NSToolbarItem.Identifier: NSToolbarItem] = [:]
     
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         if saveCurrentMapIfModified() {
@@ -32,39 +47,17 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
     
     private func setup() -> Void {
-        let sceneSize = Screen.getBestMatchingSceneSizeOnMainScreen(CGSize(width: 640, height: 360))
-        
-        let windowRect = NSRect(x: 100, y: 100, width: sceneSize.width, height: sceneSize.height)
+        let windowRect = NSRect(x: 100, y: 100, width: 640, height: 360)
         window = NSWindow(contentRect: windowRect, styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         window.delegate = self
         window.acceptsMouseMovedEvents = true
         gameView = EditorGameView(frame: windowRect)
-        toolsDelegate = gameView
-        window.contentView = gameView
-        window.makeKeyAndOrderFront(nil)
-        window.toggleFullScreen(nil)
-        
-        let panelRect = NSRect(x: 100, y: 100, width: 200, height: 600)
-        let panel = NSPanel(contentRect: panelRect, styleMask: [.utilityWindow, .titled], backing: .buffered, defer: false)
-        panel.title = "Inspector"
-        panel.isFloatingPanel = true
-        panel.becomesKeyOnlyIfNeeded = true
-        let inspectorView = InspectorView().environmentObject(gameView.selectionModel)
-        panel.contentView = NSHostingView(rootView: inspectorView)
-        panel.orderFront(nil)
-        
-        let toolsPanelRect = NSRect(x: 150, y: 150, width: 200, height: 600)
-        let toolsPanel = NSPanel(contentRect: toolsPanelRect, styleMask: [.utilityWindow, .titled], backing: .buffered, defer: false)
-        toolsPanel.title = "Tools"
-        toolsPanel.isFloatingPanel = true
-        toolsPanel.becomesKeyOnlyIfNeeded = true
-        var toolsView = ToolsView()
-        toolsView.delegate = gameView
-        toolsPanel.contentView = NSHostingView(rootView: toolsView.environmentObject(gameView.selectionModel))
-        toolsPanel.orderFront(nil)
+        EditorGameViewRepresentable.gameView = gameView
+        window.contentView = NSHostingView(rootView: EditorMainView())
         
         updateWindowTitle()
         observeMapDirtyFlag()
+        observeSelectionModel()
     }
     
     private func setupMainMenu() -> Void {
@@ -97,10 +90,58 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate {
         NSApp.mainMenu = mainMenu
     }
     
+    private func setupToolbar() -> Void {
+        initToolbarItems()
+        
+        let toolbar = NSToolbar(identifier: "main")
+        toolbar.displayMode = .iconOnly
+        toolbar.delegate = self
+        toolbar.insertItem(withItemIdentifier: NSToolbarItem.Identifier.increaseElevation, at: 0)
+        window.toolbar = toolbar
+    }
+    
+    private func initToolbarItems() -> Void {
+        let increaseElevationItem = NSToolbarItem(itemIdentifier: .increaseElevation)
+        increaseElevationItem.label = "Increase"
+        increaseElevationItem.image = NSImage(named: "arrow_up")
+        increaseElevationItem.action = #selector(self.increaseElevationForSelection)
+        definedToolbarItems[.increaseElevation] = increaseElevationItem
+        
+        let decreaseElevationItem = NSToolbarItem(itemIdentifier: .decreaseElevation)
+        decreaseElevationItem.label = "Decrease"
+        decreaseElevationItem.image = NSImage(named: "arrow_down")
+        decreaseElevationItem.action = #selector(self.decreaseElevationForSelection)
+        definedToolbarItems[.decreaseElevation] = decreaseElevationItem
+    }
+    
+    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        return definedToolbarItems[itemIdentifier]
+    }
+    
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return allowedToolbarIdentifiers
+    }
+    
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return allowedToolbarIdentifiers
+    }
+    
     private func observeMapDirtyFlag() {
-        cancellable = gameView.map.objectWillChange.sink { _ in
+        mapDirtyFlagCancellable = gameView.map.objectWillChange.sink {
             DispatchQueue.main.async {
                 self.updateWindowTitle()
+            }
+        }
+    }
+    
+    private func observeSelectionModel() {
+        selectionModelCancellable = gameView.selectionModel.objectWillChange.sink {
+            DispatchQueue.main.async {
+                if let visibleItems = self.window.toolbar?.visibleItems {
+                    for visibleItem in visibleItems {
+                        visibleItem.isEnabled = self.gameView.selectionModel.hasSelectedArea
+                    }
+                }
             }
         }
     }
@@ -204,13 +245,23 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
     
     @objc
+    private func increaseElevationForSelection() {
+        gameView.increaseElevation(area: gameView.selectionModel.selectedArea)
+    }
+    
+    @objc
+    private func decreaseElevationForSelection() {
+        gameView.decreaseElevation(area: gameView.selectionModel.selectedArea)
+    }
+    
+    @objc
     private func increaseElevationForWholeMap() {
-        toolsDelegate?.increaseElevation(area: nil)
+        gameView.increaseElevation(area: nil)
     }
     
     @objc
     private func decreaseElevationForWholeMap() {
-        toolsDelegate?.decreaseElevation(area: nil)
+        gameView.decreaseElevation(area: nil)
     }
     
     static func main() -> Void {
@@ -226,6 +277,10 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate {
             DispatchQueue.main.async {
                 delegate.setup()
                 delegate.setupMainMenu()
+                delegate.setupToolbar()
+                
+                delegate.window.makeKeyAndOrderFront(nil)
+                delegate.window.toggleFullScreen(nil)
             }
         }
         

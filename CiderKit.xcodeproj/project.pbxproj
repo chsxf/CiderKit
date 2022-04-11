@@ -56,11 +56,11 @@
 		D9730B1527B795A40007513C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
 		D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7E827DDEBBC00AC2465 /* InspectorView.swift */; };
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
-		D985E7ED27DE903700AC2465 /* ToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EC27DE903700AC2465 /* ToolsView.swift */; };
 		D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */; };
 		D9A87A8327DD320B0079C831 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
 		D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
 		D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
+		D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BF52CC280A05F20093005B /* EditorMainView.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
 		D9E2C28028018EB600B17CD0 /* CellRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */; };
 		D9E2C28228018F3D00B17CD0 /* BaseMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */; };
@@ -139,13 +139,13 @@
 		D9730B1427B795A40007513C /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		D985E7EA27DE38D300AC2465 /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
-		D985E7EC27DE903700AC2465 /* ToolsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsView.swift; sourceTree = "<group>"; };
 		D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorFunctions.swift; sourceTree = "<group>"; };
 		D9A87A8227DD320B0079C831 /* MapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCellComponent.swift; sourceTree = "<group>"; };
 		D9A87A8727DD43F10079C831 /* HoverShader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = HoverShader.fsh; sourceTree = "<group>"; };
 		D9B8557227EFC1A000D605F4 /* MapArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapArea.swift; sourceTree = "<group>"; };
 		D9B8557927F0C86F00D605F4 /* CiderKit-EditorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CiderKit-EditorTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAreaTests.swift; sourceTree = "<group>"; };
+		D9BF52CC280A05F20093005B /* EditorMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMainView.swift; sourceTree = "<group>"; };
 		D9CC420F276163700081A464 /* WorldGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldGrid.swift; sourceTree = "<group>"; };
 		D9CECB2627E91DB0000E8CC7 /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
 		D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellRenderer.swift; sourceTree = "<group>"; };
@@ -326,9 +326,9 @@
 		D985E7E727DDEBAA00AC2465 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D985E7E827DDEBBC00AC2465 /* InspectorView.swift */,
 				D936187A27E71D77009A14E2 /* EditorGameView.swift */,
-				D985E7EC27DE903700AC2465 /* ToolsView.swift */,
+				D9BF52CC280A05F20093005B /* EditorMainView.swift */,
+				D985E7E827DDEBBC00AC2465 /* InspectorView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -584,7 +584,6 @@
 				D9E2C2842801903800B17CD0 /* SequenceMaterial.swift in Sources */,
 				D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */,
 				D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */,
-				D985E7ED27DE903700AC2465 /* ToolsView.swift in Sources */,
 				D93C24FA280227500023FE7A /* Materials.swift in Sources */,
 				D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */,
 				D9E2C28228018F3D00B17CD0 /* BaseMaterial.swift in Sources */,
@@ -593,6 +592,7 @@
 				D93C24FD2802E2680023FE7A /* CellRenderers.swift in Sources */,
 				D9E2C286280192FC00B17CD0 /* RandomizedMaterial.swift in Sources */,
 				D9E2C28028018EB600B17CD0 /* CellRenderer.swift in Sources */,
+				D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */,
 				D91061CF2755F27600EA8A03 /* Atlases.swift in Sources */,
 				D91061D32755F27600EA8A03 /* Atlas.swift in Sources */,
 				D9A87A8327DD320B0079C831 /* MapCellComponent.swift in Sources */,

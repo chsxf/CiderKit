@@ -1,8 +1,23 @@
 import CoreFoundation
 import SpriteKit
 import GameplayKit
+import SwiftUI
 
-class EditorGameView: GameView, ToolsDelegate {
+final class EditorGameViewRepresentable: NSViewRepresentable {
+    
+    static var gameView: EditorGameView? = nil
+    
+    func makeNSView(context: Context) -> EditorGameView {
+        return Self.gameView!
+    }
+
+    func updateNSView(_ nsView: EditorGameView, context: Context) {
+        
+    }
+    
+}
+
+class EditorGameView: GameView {
     
     private(set) var worldGrid: WorldGrid!
     
@@ -29,16 +44,7 @@ class EditorGameView: GameView, ToolsDelegate {
     override func update(_ currentTime: TimeInterval, for scene: SKScene) {
         super.update(currentTime, for: scene)
         
-        guard
-            let cam = scene.camera,
-            worldGrid != nil
-        else {
-            return
-        }
-        
-        let viewportRect = CGRect(x: cam.position.x - (scene.size.width / 2), y: cam.position.y - (scene.size.height / 2), width: scene.size.width, height: scene.size.height)
-        worldGrid.update(withViewport: viewportRect)
-        
+        updateWorldGrid(for: scene)
         selectionManager?.update()
     }
     
@@ -93,11 +99,31 @@ class EditorGameView: GameView, ToolsDelegate {
         }
     }
     
+    override func viewDidEndLiveResize() {
+        super.viewDidEndLiveResize()
+        
+        if scene != nil {
+            updateWorldGrid(for: scene!)
+        }
+    }
+    
+    func updateWorldGrid(for scene: SKScene) {
+        guard
+            let cam = scene.camera,
+            worldGrid != nil
+        else {
+            return
+        }
+        
+        let viewportRect = CGRect(x: cam.position.x - (scene.size.width / 2), y: cam.position.y - (scene.size.height / 2), width: scene.size.width, height: scene.size.height)
+        worldGrid.update(withViewport: viewportRect)
+    }
+    
     func increaseElevation(area: MapArea?) {
         map.increaseElevation(area: area)
         
         if area != nil {
-            selectionModel.selectedCell = map.getMapCellEntity(atX: area!.x, y: area!.y)
+            selectionModel.setSelectedCell(map.getMapCellEntity(atX: area!.x, y: area!.y))
         }
     }
     
@@ -105,7 +131,7 @@ class EditorGameView: GameView, ToolsDelegate {
         map.decreaseElevation(area: area)
         
         if area != nil {
-            selectionModel.selectedCell = map.getMapCellEntity(atX: area!.x, y: area!.y)
+            selectionModel.setSelectedCell(map.getMapCellEntity(atX: area!.x, y: area!.y))
         }
     }
     

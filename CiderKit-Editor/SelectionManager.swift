@@ -99,10 +99,10 @@ class SelectionManager: NSResponder {
             let cellComponent = gridSelectedCellEntity.component(ofType: MapCellComponent.self)!
             cellComponent.mapX = hoveredCellComponent.mapX
             cellComponent.mapY = hoveredCellComponent.mapY
-            selectionModel.selectedCell = gridSelectedCellEntity
+            selectionModel.setSelectedCell(gridSelectedCellEntity)
         }
         else {
-            selectionModel.selectedCell = selectionModel.hoveredCell
+            selectionModel.setSelectedCell(selectionModel.hoveredCell)
         }
     }
     
@@ -111,12 +111,12 @@ class SelectionManager: NSResponder {
         
         let sceneCoordinates = editorGameView.convert(event.locationInWindow, to: editorGameView.scene!)
         
-        selectionModel.hoveredCell = nil
+        selectionModel.setHoveredCell(nil)
         for region in editorGameView.map {
             if region.calculateAccumulatedFrame().contains(sceneCoordinates) {
                 for cell in region.cellEntities {
                     if cell.component(ofType: MapCellComponent.self)!.containsScenePosition(sceneCoordinates) {
-                        selectionModel.hoveredCell = cell
+                        selectionModel.setHoveredCell(cell)
                     }
                 }
             }
@@ -133,13 +133,13 @@ class SelectionManager: NSResponder {
             let cellComponent = gridHoveredCellEntity.component(ofType: MapCellComponent.self)!
             cellComponent.mapX = Int(gridCellPosition.x)
             cellComponent.mapY = Int(gridCellPosition.y)
-            selectionModel.hoveredCell = gridHoveredCellEntity
+            selectionModel.setHoveredCell(gridHoveredCellEntity)
         }
     }
     
     override func rightMouseUp(with event: NSEvent) {
         super.rightMouseUp(with: event)
-        selectionModel.selectedCell = nil
+        selectionModel.setSelectedCell(nil)
     }
     
 }

@@ -35,7 +35,7 @@ struct InspectorView: View {
             }
         }
         .padding()
-        .frame(width: 200, height: 600, alignment: .topLeading)
+        .frame(minWidth: 200, maxWidth: 200, maxHeight: .infinity, alignment: .topLeading)
     }
 }
 
