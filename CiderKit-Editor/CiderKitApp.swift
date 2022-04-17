@@ -11,7 +11,7 @@ private extension NSToolbarItem.Identifier {
 @main
 class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarDelegate {
 
-    private static let baseWindowTitle = "CiderKit Editor"
+    public static let appName = "CiderKit Editor"
     
     private var window: NSWindow!
     private var gameView: EditorGameView!
@@ -47,7 +47,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     private func setup() -> Void {
-        let windowRect = NSRect(x: 100, y: 100, width: 640, height: 360)
+        let windowRect = CGRect(x: 100, y: 100, width: 640, height: 360)
         window = NSWindow(contentRect: windowRect, styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         window.delegate = self
         window.acceptsMouseMovedEvents = true
@@ -61,13 +61,12 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     private func setupMainMenu() -> Void {
-        let applicationName = ProcessInfo.processInfo.processName
         let mainMenu = NSMenu()
         
         let menuItemOne = NSMenuItem()
         menuItemOne.submenu = NSMenu(title: "menuItemOne")
         menuItemOne.submenu?.items = [
-            NSMenuItem(title: "Quit \(applicationName)", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+            NSMenuItem(title: "Quit \(Self.appName)", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         ]
         
         let fileMenu = NSMenuItem()
@@ -114,6 +113,19 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         definedToolbarItems[.decreaseElevation] = decreaseElevationItem
     }
     
+    private func openProjectManagerView() -> Void {
+        let windowRect = CGRect(x: 0, y: 0, width: 640, height: 360)
+        let pmWindow = NSWindow(contentRect: windowRect, styleMask: [.titled], backing: .buffered, defer: false)
+        let pmView = ProjectManagerView(parentWindow: window, hostingWindow: pmWindow).environmentObject(ProjectManager.default)
+        pmWindow.contentView = NSHostingView(rootView: pmView)
+        
+        window.beginSheet(pmWindow) { response in
+            if response == .abort {
+                NSApp.terminate(self)
+            }
+        }
+    }
+    
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         return definedToolbarItems[itemIdentifier]
     }
@@ -147,7 +159,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     private func updateWindowTitle() {
-        var title = "\(CiderKitApp.baseWindowTitle) - \(currentMapURL?.lastPathComponent ?? "Untitled")"
+        var title = "\(CiderKitApp.appName) - \(currentMapURL?.lastPathComponent ?? "Untitled")"
         if gameView.map.dirty {
             title += " *"
         }
@@ -194,12 +206,20 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
             }
         }
         
-        if selectedURL != nil {
-            let mapDescription = gameView.map.toMapDescription()
-            if EditorFunctions.save(mapDescription, to: selectedURL!) {
-                currentMapURL = selectedURL
+        if let validURL = selectedURL {
+            do {
+                let mapDescription = gameView.map.toMapDescription()
+                try EditorFunctions.save(mapDescription, to: validURL, prettyPrint: true)
+                currentMapURL = validURL
                 gameView.map.clearDirtyFlag()
                 return true
+            }
+            catch {
+                let alert = NSAlert()
+                alert.informativeText = "Error"
+                alert.messageText = "Unable to save map to file \(validURL)"
+                alert.addButton(withTitle: "OK")
+                let _ = alert.runModal()
             }
         }
         return false
@@ -283,6 +303,8 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
                 
                 delegate.window.makeKeyAndOrderFront(nil)
                 delegate.window.toggleFullScreen(nil)
+                
+                delegate.openProjectManagerView()
             }
         }
         

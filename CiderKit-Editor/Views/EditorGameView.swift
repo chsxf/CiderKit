@@ -24,6 +24,7 @@ class EditorGameView: GameView {
     let selectionModel: SelectionModel = SelectionModel()
     
     private var selectionManager: SelectionManager?
+    private var viewFrustrumShape: SKShapeNode?
     
     override init(frame frameRect: CGRect) {
         super.init(frame: frameRect)
@@ -31,20 +32,34 @@ class EditorGameView: GameView {
         worldGrid = WorldGrid()
         scene!.addChild(worldGrid)
     
-        if let camera = scene?.camera {
-            let viewShape = SKShapeNode(rectOf: CGSize(width: 640, height: 360))
-            viewShape.strokeColor = .red
-            camera.addChild(viewShape)
-        }
+        updateViewFrustrum()
         
         DispatchQueue.main.async {
             self.selectionManager = SelectionManager(editorGameView: self)
             self.nextResponder = self.selectionManager
+            
+            NotificationCenter.default.addObserver(forName: ProjectManager.projectOpened, object: nil, queue: OperationQueue.main) { notif in
+                self.updateViewFrustrum()
+                self.viewDidEndLiveResize()
+            }
         }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func updateViewFrustrum() {
+        if let camera = scene?.camera {
+            viewFrustrumShape?.removeFromParent()
+            
+            let defaultViewWidth = Project.current?.settings.targetResolutionWidth ?? 640
+            let defaultViewHeight = Project.current?.settings.targetResolutionHeight ?? 360
+            
+            viewFrustrumShape = SKShapeNode(rectOf: CGSize(width: defaultViewWidth, height: defaultViewHeight))
+            viewFrustrumShape!.strokeColor = .red
+            camera.addChild(viewFrustrumShape!)
+        }
     }
     
     override func update(_ currentTime: TimeInterval, for scene: SKScene) {

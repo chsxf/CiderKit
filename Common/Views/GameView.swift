@@ -56,11 +56,19 @@ public class GameView: SKView, SKSceneDelegate {
     public func update(_ currentTime: TimeInterval, for scene: SKScene) { }
     
     public func loadMap(file: URL) {
-        unloadMap()
-        
-        let mapDescription: MapDescription = Functions.load(file)
-        map = MapNode(description: mapDescription)
-        gameScene.addChild(map!)
+        do {
+            let mapDescription: MapDescription = try Functions.load(file)
+            unloadMap()
+            map = MapNode(description: mapDescription)
+            gameScene.addChild(map!)
+        }
+        catch {
+            let alert = NSAlert()
+            alert.informativeText = "Error"
+            alert.messageText = "Unable to load map file at \(file)"
+            alert.addButton(withTitle: "OK")
+            let _ = alert.runModal()
+        }
     }
     
     public func unloadMap(removePreviousMap: Bool = true) {
@@ -74,7 +82,9 @@ public class GameView: SKView, SKSceneDelegate {
     }
     
     override public func viewDidEndLiveResize() {
-        let sceneSize = getBestMatchingSceneSize(CGSize(width: 640, height: 360))
+        let sceneWidth = Project.current?.settings.targetResolutionWidth ?? 640
+        let sceneHeight = Project.current?.settings.targetResolutionHeight ?? 360
+        let sceneSize = getBestMatchingSceneSize(CGSize(width: sceneWidth, height: sceneHeight))
         scene?.size = sceneSize
     }
     

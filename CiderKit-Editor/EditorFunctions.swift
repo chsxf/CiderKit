@@ -1,17 +1,15 @@
 import Foundation
 
 class EditorFunctions {
-    static func save<T: Codable>(_ data: T, to url: URL) -> Bool {
-        do {
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
-            
-            let encodedData = try encoder.encode(data)
-            try encodedData.write(to: url)
-            return true
+    static func save<T: Codable>(_ data: T, to url: URL, prettyPrint: Bool) throws {
+        let encoder = JSONEncoder()
+        if prettyPrint {
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         }
-        catch {
-            fatalError("Couldn't save data to \(url):\n\(error)")
+        else {
+            encoder.outputFormatting = .sortedKeys
         }
+        let encodedData = try encoder.encode(data)
+        try encodedData.write(to: url)
     }
 }

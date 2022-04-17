@@ -6,6 +6,23 @@
 	<array>
 		<dict>
 			<key>UTTypeDescription</key>
+			<string>CiderKit Settings File</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.json</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>com.xhaleera.CiderKit.settings</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cksettings</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeDescription</key>
 			<string>CiderKit Map File</string>
 			<key>UTTypeConformsTo</key>
 			<array>
