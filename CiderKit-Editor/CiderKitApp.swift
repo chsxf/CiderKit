@@ -269,11 +269,13 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         
         let delegate = CiderKitApp()
         NSApp.delegate = delegate
-        
-        try? Atlases.preload(atlases: [
-            "main": "Main Atlas",
-            "grid": "Grid Atlas"
-        ]) {
+
+        Task.detached {
+            try? await Atlases.preload(atlases: [
+                "main": "Main Atlas",
+                "grid": "Grid Atlas"
+            ])
+
             DispatchQueue.main.async {
                 delegate.setup()
                 delegate.setupMainMenu()

@@ -42,16 +42,17 @@ class CiderKitApp: NSObject, NSApplicationDelegate {
         let delegate = CiderKitApp()
         NSApp.delegate = delegate
         
-        try? Atlases.preload(atlases: [
-            "main": "Main Atlas",
-            "grid": "Grid Atlas"
-        ]) {
+        Task.detached {
+            try? await Atlases.preload(atlases: [
+                "main": "Main Atlas"
+            ])
+            
             DispatchQueue.main.async {
                 delegate.setup()
                 delegate.setupMainMenu()
             }
         }
-                
+        
         NSApp.run()
     }
 

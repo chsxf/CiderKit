@@ -3,6 +3,7 @@ import SpriteKit
 
 enum AtlasesError: Error {
     case alreadyPreloading
+    case alreadyRegistered
 }
 
 final public class Atlases {
@@ -14,40 +15,23 @@ final public class Atlases {
     static var main: Atlas { self[MAIN_ATLAS_KEY] }
     
     private static var preloading: Bool = false
-    private static var remainingToPreload: Int = 0
-    private static var preloadCallback: (() -> Void)? = nil
     
-    static public func preload(atlases: [String: String], completionHandler: @escaping () -> Void) throws {
+    static public func preload(atlases: [String: String]) async throws {
         if preloading {
             throw AtlasesError.alreadyPreloading
         }
         
-        var atlasesToPreload = [Atlas]()
-        
         preloading = true
-        preloadCallback = completionHandler
         for (key, name) in atlases {
-            if loadedAtlases[key] == nil {
-                let atlas = Atlas(named: name)
-                atlasesToPreload.append(atlas)
-                loadedAtlases[key] = atlas
+            if loadedAtlases[key] != nil {
+                throw AtlasesError.alreadyRegistered
             }
+            
+            let atlas = Atlas(named: name)
+            loadedAtlases[key] = atlas
+            await atlas.preload()
         }
-        
-        remainingToPreload = atlasesToPreload.count
-        for atlas in atlasesToPreload {
-            atlas.preload(completionHandler: self.atlasPreloadedCallback)
-        }
-    }
-    
-    private static func atlasPreloadedCallback() -> Void {
-        remainingToPreload -= 1
-        
-        if remainingToPreload == 0 {
-            preloading = false
-            preloadCallback!()
-            preloadCallback = nil
-        }
+        preloading = false
     }
     
     static subscript(name: String) -> Atlas {
