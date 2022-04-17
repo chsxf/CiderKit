@@ -31,6 +31,12 @@ class EditorGameView: GameView {
         worldGrid = WorldGrid()
         scene!.addChild(worldGrid)
     
+        if let camera = scene?.camera {
+            let viewShape = SKShapeNode(rectOf: CGSize(width: 640, height: 360))
+            viewShape.strokeColor = .red
+            camera.addChild(viewShape)
+        }
+        
         DispatchQueue.main.async {
             self.selectionManager = SelectionManager(editorGameView: self)
             self.nextResponder = self.selectionManager
