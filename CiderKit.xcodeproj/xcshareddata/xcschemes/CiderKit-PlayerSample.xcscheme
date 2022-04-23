@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D93C4CB82800CC18000955E1"
-               BuildableName = "CiderKit-Player.app"
+               BuildableName = "CiderKit-PlayerSample.app"
                BlueprintName = "CiderKit-PlayerSample"
                ReferencedContainer = "container:CiderKit.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D93C4CB82800CC18000955E1"
-            BuildableName = "CiderKit-Player.app"
+            BuildableName = "CiderKit-PlayerSample.app"
             BlueprintName = "CiderKit-PlayerSample"
             ReferencedContainer = "container:CiderKit.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D93C4CB82800CC18000955E1"
-            BuildableName = "CiderKit-Player.app"
+            BuildableName = "CiderKit-PlayerSample.app"
             BlueprintName = "CiderKit-PlayerSample"
             ReferencedContainer = "container:CiderKit.xcodeproj">
          </BuildableReference>
