@@ -48,7 +48,7 @@
 		D93C4CB22800CBE8000955E1 /* MapRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegion.swift */; };
 		D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
 		D93C4CB42800CBED000955E1 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CB2755F27600EA8A03 /* GameView.swift */; };
-		D93C4CBC2800CC18000955E1 /* CiderKit_PlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C4CBB2800CC18000955E1 /* CiderKit_PlayerApp.swift */; };
+		D93C4CBC2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */; };
 		D93C4CC92800CC25000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
 		D93C4CCA2800CC25000955E1 /* CiderKit_Engine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D96809A627E9283E001D2C04 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CECB2627E91DB0000E8CC7 /* Screen.swift */; };
@@ -132,9 +132,9 @@
 		D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CiderKit_Engine.h; sourceTree = "<group>"; };
 		D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = CiderKit_Engine.docc; sourceTree = "<group>"; };
 		D93C4C982800CBD6000955E1 /* CiderKit-EngineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CiderKit-EngineTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D93C4CB92800CC18000955E1 /* CiderKit-Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CiderKit-Player.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D93C4CBB2800CC18000955E1 /* CiderKit_PlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKit_PlayerApp.swift; sourceTree = "<group>"; };
-		D93C4CC42800CC1B000955E1 /* CiderKit_Player.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit_Player.entitlements; sourceTree = "<group>"; };
+		D93C4CB92800CC18000955E1 /* CiderKit-PlayerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CiderKit-PlayerSample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKit_PlayerSampleApp.swift; sourceTree = "<group>"; };
+		D93C4CC42800CC1B000955E1 /* CiderKit_PlayerSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit_PlayerSample.entitlements; sourceTree = "<group>"; };
 		D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionManager.swift; sourceTree = "<group>"; };
 		D9730B1427B795A40007513C /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
@@ -203,7 +203,7 @@
 				D9B8557A27F0C86F00D605F4 /* CiderKit-EditorTests */,
 				D93C4C902800CBD6000955E1 /* CiderKit-Engine */,
 				D93C4C9C2800CBD6000955E1 /* CiderKit-EngineTests */,
-				D93C4CBA2800CC18000955E1 /* CiderKit-Player */,
+				D99369622813F7C600AC07F9 /* CiderKit-PlayerSample */,
 				D91061AD2755F0B200EA8A03 /* Common */,
 				D93C4CC82800CC25000955E1 /* Frameworks */,
 				D91061AC2755F0B200EA8A03 /* Products */,
@@ -218,7 +218,7 @@
 				D9B8557927F0C86F00D605F4 /* CiderKit-EditorTests.xctest */,
 				D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */,
 				D93C4C982800CBD6000955E1 /* CiderKit-EngineTests.xctest */,
-				D93C4CB92800CC18000955E1 /* CiderKit-Player.app */,
+				D93C4CB92800CC18000955E1 /* CiderKit-PlayerSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -298,16 +298,6 @@
 			path = "CiderKit-EngineTests";
 			sourceTree = "<group>";
 		};
-		D93C4CBA2800CC18000955E1 /* CiderKit-Player */ = {
-			isa = PBXGroup;
-			children = (
-				D93C4CC42800CC1B000955E1 /* CiderKit_Player.entitlements */,
-				D936187827E71CE5009A14E2 /* Info.plist */,
-				D93C4CBB2800CC18000955E1 /* CiderKit_PlayerApp.swift */,
-			);
-			path = "CiderKit-Player";
-			sourceTree = "<group>";
-		};
 		D93C4CC82800CC25000955E1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -331,6 +321,16 @@
 				D985E7E827DDEBBC00AC2465 /* InspectorView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		D99369622813F7C600AC07F9 /* CiderKit-PlayerSample */ = {
+			isa = PBXGroup;
+			children = (
+				D93C4CC42800CC1B000955E1 /* CiderKit_PlayerSample.entitlements */,
+				D936187827E71CE5009A14E2 /* Info.plist */,
+				D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */,
+			);
+			path = "CiderKit-PlayerSample";
 			sourceTree = "<group>";
 		};
 		D9A87A8427DD43770079C831 /* Shaders */ = {
@@ -434,9 +434,9 @@
 			productReference = D93C4C982800CBD6000955E1 /* CiderKit-EngineTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		D93C4CB82800CC18000955E1 /* CiderKit-Player */ = {
+		D93C4CB82800CC18000955E1 /* CiderKit-PlayerSample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D93C4CC52800CC1B000955E1 /* Build configuration list for PBXNativeTarget "CiderKit-Player" */;
+			buildConfigurationList = D93C4CC52800CC1B000955E1 /* Build configuration list for PBXNativeTarget "CiderKit-PlayerSample" */;
 			buildPhases = (
 				D93C4CB52800CC18000955E1 /* Sources */,
 				D93C4CB62800CC18000955E1 /* Frameworks */,
@@ -448,9 +448,9 @@
 			dependencies = (
 				D93C4CCC2800CC25000955E1 /* PBXTargetDependency */,
 			);
-			name = "CiderKit-Player";
+			name = "CiderKit-PlayerSample";
 			productName = "CiderKit-Player";
-			productReference = D93C4CB92800CC18000955E1 /* CiderKit-Player.app */;
+			productReference = D93C4CB92800CC18000955E1 /* CiderKit-PlayerSample.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D9B8557827F0C86F00D605F4 /* CiderKit-EditorTests */ = {
@@ -517,7 +517,7 @@
 				D9B8557827F0C86F00D605F4 /* CiderKit-EditorTests */,
 				D93C4C8E2800CBD6000955E1 /* CiderKit-Engine */,
 				D93C4C972800CBD6000955E1 /* CiderKit-EngineTests */,
-				D93C4CB82800CC18000955E1 /* CiderKit-Player */,
+				D93C4CB82800CC18000955E1 /* CiderKit-PlayerSample */,
 			);
 		};
 /* End PBXProject section */
@@ -641,7 +641,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D93C4CBC2800CC18000955E1 /* CiderKit_PlayerApp.swift in Sources */,
+				D93C4CBC2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -807,6 +807,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xhaleera.CiderKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -835,6 +836,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.xhaleera.CiderKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -863,7 +865,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-Engine";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -895,7 +897,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-Engine";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -947,7 +949,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "CiderKit-Player/CiderKit_Player.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "CiderKit-PlayerSample/CiderKit_PlayerSample.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -956,15 +958,15 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "CiderKit-Player/Info.plist";
+				INFOPLIST_FILE = "CiderKit-PlayerSample/Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-Player";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-PlayerSample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -976,7 +978,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "CiderKit-Player/CiderKit_Player.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "CiderKit-PlayerSample/CiderKit_PlayerSample.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -985,15 +987,15 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "CiderKit-Player/Info.plist";
+				INFOPLIST_FILE = "CiderKit-PlayerSample/Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-Player";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xhaleera.CiderKit-PlayerSample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1088,7 +1090,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D93C4CC52800CC1B000955E1 /* Build configuration list for PBXNativeTarget "CiderKit-Player" */ = {
+		D93C4CC52800CC1B000955E1 /* Build configuration list for PBXNativeTarget "CiderKit-PlayerSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D93C4CC62800CC1B000955E1 /* Debug */,
