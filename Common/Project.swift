@@ -10,6 +10,8 @@ open class Project {
     public let url: URL
     public let settings: ProjectSettings
     
+    public var mapsDirectoryURL: URL { URL(fileURLWithPath: "Maps", relativeTo: url) }
+    
     private init(url: URL) throws {
         let projectSettingsFileURL = URL(fileURLWithPath: "Settings/project.cksettings", relativeTo: url)
         do {

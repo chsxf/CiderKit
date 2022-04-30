@@ -197,6 +197,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         }
         if selectedURL == nil {
             let savePanel = NSSavePanel()
+            savePanel.directoryURL = Project.current?.mapsDirectoryURL
             if let type = UTType("com.xhaleera.CiderKit.map") {
                 savePanel.allowedContentTypes = [ type ]
             }
@@ -241,6 +242,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
             let openPanel = NSOpenPanel()
             openPanel.canChooseFiles = true
             openPanel.canChooseDirectories = false
+            openPanel.directoryURL = Project.current?.mapsDirectoryURL
             if let type = UTType("com.xhaleera.CiderKit.map") {
                 openPanel.allowedContentTypes = [ type ]
             }
