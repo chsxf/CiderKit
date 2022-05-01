@@ -1,7 +1,7 @@
 import Foundation
 import SpriteKit
 
-public enum OverflowMode {
+public enum OverflowMode: String {
     case PersistLast
     case Loop
     case Mirror
@@ -9,17 +9,29 @@ public enum OverflowMode {
 
 public class SequenceMaterial: BaseMaterial {
     
+    enum Overrides: String {
+        case overflowMode = "om"
+    }
+    
     private let overflowMode: OverflowMode
     
     private var currentSequenceIndex: Int = -1
     private var sequenceCount: Int = 0
     
-    public init(spriteSequences: [SKAction], overflowMode: OverflowMode, shader: SKShader? = nil, shared: Bool = true) {
+    public init(spriteSequences: [SKAction], overflowMode: OverflowMode, shader: SKShader? = nil) {
         self.overflowMode = overflowMode
-        super.init(spriteSequences: spriteSequences, shader: shader, shared: shared)
+        super.init(spriteSequences: spriteSequences, shader: shader)
     }
     
-    override public func nextSpriteSequence() -> SKAction {
+    public convenience init(sprites: [SKTexture], overflowMode: OverflowMode, shader: SKShader? = nil) {
+        var spriteSequences = [SKAction]()
+        for sprite in sprites {
+            spriteSequences.append(SKAction.setTexture(sprite, resize: true))
+        }
+        self.init(spriteSequences: spriteSequences, overflowMode: overflowMode, shader: shader)
+    }
+    
+    override public func nextSpriteSequence(withLocalOverrides localOverrides: CustomSettings?) -> SKAction {
         switch overflowMode {
         case .PersistLast:
             currentSequenceIndex = min(currentSequenceIndex + 1, spriteSequences.count - 1)
@@ -51,8 +63,12 @@ public class SequenceMaterial: BaseMaterial {
         sequenceCount = 0
     }
     
-    override public func clone() -> BaseMaterial {
-        return SequenceMaterial(spriteSequences: spriteSequences, overflowMode: overflowMode, shader: shader, shared: shared)
+    override public func clone(withOverrides overrides: CustomSettings?) -> BaseMaterial {
+        var newOverflowMode = overflowMode
+        if let overriddenOverflow = overrides?.getString(for: Overrides.overflowMode.rawValue), let overflowFromRawValue = OverflowMode(rawValue: overriddenOverflow) {
+            newOverflowMode = overflowFromRawValue
+        }
+        return SequenceMaterial(spriteSequences: spriteSequences, overflowMode: newOverflowMode, shader: shader)
     }
     
 }

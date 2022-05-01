@@ -8,6 +8,10 @@ class MapCellComponent: GKComponent
     var mapY: Int
     let elevation: Int?
     
+    var groundMaterialOverrides: CustomSettings? = nil
+    var leftElevationMaterialOverrides: CustomSettings? = nil
+    var rightElevationMaterialOverrides: CustomSettings? = nil
+    
     init(region: MapRegion?, mapX: Int, mapY: Int, elevation: Int?) {
         self.region = region
         self.mapX = mapX

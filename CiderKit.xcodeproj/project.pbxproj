@@ -24,6 +24,8 @@
 		D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91ED91227E7AA520016D818 /* EditorAssets.xcassets */; };
 		D9254462281AB55B002DCA4C /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9254461281AB55B002DCA4C /* Project.swift */; };
 		D9254463281AB55B002DCA4C /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9254461281AB55B002DCA4C /* Project.swift */; };
+		D92EE974281DD3F2009B2055 /* CustomSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92EE973281DD3F2009B2055 /* CustomSettings.swift */; };
+		D92EE975281DD3F2009B2055 /* CustomSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92EE973281DD3F2009B2055 /* CustomSettings.swift */; };
 		D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187A27E71D77009A14E2 /* EditorGameView.swift */; };
 		D93C24F42801EBBE0023FE7A /* RandomizedMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */; };
 		D93C24F52801EBBE0023FE7A /* BaseMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */; };
@@ -131,6 +133,7 @@
 		D91061D52755F2D900EA8A03 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D91ED91227E7AA520016D818 /* EditorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = EditorAssets.xcassets; sourceTree = "<group>"; };
 		D9254461281AB55B002DCA4C /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		D92EE973281DD3F2009B2055 /* CustomSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettings.swift; sourceTree = "<group>"; };
 		D936187827E71CE5009A14E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D936187A27E71D77009A14E2 /* EditorGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorGameView.swift; sourceTree = "<group>"; };
 		D93C24F9280227500023FE7A /* Materials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Materials.swift; sourceTree = "<group>"; };
@@ -241,6 +244,7 @@
 				D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */,
 				D93C24FC2802E2680023FE7A /* CellRenderers.swift */,
 				D91061C92755F27600EA8A03 /* CharacterComponent.swift */,
+				D92EE973281DD3F2009B2055 /* CustomSettings.swift */,
 				D91061CA2755F27600EA8A03 /* Functions.swift */,
 				D91061C72755F27600EA8A03 /* Keycode.swift */,
 				D9730B1427B795A40007513C /* Math.swift */,
@@ -599,6 +603,7 @@
 				D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */,
 				D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */,
 				D91061D02755F27600EA8A03 /* CharacterComponent.swift in Sources */,
+				D92EE974281DD3F2009B2055 /* CustomSettings.swift in Sources */,
 				D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */,
 				D9730B1527B795A40007513C /* Math.swift in Sources */,
 				D91061D12755F27600EA8A03 /* Functions.swift in Sources */,
@@ -650,6 +655,7 @@
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,
 				D93C24FB280227690023FE7A /* Materials.swift in Sources */,
 				D93C4CAB2800CBE0000955E1 /* Screen.swift in Sources */,
+				D92EE975281DD3F2009B2055 /* CustomSettings.swift in Sources */,
 				D9AF1F5B280BE5FF00BF34B3 /* ProjectSettings.swift in Sources */,
 				D93C24F42801EBBE0023FE7A /* RandomizedMaterial.swift in Sources */,
 				D93C24F62801EBBE0023FE7A /* SequenceMaterial.swift in Sources */,

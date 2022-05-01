@@ -15,7 +15,7 @@ public struct CellRenderer {
     
     private let groundMaterialName: String
     public var groundMaterial: BaseMaterial {
-        get throws { try Materials[groundMaterialName] }
+        get throws { try Materials.material(named: groundMaterialName, withOverrides: nil) }
     }
     private var _groundMaterialResetPolicy: CellRendererMaterialResetPolicy = .inherit
     public var groundMaterialResetPolicy: CellRendererMaterialResetPolicy {
@@ -25,7 +25,7 @@ public struct CellRenderer {
     
     private let leftElevationMaterialName: String
     public var leftElevationMaterial: BaseMaterial {
-        get throws { try Materials[leftElevationMaterialName] }
+        get throws { try Materials.material(named: leftElevationMaterialName, withOverrides: nil) }
     }
     private var _leftElevationMaterialResetPolicy: CellRendererMaterialResetPolicy = .resetWithEachCell
     public var leftElevationMaterialResetPolicy: CellRendererMaterialResetPolicy {
@@ -35,7 +35,7 @@ public struct CellRenderer {
     
     private let rightElevationMaterialName: String
     public var rightElevationMaterial: BaseMaterial {
-        get throws { try Materials[rightElevationMaterialName] }
+        get throws { try Materials.material(named: rightElevationMaterialName, withOverrides: nil) }
     }
     private var _rightElevationMaterialResetPolicy: CellRendererMaterialResetPolicy = .resetWithEachCell
     public var rightElevationMaterialResetPolicy: CellRendererMaterialResetPolicy {

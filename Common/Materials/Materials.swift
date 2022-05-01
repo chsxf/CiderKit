@@ -17,13 +17,11 @@ final public class Materials {
         materials[name] = material
     }
     
-    public static subscript(name: String) -> BaseMaterial {
-        get throws {
-            guard let material = Self.materials[name] else {
-                throw MaterialsError.notRegistered
-            }
-            return material.shared ? material : material.clone()
+    public static func material(named name: String, withOverrides overrides: CustomSettings?) throws -> BaseMaterial {
+        guard let material = Self.materials[name] else {
+            throw MaterialsError.notRegistered
         }
+        return material.clone(withOverrides: overrides)
     }
     
 }

@@ -240,7 +240,7 @@ extension MapNode {
                 let region = regions[i]
                 for i2 in i+1..<regions.count {
                     let region2 = regions[i2]
-                    if let newRegionDescription = region.regionDescription.merge(with: region2.regionDescription) {
+                    if let newRegionDescription = region.regionDescription.merging(with: region2.regionDescription) {
                         let newRegion = MapRegion(forMap: self, description: newRegionDescription)
                         regions[i] = newRegion
                         regions.remove(at: i2)

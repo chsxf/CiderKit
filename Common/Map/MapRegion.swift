@@ -49,6 +49,10 @@ class MapRegion : SKNode, Identifiable, Comparable {
             let mapX = x + Int(regionDescription.area.minX)
             
             for y in 0..<Int(regionDescription.area.height) {
+                var localLeftElevationMaterialOverride: CustomSettings? = nil
+                var localRightElevationMaterialOverride: CustomSettings? = nil
+                
+                let indexInRegion = y * regionDescription.area.width + x
                 let mapY = y + Int(regionDescription.area.minY)
                 
                 let isoX = MapNode.halfWidth * (mapX - mapY)
@@ -67,7 +71,9 @@ class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.anchorPoint = CGPoint(x: 1, y: 1)
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -2
-                    leftElevationMaterial.applyOn(spriteNode: sprite)
+                    
+                    localLeftElevationMaterialOverride = regionDescription.leftElevationMaterialOverride(at: indexInRegion)
+                    leftElevationMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localLeftElevationMaterialOverride)
                     addChild(sprite)
                 }
 
@@ -84,7 +90,9 @@ class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.anchorPoint = CGPoint(x: 0, y: 1)
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -1
-                    rightElevationMaterial.applyOn(spriteNode: sprite)
+                    
+                    localRightElevationMaterialOverride = regionDescription.rightElevationMaterialOverride(at: indexInRegion)
+                    rightElevationMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localRightElevationMaterialOverride)
                     addChild(sprite)
                 }
             
@@ -95,12 +103,17 @@ class MapRegion : SKNode, Identifiable, Comparable {
                 let sprite = SKSpriteNode(texture: nil)
                 sprite.anchorPoint = CGPoint(x: 0.5, y: 1)
                 sprite.position = CGPoint(x: isoX, y: isoY)
-                groundMaterial.applyOn(spriteNode: sprite)
+                
+                let localGroundMaterialOverride = regionDescription.groundMaterialOverride(at: indexInRegion)
+                groundMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localGroundMaterialOverride)
                 addChild(sprite)
                 
                 let entity = GKEntity()
                 entity.addComponent(GKSKNodeComponent(node: sprite))
                 let cell = MapCellComponent(region: self, mapX: mapX, mapY: mapY, elevation: regionDescription.elevation)
+                cell.groundMaterialOverrides = localGroundMaterialOverride
+                cell.leftElevationMaterialOverrides = localLeftElevationMaterialOverride
+                cell.rightElevationMaterialOverrides = localRightElevationMaterialOverride
                 entity.addComponent(cell)
                 cellEntities.append(entity)
             }
@@ -162,7 +175,7 @@ extension MapRegion {
         let hasBottomSubdiv = intersection.minY > regionDescription.area.minY
         let hasTopSubdiv = intersection.maxY < regionDescription.area.maxY
         
-        let mainSubdivDescription = MapRegionDescription(area: intersection, elevation: regionDescription.elevation)
+        let mainSubdivDescription = MapRegionDescription(byExporting: intersection, from: regionDescription)
         let mainSubdivision = MapRegion(forMap: map!, description: mainSubdivDescription)
         
         var otherSubdivisions = [MapRegion]()
@@ -170,7 +183,7 @@ extension MapRegion {
         if hasLeftSubdiv {
             var area = regionDescription.area
             area.width = intersection.minX - area.minX
-            let otherSubdivDescription = MapRegionDescription(area: area, elevation: regionDescription.elevation)
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: regionDescription)
             let otherMapRegion = MapRegion(forMap: map!, description: otherSubdivDescription)
             otherSubdivisions.append(otherMapRegion)
         }
@@ -179,21 +192,21 @@ extension MapRegion {
             var area = regionDescription.area
             area.width = area.maxX - intersection.maxX
             area.x = intersection.maxX
-            let otherSubdivDescription = MapRegionDescription(area: area, elevation: regionDescription.elevation)
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: regionDescription)
             let otherMapRegion = MapRegion(forMap: map!, description: otherSubdivDescription)
             otherSubdivisions.append(otherMapRegion)
         }
         
         if hasTopSubdiv {
             let area = MapArea(x: intersection.minX, y: intersection.maxY, width: intersection.width, height: regionDescription.area.maxY - intersection.maxY)
-            let otherSubdivDescription = MapRegionDescription(area: area, elevation: regionDescription.elevation)
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: regionDescription)
             let otherMapRegion = MapRegion(forMap: map!, description: otherSubdivDescription)
             otherSubdivisions.append(otherMapRegion)
         }
         
         if hasBottomSubdiv {
             let area = MapArea(x: intersection.minX, y: regionDescription.area.minY, width: intersection.width, height: intersection.minY - regionDescription.area.minY)
-            let otherSubdivDescription = MapRegionDescription(area: area, elevation: regionDescription.elevation)
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: regionDescription)
             let otherMapRegion = MapRegion(forMap: map!, description: otherSubdivDescription)
             otherSubdivisions.append(otherMapRegion)
         }

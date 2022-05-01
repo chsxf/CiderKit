@@ -34,6 +34,10 @@ public struct MapArea: Equatable, CustomStringConvertible {
         return minX <= other.minX && maxX >= other.maxX && minY <= other.minY && maxY >= other.maxY
     }
     
+    public func contains(x: Int, y: Int) -> Bool {
+        return x >= self.x && x < self.maxX && y >= self.y && y < self.maxY
+    }
+    
     public func intersects(_ other: MapArea) -> Bool {
         let overlapsOnX = (maxX > other.minX && minX < other.maxX)
         let overlapsOnY = (maxY > other.minY && minY < other.maxY)
@@ -52,6 +56,10 @@ public struct MapArea: Equatable, CustomStringConvertible {
         }
         
         return intersectionArea
+    }
+    
+    public func relative(to area: MapArea) -> MapArea {
+        return MapArea(x: self.x - area.x, y: self.y - area.y, width: self.width, height: self.height)
     }
     
 }
