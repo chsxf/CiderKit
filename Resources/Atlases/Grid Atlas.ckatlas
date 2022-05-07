@@ -1,0 +1,75 @@
+{
+  "texture": "Grid Atlas",
+  "sprites": [
+    {
+      "name": "grid_tile_Bottom",
+      "x": 1,
+      "y": 1,
+      "w": 48,
+      "h": 25
+    },
+    {
+      "name": "grid_tile_BottomRight",
+      "x": 51,
+      "y": 1,
+      "w": 48,
+      "h": 25
+    },
+    {
+      "name": "grid_tile_Right",
+      "x": 101,
+      "y": 1,
+      "w": 48,
+      "h": 25
+    },
+    {
+      "name": "grid_tile_BottomLeft",
+      "x": 1,
+      "y": 28,
+      "w": 48,
+      "h": 25
+    },
+    {
+      "name": "grid_tile_Base",
+      "x": 51,
+      "y": 28,
+      "w": 48,
+      "h": 25
+    },
+    {
+      "name": "grid_tile_TopRight",
+      "x": 101,
+      "y": 28,
+      "w": 48,
+      "h": 25
+    },
+    {
+      "name": "grid_tile_Left",
+      "x": 1,
+      "y": 55,
+      "w": 48,
+      "h": 25
+    },
+    {
+      "name": "grid_tile_TopLeft",
+      "x": 51,
+      "y": 55,
+      "w": 48,
+      "h": 25
+    },
+    {
+      "name": "grid_tile_Top",
+      "x": 101,
+      "y": 55,
+      "w": 48,
+      "h": 25
+    },
+    {
+      "name": "triaxis",
+      "x": 1,
+      "y": 82,
+      "w": 24,
+      "h": 22
+    }
+  ]
+}

@@ -28,6 +28,7 @@ class WorldGrid: SKNode {
     
     override init() {
         triaxis = SKSpriteNode(texture: Atlases["grid"]["triaxis"])
+        triaxis.anchorPoint = CGPoint(x: 0.5, y: 0.32)
         
         for element in GridElement.allCases {
             gridTileTextures[element] = Atlases["grid"]["grid_tile_\(element)"]

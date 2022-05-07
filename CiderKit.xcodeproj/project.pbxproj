@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		D90047BB28017AC3003CE96C /* map.ckmap in Resources */ = {isa = PBXBuildFile; fileRef = D91061BE2755F23700EA8A03 /* map.ckmap */; };
-		D90047BC28017B63003CE96C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
 		D90047BD28017D29003CE96C /* MapAreaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */; };
 		D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */; };
-		D91061B32755F0B400EA8A03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91061B22755F0B400EA8A03 /* Assets.xcassets */; };
 		D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegion.swift */; };
 		D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C22755F24100EA8A03 /* MapDescription.swift */; };
 		D91061C62755F24100EA8A03 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C32755F24100EA8A03 /* MapNode.swift */; };
@@ -58,6 +56,13 @@
 		D96809A627E9283E001D2C04 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CECB2627E91DB0000E8CC7 /* Screen.swift */; };
 		D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */; };
 		D9730B1527B795A40007513C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
+		D978AE1C282703C7008F8D0E /* AtlasDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D978AE1B282703C7008F8D0E /* AtlasDescription.swift */; };
+		D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D978AE1B282703C7008F8D0E /* AtlasDescription.swift */; };
+		D978AE2028270EE8008F8D0E /* Grid Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */; };
+		D978AE2B282715A6008F8D0E /* Main Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE2A282715A6008F8D0E /* Main Atlas.ckatlas */; };
+		D978AE2D282715AB008F8D0E /* Main Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE2A282715A6008F8D0E /* Main Atlas.ckatlas */; };
+		D978AE3128271857008F8D0E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D978AE3028271857008F8D0E /* Assets.xcassets */; };
+		D978AE3228271857008F8D0E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D978AE3028271857008F8D0E /* Assets.xcassets */; };
 		D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7E827DDEBBC00AC2465 /* InspectorView.swift */; };
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
 		D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */; };
@@ -118,9 +123,8 @@
 /* Begin PBXFileReference section */
 		D91061AB2755F0B200EA8A03 /* CiderKit-Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CiderKit-Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKitApp.swift; sourceTree = "<group>"; };
-		D91061B22755F0B400EA8A03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D91061B72755F0B400EA8A03 /* CiderKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit.entitlements; sourceTree = "<group>"; };
-		D91061BE2755F23700EA8A03 /* map.ckmap */ = {isa = PBXFileReference; explicitFileType = text.json; fileEncoding = 4; path = map.ckmap; sourceTree = "<group>"; };
+		D91061BE2755F23700EA8A03 /* map.ckmap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = map.ckmap; sourceTree = "<group>"; };
 		D91061C12755F24100EA8A03 /* MapRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapRegion.swift; sourceTree = "<group>"; };
 		D91061C22755F24100EA8A03 /* MapDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDescription.swift; sourceTree = "<group>"; };
 		D91061C32755F24100EA8A03 /* MapNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapNode.swift; sourceTree = "<group>"; };
@@ -147,6 +151,10 @@
 		D93C4CC42800CC1B000955E1 /* CiderKit_PlayerSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit_PlayerSample.entitlements; sourceTree = "<group>"; };
 		D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionManager.swift; sourceTree = "<group>"; };
 		D9730B1427B795A40007513C /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
+		D978AE1B282703C7008F8D0E /* AtlasDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtlasDescription.swift; sourceTree = "<group>"; };
+		D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Grid Atlas.ckatlas"; sourceTree = "<group>"; };
+		D978AE2A282715A6008F8D0E /* Main Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Main Atlas.ckatlas"; sourceTree = "<group>"; };
+		D978AE3028271857008F8D0E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		D985E7EA27DE38D300AC2465 /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
 		D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorFunctions.swift; sourceTree = "<group>"; };
@@ -239,8 +247,6 @@
 		D91061AD2755F0B200EA8A03 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				D91061CC2755F27600EA8A03 /* Atlas.swift */,
-				D91061C82755F27600EA8A03 /* Atlases.swift */,
 				D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */,
 				D93C24FC2802E2680023FE7A /* CellRenderers.swift */,
 				D91061C92755F27600EA8A03 /* CharacterComponent.swift */,
@@ -251,7 +257,8 @@
 				D9254461281AB55B002DCA4C /* Project.swift */,
 				D9CECB2627E91DB0000E8CC7 /* Screen.swift */,
 				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
-				D91061B22755F0B400EA8A03 /* Assets.xcassets */,
+				D978AE3028271857008F8D0E /* Assets.xcassets */,
+				D9C132E52827008D00DE8457 /* Atlases */,
 				D91061C02755F24100EA8A03 /* Map */,
 				D9E2C27E28018E9D00B17CD0 /* Materials */,
 				D9AF1F58280BE5E300BF34B3 /* Settings */,
@@ -263,6 +270,7 @@
 		D91061BD2755F1D600EA8A03 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D978AE1E28270898008F8D0E /* Atlases */,
 				D91061BE2755F23700EA8A03 /* map.ckmap */,
 				D9A87A8427DD43770079C831 /* Shaders */,
 			);
@@ -330,6 +338,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		D978AE1E28270898008F8D0E /* Atlases */ = {
+			isa = PBXGroup;
+			children = (
+				D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */,
+				D978AE2A282715A6008F8D0E /* Main Atlas.ckatlas */,
+			);
+			path = Atlases;
+			sourceTree = "<group>";
+		};
 		D985E7E727DDEBAA00AC2465 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,6 +397,16 @@
 				D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */,
 			);
 			path = Map;
+			sourceTree = "<group>";
+		};
+		D9C132E52827008D00DE8457 /* Atlases */ = {
+			isa = PBXGroup;
+			children = (
+				D91061CC2755F27600EA8A03 /* Atlas.swift */,
+				D978AE1B282703C7008F8D0E /* AtlasDescription.swift */,
+				D91061C82755F27600EA8A03 /* Atlases.swift */,
+			);
+			path = Atlases;
 			sourceTree = "<group>";
 		};
 		D9E2C27E28018E9D00B17CD0 /* Materials */ = {
@@ -554,8 +581,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */,
-				D91061B32755F0B400EA8A03 /* Assets.xcassets in Resources */,
+				D978AE2B282715A6008F8D0E /* Main Atlas.ckatlas in Resources */,
 				D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */,
+				D978AE3128271857008F8D0E /* Assets.xcassets in Resources */,
+				D978AE2028270EE8008F8D0E /* Grid Atlas.ckatlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -577,7 +606,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D90047BC28017B63003CE96C /* Assets.xcassets in Resources */,
+				D978AE2D282715AB008F8D0E /* Main Atlas.ckatlas in Resources */,
+				D978AE3228271857008F8D0E /* Assets.xcassets in Resources */,
 				D90047BB28017AC3003CE96C /* map.ckmap in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -600,6 +630,7 @@
 				D9254462281AB55B002DCA4C /* Project.swift in Sources */,
 				D91061C62755F24100EA8A03 /* MapNode.swift in Sources */,
 				D91061CE2755F27600EA8A03 /* Keycode.swift in Sources */,
+				D978AE1C282703C7008F8D0E /* AtlasDescription.swift in Sources */,
 				D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */,
 				D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */,
 				D91061D02755F27600EA8A03 /* CharacterComponent.swift in Sources */,
@@ -654,6 +685,7 @@
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,
 				D93C24FB280227690023FE7A /* Materials.swift in Sources */,
+				D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */,
 				D93C4CAB2800CBE0000955E1 /* Screen.swift in Sources */,
 				D92EE975281DD3F2009B2055 /* CustomSettings.swift in Sources */,
 				D9AF1F5B280BE5FF00BF34B3 /* ProjectSettings.swift in Sources */,
@@ -837,6 +869,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "CiderKit-Editor/Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -866,6 +900,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "CiderKit-Editor/Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

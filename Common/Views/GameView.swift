@@ -36,13 +36,13 @@ public class GameView: SKView, SKSceneDelegate {
     }
     
     func registerDefaultMaterialsAndRenderers() {
-        let defaultGroundMaterial = BaseMaterial(sprites: [ Atlases.main["default_tile"], Atlases.main["default_tile_green"] ])
+        let defaultGroundMaterial = BaseMaterial(sprites: [ Atlases.main["default_tile"]!, Atlases.main["default_tile_green"]! ])
         try! Materials.register(material: defaultGroundMaterial, forName: "default_ground")
         
-        let defaultLeftElevationMaterial = BaseMaterial(sprite: Atlases.main["default_elevation_left"])
+        let defaultLeftElevationMaterial = BaseMaterial(sprite: Atlases.main["default_elevation_left"]!)
         try! Materials.register(material: defaultLeftElevationMaterial, forName: "default_elevation_left")
         
-        let defaultRightElevationMaterial = BaseMaterial(sprite: Atlases.main["default_elevation_right"])
+        let defaultRightElevationMaterial = BaseMaterial(sprite: Atlases.main["default_elevation_right"]!)
         try! Materials.register(material: defaultRightElevationMaterial, forName: "default_elevation_right")
         
         let defaultRenderer = CellRenderer(

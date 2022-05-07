@@ -292,23 +292,19 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         let delegate = CiderKitApp()
         NSApp.delegate = delegate
 
-        Task.detached {
-            try? await Atlases.preload(atlases: [
-                "main": "Main Atlas",
-                "grid": "Grid Atlas"
-            ])
+        try! Atlases.load(atlases: [
+            Atlases.MAIN_ATLAS_KEY: Bundle.main.url(forResource: "Main Atlas", withExtension: "ckatlas")!,
+            "grid": Bundle.main.url(forResource: "Grid Atlas", withExtension: "ckatlas")!
+        ])
 
-            DispatchQueue.main.async {
-                delegate.setup()
-                delegate.setupMainMenu()
-                delegate.setupToolbar()
-                
-                delegate.window.makeKeyAndOrderFront(nil)
-                delegate.window.toggleFullScreen(nil)
-                
-                delegate.openProjectManagerView()
-            }
-        }
+        delegate.setup()
+        delegate.setupMainMenu()
+        delegate.setupToolbar()
+        
+        delegate.window.makeKeyAndOrderFront(nil)
+        delegate.window.toggleFullScreen(nil)
+        
+        delegate.openProjectManagerView()
         
         NSApp.run()
     }

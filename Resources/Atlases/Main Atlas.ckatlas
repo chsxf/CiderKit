@@ -1,0 +1,37 @@
+{
+  "texture": "Main Atlas",
+  "variants": {
+      "normals": "Main Atlas - Normals",
+      "position": "Main Atlas - Position"
+  },
+  "sprites": [
+    {
+      "name": "default_elevation_left",
+      "x": 1,
+      "y": 1,
+      "w": 24,
+      "h": 22
+    },
+    {
+      "name": "default_elevation_right",
+      "x": 27,
+      "y": 1,
+      "w": 24,
+      "h": 22
+    },
+    {
+      "name": "default_tile",
+      "x": 1,
+      "y": 25,
+      "w": 48,
+      "h": 25
+    },
+    {
+      "name": "default_tile_green",
+      "x": 51,
+      "y": 25,
+      "w": 48,
+      "h": 25
+    }
+  ]
+}
