@@ -61,6 +61,7 @@ class EditorGameView: GameView {
             
             viewFrustrumShape = SKShapeNode(rectOf: CGSize(width: defaultViewWidth, height: defaultViewHeight))
             viewFrustrumShape!.strokeColor = .red
+            viewFrustrumShape!.zPosition = 10001
             camera.addChild(viewFrustrumShape!)
         }
     }
@@ -172,6 +173,20 @@ class EditorGameView: GameView {
     override func loadMap(file: URL) {
         super.loadMap(file: file)
         selectionModel.clear()
+    }
+    
+    override func prepareSceneForPrepasses() {
+        super.prepareSceneForPrepasses()
+        
+        worldGrid.isHidden = true
+        viewFrustrumShape?.isHidden = true
+    }
+    
+    override func prepassesDidComplete() {
+        super.prepassesDidComplete()
+        
+        worldGrid.isHidden = false
+        viewFrustrumShape?.isHidden = false
     }
     
 }

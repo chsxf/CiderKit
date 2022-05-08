@@ -43,6 +43,8 @@ final public class Atlases {
                     
                     let variantAtlas = Atlas(from: description, in: locator.bundle, variant: variantKey)
                     loadedAtlases[fullVariantKey] = variantAtlas
+                    
+                    atlas.add(variant: variantAtlas, for: variantKey)
                 }
             }
         }

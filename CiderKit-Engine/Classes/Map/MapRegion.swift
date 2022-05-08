@@ -58,6 +58,8 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 let isoX = MapNode.halfWidth * (mapX - mapY)
                 let isoY = (regionDescription.elevation * MapNode.elevationHeight) - MapNode.halfHeight * (mapY + mapX)
                 
+                let zForShader = Float(regionDescription.elevation) / 4.0
+                
                 if defaultRenderer.leftElevationMaterialResetPolicy == .resetWithEachCell {
                     leftElevationMaterial.reset()
                 }
@@ -72,8 +74,12 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -2
                     
+                    let z = zForShader - Float(i + 1) * 0.25
+                    sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)), forAttribute: "a_position")
+                    
                     localLeftElevationMaterialOverride = regionDescription.leftElevationMaterialOverride(at: indexInRegion)
                     leftElevationMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localLeftElevationMaterialOverride)
+                    
                     addChild(sprite)
                 }
 
@@ -91,8 +97,12 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -1
                     
+                    let z = zForShader - Float(i + 1) * 0.25
+                    sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)), forAttribute: "a_position")
+                    
                     localRightElevationMaterialOverride = regionDescription.rightElevationMaterialOverride(at: indexInRegion)
                     rightElevationMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localRightElevationMaterialOverride)
+                    
                     addChild(sprite)
                 }
             
@@ -106,6 +116,9 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 
                 let localGroundMaterialOverride = regionDescription.groundMaterialOverride(at: indexInRegion)
                 groundMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localGroundMaterialOverride)
+                
+                sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), zForShader)), forAttribute: "a_position")
+                
                 addChild(sprite)
                 
                 let entity = GKEntity()

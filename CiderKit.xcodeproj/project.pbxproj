@@ -47,6 +47,8 @@
 		D972C1B82827D9FD00D85376 /* EditorMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D972C1B72827D9FD00D85376 /* EditorMapNode.swift */; };
 		D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D978AE1B282703C7008F8D0E /* AtlasDescription.swift */; };
 		D978AE2028270EE8008F8D0E /* Grid Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */; };
+		D978C42B28281B6000BDF0BB /* UberShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D978C42A28281B6000BDF0BB /* UberShader.fsh */; };
+		D981239228292E3B00CC5897 /* LightModelFinalGathering.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D981239128292E3B00CC5897 /* LightModelFinalGathering.fsh */; };
 		D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7E827DDEBBC00AC2465 /* InspectorView.swift */; };
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
 		D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */; };
@@ -140,6 +142,8 @@
 		D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Grid Atlas.ckatlas"; sourceTree = "<group>"; };
 		D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Default Tile Atlas.ckatlas"; sourceTree = "<group>"; };
 		D978AE3028271857008F8D0E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D978C42A28281B6000BDF0BB /* UberShader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = UberShader.fsh; sourceTree = "<group>"; };
+		D981239128292E3B00CC5897 /* LightModelFinalGathering.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = LightModelFinalGathering.fsh; sourceTree = "<group>"; };
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		D985E7EA27DE38D300AC2465 /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
 		D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorFunctions.swift; sourceTree = "<group>"; };
@@ -327,7 +331,8 @@
 		D972C1B22827D19C00D85376 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */,
+				D978C42828281B3F00BDF0BB /* Atlases */,
+				D978C42928281B4800BDF0BB /* Shaders */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -347,6 +352,23 @@
 				D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */,
 			);
 			path = Atlases;
+			sourceTree = "<group>";
+		};
+		D978C42828281B3F00BDF0BB /* Atlases */ = {
+			isa = PBXGroup;
+			children = (
+				D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */,
+			);
+			path = Atlases;
+			sourceTree = "<group>";
+		};
+		D978C42928281B4800BDF0BB /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				D978C42A28281B6000BDF0BB /* UberShader.fsh */,
+				D981239128292E3B00CC5897 /* LightModelFinalGathering.fsh */,
+			);
+			path = Shaders;
 			sourceTree = "<group>";
 		};
 		D985E7E727DDEBAA00AC2465 /* Views */ = {
@@ -594,8 +616,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D978C42B28281B6000BDF0BB /* UberShader.fsh in Resources */,
 				D972C1B12827D11300D85376 /* Assets.xcassets in Resources */,
 				D972C1B42827D1BB00D85376 /* Default Tile Atlas.ckatlas in Resources */,
+				D981239228292E3B00CC5897 /* LightModelFinalGathering.fsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

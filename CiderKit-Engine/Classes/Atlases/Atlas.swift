@@ -3,8 +3,10 @@ import SpriteKit
 
 public final class Atlas {
     
-    private let atlasTexture: SKTexture
+    public let atlasTexture: SKTexture
     private var atlasSprites: [String: SKTexture]
+    
+    private var variants: [String: Atlas] = [:]
     
     init(from description: AtlasDescription, in bundle: Bundle, variant: String?) {
         var textureName = description.texture
@@ -25,6 +27,14 @@ public final class Atlas {
     
     public subscript(spriteName: String) -> SKTexture? {
         return atlasSprites[spriteName]
+    }
+    
+    func add(variant: Atlas, for key: String) {
+        variants[key] = variant
+    }
+    
+    public func variant(for key: String) -> Atlas? {
+        return variants[key]
     }
     
 }

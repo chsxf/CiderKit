@@ -30,7 +30,8 @@ class WorldGrid: SKNode {
     override init() {
         triaxis = SKSpriteNode(texture: Atlases["grid"]["triaxis"])
         triaxis.anchorPoint = CGPoint(x: 0.5, y: 0.32)
-        
+        triaxis.zPosition = 10000
+
         for element in GridElement.allCases {
             gridTileTextures[element] = Atlases["grid"]["grid_tile_\(element)"]
             spritePools[element] = SpritePool()
@@ -45,7 +46,6 @@ class WorldGrid: SKNode {
         super.init()
         
         addChild(triaxis)
-        triaxis.zPosition = 10000
     }
     
     required init?(coder aDecoder: NSCoder) {
