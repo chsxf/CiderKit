@@ -1,6 +1,6 @@
 import Foundation
 
-struct MapDescription: Codable {
+public struct MapDescription: Codable {
     var regions: [MapRegionDescription]
     
     init() {
@@ -8,7 +8,7 @@ struct MapDescription: Codable {
     }
 }
 
-struct MapRegionDescription: Codable {
+public struct MapRegionDescription: Codable {
     
     private enum MaterialOverrideContext: String {
         case ground = "g"
@@ -26,9 +26,9 @@ struct MapRegionDescription: Codable {
     
     var elevation: Int
     
-    var area: MapArea { MapArea(x: x, y: y, width: width, height: height) }
+    public var area: MapArea { MapArea(x: x, y: y, width: width, height: height) }
     
-    init(x: Int, y: Int, width: Int, height: Int, elevation: Int) {
+    public init(x: Int, y: Int, width: Int, height: Int, elevation: Int) {
         self.x = x
         self.y = y
         self.width = width
@@ -38,8 +38,13 @@ struct MapRegionDescription: Codable {
         materialOverrides = nil
     }
     
-    init(area: MapArea, elevation: Int) {
+    public init(area: MapArea, elevation: Int) {
         self.init(x: area.minX, y: area.minY, width: area.width, height: area.height, elevation: elevation)
+    }
+    
+    init(byExporting area: MapArea, from other: MapRegionDescription) {
+        self.init(area: area, elevation: other.elevation)
+        importMaterialOverrides(from: other)
     }
     
     private func getMaterialOverride(for context: MaterialOverrideContext, at index: Int) -> CustomSettings? {
@@ -65,16 +70,7 @@ struct MapRegionDescription: Codable {
         return getMaterialOverride(for: MaterialOverrideContext.rightElevation, at: index)
     }
     
-}
-
-#if CIDERKIT_EDITOR
-extension MapRegionDescription {
-    init(byExporting area: MapArea, from other: MapRegionDescription) {
-        self.init(area: area, elevation: other.elevation)
-        importMaterialOverrides(from: other)
-    }
-    
-    func merging(with other: MapRegionDescription) -> MapRegionDescription? {
+    public func merging(with other: MapRegionDescription) -> MapRegionDescription? {
         guard elevation == other.elevation else {
             return nil
         }
@@ -143,5 +139,5 @@ extension MapRegionDescription {
             }
         }
     }
+    
 }
-#endif

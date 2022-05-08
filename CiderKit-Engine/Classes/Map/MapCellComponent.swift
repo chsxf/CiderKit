@@ -1,12 +1,12 @@
 import GameplayKit
 
-class MapCellComponent: GKComponent
+public class MapCellComponent: GKComponent
 {
-    private(set) weak var region: MapRegion?
+    public private(set) weak var region: MapRegion?
     
-    var mapX: Int
-    var mapY: Int
-    let elevation: Int?
+    public var mapX: Int
+    public var mapY: Int
+    public let elevation: Int?
     
     var groundMaterialOverrides: CustomSettings? = nil
     var leftElevationMaterialOverrides: CustomSettings? = nil
@@ -21,7 +21,7 @@ class MapCellComponent: GKComponent
         super.init()
     }
     
-    convenience init(mapX: Int, mapY: Int) {
+    public convenience init(mapX: Int, mapY: Int) {
         self.init(region: nil, mapX: mapX, mapY: mapY, elevation: nil)
     }
     
@@ -29,7 +29,7 @@ class MapCellComponent: GKComponent
         fatalError("init(coder:) has not been implemented")
     }
     
-    func containsScenePosition(_ scenePosition: CGPoint) -> Bool {
+    public func containsScenePosition(_ scenePosition: CGPoint) -> Bool {
         guard let node = entity?.component(ofType: GKSKNodeComponent.self)?.node else {
             return false
         }

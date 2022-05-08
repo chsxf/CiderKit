@@ -1,5 +1,6 @@
 import Foundation
 import GameplayKit
+import CiderKit_Engine
 
 class SelectionModel: ObservableObject {
     

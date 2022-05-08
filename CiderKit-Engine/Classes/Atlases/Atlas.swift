@@ -1,17 +1,19 @@
 import Foundation
 import SpriteKit
 
-final class Atlas {
+public final class Atlas {
     
     private let atlasTexture: SKTexture
     private var atlasSprites: [String: SKTexture]
     
-    init(from description: AtlasDescription, variant: String?) {
+    init(from description: AtlasDescription, in bundle: Bundle, variant: String?) {
         var textureName = description.texture
         if let variant = variant, let variants = description.variants {
             textureName = variants[variant]!
         }
-        atlasTexture = SKTexture(imageNamed: textureName)
+        
+        let image = bundle.image(forResource: textureName)!
+        atlasTexture = SKTexture(image: image)
         atlasTexture.filteringMode = .nearest
         atlasSprites = [:]
         for spriteDescription in description.sprites {
@@ -21,7 +23,7 @@ final class Atlas {
         }
     }
     
-    subscript(spriteName: String) -> SKTexture? {
+    public subscript(spriteName: String) -> SKTexture? {
         return atlasSprites[spriteName]
     }
     

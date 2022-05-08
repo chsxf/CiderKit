@@ -1,20 +1,20 @@
 import SpriteKit
 import GameplayKit
 
-class MapRegion : SKNode, Identifiable, Comparable {
+public class MapRegion : SKNode, Identifiable, Comparable {
     
     private static var nextRegionId: Int = 1
     
     private let _id: Int;
-    var id: Int { _id }
+    public var id: Int { _id }
     
-    var regionDescription: MapRegionDescription
+    public var regionDescription: MapRegionDescription
     
     private weak var map: MapNode?
     
-    var cellEntities: [GKEntity] = []
+    public var cellEntities: [GKEntity] = []
     
-    init(forMap map: MapNode, description: MapRegionDescription) {
+    public init(forMap map: MapNode, description: MapRegionDescription) {
         _id = MapRegion.nextRegionId
         MapRegion.nextRegionId += 1
         
@@ -129,7 +129,7 @@ class MapRegion : SKNode, Identifiable, Comparable {
                 && y >= Int(regionDescription.area.minY) && y < Int(regionDescription.area.maxY))
     }
     
-    static func < (lhs: MapRegion, rhs: MapRegion) -> Bool {
+    public static func < (lhs: MapRegion, rhs: MapRegion) -> Bool {
         let regionsOverlapOnX = (lhs.regionDescription.area.maxX > rhs.regionDescription.area.minX && lhs.regionDescription.area.minX < rhs.regionDescription.area.maxX)
         let regionsOverlapOnY = (lhs.regionDescription.area.maxY > rhs.regionDescription.area.minY && lhs.regionDescription.area.minY < rhs.regionDescription.area.maxY)
         
@@ -146,17 +146,12 @@ class MapRegion : SKNode, Identifiable, Comparable {
         return result
     }
     
-}
-
-#if CIDERKIT_EDITOR
-extension MapRegion {
-    
-    func increaseElevation() -> Bool {
+    public func increaseElevation() -> Bool {
         regionDescription.elevation += 1
         return true
     }
     
-    func decreaseElevation() -> Bool {
+    public func decreaseElevation() -> Bool {
         var needsRebuilding = false
         if regionDescription.elevation > 0 {
             regionDescription.elevation -= 1
@@ -165,7 +160,7 @@ extension MapRegion {
         return needsRebuilding
     }
     
-    func subdivide(subArea: MapArea) -> (mainSubdivision: MapRegion, otherSubdivisions: [MapRegion])? {
+    public func subdivide(subArea: MapArea) -> (mainSubdivision: MapRegion, otherSubdivisions: [MapRegion])? {
         guard let intersection = regionDescription.area.intersection(subArea) else {
             return nil
         }
@@ -215,4 +210,3 @@ extension MapRegion {
     }
     
 }
-#endif

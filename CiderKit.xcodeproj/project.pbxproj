@@ -10,28 +10,15 @@
 		D90047BB28017AC3003CE96C /* map.ckmap in Resources */ = {isa = PBXBuildFile; fileRef = D91061BE2755F23700EA8A03 /* map.ckmap */; };
 		D90047BD28017D29003CE96C /* MapAreaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */; };
 		D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */; };
-		D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegion.swift */; };
-		D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C22755F24100EA8A03 /* MapDescription.swift */; };
-		D91061C62755F24100EA8A03 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C32755F24100EA8A03 /* MapNode.swift */; };
-		D91061CE2755F27600EA8A03 /* Keycode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C72755F27600EA8A03 /* Keycode.swift */; };
-		D91061CF2755F27600EA8A03 /* Atlases.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C82755F27600EA8A03 /* Atlases.swift */; };
-		D91061D02755F27600EA8A03 /* CharacterComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C92755F27600EA8A03 /* CharacterComponent.swift */; };
-		D91061D12755F27600EA8A03 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CA2755F27600EA8A03 /* Functions.swift */; };
-		D91061D22755F27600EA8A03 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CB2755F27600EA8A03 /* GameView.swift */; };
-		D91061D32755F27600EA8A03 /* Atlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CC2755F27600EA8A03 /* Atlas.swift */; };
 		D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91ED91227E7AA520016D818 /* EditorAssets.xcassets */; };
-		D9254462281AB55B002DCA4C /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9254461281AB55B002DCA4C /* Project.swift */; };
 		D9254463281AB55B002DCA4C /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9254461281AB55B002DCA4C /* Project.swift */; };
-		D92EE974281DD3F2009B2055 /* CustomSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92EE973281DD3F2009B2055 /* CustomSettings.swift */; };
 		D92EE975281DD3F2009B2055 /* CustomSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92EE973281DD3F2009B2055 /* CustomSettings.swift */; };
 		D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187A27E71D77009A14E2 /* EditorGameView.swift */; };
 		D93C24F42801EBBE0023FE7A /* RandomizedMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */; };
 		D93C24F52801EBBE0023FE7A /* BaseMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */; };
 		D93C24F62801EBBE0023FE7A /* SequenceMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C2832801903800B17CD0 /* SequenceMaterial.swift */; };
 		D93C24F82801EBC90023FE7A /* CellRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */; };
-		D93C24FA280227500023FE7A /* Materials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24F9280227500023FE7A /* Materials.swift */; };
 		D93C24FB280227690023FE7A /* Materials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24F9280227500023FE7A /* Materials.swift */; };
-		D93C24FD2802E2680023FE7A /* CellRenderers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24FC2802E2680023FE7A /* CellRenderers.swift */; };
 		D93C24FE2802E2680023FE7A /* CellRenderers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24FC2802E2680023FE7A /* CellRenderers.swift */; };
 		D93C4C932800CBD6000955E1 /* CiderKit_Engine.docc in Sources */ = {isa = PBXBuildFile; fileRef = D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */; };
 		D93C4C992800CBD6000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
@@ -53,33 +40,22 @@
 		D93C4CBC2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */; };
 		D93C4CC92800CC25000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
 		D93C4CCA2800CC25000955E1 /* CiderKit_Engine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D96809A627E9283E001D2C04 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CECB2627E91DB0000E8CC7 /* Screen.swift */; };
 		D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */; };
-		D9730B1527B795A40007513C /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
-		D978AE1C282703C7008F8D0E /* AtlasDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D978AE1B282703C7008F8D0E /* AtlasDescription.swift */; };
+		D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D972C1AD2827B46500D85376 /* CiderKitEngine.swift */; };
+		D972C1B12827D11300D85376 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D978AE3028271857008F8D0E /* Assets.xcassets */; };
+		D972C1B42827D1BB00D85376 /* Default Tile Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */; };
+		D972C1B82827D9FD00D85376 /* EditorMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D972C1B72827D9FD00D85376 /* EditorMapNode.swift */; };
 		D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D978AE1B282703C7008F8D0E /* AtlasDescription.swift */; };
 		D978AE2028270EE8008F8D0E /* Grid Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */; };
-		D978AE2B282715A6008F8D0E /* Main Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE2A282715A6008F8D0E /* Main Atlas.ckatlas */; };
-		D978AE2D282715AB008F8D0E /* Main Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE2A282715A6008F8D0E /* Main Atlas.ckatlas */; };
-		D978AE3128271857008F8D0E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D978AE3028271857008F8D0E /* Assets.xcassets */; };
-		D978AE3228271857008F8D0E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D978AE3028271857008F8D0E /* Assets.xcassets */; };
 		D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7E827DDEBBC00AC2465 /* InspectorView.swift */; };
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
 		D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */; };
-		D9A87A8327DD320B0079C831 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
 		D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
-		D9AF1F5A280BE5FF00BF34B3 /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F59280BE5FF00BF34B3 /* ProjectSettings.swift */; };
 		D9AF1F5B280BE5FF00BF34B3 /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F59280BE5FF00BF34B3 /* ProjectSettings.swift */; };
 		D9AF1F5D280BE7F800BF34B3 /* ProjectManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F5C280BE7F800BF34B3 /* ProjectManagerView.swift */; };
 		D9AF1F60280BE99400BF34B3 /* ProjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F5F280BE99400BF34B3 /* ProjectManager.swift */; };
-		D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
 		D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BF52CC280A05F20093005B /* EditorMainView.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
-		D9E2C28028018EB600B17CD0 /* CellRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */; };
-		D9E2C28228018F3D00B17CD0 /* BaseMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */; };
-		D9E2C2842801903800B17CD0 /* SequenceMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C2832801903800B17CD0 /* SequenceMaterial.swift */; };
-		D9E2C286280192FC00B17CD0 /* RandomizedMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */; };
-		D9FBC5732765EA6A004A30BB /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +67,13 @@
 			remoteInfo = "CiderKit-Engine";
 		};
 		D93C4CCB2800CC25000955E1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D91061A32755F0B200EA8A03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D93C4C8E2800CBD6000955E1;
+			remoteInfo = "CiderKit-Engine";
+		};
+		D972C1B52827D3AB00D85376 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D91061A32755F0B200EA8A03 /* Project object */;
 			proxyType = 1;
@@ -150,10 +133,12 @@
 		D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKit_PlayerSampleApp.swift; sourceTree = "<group>"; };
 		D93C4CC42800CC1B000955E1 /* CiderKit_PlayerSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit_PlayerSample.entitlements; sourceTree = "<group>"; };
 		D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionManager.swift; sourceTree = "<group>"; };
+		D972C1AD2827B46500D85376 /* CiderKitEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKitEngine.swift; sourceTree = "<group>"; };
+		D972C1B72827D9FD00D85376 /* EditorMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapNode.swift; sourceTree = "<group>"; };
 		D9730B1427B795A40007513C /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		D978AE1B282703C7008F8D0E /* AtlasDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtlasDescription.swift; sourceTree = "<group>"; };
 		D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Grid Atlas.ckatlas"; sourceTree = "<group>"; };
-		D978AE2A282715A6008F8D0E /* Main Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Main Atlas.ckatlas"; sourceTree = "<group>"; };
+		D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Default Tile Atlas.ckatlas"; sourceTree = "<group>"; };
 		D978AE3028271857008F8D0E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		D985E7EA27DE38D300AC2465 /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
@@ -225,10 +210,8 @@
 				D93C4C902800CBD6000955E1 /* CiderKit-Engine */,
 				D93C4C9C2800CBD6000955E1 /* CiderKit-EngineTests */,
 				D99369622813F7C600AC07F9 /* CiderKit-PlayerSample */,
-				D91061AD2755F0B200EA8A03 /* Common */,
 				D93C4CC82800CC25000955E1 /* Frameworks */,
 				D91061AC2755F0B200EA8A03 /* Products */,
-				D91061BD2755F1D600EA8A03 /* Resources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -244,35 +227,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D91061AD2755F0B200EA8A03 /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */,
-				D93C24FC2802E2680023FE7A /* CellRenderers.swift */,
-				D91061C92755F27600EA8A03 /* CharacterComponent.swift */,
-				D92EE973281DD3F2009B2055 /* CustomSettings.swift */,
-				D91061CA2755F27600EA8A03 /* Functions.swift */,
-				D91061C72755F27600EA8A03 /* Keycode.swift */,
-				D9730B1427B795A40007513C /* Math.swift */,
-				D9254461281AB55B002DCA4C /* Project.swift */,
-				D9CECB2627E91DB0000E8CC7 /* Screen.swift */,
-				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
-				D978AE3028271857008F8D0E /* Assets.xcassets */,
-				D9C132E52827008D00DE8457 /* Atlases */,
-				D91061C02755F24100EA8A03 /* Map */,
-				D9E2C27E28018E9D00B17CD0 /* Materials */,
-				D9AF1F58280BE5E300BF34B3 /* Settings */,
-				D96BDEC627EBD5B80097A0BD /* Views */,
-			);
-			path = Common;
-			sourceTree = "<group>";
-		};
 		D91061BD2755F1D600EA8A03 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D978AE1E28270898008F8D0E /* Atlases */,
 				D91061BE2755F23700EA8A03 /* map.ckmap */,
-				D9A87A8427DD43770079C831 /* Shaders */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -296,11 +254,13 @@
 				D91061D52755F2D900EA8A03 /* Info.plist */,
 				D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */,
 				D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */,
+				D972C1B72827D9FD00D85376 /* EditorMapNode.swift */,
 				D9AF1F5F280BE99400BF34B3 /* ProjectManager.swift */,
 				D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */,
 				D985E7EA27DE38D300AC2465 /* SelectionModel.swift */,
 				D9CC420F276163700081A464 /* WorldGrid.swift */,
 				D91ED91227E7AA520016D818 /* EditorAssets.xcassets */,
+				D972C1B32827D1AD00D85376 /* Resources */,
 				D985E7E727DDEBAA00AC2465 /* Views */,
 			);
 			path = "CiderKit-Editor";
@@ -309,8 +269,11 @@
 		D93C4C902800CBD6000955E1 /* CiderKit-Engine */ = {
 			isa = PBXGroup;
 			children = (
-				D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */,
 				D93C4C922800CBD6000955E1 /* CiderKit_Engine.docc */,
+				D93C4C912800CBD6000955E1 /* CiderKit_Engine.h */,
+				D978AE3028271857008F8D0E /* Assets.xcassets */,
+				D972C1B02827D0E700D85376 /* Classes */,
+				D972C1B22827D19C00D85376 /* Resources */,
 			);
 			path = "CiderKit-Engine";
 			sourceTree = "<group>";
@@ -338,11 +301,50 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		D972C1B02827D0E700D85376 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */,
+				D93C24FC2802E2680023FE7A /* CellRenderers.swift */,
+				D91061C92755F27600EA8A03 /* CharacterComponent.swift */,
+				D972C1AD2827B46500D85376 /* CiderKitEngine.swift */,
+				D92EE973281DD3F2009B2055 /* CustomSettings.swift */,
+				D91061CA2755F27600EA8A03 /* Functions.swift */,
+				D91061C72755F27600EA8A03 /* Keycode.swift */,
+				D9730B1427B795A40007513C /* Math.swift */,
+				D9254461281AB55B002DCA4C /* Project.swift */,
+				D9CECB2627E91DB0000E8CC7 /* Screen.swift */,
+				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
+				D9C132E52827008D00DE8457 /* Atlases */,
+				D91061C02755F24100EA8A03 /* Map */,
+				D9E2C27E28018E9D00B17CD0 /* Materials */,
+				D9AF1F58280BE5E300BF34B3 /* Settings */,
+				D96BDEC627EBD5B80097A0BD /* Views */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		D972C1B22827D19C00D85376 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D972C1B32827D1AD00D85376 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D978AE1E28270898008F8D0E /* Atlases */,
+				D9A87A8427DD43770079C831 /* Shaders */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		D978AE1E28270898008F8D0E /* Atlases */ = {
 			isa = PBXGroup;
 			children = (
 				D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */,
-				D978AE2A282715A6008F8D0E /* Main Atlas.ckatlas */,
 			);
 			path = Atlases;
 			sourceTree = "<group>";
@@ -361,6 +363,7 @@
 		D99369622813F7C600AC07F9 /* CiderKit-PlayerSample */ = {
 			isa = PBXGroup;
 			children = (
+				D91061BD2755F1D600EA8A03 /* Resources */,
 				D93C4CC42800CC1B000955E1 /* CiderKit_PlayerSample.entitlements */,
 				D936187827E71CE5009A14E2 /* Info.plist */,
 				D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */,
@@ -445,6 +448,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D972C1B62827D3AB00D85376 /* PBXTargetDependency */,
 			);
 			name = "CiderKit-Editor";
 			productName = CiderKit;
@@ -581,9 +585,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */,
-				D978AE2B282715A6008F8D0E /* Main Atlas.ckatlas in Resources */,
 				D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */,
-				D978AE3128271857008F8D0E /* Assets.xcassets in Resources */,
 				D978AE2028270EE8008F8D0E /* Grid Atlas.ckatlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -592,6 +594,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D972C1B12827D11300D85376 /* Assets.xcassets in Resources */,
+				D972C1B42827D1BB00D85376 /* Default Tile Atlas.ckatlas in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -606,8 +610,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D978AE2D282715AB008F8D0E /* Main Atlas.ckatlas in Resources */,
-				D978AE3228271857008F8D0E /* Assets.xcassets in Resources */,
 				D90047BB28017AC3003CE96C /* map.ckmap in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -627,39 +629,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9AF1F5D280BE7F800BF34B3 /* ProjectManagerView.swift in Sources */,
-				D9254462281AB55B002DCA4C /* Project.swift in Sources */,
-				D91061C62755F24100EA8A03 /* MapNode.swift in Sources */,
-				D91061CE2755F27600EA8A03 /* Keycode.swift in Sources */,
-				D978AE1C282703C7008F8D0E /* AtlasDescription.swift in Sources */,
 				D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */,
-				D9B8557327EFC1A000D605F4 /* MapArea.swift in Sources */,
-				D91061D02755F27600EA8A03 /* CharacterComponent.swift in Sources */,
-				D92EE974281DD3F2009B2055 /* CustomSettings.swift in Sources */,
 				D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */,
-				D9730B1527B795A40007513C /* Math.swift in Sources */,
-				D91061D12755F27600EA8A03 /* Functions.swift in Sources */,
 				D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */,
-				D91061D22755F27600EA8A03 /* GameView.swift in Sources */,
-				D96809A627E9283E001D2C04 /* Screen.swift in Sources */,
-				D9E2C2842801903800B17CD0 /* SequenceMaterial.swift in Sources */,
-				D91061C42755F24100EA8A03 /* MapRegion.swift in Sources */,
 				D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */,
-				D93C24FA280227500023FE7A /* Materials.swift in Sources */,
-				D91061C52755F24100EA8A03 /* MapDescription.swift in Sources */,
-				D9E2C28228018F3D00B17CD0 /* BaseMaterial.swift in Sources */,
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
-				D9AF1F5A280BE5FF00BF34B3 /* ProjectSettings.swift in Sources */,
 				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
-				D93C24FD2802E2680023FE7A /* CellRenderers.swift in Sources */,
-				D9E2C286280192FC00B17CD0 /* RandomizedMaterial.swift in Sources */,
-				D9E2C28028018EB600B17CD0 /* CellRenderer.swift in Sources */,
 				D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */,
-				D91061CF2755F27600EA8A03 /* Atlases.swift in Sources */,
+				D972C1B82827D9FD00D85376 /* EditorMapNode.swift in Sources */,
 				D9AF1F60280BE99400BF34B3 /* ProjectManager.swift in Sources */,
-				D91061D32755F27600EA8A03 /* Atlas.swift in Sources */,
-				D9A87A8327DD320B0079C831 /* MapCellComponent.swift in Sources */,
 				D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */,
-				D9FBC5732765EA6A004A30BB /* SpritePool.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -679,6 +658,7 @@
 				D93C4CA62800CBE0000955E1 /* Atlases.swift in Sources */,
 				D93C4CAC2800CBE0000955E1 /* Math.swift in Sources */,
 				D93C4CAE2800CBE0000955E1 /* Keycode.swift in Sources */,
+				D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */,
 				D93C4CAD2800CBE0000955E1 /* SpritePool.swift in Sources */,
 				D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */,
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
@@ -730,6 +710,11 @@
 			isa = PBXTargetDependency;
 			target = D93C4C8E2800CBD6000955E1 /* CiderKit-Engine */;
 			targetProxy = D93C4CCB2800CC25000955E1 /* PBXContainerItemProxy */;
+		};
+		D972C1B62827D3AB00D85376 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D93C4C8E2800CBD6000955E1 /* CiderKit-Engine */;
+			targetProxy = D972C1B52827D3AB00D85376 /* PBXContainerItemProxy */;
 		};
 		D9B8557E27F0C86F00D605F4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

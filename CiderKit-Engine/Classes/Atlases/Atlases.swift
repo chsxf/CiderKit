@@ -5,6 +5,16 @@ enum AtlasesError: Error {
     case alreadyRegistered
 }
 
+public struct AtlasLocator {
+    public let url: URL
+    public let bundle: Bundle
+    
+    public init(url: URL, bundle: Bundle) {
+        self.url = url
+        self.bundle = bundle
+    }
+}
+
 final public class Atlases {
     
     public static let MAIN_ATLAS_KEY = "main"
@@ -13,14 +23,14 @@ final public class Atlases {
     
     static var main: Atlas { self[MAIN_ATLAS_KEY] }
     
-    static public func load(atlases: [String: URL]) throws {
-        for (key, url) in atlases {
+    public static func load(atlases: [String: AtlasLocator]) throws {
+        for (key, locator) in atlases {
             if loadedAtlases[key] != nil {
                 throw AtlasesError.alreadyRegistered
             }
             
-            let description: AtlasDescription = try Functions.load(url)
-            let atlas = Atlas(from: description, variant: nil)
+            let description: AtlasDescription = try Functions.load(locator.url)
+            let atlas = Atlas(from: description, in: locator.bundle, variant: nil)
             loadedAtlases[key] = atlas
             
             if let variants = description.variants {
@@ -31,14 +41,14 @@ final public class Atlases {
                         throw AtlasesError.alreadyRegistered
                     }
                     
-                    let variantAtlas = Atlas(from: description, variant: variantKey)
+                    let variantAtlas = Atlas(from: description, in: locator.bundle, variant: variantKey)
                     loadedAtlases[fullVariantKey] = variantAtlas
                 }
             }
         }
     }
     
-    static subscript(name: String) -> Atlas {
+    public static subscript(name: String) -> Atlas {
         return loadedAtlases[name]!
     }
     

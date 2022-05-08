@@ -1,8 +1,8 @@
 {
-  "texture": "Main Atlas",
+  "texture": "Default Tile Atlas",
   "variants": {
-      "normals": "Main Atlas - Normals",
-      "position": "Main Atlas - Position"
+      "normals": "Default Tile Atlas - Normals",
+      "position": "Default Tile Atlas - Position"
   },
   "sprites": [
     {

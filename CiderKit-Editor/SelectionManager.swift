@@ -2,6 +2,7 @@ import Foundation
 import AppKit
 import SpriteKit
 import GameplayKit
+import CiderKit_Engine
 
 class SelectionManager: NSResponder {
     

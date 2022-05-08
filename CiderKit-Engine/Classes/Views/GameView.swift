@@ -1,11 +1,11 @@
 import SpriteKit
 import GameplayKit
 
-public class GameView: SKView, SKSceneDelegate {
+open class GameView: SKView, SKSceneDelegate {
 
     internal var gameScene: SKScene!
     
-    private(set) var map: MapNode!
+    public private(set) var map: MapNode!
     
     override public init(frame frameRect: CGRect) {
         super.init(frame: frameRect)
@@ -31,18 +31,20 @@ public class GameView: SKView, SKSceneDelegate {
         registerDefaultMaterialsAndRenderers()
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     func registerDefaultMaterialsAndRenderers() {
-        let defaultGroundMaterial = BaseMaterial(sprites: [ Atlases.main["default_tile"]!, Atlases.main["default_tile_green"]! ])
+        let defaultTileAtlas = Atlases["default_tile"]
+        
+        let defaultGroundMaterial = BaseMaterial(sprites: [ defaultTileAtlas["default_tile"]!, defaultTileAtlas["default_tile_green"]! ])
         try! Materials.register(material: defaultGroundMaterial, forName: "default_ground")
         
-        let defaultLeftElevationMaterial = BaseMaterial(sprite: Atlases.main["default_elevation_left"]!)
+        let defaultLeftElevationMaterial = BaseMaterial(sprite: defaultTileAtlas["default_elevation_left"]!)
         try! Materials.register(material: defaultLeftElevationMaterial, forName: "default_elevation_left")
         
-        let defaultRightElevationMaterial = BaseMaterial(sprite: Atlases.main["default_elevation_right"]!)
+        let defaultRightElevationMaterial = BaseMaterial(sprite: defaultTileAtlas["default_elevation_right"]!)
         try! Materials.register(material: defaultRightElevationMaterial, forName: "default_elevation_right")
         
         let defaultRenderer = CellRenderer(
@@ -53,13 +55,17 @@ public class GameView: SKView, SKSceneDelegate {
         try! CellRenderers.register(cellRenderer: defaultRenderer, forName: "default_cell")
     }
     
-    public func update(_ currentTime: TimeInterval, for scene: SKScene) { }
+    open func mapNode(from description: MapDescription) -> MapNode {
+        return MapNode(description: description)
+    }
     
-    public func loadMap(file: URL) {
+    open func update(_ currentTime: TimeInterval, for scene: SKScene) { }
+    
+    open func loadMap(file: URL) {
         do {
             let mapDescription: MapDescription = try Functions.load(file)
             unloadMap()
-            map = MapNode(description: mapDescription)
+            map = mapNode(from: mapDescription)
             gameScene.addChild(map!)
         }
         catch {
@@ -71,17 +77,17 @@ public class GameView: SKView, SKSceneDelegate {
         }
     }
     
-    public func unloadMap(removePreviousMap: Bool = true) {
+    open func unloadMap(removePreviousMap: Bool = true) {
         if removePreviousMap {
             map.removeFromParent()
         }
         
         let mapDescription = MapDescription()
-        map = MapNode(description: mapDescription)
+        map = mapNode(from: mapDescription)
         gameScene.addChild(map)
     }
     
-    override public func viewDidEndLiveResize() {
+    override open func viewDidEndLiveResize() {
         let sceneWidth = Project.current?.settings.targetResolutionWidth ?? 640
         let sceneHeight = Project.current?.settings.targetResolutionHeight ?? 360
         let sceneSize = getBestMatchingSceneSize(CGSize(width: sceneWidth, height: sceneHeight))

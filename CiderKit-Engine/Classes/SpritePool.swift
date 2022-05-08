@@ -1,15 +1,19 @@
 import SpriteKit
 
-final class SpritePool {
+public final class SpritePool {
     
     private var availableSprites = [SKSpriteNode]()
     private var usedSprites = [SKSpriteNode]()
     
-    func hasAvailableSprite() -> Bool {
+    public init() {
+        
+    }
+    
+    public func hasAvailableSprite() -> Bool {
         return !availableSprites.isEmpty
     }
     
-    func getSprite() -> SKSpriteNode? {
+    public func getSprite() -> SKSpriteNode? {
         if hasAvailableSprite() {
             let sprite = availableSprites.popLast()!
             usedSprites.append(sprite)
@@ -18,7 +22,7 @@ final class SpritePool {
         return nil
     }
     
-    func returnSprite(_ sprite: SKSpriteNode) {
+    public func returnSprite(_ sprite: SKSpriteNode) {
         if usedSprites.contains(sprite) {
             usedSprites.removeAll { $0 == sprite }
             sprite.removeFromParent()
@@ -28,7 +32,7 @@ final class SpritePool {
         }
     }
     
-    func returnAll() {
+    public func returnAll() {
         usedSprites.forEach { $0.removeFromParent() }
         availableSprites.append(contentsOf: usedSprites)
         usedSprites.removeAll()

@@ -1,11 +1,5 @@
-//
-//  ProjectManagerView.swift
-//  CiderKit
-//
-//  Created by Christophe on 17/04/2022.
-//
-
 import SwiftUI
+import CiderKit_Engine
 
 fileprivate struct ProjectDetails {
     let url: URL

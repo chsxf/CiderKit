@@ -1,5 +1,6 @@
 import Foundation
 import AppKit
+import CiderKit_Engine
 
 enum ProjectManagerErrors: String, Error {
     case unableToCreateSettingsFolder = "Unable to create Settings folder"

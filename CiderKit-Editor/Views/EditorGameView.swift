@@ -2,6 +2,7 @@ import CoreFoundation
 import SpriteKit
 import GameplayKit
 import SwiftUI
+import CiderKit_Engine
 
 final class EditorGameViewRepresentable: NSViewRepresentable {
     
@@ -20,6 +21,8 @@ final class EditorGameViewRepresentable: NSViewRepresentable {
 class EditorGameView: GameView {
     
     private(set) var worldGrid: WorldGrid!
+    
+    private(set) var mutableMap: EditorMapNode!
     
     let selectionModel: SelectionModel = SelectionModel()
     
@@ -141,7 +144,7 @@ class EditorGameView: GameView {
     }
     
     func increaseElevation(area: MapArea?) {
-        map.increaseElevation(area: area)
+        mutableMap.increaseElevation(area: area)
         
         if area != nil {
             selectionModel.setSelectedCell(map.getMapCellEntity(atX: area!.x, y: area!.y))
@@ -149,11 +152,16 @@ class EditorGameView: GameView {
     }
     
     func decreaseElevation(area: MapArea?) {
-        map.decreaseElevation(area: area)
+        mutableMap.decreaseElevation(area: area)
         
         if area != nil {
             selectionModel.setSelectedCell(map.getMapCellEntity(atX: area!.x, y: area!.y))
         }
+    }
+    
+    override func mapNode(from description: MapDescription) -> MapNode {
+        mutableMap = EditorMapNode(description: description)
+        return mutableMap
     }
     
     override func unloadMap(removePreviousMap: Bool = true) {

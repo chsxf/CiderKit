@@ -1,6 +1,6 @@
 import Foundation
 
-enum ProjectErrors: String, Error {
+public enum ProjectErrors: String, Error {
     case notProjectFolder = "Not project folder"
 }
 

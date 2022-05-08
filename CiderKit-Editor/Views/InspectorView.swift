@@ -1,5 +1,6 @@
 import SwiftUI
 import GameplayKit
+import CiderKit_Engine
 
 struct InspectorView: View {
     @EnvironmentObject var selectionModel: SelectionModel

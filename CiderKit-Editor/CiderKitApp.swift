@@ -2,6 +2,7 @@ import Cocoa
 import SwiftUI
 import UniformTypeIdentifiers
 import Combine
+import CiderKit_Engine
 
 private extension NSToolbarItem.Identifier {
     static let increaseElevation = NSToolbarItem.Identifier(rawValue: "increase_elevation")
@@ -160,7 +161,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     
     private func updateWindowTitle() {
         var title = "\(CiderKitApp.appName) - \(currentMapURL?.lastPathComponent ?? "Untitled")"
-        if gameView.map.dirty {
+        if gameView.mutableMap.dirty {
             title += " *"
         }
         window.title = title
@@ -168,7 +169,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     
     private func saveCurrentMapIfModified() -> Bool {
         var shouldSave = false
-        if gameView.map.dirty {
+        if gameView.mutableMap.dirty {
             let alert = NSAlert()
             alert.messageText = "Would you like to save the current map?"
             alert.informativeText = "Confirmation"
@@ -212,7 +213,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
                 let mapDescription = gameView.map.toMapDescription()
                 try EditorFunctions.save(mapDescription, to: validURL, prettyPrint: true)
                 currentMapURL = validURL
-                gameView.map.clearDirtyFlag()
+                gameView.mutableMap.clearDirtyFlag()
                 return true
             }
             catch {
@@ -293,8 +294,8 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         NSApp.delegate = delegate
 
         try! Atlases.load(atlases: [
-            Atlases.MAIN_ATLAS_KEY: Bundle.main.url(forResource: "Main Atlas", withExtension: "ckatlas")!,
-            "grid": Bundle.main.url(forResource: "Grid Atlas", withExtension: "ckatlas")!
+            "default_tile": AtlasLocator(url: CiderKitEngine.bundle.url(forResource: "Default Tile Atlas", withExtension: "ckatlas")!, bundle: CiderKitEngine.bundle),
+            "grid": AtlasLocator(url: Bundle.main.url(forResource: "Grid Atlas", withExtension: "ckatlas")!, bundle: Bundle.main)
         ])
 
         delegate.setup()
