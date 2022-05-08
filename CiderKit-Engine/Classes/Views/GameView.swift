@@ -5,7 +5,15 @@ open class GameView: SKView, SKSceneDelegate {
 
     internal var gameScene: SKScene!
     
+    private var finalGatheringNode: SKEffectNode!
+    
     public private(set) var map: MapNode!
+    
+    private var normalsTexture: SKTexture?
+    private var positionTexture: SKTexture?
+    
+    private var lastTime: TimeInterval?
+    private var angle: Double = 0
     
     override public init(frame frameRect: CGRect) {
         super.init(frame: frameRect)
@@ -15,6 +23,7 @@ open class GameView: SKView, SKSceneDelegate {
         showsNodeCount = true
         ignoresSiblingOrder = true
         allowsTransparency = true
+        disableDepthStencilBuffer = true
         
         let scene = SKScene(size: frameRect.size)
         self.gameScene = scene
@@ -24,11 +33,36 @@ open class GameView: SKView, SKSceneDelegate {
         gameScene.camera = cam
         gameScene.addChild(cam)
         
+        finalGatheringNode = SKEffectNode();
+        finalGatheringNode.shader = CiderKitEngine.lightModelFinalGatheringShader
+        finalGatheringNode.shouldEnableEffects = false
+        gameScene.addChild(finalGatheringNode)
+        
         presentScene(gameScene)
         
         unloadMap(removePreviousMap: false)
       
         registerDefaultMaterialsAndRenderers()
+        
+        let xyRanges = vector_float4(-1, 10, -1, 10)
+
+        if let uniform = CiderKitEngine.uberShader.uniformNamed("u_tex_size") {
+            let texture = Atlases["default_tile"].atlasTexture
+            let textureSize = texture.size()
+            uniform.vectorFloat2Value = vector_float2(x: Float(textureSize.width), y: Float(textureSize.height))
+        }
+
+        if let uniform = CiderKitEngine.uberShader.uniformNamed("u_normals_texture") {
+            uniform.textureValue = Atlases["default_tile~normals"].atlasTexture
+        }
+
+        if let uniform = CiderKitEngine.uberShader.uniformNamed("u_position_texture") {
+            uniform.textureValue = Atlases["default_tile~position"].atlasTexture
+        }
+
+        if let uniform = CiderKitEngine.uberShader.uniformNamed("u_position_xy_ranges") {
+            uniform.vectorFloat4Value = xyRanges
+        }
     }
     
     required public init?(coder: NSCoder) {
@@ -59,14 +93,80 @@ open class GameView: SKView, SKSceneDelegate {
         return MapNode(description: description)
     }
     
-    open func update(_ currentTime: TimeInterval, for scene: SKScene) { }
+    open func update(_ currentTime: TimeInterval, for scene: SKScene) {
+        if let lastTime = lastTime {
+            let diff = currentTime - lastTime
+            angle += Double.pi / 10.0 * diff
+        }
+        self.lastTime = currentTime
+    }
+    
+    open func prepareSceneForPrepasses() {
+        finalGatheringNode.shouldEnableEffects = false
+    }
+    
+    open func prepassesDidComplete() {
+        finalGatheringNode.shouldEnableEffects = true
+    }
+    
+    open func didFinishUpdate(for scene: SKScene) {
+        let viewBottomLeftInScene = convert(CGPoint(), to: scene)
+        let viewTopRightInScene = convert(CGPoint(x: frame.maxX, y: frame.maxY), to: scene)
+        let viewWidthInScene = viewTopRightInScene.x - viewBottomLeftInScene.x
+        let viewHeightInScene = viewTopRightInScene.y - viewBottomLeftInScene.y
+        let viewRectInScene = CGRect(origin: viewBottomLeftInScene, size: CGSize(width: viewWidthInScene, height: viewHeightInScene))
+
+        if let uniform = CiderKitEngine.uberShader.uniformNamed("u_shadeMode") {
+            prepareSceneForPrepasses()
+
+            uniform.floatValue = 2
+            normalsTexture = texture(from: scene, crop: viewRectInScene)
+
+            uniform.floatValue = 1
+            positionTexture = texture(from: scene, crop: viewRectInScene)
+
+            uniform.floatValue = 0
+
+            prepassesDidComplete()
+        }
+
+        let finalGatherRect = finalGatheringNode.calculateAccumulatedFrame()
+        let finalGatherMinInView = convert(finalGatherRect.origin, from: scene)
+        let finalGatherMaxInView = convert(CGPoint(x: finalGatherRect.maxX, y: finalGatherRect.maxY), from: scene)
+        let finalGatherViewNormalizedMinX = Float(finalGatherMinInView.x / frame.width)
+        let finalGatherViewNormalizedMinY = Float(finalGatherMinInView.y / frame.height)
+        let finalGatherViewNormalizedMaxX = Float(finalGatherMaxInView.x / frame.width)
+        let finalGatherViewNormalizedMaxY = Float(finalGatherMaxInView.y / frame.height)
+
+        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_frame_in_view") {
+            uniform.matrixFloat2x2Value = matrix_float2x2([vector_float2(finalGatherViewNormalizedMinX, finalGatherViewNormalizedMinY), vector_float2(finalGatherViewNormalizedMaxX, finalGatherViewNormalizedMaxY)])
+        }
+
+        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_position_texture") {
+            uniform.textureValue = positionTexture
+        }
+
+        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_normals_texture") {
+            uniform.textureValue = normalsTexture
+        }
+
+        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_position_ranges") {
+            uniform.matrixFloat3x3Value = matrix_float3x3([vector_float3(-1, -1, 0), vector_float3(10, 10, 5), vector_float3()])
+        }
+
+        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_light0") {
+            var matrix = uniform.matrixFloat3x3Value
+            matrix[0] = vector_float3(3 + Float(cos(angle)) * 4, 3 + Float(sin(angle)) * 4, 4)
+            uniform.matrixFloat3x3Value = matrix
+        }
+    }
     
     open func loadMap(file: URL) {
         do {
             let mapDescription: MapDescription = try Functions.load(file)
             unloadMap()
             map = mapNode(from: mapDescription)
-            gameScene.addChild(map!)
+            finalGatheringNode.addChild(map!)
         }
         catch {
             let alert = NSAlert()
@@ -84,7 +184,7 @@ open class GameView: SKView, SKSceneDelegate {
         
         let mapDescription = MapDescription()
         map = mapNode(from: mapDescription)
-        gameScene.addChild(map)
+        finalGatheringNode.addChild(map)
     }
     
     override open func viewDidEndLiveResize() {

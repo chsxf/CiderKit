@@ -3,7 +3,7 @@ import SpriteKit
 
 public final class Atlas {
     
-    private let atlasTexture: SKTexture
+    public let atlasTexture: SKTexture
     private var atlasSprites: [String: SKTexture]
     
     init(from description: AtlasDescription, in bundle: Bundle, variant: String?) {
