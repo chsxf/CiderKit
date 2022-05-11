@@ -12,9 +12,6 @@ open class GameView: SKView, SKSceneDelegate {
     private var normalsTexture: SKTexture?
     private var positionTexture: SKTexture?
     
-    private var lastTime: TimeInterval?
-    private var angle: Double = 0
-    
     override public init(frame frameRect: CGRect) {
         super.init(frame: frameRect)
 
@@ -74,13 +71,7 @@ open class GameView: SKView, SKSceneDelegate {
         return MapNode(description: description)
     }
     
-    open func update(_ currentTime: TimeInterval, for scene: SKScene) {
-        if let lastTime = lastTime {
-            let diff = currentTime - lastTime
-            angle += Double.pi / 10.0 * diff
-        }
-        self.lastTime = currentTime
-    }
+    open func update(_ currentTime: TimeInterval, for scene: SKScene) { }
     
     open func prepareSceneForPrepasses() {
         finalGatheringNode.shouldEnableEffects = false
