@@ -1,3 +1,4 @@
+#if os(macOS)
 import Foundation
 import AppKit
 
@@ -21,3 +22,4 @@ public class Screen {
     }
     
 }
+#endif

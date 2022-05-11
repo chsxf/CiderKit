@@ -1,4 +1,5 @@
 import Foundation
+import CoreGraphics
 
 public final class Math {
     

@@ -86,18 +86,26 @@ open class GameView: SKView, SKSceneDelegate {
         
         CiderKitEngine.setUberShaderPositionRanges(positionMatrix)
         
+        prepareSceneForPrepasses()
+        #if os(macOS)
         let viewBottomLeftInScene = convert(CGPoint(), to: scene)
         let viewTopRightInScene = convert(CGPoint(x: frame.maxX, y: frame.maxY), to: scene)
         let viewWidthInScene = viewTopRightInScene.x - viewBottomLeftInScene.x
         let viewHeightInScene = viewTopRightInScene.y - viewBottomLeftInScene.y
         let viewRectInScene = CGRect(origin: viewBottomLeftInScene, size: CGSize(width: viewWidthInScene, height: viewHeightInScene))
 
-        prepareSceneForPrepasses()
         CiderKitEngine.setUberShaderShadeMode(.normals)
         normalsTexture = texture(from: scene, crop: viewRectInScene)
         CiderKitEngine.setUberShaderShadeMode(.position)
         positionTexture = texture(from: scene, crop: viewRectInScene)
         CiderKitEngine.setUberShaderShadeMode(.default)
+        #else
+        CiderKitEngine.setUberShaderShadeMode(.normals)
+        normalsTexture = texture(from: scene)
+        CiderKitEngine.setUberShaderShadeMode(.position)
+        positionTexture = texture(from: scene)
+        CiderKitEngine.setUberShaderShadeMode(.default)
+        #endif
         prepassesDidComplete()
         
         let finalGatherRect = finalGatheringNode.calculateAccumulatedFrame()
@@ -109,7 +117,13 @@ open class GameView: SKView, SKSceneDelegate {
         let finalGatherViewNormalizedMaxY = Float(finalGatherMaxInView.y / frame.height)
 
         if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_frame_in_view") {
-            uniform.matrixFloat2x2Value = matrix_float2x2([vector_float2(finalGatherViewNormalizedMinX, finalGatherViewNormalizedMinY), vector_float2(finalGatherViewNormalizedMaxX, finalGatherViewNormalizedMaxY)])
+            #if os(iOS) || os(tvOS) || arch(arm64)
+            let matrix = matrix_float2x2([vector_float2(finalGatherViewNormalizedMinX, 1.0 - finalGatherViewNormalizedMinY), vector_float2(finalGatherViewNormalizedMaxX, 1.0 - finalGatherViewNormalizedMaxY)])
+            #else
+            let matrix = matrix_float2x2([vector_float2(finalGatherViewNormalizedMinX, finalGatherViewNormalizedMinY), vector_float2(finalGatherViewNormalizedMaxX, finalGatherViewNormalizedMaxY)])
+            #endif
+            
+            uniform.matrixFloat2x2Value = matrix
         }
         if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_position_texture") {
             uniform.textureValue = positionTexture
@@ -130,11 +144,20 @@ open class GameView: SKView, SKSceneDelegate {
             finalGatheringNode.addChild(map!)
         }
         catch {
+            let title = "Error"
+            let message = "Unable to load map file at \(file)"
+            
+            #if os(macOS)
             let alert = NSAlert()
-            alert.informativeText = "Error"
-            alert.messageText = "Unable to load map file at \(file)"
+            alert.informativeText = title
+            alert.messageText = message
             alert.addButton(withTitle: "OK")
             let _ = alert.runModal()
+            #else
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self.findViewController()?.present(alert, animated: true, completion: nil)
+            #endif
         }
     }
     
@@ -148,12 +171,14 @@ open class GameView: SKView, SKSceneDelegate {
         finalGatheringNode.addChild(map)
     }
     
+    #if os(macOS)
     override open func viewDidEndLiveResize() {
         let sceneWidth = Project.current?.settings.targetResolutionWidth ?? 640
         let sceneHeight = Project.current?.settings.targetResolutionHeight ?? 360
         let sceneSize = getBestMatchingSceneSize(CGSize(width: sceneWidth, height: sceneHeight))
         scene?.size = sceneSize
     }
+    #endif
     
     public func getBestMatchingSceneSize(_ size: CGSize) -> CGSize {
         let baseAspectRatio = size.width / size.height

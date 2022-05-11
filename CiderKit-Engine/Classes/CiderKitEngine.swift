@@ -28,8 +28,8 @@ public class CiderKitEngine {
         if _lightModelFinalGatheringShader == nil {
             let source = try! String(contentsOf: bundle.url(forResource: "LightModelFinalGathering", withExtension: "fsh")!, encoding: .utf8)
             _lightModelFinalGatheringShader = SKShader(source: source, uniforms: [
-                SKUniform(name: "u_normals_texture", texture: nil),
-                SKUniform(name: "u_position_texture", texture: nil),
+                SKUniform(name: "u_normals_texture", texture: clearTexture),
+                SKUniform(name: "u_position_texture", texture: clearTexture),
                 SKUniform(name: "u_frame_in_view", matrixFloat2x2: matrix_float2x2()),
                 SKUniform(name: "u_ambient_light", vectorFloat3: vector_float3(0.1, 0.1, 0.1)),
                 SKUniform(name: "u_position_ranges", matrixFloat3x3: matrix_float3x3()),

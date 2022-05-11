@@ -13,8 +13,12 @@ public final class Atlas {
         if let variant = variant, let variants = description.variants {
             textureName = variants[variant]!
         }
-        
+
+        #if os(macOS)
         let image = bundle.image(forResource: textureName)!
+        #else
+        let image = UIImage(named: textureName, in: bundle, with: nil)!
+        #endif
         atlasTexture = SKTexture(image: image)
         atlasTexture.filteringMode = .nearest
         atlasSprites = [:]

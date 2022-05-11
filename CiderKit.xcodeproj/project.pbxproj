@@ -51,6 +51,7 @@
 		D981239228292E3B00CC5897 /* LightModelFinalGathering.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D981239128292E3B00CC5897 /* LightModelFinalGathering.fsh */; };
 		D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7E827DDEBBC00AC2465 /* InspectorView.swift */; };
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
+		D9A64CFC282C491F00CAF635 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */; };
 		D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */; };
 		D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
 		D9AF1F5B280BE5FF00BF34B3 /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F59280BE5FF00BF34B3 /* ProjectSettings.swift */; };
@@ -146,6 +147,7 @@
 		D981239128292E3B00CC5897 /* LightModelFinalGathering.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = LightModelFinalGathering.fsh; sourceTree = "<group>"; };
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		D985E7EA27DE38D300AC2465 /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
+		D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorFunctions.swift; sourceTree = "<group>"; };
 		D9A87A8227DD320B0079C831 /* MapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCellComponent.swift; sourceTree = "<group>"; };
 		D9A87A8727DD43F10079C831 /* HoverShader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = HoverShader.fsh; sourceTree = "<group>"; };
@@ -324,6 +326,7 @@
 				D9E2C27E28018E9D00B17CD0 /* Materials */,
 				D9AF1F58280BE5E300BF34B3 /* Settings */,
 				D96BDEC627EBD5B80097A0BD /* Views */,
+				D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -685,6 +688,7 @@
 				D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */,
 				D93C4CAD2800CBE0000955E1 /* SpritePool.swift in Sources */,
 				D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */,
+				D9A64CFC282C491F00CAF635 /* UIViewExtension.swift in Sources */,
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,
@@ -928,6 +932,7 @@
 		D93C4CA02800CBD6000955E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -950,6 +955,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				RUN_DOCUMENTATION_COMPILER = YES;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -960,6 +967,7 @@
 		D93C4CA12800CBD6000955E1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -982,6 +990,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				RUN_DOCUMENTATION_COMPILER = YES;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
