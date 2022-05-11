@@ -13,7 +13,7 @@ vec3 inverseLerp(vec3 min, vec3 max, vec3 value) {
 }
 
 vec4 shadeWithPosition(vec4 posTexColor, vec3 pos, mat3 posRanges) {
-    vec3 adjustedPos = inverseLerp(posRanges[0], posRanges[1], pos);
+    vec3 adjustedPos = inverseLerp(posRanges[0], posRanges[1], pos + vec3(posTexColor.r, posTexColor.g, posTexColor.b * 0.25));
     return vec4(adjustedPos * posTexColor.a, posTexColor.a);
 }
 
