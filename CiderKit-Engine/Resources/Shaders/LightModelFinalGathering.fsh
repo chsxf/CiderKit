@@ -3,7 +3,7 @@ float inverseLerp(float min, float max, float value) {
 }
 
 vec4 processLight(mat3 light, vec3 pos, vec3 normals) {
-    if (light[0][0] == 0 && light[0][1] == 0 && light[0][2] == 0) {
+    if (light[2][1] == 0) {
         return vec4();
     }
     
@@ -14,10 +14,15 @@ vec4 processLight(mat3 light, vec3 pos, vec3 normals) {
     float dotProduct = dot(normals, normalizedLightToPos);
     if (dotProduct > 0) {
         float distanceToLight = length(lightToPos);
-        vec3 lightFallOff = light[2];
-        if (distanceToLight < lightFallOff[1]) {
-            lightPower = clamp(1.0 - inverseLerp(lightFallOff[0], lightFallOff[1], distanceToLight), 0.0, 1.0);
-            lightPower *= pow(dotProduct, lightFallOff[2]);
+        vec3 lightFalloff = light[2];
+        if (distanceToLight < lightFalloff[1]) {
+            if (lightFalloff[2] < 0) {
+                lightPower = 1;
+            }
+            else {
+                lightPower = clamp(1.0 - inverseLerp(lightFalloff[0], lightFalloff[1], distanceToLight), 0.0, 1.0);
+                lightPower *= pow(dotProduct, lightFalloff[2]);
+            }
         }
     }
     

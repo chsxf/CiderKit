@@ -2,6 +2,7 @@ import Foundation
 
 public struct MapDescription: Codable {
     var regions: [MapRegionDescription]
+    var lighting: LightDescription?
     
     init() {
         regions = []

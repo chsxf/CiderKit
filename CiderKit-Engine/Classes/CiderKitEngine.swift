@@ -9,6 +9,45 @@ enum UberShaderShadeMode: Int {
 
 public class CiderKitEngine {
     
+    enum ShaderUniformName: String {
+        case shadeMode = "u_shadeMode"
+        case textureSize = "u_tex_size"
+        case normalsTexture = "u_normals_texture"
+        case positionTexture = "u_position_texture"
+        case positionRanges = "u_position_ranges"
+        case frameInViewSpace = "u_frame_in_view"
+        case ambientLight = "u_ambient_light"
+        case light0 = "u_light0"
+        case light1 = "u_light1"
+        case light2 = "u_light2"
+        case light3 = "u_light3"
+        case light4 = "u_light4"
+        case light5 = "u_light5"
+        case light6 = "u_light6"
+        case light7 = "u_light7"
+        case light8 = "u_light8"
+        case light9 = "u_light9"
+        case light10 = "u_light10"
+        case light11 = "u_light11"
+        case light12 = "u_light12"
+        case light13 = "u_light13"
+        case light14 = "u_light14"
+        case light15 = "u_light15"
+        
+        static var maxLightIndex: Int { 15 }
+        
+        init?(lightIndex: Int) {
+            if (lightIndex < 0 || lightIndex > Self.maxLightIndex) {
+                return nil
+            }
+            self.init(rawValue: "u_light\(lightIndex)")
+        }
+    }
+
+    enum ShaderAttributeName: String {
+        case position = "a_position"
+    }
+    
     public static var bundle: Bundle { Bundle(for: Self.self) }
 
     private static var _clearTexture: SKTexture? = nil
@@ -28,27 +67,27 @@ public class CiderKitEngine {
         if _lightModelFinalGatheringShader == nil {
             let source = try! String(contentsOf: bundle.url(forResource: "LightModelFinalGathering", withExtension: "fsh")!, encoding: .utf8)
             _lightModelFinalGatheringShader = SKShader(source: source, uniforms: [
-                SKUniform(name: "u_normals_texture", texture: clearTexture),
-                SKUniform(name: "u_position_texture", texture: clearTexture),
-                SKUniform(name: "u_frame_in_view", matrixFloat2x2: matrix_float2x2()),
-                SKUniform(name: "u_ambient_light", vectorFloat3: vector_float3(0.1, 0.1, 0.1)),
-                SKUniform(name: "u_position_ranges", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light0", matrixFloat3x3: matrix_float3x3([vector_float3(10, 2, 5), vector_float3(1, 1, 1), vector_float3(10, 15, 0.5)])),
-                SKUniform(name: "u_light1", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light2", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light3", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light4", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light5", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light6", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light7", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light8", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light9", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light10", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light11", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light12", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light13", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light14", matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: "u_light15", matrixFloat3x3: matrix_float3x3())
+                SKUniform(name: ShaderUniformName.normalsTexture.rawValue, texture: clearTexture),
+                SKUniform(name: ShaderUniformName.positionTexture.rawValue, texture: clearTexture),
+                SKUniform(name: ShaderUniformName.frameInViewSpace.rawValue, matrixFloat2x2: matrix_float2x2()),
+                SKUniform(name: ShaderUniformName.positionRanges.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.ambientLight.rawValue, vectorFloat3: vector_float3(1, 1, 1)),
+                SKUniform(name: ShaderUniformName.light0.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light1.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light2.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light3.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light4.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light5.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light6.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light7.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light8.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light9.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light10.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light11.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light12.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light13.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light14.rawValue, matrixFloat3x3: matrix_float3x3()),
+                SKUniform(name: ShaderUniformName.light15.rawValue, matrixFloat3x3: matrix_float3x3())
             ])
         }
         return _lightModelFinalGatheringShader!
@@ -63,14 +102,14 @@ public class CiderKitEngine {
         let uTexSize = vector_float2(Float(textureSize.width), Float(textureSize.height))
         
         let uberShader = SKShader(source: source, uniforms: [
-            SKUniform(name: "u_shadeMode", float: 0),
-            SKUniform(name: "u_tex_size", vectorFloat2: uTexSize),
-            SKUniform(name: "u_normals_texture", texture: atlas.variant(for: "normals")?.atlasTexture ?? clearTexture),
-            SKUniform(name: "u_position_texture", texture: atlas.variant(for: "position")?.atlasTexture ?? clearTexture),
-            SKUniform(name: "u_position_ranges", matrixFloat3x3: matrix_float3x3())
+            SKUniform(name: ShaderUniformName.shadeMode.rawValue, float: 0),
+            SKUniform(name: ShaderUniformName.textureSize.rawValue, vectorFloat2: uTexSize),
+            SKUniform(name: ShaderUniformName.normalsTexture.rawValue, texture: atlas.variant(for: "normals")?.atlasTexture ?? clearTexture),
+            SKUniform(name: ShaderUniformName.positionTexture.rawValue, texture: atlas.variant(for: "position")?.atlasTexture ?? clearTexture),
+            SKUniform(name: ShaderUniformName.positionRanges.rawValue, matrixFloat3x3: matrix_float3x3())
         ])
         uberShader.attributes = [
-            SKAttribute(name: "a_position", type: .vectorFloat3)
+            SKAttribute(name: ShaderAttributeName.position.rawValue, type: .vectorFloat3)
         ]
         
         uberShaderInstances.append(uberShader)
@@ -84,7 +123,7 @@ public class CiderKitEngine {
     
     static func setUberShaderShadeMode(_ shadeMode: UberShaderShadeMode) {
         for shader in uberShaderInstances {
-            if let uniform = shader.uniformNamed("u_shadeMode") {
+            if let uniform = shader.uniformNamed(ShaderUniformName.shadeMode.rawValue) {
                 uniform.floatValue = Float(shadeMode.rawValue)
             }
         }
@@ -92,7 +131,7 @@ public class CiderKitEngine {
     
     static func setUberShaderPositionRanges(_ positionMatrix: matrix_float3x3) {
         for shader in uberShaderInstances {
-            if let uniform = shader.uniformNamed("u_position_ranges") {
+            if let uniform = shader.uniformNamed(ShaderUniformName.positionRanges.rawValue) {
                 uniform.matrixFloat3x3Value = positionMatrix
             }
         }

@@ -116,7 +116,7 @@ open class GameView: SKView, SKSceneDelegate {
         let finalGatherViewNormalizedMaxX = Float(finalGatherMaxInView.x / frame.width)
         let finalGatherViewNormalizedMaxY = Float(finalGatherMaxInView.y / frame.height)
 
-        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_frame_in_view") {
+        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed(CiderKitEngine.ShaderUniformName.frameInViewSpace.rawValue) {
             #if os(iOS) || os(tvOS) || arch(arm64)
             let matrix = matrix_float2x2([vector_float2(finalGatherViewNormalizedMinX, 1.0 - finalGatherViewNormalizedMinY), vector_float2(finalGatherViewNormalizedMaxX, 1.0 - finalGatherViewNormalizedMaxY)])
             #else
@@ -125,14 +125,30 @@ open class GameView: SKView, SKSceneDelegate {
             
             uniform.matrixFloat2x2Value = matrix
         }
-        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_position_texture") {
+        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed(CiderKitEngine.ShaderUniformName.positionTexture.rawValue) {
             uniform.textureValue = positionTexture
         }
-        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_normals_texture") {
+        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed(CiderKitEngine.ShaderUniformName.normalsTexture.rawValue) {
             uniform.textureValue = normalsTexture
         }
-        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed("u_position_ranges") {
+        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed(CiderKitEngine.ShaderUniformName.positionRanges.rawValue) {
             uniform.matrixFloat3x3Value = positionMatrix
+        }
+
+        if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed(CiderKitEngine.ShaderUniformName.ambientLight.rawValue) {
+            uniform.vectorFloat3Value = map.ambientLight.vector
+        }
+        
+        let definedLightCount = map.lights?.count ?? 0
+        for lightIndex in 0...CiderKitEngine.ShaderUniformName.maxLightIndex {
+            guard
+                let lightUniformName = CiderKitEngine.ShaderUniformName(lightIndex: lightIndex),
+                let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed(lightUniformName.rawValue)
+            else {
+                break
+            }
+            let lightMatrix = lightIndex < definedLightCount ? map.lights![lightIndex].matrix : matrix_float3x3();
+            uniform.matrixFloat3x3Value = lightMatrix
         }
     }
     

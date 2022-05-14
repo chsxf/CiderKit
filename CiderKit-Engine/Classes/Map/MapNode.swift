@@ -3,14 +3,18 @@ import GameplayKit
 
 open class MapNode: SKNode, Collection, ObservableObject {
     
-    static let elevationHeight: Int = 10
+    public static let elevationHeight: Int = 10
     
-    static let halfWidth: Int = 24
-    static let halfHeight: Int = 12
+    public static let halfWidth: Int = 24
+    public static let halfHeight: Int = 12
     
     public var regions: [MapRegion] = [MapRegion]()
     
     private let mapDescription: MapDescription
+    
+    var ambientLight: BaseLight { mapDescription.lighting?.ambientLight ?? BaseLight(color: LightColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)) }
+    
+    public var lights: [PointLight]? { mapDescription.lighting?.lights }
     
     var layerCount:Int { 3 } // Temporary code
     
@@ -19,10 +23,6 @@ open class MapNode: SKNode, Collection, ObservableObject {
     
     public subscript(position: Int) -> MapRegion {
         return regions[position]
-    }
-    
-    public override required init() {
-        fatalError("init() has not been implemented")
     }
     
     public init(description mapDescription: MapDescription) {
@@ -49,11 +49,12 @@ open class MapNode: SKNode, Collection, ObservableObject {
     public func index(after i: Int) -> Int { regions.index(after: i) }
     
     public func toMapDescription() -> MapDescription {
-        var mapDescription = MapDescription()
+        var newMapDescription = MapDescription()
         for region in regions {
-            mapDescription.regions.append(region.regionDescription)
+            newMapDescription.regions.append(region.regionDescription)
         }
-        return mapDescription
+        newMapDescription.lighting = mapDescription.lighting
+        return newMapDescription
     }
     
     private func updateRegionsZPosition() {

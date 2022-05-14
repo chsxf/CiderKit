@@ -75,7 +75,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.zPosition = -2
                     
                     let z = zForShader - Float(i + 1) * 0.25
-                    sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)), forAttribute: "a_position")
+                    sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)), forAttribute: CiderKitEngine.ShaderAttributeName.position.rawValue)
                     
                     localLeftElevationMaterialOverride = regionDescription.leftElevationMaterialOverride(at: indexInRegion)
                     leftElevationMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localLeftElevationMaterialOverride)
@@ -98,7 +98,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.zPosition = -1
                     
                     let z = zForShader - Float(i + 1) * 0.25
-                    sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)), forAttribute: "a_position")
+                    sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)), forAttribute: CiderKitEngine.ShaderAttributeName.position.rawValue)
                     
                     localRightElevationMaterialOverride = regionDescription.rightElevationMaterialOverride(at: indexInRegion)
                     rightElevationMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localRightElevationMaterialOverride)
@@ -117,7 +117,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 let localGroundMaterialOverride = regionDescription.groundMaterialOverride(at: indexInRegion)
                 groundMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localGroundMaterialOverride)
                 
-                sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), zForShader)), forAttribute: "a_position")
+                sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), zForShader)), forAttribute: CiderKitEngine.ShaderAttributeName.position.rawValue)
                 
                 addChild(sprite)
                 

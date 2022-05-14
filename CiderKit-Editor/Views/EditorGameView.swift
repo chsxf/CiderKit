@@ -29,12 +29,18 @@ class EditorGameView: GameView {
     private var selectionManager: SelectionManager?
     private var viewFrustrumShape: SKShapeNode?
     
+    private let lightsRoot: SKNode
+    
     override init(frame frameRect: CGRect) {
+        lightsRoot = SKNode()
+        
         super.init(frame: frameRect)
         
         worldGrid = WorldGrid()
         scene!.addChild(worldGrid)
     
+        scene!.addChild(lightsRoot)
+        
         updateViewFrustrum()
         
         DispatchQueue.main.async {
@@ -168,11 +174,13 @@ class EditorGameView: GameView {
     override func unloadMap(removePreviousMap: Bool = true) {
         super.unloadMap(removePreviousMap: removePreviousMap)
         selectionModel.clear()
+        lightsRoot.removeAllChildren()
     }
     
     override func loadMap(file: URL) {
         super.loadMap(file: file)
         selectionModel.clear()
+        buildLightNodes()
     }
     
     override func prepareSceneForPrepasses() {
@@ -180,6 +188,7 @@ class EditorGameView: GameView {
         
         worldGrid.isHidden = true
         viewFrustrumShape?.isHidden = true
+        lightsRoot.isHidden = true
     }
     
     override func prepassesDidComplete() {
@@ -187,6 +196,16 @@ class EditorGameView: GameView {
         
         worldGrid.isHidden = false
         viewFrustrumShape?.isHidden = false
+        lightsRoot.isHidden = false
+    }
+    
+    func buildLightNodes() {
+        if let lights = map.lights {
+            for light in lights {
+                let lightNode = PointLightNode(from: light)
+                lightsRoot.addChild(lightNode)
+            }
+        }
     }
     
 }
