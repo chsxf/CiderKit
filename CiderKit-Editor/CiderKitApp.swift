@@ -7,6 +7,7 @@ import CiderKit_Engine
 private extension NSToolbarItem.Identifier {
     static let increaseElevation = NSToolbarItem.Identifier(rawValue: "increase_elevation")
     static let decreaseElevation = NSToolbarItem.Identifier(rawValue: "decrease_elevation")
+    static let toggleLighting = NSToolbarItem.Identifier(rawValue: "toogle_lighting")
 }
 
 @main
@@ -23,11 +24,11 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     private var selectionModelCancellable: AnyCancellable?
     
     private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .increaseElevation, .decreaseElevation
+        .increaseElevation, .decreaseElevation, .toggleLighting
     ]
     
     private let defaultToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .increaseElevation, .decreaseElevation
+        .increaseElevation, .decreaseElevation, .toggleLighting
     ]
     
     private var definedToolbarItems: [NSToolbarItem.Identifier: NSToolbarItem] = [:]
@@ -96,7 +97,6 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         let toolbar = NSToolbar(identifier: "main")
         toolbar.displayMode = .iconOnly
         toolbar.delegate = self
-        toolbar.insertItem(withItemIdentifier: NSToolbarItem.Identifier.increaseElevation, at: 0)
         window.toolbar = toolbar
     }
     
@@ -112,6 +112,12 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         decreaseElevationItem.image = NSImage(named: "arrow_down")
         decreaseElevationItem.action = #selector(self.decreaseElevationForSelection)
         definedToolbarItems[.decreaseElevation] = decreaseElevationItem
+        
+        let toggleLightingItem = NSToolbarItem(itemIdentifier: .toggleLighting)
+        toggleLightingItem.label = "Toggle Lighting"
+        toggleLightingItem.image = NSImage(named: "lighting_on")
+        toggleLightingItem.action = #selector(self.toggleLighting)
+        definedToolbarItems[.toggleLighting] = toggleLightingItem
     }
     
     private func openProjectManagerView() -> Void {
@@ -152,7 +158,9 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
             DispatchQueue.main.async {
                 if let visibleItems = self.window.toolbar?.visibleItems {
                     for visibleItem in visibleItems {
-                        visibleItem.isEnabled = self.gameView.selectionModel.hasSelectedArea
+                        if visibleItem.itemIdentifier == .increaseElevation || visibleItem.itemIdentifier == .decreaseElevation {
+                            visibleItem.isEnabled = self.gameView.selectionModel.hasSelectedArea
+                        }
                     }
                 }
             }
@@ -285,6 +293,12 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     @objc
     private func decreaseElevationForWholeMap() {
         gameView.decreaseElevation(area: nil)
+    }
+    
+    @objc
+    private func toggleLighting() {
+        gameView.lightingEnabled = !gameView.lightingEnabled
+        definedToolbarItems[.toggleLighting]!.image = gameView.lightingEnabled ? NSImage(named: "lighting_on") : NSImage(named: "lighting_off")
     }
     
     static func main() -> Void {

@@ -12,6 +12,8 @@ open class GameView: SKView, SKSceneDelegate {
     private var normalsTexture: SKTexture?
     private var positionTexture: SKTexture?
     
+    public var lightingEnabled: Bool = true
+    
     override public init(frame frameRect: CGRect) {
         super.init(frame: frameRect)
 
@@ -136,7 +138,7 @@ open class GameView: SKView, SKSceneDelegate {
         }
 
         if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed(CiderKitEngine.ShaderUniformName.ambientLight.rawValue) {
-            uniform.vectorFloat3Value = map.ambientLight.vector
+            uniform.vectorFloat3Value = lightingEnabled ? map.ambientLight.vector : vector_float3(1, 1, 1)
         }
         
         let definedLightCount = map.lights?.count ?? 0
@@ -147,7 +149,7 @@ open class GameView: SKView, SKSceneDelegate {
             else {
                 break
             }
-            let lightMatrix = lightIndex < definedLightCount ? map.lights![lightIndex].matrix : matrix_float3x3();
+            let lightMatrix = (lightingEnabled && lightIndex < definedLightCount) ? map.lights![lightIndex].matrix : matrix_float3x3();
             uniform.matrixFloat3x3Value = lightMatrix
         }
     }
