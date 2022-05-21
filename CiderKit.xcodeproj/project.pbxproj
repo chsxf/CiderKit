@@ -80,7 +80,7 @@
 			remoteGlobalIDString = D93C4C8E2800CBD6000955E1;
 			remoteInfo = "CiderKit-Engine";
 		};
-		D972C1B52827D3AB00D85376 /* PBXContainerItemProxy */ = {
+		D9405F632838D7E900CA953A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D91061A32755F0B200EA8A03 /* Project object */;
 			proxyType = 1;
@@ -501,7 +501,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				D972C1B62827D3AB00D85376 /* PBXTargetDependency */,
+				D9405F642838D7E900CA953A /* PBXTargetDependency */,
 			);
 			name = "CiderKit-Editor";
 			productName = CiderKit;
@@ -589,7 +589,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1340;
 				TargetAttributes = {
 					D91061AA2755F0B200EA8A03 = {
 						CreatedOnToolsVersion = 13.1;
@@ -771,10 +771,10 @@
 			target = D93C4C8E2800CBD6000955E1 /* CiderKit-Engine */;
 			targetProxy = D93C4CCB2800CC25000955E1 /* PBXContainerItemProxy */;
 		};
-		D972C1B62827D3AB00D85376 /* PBXTargetDependency */ = {
+		D9405F642838D7E900CA953A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D93C4C8E2800CBD6000955E1 /* CiderKit-Engine */;
-			targetProxy = D972C1B52827D3AB00D85376 /* PBXContainerItemProxy */;
+			targetProxy = D9405F632838D7E900CA953A /* PBXContainerItemProxy */;
 		};
 		D9B8557E27F0C86F00D605F4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -905,6 +905,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "CiderKit-Editor/CiderKit.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -936,6 +937,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "CiderKit-Editor/CiderKit.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1071,6 +1073,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "CiderKit-PlayerSample/CiderKit_PlayerSample.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1100,6 +1103,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "CiderKit-PlayerSample/CiderKit_PlayerSample.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
