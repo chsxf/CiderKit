@@ -63,7 +63,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 if defaultRenderer.leftElevationMaterialResetPolicy == .resetWithEachCell {
                     leftElevationMaterial.reset()
                 }
-                let leftElevationCount = map!.getLeftVisibleElevation(forX: mapX, andY: mapY, usingDefaultElevation: regionDescription.elevation)
+                let leftElevationCount = map!.getLeftVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<leftElevationCount {
                     if defaultRenderer.leftElevationMaterialResetPolicy == .resetAlways {
                         leftElevationMaterial.reset()
@@ -86,7 +86,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 if defaultRenderer.rightElevationMaterialResetPolicy == .resetWithEachCell {
                     rightElevationMaterial.reset()
                 }
-                let rightElevationCount = map!.getRightVisibleElevation(forX: mapX, andY: mapY, usingDefaultElevation: regionDescription.elevation)
+                let rightElevationCount = map!.getRightVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<rightElevationCount {
                     if defaultRenderer.rightElevationMaterialResetPolicy == .resetAlways {
                         rightElevationMaterial.reset()
@@ -121,13 +121,12 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 
                 addChild(sprite)
                 
-                let entity = GKEntity()
-                entity.addComponent(GKSKNodeComponent(node: sprite))
-                let cell = MapCellComponent(region: self, mapX: mapX, mapY: mapY, elevation: regionDescription.elevation)
-                cell.groundMaterialOverrides = localGroundMaterialOverride
-                cell.leftElevationMaterialOverrides = localLeftElevationMaterialOverride
-                cell.rightElevationMaterialOverrides = localRightElevationMaterialOverride
-                entity.addComponent(cell)
+                let entity = map!.mapCellEntity(node: sprite, for: self, atX: mapX, y: mapY, elevation: regionDescription.elevation)
+                if let cellComponent = entity.component(ofType: MapCellComponent.self) {
+                    cellComponent.groundMaterialOverrides = localGroundMaterialOverride
+                    cellComponent.leftElevationMaterialOverrides = localLeftElevationMaterialOverride
+                    cellComponent.rightElevationMaterialOverrides = localRightElevationMaterialOverride
+                }
                 cellEntities.append(entity)
             }
         }

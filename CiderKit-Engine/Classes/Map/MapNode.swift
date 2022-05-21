@@ -77,10 +77,19 @@ open class MapNode: SKNode, Collection, ObservableObject {
         updateRegionsZPosition()
     }
     
-    func getLeftVisibleElevation(forX x: Int, andY y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
+    public func hasCell(forX x: Int, y: Int) -> Bool {
+        for region in regions {
+            if region.regionDescription.area.contains(x: x, y: y) {
+                return true
+            }
+        }
+        return false;
+    }
+    
+    func getLeftVisibleElevation(forX x: Int, y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
         guard
-            let cellElevation = getCellElevation(forX: x, andY: y),
-            let leftCellElevation = getCellElevation(forX: x, andY: y + 1)
+            let cellElevation = getCellElevation(forX: x, y: y),
+            let leftCellElevation = getCellElevation(forX: x, y: y + 1)
         else {
             return defaultElevation
         }
@@ -89,10 +98,10 @@ open class MapNode: SKNode, Collection, ObservableObject {
         return Swift.max(diff, 0)
     }
     
-    func getRightVisibleElevation(forX x: Int, andY y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
+    func getRightVisibleElevation(forX x: Int, y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
         guard
-            let cellElevation = getCellElevation(forX: x, andY: y),
-            let rightCellElevation = getCellElevation(forX: x + 1, andY: y)
+            let cellElevation = getCellElevation(forX: x, y: y),
+            let rightCellElevation = getCellElevation(forX: x + 1, y: y)
         else {
             return defaultElevation
         }
@@ -101,7 +110,7 @@ open class MapNode: SKNode, Collection, ObservableObject {
         return Swift.max(diff, 0)
     }
     
-    func getCellElevation(forX x: Int, andY y: Int) -> Int? {
+    func getCellElevation(forX x: Int, y: Int) -> Int? {
         for region in regions {
             if region.containsMapCoordinates(x: x, y: y) {
                 return region.regionDescription.elevation
@@ -111,7 +120,7 @@ open class MapNode: SKNode, Collection, ObservableObject {
     }
     
     func getWorldPosition(atCellX x: Int, y: Int) -> CGPoint? {
-        guard let elevation = getCellElevation(forX: x, andY: y) else {
+        guard let elevation = getCellElevation(forX: x, y: y) else {
             return nil
         }
         
@@ -121,18 +130,28 @@ open class MapNode: SKNode, Collection, ObservableObject {
         return CGPoint(x: isoX, y: isoY)
     }
     
-    public func getMapCellEntity(atX x: Int, y: Int) -> GKEntity? {
+    public func lookForMapCellEntity(atX x: Int, y: Int) -> GKEntity? {
         for region in regions {
             for cell in region.cellEntities {
-                guard let cellComponent = cell.component(ofType: MapCellComponent.self) else {
-                    continue
-                }
-                if cellComponent.mapX == x && cellComponent.mapY == y {
-                    return cell
+                if let cellComponent = cell.component(ofType: MapCellComponent.self) {
+                    if cellComponent.mapX == x && cellComponent.mapY == y {
+                        return cell
+                    }
                 }
             }
         }
         return nil
     }
     
+    open func mapCellEntity(node: SKNode, for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> GKEntity {
+        let entity = GKEntity()
+        entity.addComponent(GKSKNodeComponent(node: node))
+        let cell = mapCellComponent(for: region, atX: x, y: y, elevation: elevation)
+        entity.addComponent(cell)
+        return entity
+    }
+    
+    open func mapCellComponent(for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> MapCellComponent {
+        return MapCellComponent(region: region, mapX: x, mapY: y, elevation: elevation)
+    }
 }

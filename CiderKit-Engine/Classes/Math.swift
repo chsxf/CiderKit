@@ -15,4 +15,20 @@ public final class Math {
         return CGPoint(x: xScene, y: yScene)
     }
     
+    public static func sceneToCell(_ point: CGPoint, halfTileSize: CGSize) -> CGPoint {
+        let world = sceneToWorld(point, halfTileSize: halfTileSize)
+        return worldToCell(world)
+    }
+    
+    public static func cellToScene(_ point: CGPoint, halfTileSize: CGSize) -> CGPoint {
+        return worldToScene(point, halfTileSize: halfTileSize)
+    }
+    
+    public static func worldToCell(_ point: CGPoint) -> CGPoint {
+        return CGPoint(x: point.x.rounded(.down), y: point.y.rounded(.down))
+    }
+    
+    public static func cellToWorld(_ point: CGPoint) -> CGPoint {
+        return point
+    }
 }

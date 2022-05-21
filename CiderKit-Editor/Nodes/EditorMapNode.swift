@@ -1,9 +1,12 @@
 import Foundation
 import CiderKit_Engine
+import GameplayKit
 
 class EditorMapNode: MapNode {
 
     @Published private(set) var dirty: Bool = false
+    
+    private(set) var hoverableEntities: [GKEntity] = []
     
     func increaseElevation(area: MapArea?) {
         var appliedOnRegion = false
@@ -119,6 +122,16 @@ class EditorMapNode: MapNode {
     
     func clearDirtyFlag() {
         dirty = false
+    }
+    
+    override func mapCellEntity(node: SKNode, for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> GKEntity {
+        let entity = super.mapCellEntity(node: node, for: region, atX: x, y: y, elevation: elevation)
+        hoverableEntities.append(entity)
+        return entity
+    }
+    
+    override func mapCellComponent(for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> MapCellComponent {
+        return EditorMapCellComponent(region: region, mapX: x, mapY: y, elevation: elevation)
     }
     
 }

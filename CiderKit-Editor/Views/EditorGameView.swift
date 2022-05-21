@@ -30,11 +30,16 @@ class EditorGameView: GameView {
     private var viewFrustrumShape: SKShapeNode?
     
     private let lightsRoot: SKNode
+    private var lightEntities: [GKEntity] = []
+    
+    var hoverableEntities: HoverableSequence { HoverableSequence(worldGrid.hoverableEntities, mutableMap.hoverableEntities, lightEntities) }
     
     override init(frame frameRect: CGRect) {
         lightsRoot = SKNode()
         
         super.init(frame: frameRect)
+        
+        showsPhysics = true
         
         worldGrid = WorldGrid()
         scene!.addChild(worldGrid)
@@ -76,7 +81,6 @@ class EditorGameView: GameView {
         super.update(currentTime, for: scene)
         
         updateWorldGrid(for: scene)
-        selectionManager?.update()
     }
     
     override func mouseDown(with event: NSEvent) {
@@ -154,7 +158,8 @@ class EditorGameView: GameView {
         mutableMap.increaseElevation(area: area)
         
         if area != nil {
-            selectionModel.setSelectedCell(map.getMapCellEntity(atX: area!.x, y: area!.y))
+            let selectable = map.lookForMapCellEntity(atX: area!.x, y: area!.y)?.findSelectableComponent()
+            selectionModel.setSelectable(selectable)
         }
     }
     
@@ -162,7 +167,8 @@ class EditorGameView: GameView {
         mutableMap.decreaseElevation(area: area)
         
         if area != nil {
-            selectionModel.setSelectedCell(map.getMapCellEntity(atX: area!.x, y: area!.y))
+            let selectable = map.lookForMapCellEntity(atX: area!.x, y: area!.y)?.findSelectableComponent()
+            selectionModel.setSelectable(selectable)
         }
     }
     
@@ -175,6 +181,7 @@ class EditorGameView: GameView {
         super.unloadMap(removePreviousMap: removePreviousMap)
         selectionModel.clear()
         lightsRoot.removeAllChildren()
+        lightEntities.removeAll()
     }
     
     override func loadMap(file: URL) {
@@ -202,8 +209,11 @@ class EditorGameView: GameView {
     func buildLightNodes() {
         if let lights = map.lights {
             for light in lights {
-                let lightNode = PointLightNode(from: light)
-                lightsRoot.addChild(lightNode)
+                let lightEntity = PointLightComponent.entity(from: light)
+                if let lightNode = lightEntity.component(ofType: GKSKNodeComponent.self)?.node {
+                    lightsRoot.addChild(lightNode)
+                }
+                lightEntities.append(lightEntity)
             }
         }
     }

@@ -1,5 +1,6 @@
 import SpriteKit
 import CiderKit_Engine
+import GameplayKit
 
 class WorldGrid: SKNode {
     
@@ -26,6 +27,8 @@ class WorldGrid: SKNode {
     private var spritePools = [GridElement:SpritePool]()
     
     private var currentViewport: CGRect = CGRect()
+    
+    private(set) var hoverableEntities: [GKEntity] = []
     
     override init() {
         triaxis = SKSpriteNode(texture: Atlases["grid"]["triaxis"])
@@ -79,11 +82,11 @@ class WorldGrid: SKNode {
         let roundedViewportBottomRight = worldCoordinatesToGridBlock(transformedViewportBottomRight)
         
         spritePools.forEach { $1.returnAll() }
+        hoverableEntities.removeAll()
         
-        for x in stride(from: roundedViewportTopLeft.x, to: roundedViewportBottomRight.x, by: 10) {
-            for y in stride(from: roundedViewportTopRight.y, to: roundedViewportBottomLeft.y, by: 10) {
-                let coords = Math.worldToScene(CGPoint(x: x, y: y), halfTileSize: halfGridTileSize)
-                buildGridBlock(atWorldCoordinates: coords, withViewport: viewport)
+        for x in stride(from: Int(roundedViewportTopLeft.x), to: Int(roundedViewportBottomRight.x), by: 10) {
+            for y in stride(from: Int(roundedViewportTopRight.y), to: Int(roundedViewportBottomLeft.y), by: 10) {
+                buildGridBlock(atX: x, y: y, withViewport: viewport)
             }
         }
     }
@@ -93,11 +96,11 @@ class WorldGrid: SKNode {
             return nil
         }
 
-        if !spritePool.hasAvailableSprite() {
+        if !spritePool.hasAvailability() {
             createSprite(withElemeent: element)
         }
         
-        guard let sprite = spritePool.getSprite() else {
+        guard let sprite = spritePool.getElement() else {
             return nil
         }
         return sprite
@@ -110,7 +113,7 @@ class WorldGrid: SKNode {
         
         let sprite = SKSpriteNode(texture: gridTileTextures[element]!)
         sprite.anchorPoint = CGPoint(x: 0.5, y: 1)
-        spritePool.returnSprite(sprite)
+        spritePool.returnElement(sprite)
     }
     
     private func spriteIsVisible(atCoordinates coordinates: CGPoint, inRect rect: CGRect) -> Bool {
@@ -118,7 +121,9 @@ class WorldGrid: SKNode {
         return rect.intersects(spriteRect)
     }
     
-    private func buildGridBlock(atWorldCoordinates worldCoordinates: CGPoint, withViewport viewport: CGRect) {
+    private func buildGridBlock(atX mapX: Int, y mapY: Int, withViewport viewport: CGRect) {
+        let sceneCoordinates = Math.worldToScene(CGPoint(x: mapX, y: mapY), halfTileSize: halfGridTileSize)
+        
         for x in 0..<10 {
             for y in 0..<10 {
                 var element: GridElement = .Base
@@ -151,15 +156,20 @@ class WorldGrid: SKNode {
                     element = .Bottom
                 }
                 
-                let position = worldCoordinates.applying(CGAffineTransform.init(
+                let scenePosition = sceneCoordinates.applying(CGAffineTransform.init(
                     translationX: halfGridTileSize.width * CGFloat(x - y),
                     y: -halfGridTileSize.height * CGFloat(x + y))
                 )
-                if spriteIsVisible(atCoordinates: position, inRect: viewport) {
+                if spriteIsVisible(atCoordinates: scenePosition, inRect: viewport) {
                     let sprite = getSprite(withElement: element)!
-                    sprite.position = position
+                    sprite.position = scenePosition
                     sprite.zPosition = -10
                     addChild(sprite)
+                    
+                    let entity = GKEntity()
+                    entity.addComponent(GKSKNodeComponent(node: sprite))
+                    entity.addComponent(EditorMapCellComponent(mapX: mapX + x, mapY: mapY + y))
+                    hoverableEntities.append(entity)
                 }
             }
         }
