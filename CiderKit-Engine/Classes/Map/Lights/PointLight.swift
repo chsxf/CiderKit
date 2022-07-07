@@ -9,12 +9,18 @@ public class PointLight: BaseLight {
         public var exponent: Float
         
         var vector: vector_float3 { vector_float3(near, far, exponent) }
+
+        public init(near: Float, far: Float, exponent: Float) {
+            self.near = near
+            self.far = far
+            self.exponent = exponent
+        }
     }
-    
-    public var enabled: Bool
-    public var name: String
-    public var position: vector_float3
-    public var falloff: Falloff
+
+    @Published public var enabled: Bool
+    @Published public var name: String
+    @Published public var position: vector_float3
+    @Published public var falloff: Falloff
  
     var matrix: matrix_float3x3 {
         get {
@@ -26,7 +32,7 @@ public class PointLight: BaseLight {
         }
     }
     
-    init(name: String, color: LightColor, position: vector_float3, falloff: Falloff) {
+    public init(name: String, color: LightColor, position: vector_float3, falloff: Falloff) {
         enabled = true
         self.name = name
         self.position = position

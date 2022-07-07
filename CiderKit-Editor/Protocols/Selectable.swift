@@ -1,6 +1,10 @@
 import GameplayKit
+import SwiftUI
 
 protocol Selectable: Hoverable {
+    
+    var inspectableDescription: String { get }
+    var inspectorView: AnyView { get }
     
     func highlight()
     func demphasize()

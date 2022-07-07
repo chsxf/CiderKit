@@ -2,11 +2,23 @@ import Foundation
 import CiderKit_Engine
 import SpriteKit
 import GameplayKit
+import SwiftUI
 
-class EditorMapCellComponent: MapCellComponent, Selectable {
+class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
     
     private static var selectionShape: SKShapeNode!
     private static var hoveringShape: SKShapeNode!
+    
+    var inspectableDescription: String {
+        elevation != nil ? "Map Cell" : "Map Cell (Empty)"
+    }
+    
+    var inspectorView: AnyView {
+        AnyView(
+            MapCellInspector()
+                .environmentObject(self)
+        )
+    }
     
     func highlight() {
         guard let node = entity?.component(ofType: GKSKNodeComponent.self)?.node else {

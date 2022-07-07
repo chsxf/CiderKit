@@ -2,12 +2,6 @@ import Foundation
 import SpriteKit
 import CiderKit_Engine
 
-#if os(macOS)
-typealias Color = NSColor
-#else
-typealias Color = UIColor
-#endif
-
 class PointLightNode: SKNode {
 
     let lightbulbOnNode: SKSpriteNode
@@ -51,22 +45,22 @@ class PointLightNode: SKNode {
     
     fileprivate func setupLightBulb(_ lightbulb: SKSpriteNode) {
         lightbulb.setScale(0.33)
-        lightbulb.color = Color.white
+        lightbulb.color = LightColor.white
         lightbulb.colorBlendFactor = 1.0
         addChild(lightbulb)
     }
     
     fileprivate func updateSpriteColor() {
         if !selected && !hovered {
-            setSpriteColor(Color.white)
+            setSpriteColor(LightColor.white)
         }
         else {
-            let color = selected ? Color.green : Color.red
+            let color = selected ? LightColor.green : LightColor.red
             setSpriteColor(color)
         }
     }
     
-    fileprivate func setSpriteColor(_ color: Color) {
+    fileprivate func setSpriteColor(_ color: LightColor) {
         lightbulbOnNode.color = color
         lightbulbOffNode.color = color
     }

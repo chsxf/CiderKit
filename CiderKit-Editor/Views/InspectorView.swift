@@ -7,32 +7,16 @@ struct InspectorView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            let mapCell = selectionModel.selectable?.entity?.component(ofType: EditorMapCellComponent.self)
-            if mapCell == nil {
+            if selectionModel.selectable == nil {
                 Text("No selection")
                     .italic()
                     .foregroundColor(.gray)
             }
             else {
-                if mapCell!.region != nil {
-                    Text("Region: \(mapCell!.region!.id)")
-                }
-                else {
-                    Text("Region: NA")
-                        .foregroundColor(.gray)
-                }
-                Spacer().frame(height: 10)
-                HStack {
-                    Text("X: \(mapCell!.mapX)")
-                    Text("Y: \(mapCell!.mapY)")
-                }
-                if (mapCell!.elevation != nil) {
-                    Text("Elevation: \(mapCell!.elevation!)")
-                }
-                else {
-                    Text("Elevation: NA")
-                        .foregroundColor(.gray)
-                }
+                Text(selectionModel.selectable!.inspectableDescription)
+                    .bold()
+                Spacer()
+                selectionModel.selectable!.inspectorView
             }
         }
         .padding()

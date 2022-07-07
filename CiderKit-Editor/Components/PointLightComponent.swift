@@ -1,10 +1,21 @@
 import Foundation
 import GameplayKit
 import CiderKit_Engine
+import SwiftUI
+import Combine
 
-class PointLightComponent: GKComponent, Selectable {
+class PointLightComponent: GKComponent, Selectable, ObservableObject {
     
     let lightDescription: PointLight
+    
+    var inspectableDescription: String = "Point Light"
+    
+    var inspectorView: AnyView {
+        AnyView(
+            PointLightInspector()
+                .environmentObject(lightDescription)
+        )
+    }
     
     fileprivate var lightNode: PointLightNode { entity!.component(ofType: GKSKNodeComponent.self)!.node as! PointLightNode }
     

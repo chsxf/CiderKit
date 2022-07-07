@@ -9,7 +9,7 @@ import UIKit
 public typealias LightColor = UIColor
 #endif
 
-public class BaseLight: Codable {
+public class BaseLight: Codable, ObservableObject {
     
     enum CodingKeys : String, CodingKey {
         case name = "n"
@@ -25,7 +25,7 @@ public class BaseLight: Codable {
         case enabled = "e"
     }
 
-    let color: LightColor
+    @Published public var color: LightColor
 
     var vector: vector_float3 { vector_float3(Float(color.redComponent), Float(color.greenComponent), Float(color.blueComponent)) }
     
