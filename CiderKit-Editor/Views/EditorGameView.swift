@@ -26,11 +26,15 @@ class EditorGameView: GameView {
     
     let selectionModel: SelectionModel = SelectionModel()
     
+    private var previousFrameTime: TimeInterval? = nil
+    
     private var selectionManager: SelectionManager?
     private var viewFrustrumShape: SKShapeNode?
     
     private let lightsRoot: SKNode
     private var lightEntities: [GKEntity] = []
+    
+    private var editableComponents: GKComponentSystem = GKComponentSystem(componentClass: EditableComponent.self)
     
     var hoverableEntities: HoverableSequence { HoverableSequence(worldGrid.hoverableEntities, mutableMap.hoverableEntities, lightEntities) }
     
@@ -81,6 +85,12 @@ class EditorGameView: GameView {
         super.update(currentTime, for: scene)
         
         updateWorldGrid(for: scene)
+        
+        if let previousFrameTime = previousFrameTime {
+            let deltaTime = currentTime - previousFrameTime
+            editableComponents.update(deltaTime: deltaTime)
+        }
+        previousFrameTime = currentTime
     }
     
     override func mouseDown(with event: NSEvent) {
@@ -214,6 +224,7 @@ class EditorGameView: GameView {
                     lightsRoot.addChild(lightNode)
                 }
                 lightEntities.append(lightEntity)
+                editableComponents.addComponent(foundIn: lightEntity)
             }
         }
     }

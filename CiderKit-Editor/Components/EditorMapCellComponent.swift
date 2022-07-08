@@ -13,11 +13,18 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
         elevation != nil ? "Map Cell" : "Map Cell (Empty)"
     }
     
+    private var bakedView: AnyView? = nil
+    
     var inspectorView: AnyView {
-        AnyView(
+        if let bakedView = bakedView {
+            return bakedView
+        }
+        
+        bakedView = AnyView(
             MapCellInspector()
                 .environmentObject(self)
         )
+        return bakedView!
     }
     
     func highlight() {

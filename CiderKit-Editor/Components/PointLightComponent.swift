@@ -4,17 +4,26 @@ import CiderKit_Engine
 import SwiftUI
 import Combine
 
-class PointLightComponent: GKComponent, Selectable, ObservableObject {
+class PointLightComponent: GKComponent, Selectable, ObservableObject, EditableComponentDelegate {
     
     let lightDescription: PointLight
     
+    var lightDescriptionChangeCancellable: AnyCancellable?
+    
     var inspectableDescription: String = "Point Light"
     
+    private var bakedView: AnyView? = nil
+    
     var inspectorView: AnyView {
-        AnyView(
+        if let bakedView = bakedView {
+            return bakedView
+        }
+        
+        bakedView = AnyView(
             PointLightInspector()
                 .environmentObject(lightDescription)
         )
+        return bakedView!
     }
     
     fileprivate var lightNode: PointLightNode { entity!.component(ofType: GKSKNodeComponent.self)!.node as! PointLightNode }
@@ -22,6 +31,12 @@ class PointLightComponent: GKComponent, Selectable, ObservableObject {
     fileprivate init(from lightDescription: PointLight) {
         self.lightDescription = lightDescription
         super.init()
+        
+        lightDescriptionChangeCancellable = self.lightDescription.objectWillChange.sink {
+            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
+                editableComponent.invalidate()
+            }
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -50,21 +65,40 @@ class PointLightComponent: GKComponent, Selectable, ObservableObject {
         lightNode.selected = false
     }
     
-    class func entity(from lightDescription: PointLight) -> GKEntity {
-        let newEntity = GKEntity();
-        
+    private class func computeScenePosition(from lightDescription: PointLight) -> CGPoint {
         let xyPosition = CGPoint(x: CGFloat(lightDescription.position.x), y: CGFloat(lightDescription.position.y))
         var scenePosition = Math.worldToScene(xyPosition, halfTileSize: CGSize(width: MapNode.halfWidth, height: MapNode.halfHeight))
         scenePosition.y += CGFloat(lightDescription.position.z) * CGFloat(MapNode.elevationHeight)
+        return scenePosition
+    }
+    
+    class func entity(from lightDescription: PointLight) -> GKEntity {
+        let newEntity = GKEntity();
+        
+        let scenePosition = Self.computeScenePosition(from: lightDescription)
         
         let pointLight = PointLightNode()
         pointLight.position = scenePosition
         pointLight.enabled = lightDescription.enabled
         newEntity.addComponent(GKSKNodeComponent(node: pointLight))
         
-        newEntity.addComponent(PointLightComponent(from: lightDescription))
+        let pointLightComponent = PointLightComponent(from: lightDescription)
+        newEntity.addComponent(pointLightComponent)
+        
+        newEntity.addComponent(EditableComponent(delegate: pointLightComponent))
         
         return newEntity
+    }
+    
+    func validate() -> Bool {
+        guard let pointLight = entity?.component(ofType: GKSKNodeComponent.self)?.node as? PointLightNode else {
+            return false
+        }
+        
+        pointLight.position = Self.computeScenePosition(from: lightDescription)
+        pointLight.enabled = lightDescription.enabled
+        
+        return true
     }
     
 }

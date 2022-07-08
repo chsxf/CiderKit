@@ -24,7 +24,7 @@ struct PointLightInspector: View {
                 }
                 
                 Spacer()
-                
+
                 ColorPicker(selection: Binding(get: getColor, set: setColor), supportsOpacity: false) { }
             }
             
@@ -32,7 +32,7 @@ struct PointLightInspector: View {
                 InspectorHeaderView("Name")
                 TextField(text: $pointLight.name) { }
             }
-            
+
             Group {
                 InspectorHeaderView("Position")
                 Form {
@@ -43,7 +43,7 @@ struct PointLightInspector: View {
                         }
                         Stepper(value: xBinding, step: 0.1) { }
                     }
-                    
+
                     let yBinding = $pointLight.position.y
                     HStack {
                         TextField(value: yBinding, format: .number) {
@@ -51,7 +51,7 @@ struct PointLightInspector: View {
                         }
                         Stepper(value: yBinding, step: 0.1) { }
                     }
-                    
+
                     let elevationBinding = $pointLight.position.z
                     HStack {
                         TextField(value: elevationBinding, format: .number) {
@@ -61,7 +61,7 @@ struct PointLightInspector: View {
                     }
                 }
             }
-            
+
             Group {
                 InspectorHeaderView("Falloff")
                 Form {
@@ -72,7 +72,7 @@ struct PointLightInspector: View {
                         }
                         Stepper(value: nearBinding, step: 0.1) { }
                     }
-                    
+
                     let farBinding = $pointLight.falloff.far
                     HStack {
                         TextField(value: farBinding, format: .number) {
@@ -80,7 +80,7 @@ struct PointLightInspector: View {
                         }
                         Stepper(value: farBinding, step: 0.1) { }
                     }
-                    
+
                     let expBinding = $pointLight.falloff.exponent
                     HStack {
                         TextField(value: expBinding, format: .number) {
