@@ -5,17 +5,6 @@ struct PointLightInspector: View {
     
     @EnvironmentObject private var pointLight: PointLight
     
-    private func getColor() -> Color {
-        #if os(macOS)
-        return Color(nsColor: pointLight.color)
-        #else
-        return Color(uiColor: pointLight.color)
-        #endif
-    }
-    private func setColor(_ value: Color) {
-        pointLight.color = LightColor(value)
-    }
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             HStack {
@@ -25,7 +14,7 @@ struct PointLightInspector: View {
                 
                 Spacer()
 
-                ColorPicker(selection: Binding(get: getColor, set: setColor), supportsOpacity: false) { }
+                ColorPicker(selection: $pointLight.color, supportsOpacity: false) { }
             }
             
             Group {

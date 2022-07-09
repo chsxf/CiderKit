@@ -32,7 +32,7 @@ public class PointLight: BaseLight {
         }
     }
     
-    public init(name: String, color: LightColor, position: vector_float3, falloff: Falloff) {
+    public init(name: String, color: CGColor, position: vector_float3, falloff: Falloff) {
         enabled = true
         self.name = name
         self.position = position

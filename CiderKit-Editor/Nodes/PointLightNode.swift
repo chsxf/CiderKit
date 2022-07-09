@@ -45,22 +45,22 @@ class PointLightNode: SKNode {
     
     fileprivate func setupLightBulb(_ lightbulb: SKSpriteNode) {
         lightbulb.setScale(0.33)
-        lightbulb.color = LightColor.white
+        lightbulb.color = SKColor.white
         lightbulb.colorBlendFactor = 1.0
         addChild(lightbulb)
     }
     
     fileprivate func updateSpriteColor() {
         if !selected && !hovered {
-            setSpriteColor(LightColor.white)
+            setSpriteColor(SKColor.white)
         }
         else {
-            let color = selected ? LightColor.green : LightColor.red
+            let color = selected ? SKColor.green : SKColor.red
             setSpriteColor(color)
         }
     }
     
-    fileprivate func setSpriteColor(_ color: LightColor) {
+    fileprivate func setSpriteColor(_ color: SKColor) {
         lightbulbOnNode.color = color
         lightbulbOffNode.color = color
     }
