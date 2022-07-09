@@ -3,7 +3,7 @@ import CiderKit_Engine
 
 struct AmbientLightInspector: View {
     
-    @EnvironmentObject private var ambientLight: BaseLight
+    @EnvironmentObject private var ambientLight: DelayedObservableObject<BaseLight>
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {

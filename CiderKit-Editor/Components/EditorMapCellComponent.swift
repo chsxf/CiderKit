@@ -65,7 +65,7 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
         selectionShape = SKShapeNode(points: &points, count: points.count)
         selectionShape.strokeColor = NSColor.green
         selectionShape.lineWidth = 1
-        selectionShape.zPosition = 1000000
+        selectionShape.zPosition = 5000
         selectionShape.isHidden = true
         scene.addChild(selectionShape)
         
@@ -73,7 +73,7 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
         hoveringShape.strokeShader = SKShader(fileNamed: "HoverShader")
         hoveringShape.strokeColor = NSColor.red
         hoveringShape.lineWidth = 1
-        hoveringShape.zPosition = 1000001
+        hoveringShape.zPosition = 5001
         hoveringShape.isHidden = true
         scene.addChild(hoveringShape)
     }

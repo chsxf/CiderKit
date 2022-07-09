@@ -10,6 +10,8 @@ class PointLightComponent: GKComponent, Selectable, ObservableObject, EditableCo
     
     var lightDescriptionChangeCancellable: AnyCancellable?
     
+    let supportedToolModes: ToolMode = .move
+    
     var inspectableDescription: String = "Point Light"
     
     private var bakedView: AnyView? = nil
@@ -21,7 +23,7 @@ class PointLightComponent: GKComponent, Selectable, ObservableObject, EditableCo
         
         bakedView = AnyView(
             PointLightInspector()
-                .environmentObject(lightDescription)
+                .environmentObject(lightDescription.delayed())
         )
         return bakedView!
     }
@@ -109,6 +111,11 @@ class PointLightComponent: GKComponent, Selectable, ObservableObject, EditableCo
         pointLight.enabled = lightDescription.enabled
         
         return true
+    }
+    
+    func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) {
+        lightDescription.position += vector_float3(x: Float(x), y: Float(y), z: Float(z))
+        entity?.component(ofType: EditableComponent.self)?.invalidate()
     }
     
 }

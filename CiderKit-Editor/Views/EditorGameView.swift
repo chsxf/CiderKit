@@ -41,10 +41,12 @@ class EditorGameView: GameView {
     
     override init(frame frameRect: CGRect) {
         lightsRoot = SKNode()
+        lightsRoot.zPosition = 10000
         
         super.init(frame: frameRect)
         
         showsPhysics = true
+        isAsynchronous = false
         
         worldGrid = WorldGrid()
         scene!.addChild(worldGrid)
@@ -92,6 +94,8 @@ class EditorGameView: GameView {
             editableComponents.update(deltaTime: deltaTime)
         }
         previousFrameTime = currentTime
+        
+        selectionManager?.update()
     }
     
     override func mouseDown(with event: NSEvent) {
@@ -104,6 +108,10 @@ class EditorGameView: GameView {
     
     override func mouseMoved(with event: NSEvent) {
         nextResponder?.mouseMoved(with: event)
+    }
+    
+    override func mouseDragged(with event: NSEvent) {
+        nextResponder?.mouseDragged(with: event)
     }
     
     override func rightMouseUp(with event: NSEvent) {

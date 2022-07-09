@@ -3,7 +3,7 @@ import CiderKit_Engine
 
 struct PointLightInspector: View {
     
-    @EnvironmentObject private var pointLight: PointLight
+    @EnvironmentObject private var pointLight: DelayedObservableObject<PointLight>
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {

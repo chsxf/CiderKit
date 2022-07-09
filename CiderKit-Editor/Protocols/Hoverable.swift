@@ -1,7 +1,7 @@
 import CoreGraphics
 import GameplayKit
 
-protocol Hoverable {
+protocol Hoverable: AnyObject {
     
     var entity: GKEntity? { get }
     

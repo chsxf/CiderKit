@@ -4,6 +4,9 @@ import CiderKit_Engine
 
 class PointLightNode: SKNode {
 
+    private static var lightbulbOnTexture: SKTexture? = nil
+    private static var lightbulbOfftexture: SKTexture? = nil
+    
     let lightbulbOnNode: SKSpriteNode
     let lightbulbOffNode: SKSpriteNode
     
@@ -28,12 +31,20 @@ class PointLightNode: SKNode {
     }
     
     override init() {
-        lightbulbOnNode = SKSpriteNode(imageNamed: "lightbulb_on")
-        lightbulbOffNode = SKSpriteNode(imageNamed: "lightbulb_off")
+        if Self.lightbulbOnTexture == nil {
+            Self.lightbulbOnTexture = SKTexture(imageNamed: "lightbulb_on")
+            Self.lightbulbOnTexture?.filteringMode = .nearest
+        }
+        
+        if Self.lightbulbOfftexture == nil {
+            Self.lightbulbOfftexture = SKTexture(imageNamed: "lightbulb_off")
+            Self.lightbulbOfftexture?.filteringMode = .nearest
+        }
+        
+        lightbulbOnNode = SKSpriteNode(texture: Self.lightbulbOnTexture)
+        lightbulbOffNode = SKSpriteNode(texture: Self.lightbulbOfftexture)
         
         super.init()
-
-        zPosition = 1000
         
         setupLightBulb(lightbulbOnNode)
         setupLightBulb(lightbulbOffNode)

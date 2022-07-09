@@ -56,6 +56,10 @@
 		D9422DC228720343004D53E8 /* HoverableSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9422DC128720343004D53E8 /* HoverableSequence.swift */; };
 		D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */; };
 		D96A3BE92879909C008949A1 /* AmbientLightInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */; };
+		D96A3BEB2879D8C7008949A1 /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BEA2879D8C7008949A1 /* Tool.swift */; };
+		D96A3BED2879D94B008949A1 /* MoveToolNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BEC2879D94B008949A1 /* MoveToolNode.swift */; };
+		D96A3BF1287A1F28008949A1 /* ToolMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BF0287A1F28008949A1 /* ToolMode.swift */; };
+		D96A3BF3287A2767008949A1 /* MoveToolComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */; };
 		D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */; };
 		D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D972C1AD2827B46500D85376 /* CiderKitEngine.swift */; };
 		D972C1B12827D11300D85376 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D978AE3028271857008F8D0E /* Assets.xcassets */; };
@@ -67,6 +71,7 @@
 		D981239228292E3B00CC5897 /* LightModelFinalGathering.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D981239128292E3B00CC5897 /* LightModelFinalGathering.fsh */; };
 		D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7E827DDEBBC00AC2465 /* InspectorView.swift */; };
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
+		D98663DF287E1B1100950DC0 /* DelayedObservableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98663DE287E1B1100950DC0 /* DelayedObservableObject.swift */; };
 		D9A64CFC282C491F00CAF635 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */; };
 		D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */; };
 		D9A87A8827DD44600079C831 /* HoverShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D9A87A8727DD43F10079C831 /* HoverShader.fsh */; };
@@ -168,6 +173,10 @@
 		D9422DC128720343004D53E8 /* HoverableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverableSequence.swift; sourceTree = "<group>"; };
 		D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightComponent.swift; sourceTree = "<group>"; };
 		D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightInspector.swift; sourceTree = "<group>"; };
+		D96A3BEA2879D8C7008949A1 /* Tool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
+		D96A3BEC2879D94B008949A1 /* MoveToolNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveToolNode.swift; sourceTree = "<group>"; };
+		D96A3BF0287A1F28008949A1 /* ToolMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolMode.swift; sourceTree = "<group>"; };
+		D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveToolComponent.swift; sourceTree = "<group>"; };
 		D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionManager.swift; sourceTree = "<group>"; };
 		D972C1AD2827B46500D85376 /* CiderKitEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKitEngine.swift; sourceTree = "<group>"; };
 		D972C1B72827D9FD00D85376 /* EditorMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapNode.swift; sourceTree = "<group>"; };
@@ -180,6 +189,7 @@
 		D981239128292E3B00CC5897 /* LightModelFinalGathering.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = LightModelFinalGathering.fsh; sourceTree = "<group>"; };
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		D985E7EA27DE38D300AC2465 /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
+		D98663DE287E1B1100950DC0 /* DelayedObservableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayedObservableObject.swift; sourceTree = "<group>"; };
 		D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorFunctions.swift; sourceTree = "<group>"; };
 		D9A87A8227DD320B0079C831 /* MapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCellComponent.swift; sourceTree = "<group>"; };
@@ -321,6 +331,7 @@
 			isa = PBXGroup;
 			children = (
 				D972C1B72827D9FD00D85376 /* EditorMapNode.swift */,
+				D96A3BEC2879D94B008949A1 /* MoveToolNode.swift */,
 				D933B7412830D32200B63313 /* PointLightNode.swift */,
 				D9CC420F276163700081A464 /* WorldGrid.swift */,
 			);
@@ -333,8 +344,10 @@
 				D91061B72755F0B400EA8A03 /* CiderKit.entitlements */,
 				D91061D52755F2D900EA8A03 /* Info.plist */,
 				D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */,
+				D98663DE287E1B1100950DC0 /* DelayedObservableObject.swift */,
 				D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */,
 				D9AF1F5F280BE99400BF34B3 /* ProjectManager.swift */,
+				D96A3BF0287A1F28008949A1 /* ToolMode.swift */,
 				D91ED91227E7AA520016D818 /* EditorAssets.xcassets */,
 				D9405F672838E45B00CA953A /* Components */,
 				D933B7432830D34C00B63313 /* Nodes */,
@@ -390,6 +403,7 @@
 				D9173DA62878E134002E652C /* EditableComponent.swift */,
 				D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */,
 				D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */,
+				D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */,
 				D9405F6A2838E67E00CA953A /* PointLightComponent.swift */,
 			);
 			path = Components;
@@ -400,6 +414,7 @@
 			children = (
 				D9405F6D2838EC0100CA953A /* Hoverable.swift */,
 				D9405F682838E49A00CA953A /* Selectable.swift */,
+				D96A3BEA2879D8C7008949A1 /* Tool.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -483,11 +498,11 @@
 		D985E7E727DDEBAA00AC2465 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D909FDB6287747500083EB8C /* InspectorViews */,
 				D936187A27E71D77009A14E2 /* EditorGameView.swift */,
 				D9BF52CC280A05F20093005B /* EditorMainView.swift */,
 				D985E7E827DDEBBC00AC2465 /* InspectorView.swift */,
 				D9AF1F5C280BE7F800BF34B3 /* ProjectManagerView.swift */,
+				D909FDB6287747500083EB8C /* InspectorViews */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -765,6 +780,7 @@
 				D9AF1F5D280BE7F800BF34B3 /* ProjectManagerView.swift in Sources */,
 				D9405F6E2838EC0100CA953A /* Hoverable.swift in Sources */,
 				D909FDBA287748DD0083EB8C /* PointLightInspector.swift in Sources */,
+				D98663DF287E1B1100950DC0 /* DelayedObservableObject.swift in Sources */,
 				D9422DC228720343004D53E8 /* HoverableSequence.swift in Sources */,
 				D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */,
 				D96A3BE92879909C008949A1 /* AmbientLightInspector.swift in Sources */,
@@ -772,6 +788,7 @@
 				D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */,
 				D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */,
 				D9405F6B2838E67E00CA953A /* PointLightComponent.swift in Sources */,
+				D96A3BF3287A2767008949A1 /* MoveToolComponent.swift in Sources */,
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
 				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
 				D933B7442830D35B00B63313 /* PointLightNode.swift in Sources */,
@@ -780,11 +797,14 @@
 				D972C1B82827D9FD00D85376 /* EditorMapNode.swift in Sources */,
 				D9405F692838E49A00CA953A /* Selectable.swift in Sources */,
 				D909FDBD287779790083EB8C /* InspectorHeaderView.swift in Sources */,
+				D96A3BF1287A1F28008949A1 /* ToolMode.swift in Sources */,
+				D96A3BED2879D94B008949A1 /* MoveToolNode.swift in Sources */,
 				D9173DA72878E134002E652C /* EditableComponent.swift in Sources */,
 				D9AF1F60280BE99400BF34B3 /* ProjectManager.swift in Sources */,
 				D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */,
 				D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */,
 				D909FDB8287747640083EB8C /* MapCellInspector.swift in Sources */,
+				D96A3BEB2879D8C7008949A1 /* Tool.swift in Sources */,
 				D9405F702838F1A900CA953A /* EditorMapCellComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

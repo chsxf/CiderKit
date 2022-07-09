@@ -17,7 +17,7 @@ class AmbientLightComponent: GKComponent, Selectable {
         
         bakedView = AnyView(
             AmbientLightInspector()
-                .environmentObject(lightDescription)
+                .environmentObject(lightDescription.delayed())
         )
         return bakedView!
     }
