@@ -54,6 +54,8 @@
 		D9405F6E2838EC0100CA953A /* Hoverable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6D2838EC0100CA953A /* Hoverable.swift */; };
 		D9405F702838F1A900CA953A /* EditorMapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */; };
 		D9422DC228720343004D53E8 /* HoverableSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9422DC128720343004D53E8 /* HoverableSequence.swift */; };
+		D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */; };
+		D96A3BE92879909C008949A1 /* AmbientLightInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */; };
 		D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */; };
 		D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D972C1AD2827B46500D85376 /* CiderKitEngine.swift */; };
 		D972C1B12827D11300D85376 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D978AE3028271857008F8D0E /* Assets.xcassets */; };
@@ -164,6 +166,8 @@
 		D9405F6D2838EC0100CA953A /* Hoverable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hoverable.swift; sourceTree = "<group>"; };
 		D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapCellComponent.swift; sourceTree = "<group>"; };
 		D9422DC128720343004D53E8 /* HoverableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverableSequence.swift; sourceTree = "<group>"; };
+		D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightComponent.swift; sourceTree = "<group>"; };
+		D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightInspector.swift; sourceTree = "<group>"; };
 		D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionManager.swift; sourceTree = "<group>"; };
 		D972C1AD2827B46500D85376 /* CiderKitEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKitEngine.swift; sourceTree = "<group>"; };
 		D972C1B72827D9FD00D85376 /* EditorMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapNode.swift; sourceTree = "<group>"; };
@@ -241,6 +245,7 @@
 		D909FDB6287747500083EB8C /* InspectorViews */ = {
 			isa = PBXGroup;
 			children = (
+				D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */,
 				D909FDB7287747640083EB8C /* MapCellInspector.swift */,
 				D909FDB9287748DD0083EB8C /* PointLightInspector.swift */,
 				D909FDBB287779630083EB8C /* HelperViews */,
@@ -381,10 +386,11 @@
 		D9405F672838E45B00CA953A /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */,
 				D9173DA62878E134002E652C /* EditableComponent.swift */,
+				D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */,
 				D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */,
 				D9405F6A2838E67E00CA953A /* PointLightComponent.swift */,
-				D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -761,6 +767,7 @@
 				D909FDBA287748DD0083EB8C /* PointLightInspector.swift in Sources */,
 				D9422DC228720343004D53E8 /* HoverableSequence.swift in Sources */,
 				D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */,
+				D96A3BE92879909C008949A1 /* AmbientLightInspector.swift in Sources */,
 				D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */,
 				D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */,
 				D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */,
@@ -776,6 +783,7 @@
 				D9173DA72878E134002E652C /* EditableComponent.swift in Sources */,
 				D9AF1F60280BE99400BF34B3 /* ProjectManager.swift in Sources */,
 				D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */,
+				D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */,
 				D909FDB8287747640083EB8C /* MapCellInspector.swift in Sources */,
 				D9405F702838F1A900CA953A /* EditorMapCellComponent.swift in Sources */,
 			);

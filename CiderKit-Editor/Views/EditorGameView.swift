@@ -33,6 +33,7 @@ class EditorGameView: GameView {
     
     private let lightsRoot: SKNode
     private var lightEntities: [GKEntity] = []
+    private(set) var ambientLightEntity: GKEntity? = nil
     
     private var editableComponents: GKComponentSystem = GKComponentSystem(componentClass: EditableComponent.self)
     
@@ -192,6 +193,7 @@ class EditorGameView: GameView {
         selectionModel.clear()
         lightsRoot.removeAllChildren()
         lightEntities.removeAll()
+        buildLightNodes()
     }
     
     override func loadMap(file: URL) {
@@ -227,6 +229,8 @@ class EditorGameView: GameView {
                 editableComponents.addComponent(foundIn: lightEntity)
             }
         }
+        
+        ambientLightEntity = AmbientLightComponent.entity(from: map.ambientLight)
     }
     
 }

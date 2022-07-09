@@ -12,7 +12,7 @@ open class MapNode: SKNode, Collection, ObservableObject {
     
     private let mapDescription: MapDescription
     
-    var ambientLight: BaseLight { mapDescription.lighting?.ambientLight ?? BaseLight(color: LightColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)) }
+    public var ambientLight: BaseLight { mapDescription.lighting?.ambientLight ?? BaseLight(color: LightColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)) }
     
     public var lights: [PointLight]? { mapDescription.lighting?.lights }
     

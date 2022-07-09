@@ -7,6 +7,7 @@ import CiderKit_Engine
 private extension NSToolbarItem.Identifier {
     static let increaseElevation = NSToolbarItem.Identifier(rawValue: "increase_elevation")
     static let decreaseElevation = NSToolbarItem.Identifier(rawValue: "decrease_elevation")
+    static let ambientLightSettings = NSToolbarItem.Identifier(rawValue: "ambientlight_settings")
     static let toggleLighting = NSToolbarItem.Identifier(rawValue: "toogle_lighting")
 }
 
@@ -24,11 +25,11 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     private var selectionModelCancellable: AnyCancellable?
     
     private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .increaseElevation, .decreaseElevation, .toggleLighting
+        .increaseElevation, .decreaseElevation, .ambientLightSettings, .toggleLighting
     ]
     
     private let defaultToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .increaseElevation, .decreaseElevation, .toggleLighting
+        .increaseElevation, .decreaseElevation, .ambientLightSettings, .toggleLighting
     ]
     
     private var definedToolbarItems: [NSToolbarItem.Identifier: NSToolbarItem] = [:]
@@ -112,6 +113,12 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         decreaseElevationItem.image = NSImage(named: "arrow_down")
         decreaseElevationItem.action = #selector(self.decreaseElevationForSelection)
         definedToolbarItems[.decreaseElevation] = decreaseElevationItem
+        
+        let ambientLightSettingsItem = NSToolbarItem(itemIdentifier: .ambientLightSettings)
+        ambientLightSettingsItem.label = "Ambient Light Settings"
+        ambientLightSettingsItem.image = NSImage(named: "ambientlight_settings")
+        ambientLightSettingsItem.action = #selector(self.selectAmbientLight)
+        definedToolbarItems[.ambientLightSettings] = ambientLightSettingsItem
         
         let toggleLightingItem = NSToolbarItem(itemIdentifier: .toggleLighting)
         toggleLightingItem.label = "Toggle Lighting"
@@ -299,6 +306,11 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     private func toggleLighting() {
         gameView.lightingEnabled = !gameView.lightingEnabled
         definedToolbarItems[.toggleLighting]!.image = gameView.lightingEnabled ? NSImage(named: "lighting_on") : NSImage(named: "lighting_off")
+    }
+    
+    @objc
+    private func selectAmbientLight() {
+        gameView.selectionModel.setSelectable(gameView.ambientLightEntity?.findSelectableComponent())
     }
     
     static func main() -> Void {

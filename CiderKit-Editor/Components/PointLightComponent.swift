@@ -26,7 +26,7 @@ class PointLightComponent: GKComponent, Selectable, ObservableObject, EditableCo
         return bakedView!
     }
     
-    fileprivate var lightNode: PointLightNode { entity!.component(ofType: GKSKNodeComponent.self)!.node as! PointLightNode }
+    fileprivate var lightNode: PointLightNode? { entity?.component(ofType: GKSKNodeComponent.self)?.node as? PointLightNode }
     
     fileprivate init(from lightDescription: PointLight) {
         self.lightDescription = lightDescription
@@ -44,25 +44,35 @@ class PointLightComponent: GKComponent, Selectable, ObservableObject, EditableCo
     }
     
     func contains(sceneCoordinates: CGPoint) -> Bool {
-        let light = lightNode
-        let frame = light.calculateAccumulatedFrame()
+        guard let lightNode = lightNode else {
+            return false
+        }
+        let frame = lightNode.calculateAccumulatedFrame()
         return frame.contains(sceneCoordinates)
     }
 
     func hovered() {
-        lightNode.hovered = true
+        if let lightNode = lightNode {
+            lightNode.hovered = true
+        }
     }
     
     func departed() {
-        lightNode.hovered = false
+        if let lightNode = lightNode {
+            lightNode.hovered = false
+        }
     }
     
     func highlight() {
-        lightNode.selected = true
+        if let lightNode = lightNode {
+            lightNode.selected = true
+        }
     }
     
     func demphasize() {
-        lightNode.selected = false
+        if let lightNode = lightNode {
+            lightNode.selected = false
+        }
     }
     
     private class func computeScenePosition(from lightDescription: PointLight) -> CGPoint {
@@ -91,7 +101,7 @@ class PointLightComponent: GKComponent, Selectable, ObservableObject, EditableCo
     }
     
     func validate() -> Bool {
-        guard let pointLight = entity?.component(ofType: GKSKNodeComponent.self)?.node as? PointLightNode else {
+        guard let pointLight = lightNode else {
             return false
         }
         
