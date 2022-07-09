@@ -48,7 +48,7 @@ public class PointLight: BaseLight {
         
         let x = (try? container.decode(Float.self, forKey: CodingKeys.positionX)) ?? 0
         let y = (try? container.decode(Float.self, forKey: CodingKeys.positionY)) ?? 0
-        let z = ((try? container.decode(Float.self, forKey: CodingKeys.positionZ)) ?? 0)
+        let z = ((try? container.decode(Float.self, forKey: CodingKeys.elevation)) ?? 0)
         position = vector_float3(x, y, z)
         
         let near = (try? container.decode(Float.self, forKey: CodingKeys.falloffNear)) ?? 0
@@ -69,7 +69,7 @@ public class PointLight: BaseLight {
         
         try container.encode(position.x, forKey: CodingKeys.positionX)
         try container.encode(position.y, forKey: CodingKeys.positionY)
-        try container.encode(position.z, forKey: CodingKeys.positionZ)
+        try container.encode(position.z, forKey: CodingKeys.elevation)
         
         try container.encode(falloff.near, forKey: CodingKeys.falloffNear)
         try container.encode(falloff.far, forKey: CodingKeys.falloffFar)

@@ -10,7 +10,7 @@ public class BaseLight: Codable, ObservableObject {
         case blue = "b"
         case positionX = "x"
         case positionY = "y"
-        case positionZ = "z"
+        case elevation = "z"
         case falloffNear = "fn"
         case falloffFar = "ff"
         case falloffExponent = "fe"
