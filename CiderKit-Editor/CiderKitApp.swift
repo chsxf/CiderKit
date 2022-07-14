@@ -228,7 +228,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
                 let mapDescription = gameView.map.toMapDescription()
                 try EditorFunctions.save(mapDescription, to: validURL, prettyPrint: true)
                 currentMapURL = validURL
-                gameView.mutableMap.clearDirtyFlag()
+                gameView.mutableMap.dirty = false
                 return true
             }
             catch {

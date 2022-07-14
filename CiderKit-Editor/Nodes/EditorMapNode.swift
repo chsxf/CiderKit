@@ -4,7 +4,7 @@ import GameplayKit
 
 class EditorMapNode: MapNode {
 
-    @Published private(set) var dirty: Bool = false
+    @Published var dirty: Bool = false
     
     private(set) var hoverableEntities: [GKEntity] = []
     
@@ -118,10 +118,6 @@ class EditorMapNode: MapNode {
                 i += 1
             }
         } while regionsHaveChanged
-    }
-    
-    func clearDirtyFlag() {
-        dirty = false
     }
     
     override func mapCellEntity(node: SKNode, for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> GKEntity {

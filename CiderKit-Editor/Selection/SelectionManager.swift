@@ -3,6 +3,7 @@ import AppKit
 import SpriteKit
 import GameplayKit
 import CiderKit_Engine
+import Combine
 
 class SelectionManager: NSResponder {
     
@@ -15,6 +16,9 @@ class SelectionManager: NSResponder {
     private var previousDownSceneCoordinates: CGPoint = CGPoint.zero
     
     private var selectionModel: SelectionModel { editorGameView.selectionModel }
+    private var selectionModelSubscription: AnyCancellable!
+    
+    private var editableSubscription: AnyCancellable? = nil
     
     init(editorGameView: EditorGameView) {
         self.editorGameView = editorGameView
@@ -27,6 +31,14 @@ class SelectionManager: NSResponder {
         EditorMapCellComponent.initSelectionShapes(in: scene)
         scene.addChild(toolsRoot)
         initTools()
+        
+        selectionModelSubscription = selectionModel.objectWillChange.sink {
+                DispatchQueue.main.async {
+                    if let selectable = self.selectionModel.selectable {
+                        self.updateFor(selectable: selectable)
+                    }
+                }
+            }
     }
     
     required init?(coder: NSCoder) {
@@ -45,18 +57,25 @@ class SelectionManager: NSResponder {
     override func mouseUp(with event: NSEvent) {
         if let hoverableAndSelectable = selectionModel.hoverable as? Selectable {
             selectionModel.setSelectable(hoverableAndSelectable)
-            
-            if hoverableAndSelectable.supportedToolModes.contains(currentToolMode) {
-                if let tool = toolsByMode[currentToolMode]?.1 {
-                    tool.moveTo(scenePosition: hoverableAndSelectable.scenePosition)
-                    tool.enabled = true
-                    currentActiveTool = tool
-                    currentActiveTool?.linkedSelectable = hoverableAndSelectable
-                }
+        }
+    }
+    
+    private func updateFor(selectable: Selectable) {
+        if selectable.supportedToolModes.contains(currentToolMode) {
+            if let tool = toolsByMode[currentToolMode]?.1 {
+                tool.moveTo(scenePosition: selectable.scenePosition)
+                tool.enabled = true
+                currentActiveTool = tool
+                currentActiveTool?.linkedSelectable = selectable
             }
-            else {
-                disableAllTools()
-            }
+        }
+        else {
+            disableAllTools()
+        }
+        
+        editableSubscription?.cancel()
+        if let editableComponent = (selectable as? GKComponent)?.entity?.component(ofType: EditableComponent.self) {
+            editableSubscription = editableComponent.objectWillChange.sink { self.editorGameView.mutableMap.dirty = true }
         }
     }
     
@@ -100,6 +119,7 @@ class SelectionManager: NSResponder {
     override func rightMouseUp(with event: NSEvent) {
         selectionModel.setSelectable(nil)
         disableAllTools()
+        editableSubscription?.cancel()
     }
     
     private func initTools() {

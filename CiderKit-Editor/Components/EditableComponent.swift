@@ -8,7 +8,7 @@ enum EditableComponentStatus {
 
 class EditableComponent: GKComponent, ObservableObject {
     
-    private(set) var status: EditableComponentStatus = .valid
+    @Published private(set) var status: EditableComponentStatus = .valid
     
     private let delegate: EditableComponentDelegate
     
