@@ -15,6 +15,8 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
     
     private var bakedView: AnyView? = nil
     
+    let supportedToolModes: ToolMode = .elevation
+    
     var inspectorView: AnyView {
         if let bakedView = bakedView {
             return bakedView

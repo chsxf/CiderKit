@@ -1,5 +1,8 @@
 struct ToolMode: OptionSet, Hashable {
     let rawValue: Int
     
-    static let move = ToolMode(rawValue: 1)
+    static let select = ToolMode(rawValue: 1)
+    static let move = ToolMode(rawValue: 2)
+    static let elevation = ToolMode(rawValue: 4)
+    
 }

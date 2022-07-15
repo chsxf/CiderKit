@@ -28,7 +28,7 @@ class EditorGameView: GameView {
     
     private var previousFrameTime: TimeInterval? = nil
     
-    private var selectionManager: SelectionManager?
+    private(set) var selectionManager: SelectionManager?
     private var viewFrustrumShape: SKShapeNode?
     
     private let lightsRoot: SKNode
@@ -176,8 +176,8 @@ class EditorGameView: GameView {
     func increaseElevation(area: MapArea?) {
         mutableMap.increaseElevation(area: area)
         
-        if area != nil {
-            let selectable = map.lookForMapCellEntity(atX: area!.x, y: area!.y)?.findSelectableComponent()
+        if let area = area {
+            let selectable = map.lookForMapCellEntity(atX: area.x, y: area.y)?.findSelectableComponent()
             selectionModel.setSelectable(selectable)
         }
     }

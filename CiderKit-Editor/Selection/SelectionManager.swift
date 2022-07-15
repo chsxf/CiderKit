@@ -11,14 +11,24 @@ class SelectionManager: NSResponder {
     
     private let toolsRoot: SKNode
     private var toolsByMode: [ToolMode: (GKEntity, Tool)] = [:]
-    private var currentToolMode: ToolMode = .move
     private var currentActiveTool: Tool? = nil
     private var previousDownSceneCoordinates: CGPoint = CGPoint.zero
     
     private var selectionModel: SelectionModel { editorGameView.selectionModel }
-    private var selectionModelSubscription: AnyCancellable!
     
+    private var selectableUpdatedHandle: Disposable? = nil
+
     private var editableSubscription: AnyCancellable? = nil
+    
+    var currentToolMode: ToolMode = .select {
+        didSet {
+            if currentToolMode != oldValue {
+                if let selectable = selectionModel.selectable {
+                    updateFor(selectable: selectable)
+                }
+            }
+        }
+    }
     
     init(editorGameView: EditorGameView) {
         self.editorGameView = editorGameView
@@ -27,18 +37,12 @@ class SelectionManager: NSResponder {
         
         super.init()
         
+        selectableUpdatedHandle = selectionModel.selectableUpdatedEvent.addListener(target: self, SelectionManager.updateFor)
+        
         let scene = editorGameView.scene!
         EditorMapCellComponent.initSelectionShapes(in: scene)
         scene.addChild(toolsRoot)
         initTools()
-        
-        selectionModelSubscription = selectionModel.objectWillChange.sink {
-                DispatchQueue.main.async {
-                    if let selectable = self.selectionModel.selectable {
-                        self.updateFor(selectable: selectable)
-                    }
-                }
-            }
     }
     
     required init?(coder: NSCoder) {
@@ -55,12 +59,21 @@ class SelectionManager: NSResponder {
     }
     
     override func mouseUp(with event: NSEvent) {
+        if let currentActiveTool = currentActiveTool {
+            let sceneCoordinates = event.location(in: editorGameView.scene!)
+            if currentActiveTool.contains(sceneCoordinates: sceneCoordinates) {
+                currentActiveTool.mouseUp(atX: sceneCoordinates.x, y: sceneCoordinates.y)
+                return
+            }
+        }
+        
         if let hoverableAndSelectable = selectionModel.hoverable as? Selectable {
             selectionModel.setSelectable(hoverableAndSelectable)
         }
     }
     
     private func updateFor(selectable: Selectable) {
+        disableAllTools()
         if selectable.supportedToolModes.contains(currentToolMode) {
             if let tool = toolsByMode[currentToolMode]?.1 {
                 tool.moveTo(scenePosition: selectable.scenePosition)
@@ -68,9 +81,6 @@ class SelectionManager: NSResponder {
                 currentActiveTool = tool
                 currentActiveTool?.linkedSelectable = selectable
             }
-        }
-        else {
-            disableAllTools()
         }
         
         editableSubscription?.cancel()
@@ -124,9 +134,15 @@ class SelectionManager: NSResponder {
     
     private func initTools() {
         let moveToolEntity = MoveToolComponent.entity(parentNode: toolsRoot)
-        if let moveTool = moveToolEntity.findTool() {
-            toolsByMode[.move] = (moveToolEntity, moveTool)
-            moveTool.enabled = false
+        if let tool = moveToolEntity.findTool() {
+            toolsByMode[.move] = (moveToolEntity, tool)
+            tool.enabled = false
+        }
+        
+        let elevationToolEntity = ElevationToolComponent.entity(parentNode: toolsRoot)
+        if let tool = elevationToolEntity.findTool() {
+            toolsByMode[.elevation] = (elevationToolEntity, tool)
+            tool.enabled = false
         }
     }
     

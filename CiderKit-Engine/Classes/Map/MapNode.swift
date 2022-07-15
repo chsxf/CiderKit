@@ -133,9 +133,12 @@ open class MapNode: SKNode, Collection, ObservableObject {
     public func lookForMapCellEntity(atX x: Int, y: Int) -> GKEntity? {
         for region in regions {
             for cell in region.cellEntities {
-                if let cellComponent = cell.component(ofType: MapCellComponent.self) {
-                    if cellComponent.mapX == x && cellComponent.mapY == y {
-                        return cell
+                for component in cell.components {
+                    if let cellComponent = component as? MapCellComponent {
+                        if cellComponent.mapX == x && cellComponent.mapY == y {
+                            return cell
+                        }
+                        break
                     }
                 }
             }

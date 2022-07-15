@@ -5,8 +5,7 @@ import Combine
 import CiderKit_Engine
 
 private extension NSToolbarItem.Identifier {
-    static let increaseElevation = NSToolbarItem.Identifier(rawValue: "increase_elevation")
-    static let decreaseElevation = NSToolbarItem.Identifier(rawValue: "decrease_elevation")
+    static let tool = NSToolbarItem.Identifier(rawValue: "tool")
     static let ambientLightSettings = NSToolbarItem.Identifier(rawValue: "ambientlight_settings")
     static let toggleLighting = NSToolbarItem.Identifier(rawValue: "toogle_lighting")
 }
@@ -22,14 +21,13 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     private var currentMapURL: URL? = nil
     
     private var mapDirtyFlagCancellable: AnyCancellable?
-    private var selectionModelCancellable: AnyCancellable?
     
     private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .increaseElevation, .decreaseElevation, .ambientLightSettings, .toggleLighting
+        .tool, .flexibleSpace, .ambientLightSettings, .toggleLighting
     ]
     
     private let defaultToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .increaseElevation, .decreaseElevation, .ambientLightSettings, .toggleLighting
+        .tool, .flexibleSpace, .ambientLightSettings, .toggleLighting
     ]
     
     private var definedToolbarItems: [NSToolbarItem.Identifier: NSToolbarItem] = [:]
@@ -60,7 +58,8 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         
         updateWindowTitle()
         observeMapDirtyFlag()
-        observeSelectionModel()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.onElevationChangeRequested), name: .elevationChangeRequested, object: nil)
     }
     
     private func setupMainMenu() -> Void {
@@ -102,17 +101,11 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     private func initToolbarItems() -> Void {
-        let increaseElevationItem = NSToolbarItem(itemIdentifier: .increaseElevation)
-        increaseElevationItem.label = "Increase"
-        increaseElevationItem.image = NSImage(named: "arrow_up")
-        increaseElevationItem.action = #selector(self.increaseElevationForSelection)
-        definedToolbarItems[.increaseElevation] = increaseElevationItem
-        
-        let decreaseElevationItem = NSToolbarItem(itemIdentifier: .decreaseElevation)
-        decreaseElevationItem.label = "Decrease"
-        decreaseElevationItem.image = NSImage(named: "arrow_down")
-        decreaseElevationItem.action = #selector(self.decreaseElevationForSelection)
-        definedToolbarItems[.decreaseElevation] = decreaseElevationItem
+        let toolItemGroup = NSToolbarItemGroup(itemIdentifier: .tool, images: [
+            NSImage(named: "toolbar-select")!, NSImage(named: "toolbar-move")!, NSImage(named: "toolbar-elevation")!
+        ], selectionMode: .selectOne, labels: ["Select", "Move", "Elevation"], target: self, action: #selector(self.switchTool))
+        toolItemGroup.selectedIndex = 0
+        definedToolbarItems[.tool] = toolItemGroup
         
         let ambientLightSettingsItem = NSToolbarItem(itemIdentifier: .ambientLightSettings)
         ambientLightSettingsItem.label = "Ambient Light Settings"
@@ -149,27 +142,13 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return allowedToolbarIdentifiers
+        return defaultToolbarIdentifiers
     }
     
     private func observeMapDirtyFlag() {
         mapDirtyFlagCancellable = gameView.map.objectWillChange.sink {
             DispatchQueue.main.async {
                 self.updateWindowTitle()
-            }
-        }
-    }
-    
-    private func observeSelectionModel() {
-        selectionModelCancellable = gameView.selectionModel.objectWillChange.sink {
-            DispatchQueue.main.async {
-                if let visibleItems = self.window.toolbar?.visibleItems {
-                    for visibleItem in visibleItems {
-                        if visibleItem.itemIdentifier == .increaseElevation || visibleItem.itemIdentifier == .decreaseElevation {
-                            visibleItem.isEnabled = self.gameView.selectionModel.hasSelectedArea
-                        }
-                    }
-                }
             }
         }
     }
@@ -283,16 +262,6 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     @objc
-    private func increaseElevationForSelection() {
-        gameView.increaseElevation(area: gameView.selectionModel.selectedArea)
-    }
-    
-    @objc
-    private func decreaseElevationForSelection() {
-        gameView.decreaseElevation(area: gameView.selectionModel.selectedArea)
-    }
-    
-    @objc
     private func increaseElevationForWholeMap() {
         gameView.increaseElevation(area: nil)
     }
@@ -303,14 +272,38 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     @objc
-    private func toggleLighting() {
-        gameView.lightingEnabled = !gameView.lightingEnabled
-        definedToolbarItems[.toggleLighting]!.image = gameView.lightingEnabled ? NSImage(named: "lighting_on") : NSImage(named: "lighting_off")
+    private func onElevationChangeRequested(notification: NSNotification) {
+        if
+            let elevationToolContext = notification.object as? ElevationToolContext,
+            let area = gameView.selectionModel.selectedArea
+        {
+            switch elevationToolContext {
+            case .up:
+                gameView.increaseElevation(area: area)
+                
+            case .down:
+                gameView.decreaseElevation(area: area)
+            }
+        }
+    }
+    
+    @objc
+    private func switchTool() {
+        if let toolItemGroup = definedToolbarItems[.tool] as? NSToolbarItemGroup {
+            let toolMode = ToolMode(rawValue: 1 << toolItemGroup.selectedIndex)
+            gameView.selectionManager!.currentToolMode = toolMode
+        }
     }
     
     @objc
     private func selectAmbientLight() {
         gameView.selectionModel.setSelectable(gameView.ambientLightEntity?.findSelectableComponent())
+    }
+    
+    @objc
+    private func toggleLighting() {
+        gameView.lightingEnabled = !gameView.lightingEnabled
+        definedToolbarItems[.toggleLighting]!.image = gameView.lightingEnabled ? NSImage(named: "lighting_on") : NSImage(named: "lighting_off")
     }
     
     static func main() -> Void {

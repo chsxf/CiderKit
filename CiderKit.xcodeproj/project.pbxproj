@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		D90047BB28017AC3003CE96C /* map.ckmap in Resources */ = {isa = PBXBuildFile; fileRef = D91061BE2755F23700EA8A03 /* map.ckmap */; };
 		D90047BD28017D29003CE96C /* MapAreaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */; };
+		D90299752880B857002A7606 /* ElevationToolComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90299742880B857002A7606 /* ElevationToolComponent.swift */; };
+		D90299792880B975002A7606 /* ToolNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90299782880B975002A7606 /* ToolNode.swift */; };
+		D902997B2880BA92002A7606 /* ToolContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D902997A2880BA92002A7606 /* ToolContext.swift */; };
+		D902997D2880BEE3002A7606 /* ToolComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D902997C2880BEE3002A7606 /* ToolComponent.swift */; };
 		D909FDB8287747640083EB8C /* MapCellInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909FDB7287747640083EB8C /* MapCellInspector.swift */; };
 		D909FDBA287748DD0083EB8C /* PointLightInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909FDB9287748DD0083EB8C /* PointLightInspector.swift */; };
 		D909FDBD287779790083EB8C /* InspectorHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909FDBC287779790083EB8C /* InspectorHeaderView.swift */; };
@@ -57,7 +61,6 @@
 		D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */; };
 		D96A3BE92879909C008949A1 /* AmbientLightInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */; };
 		D96A3BEB2879D8C7008949A1 /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BEA2879D8C7008949A1 /* Tool.swift */; };
-		D96A3BED2879D94B008949A1 /* MoveToolNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BEC2879D94B008949A1 /* MoveToolNode.swift */; };
 		D96A3BF1287A1F28008949A1 /* ToolMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BF0287A1F28008949A1 /* ToolMode.swift */; };
 		D96A3BF3287A2767008949A1 /* MoveToolComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */; };
 		D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */; };
@@ -78,6 +81,8 @@
 		D9AF1F5B280BE5FF00BF34B3 /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F59280BE5FF00BF34B3 /* ProjectSettings.swift */; };
 		D9AF1F5D280BE7F800BF34B3 /* ProjectManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F5C280BE7F800BF34B3 /* ProjectManagerView.swift */; };
 		D9AF1F60280BE99400BF34B3 /* ProjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F5F280BE99400BF34B3 /* ProjectManager.swift */; };
+		D9B374092881A4B800C5E643 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B374082881A4B800C5E643 /* Disposable.swift */; };
+		D9B3740F2881A58F00C5E643 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B3740E2881A58F00C5E643 /* Event.swift */; };
 		D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BF52CC280A05F20093005B /* EditorMainView.swift */; };
 		D9CC3529285D16B7003EEB6F /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC3528285D16B7003EEB6F /* Pool.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
@@ -129,6 +134,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D90299742880B857002A7606 /* ElevationToolComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElevationToolComponent.swift; sourceTree = "<group>"; };
+		D90299782880B975002A7606 /* ToolNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolNode.swift; sourceTree = "<group>"; };
+		D902997A2880BA92002A7606 /* ToolContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolContext.swift; sourceTree = "<group>"; };
+		D902997C2880BEE3002A7606 /* ToolComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolComponent.swift; sourceTree = "<group>"; };
 		D909FDB7287747640083EB8C /* MapCellInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCellInspector.swift; sourceTree = "<group>"; };
 		D909FDB9287748DD0083EB8C /* PointLightInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLightInspector.swift; sourceTree = "<group>"; };
 		D909FDBC287779790083EB8C /* InspectorHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorHeaderView.swift; sourceTree = "<group>"; };
@@ -174,7 +183,6 @@
 		D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightComponent.swift; sourceTree = "<group>"; };
 		D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightInspector.swift; sourceTree = "<group>"; };
 		D96A3BEA2879D8C7008949A1 /* Tool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
-		D96A3BEC2879D94B008949A1 /* MoveToolNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveToolNode.swift; sourceTree = "<group>"; };
 		D96A3BF0287A1F28008949A1 /* ToolMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolMode.swift; sourceTree = "<group>"; };
 		D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveToolComponent.swift; sourceTree = "<group>"; };
 		D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionManager.swift; sourceTree = "<group>"; };
@@ -197,6 +205,9 @@
 		D9AF1F59280BE5FF00BF34B3 /* ProjectSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettings.swift; sourceTree = "<group>"; };
 		D9AF1F5C280BE7F800BF34B3 /* ProjectManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectManagerView.swift; sourceTree = "<group>"; };
 		D9AF1F5F280BE99400BF34B3 /* ProjectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectManager.swift; sourceTree = "<group>"; };
+		D9B374082881A4B800C5E643 /* Disposable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
+		D9B3740E2881A58F00C5E643 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		D9B374102881A5A900C5E643 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D9B8557227EFC1A000D605F4 /* MapArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapArea.swift; sourceTree = "<group>"; };
 		D9B8557927F0C86F00D605F4 /* CiderKit-EditorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CiderKit-EditorTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAreaTests.swift; sourceTree = "<group>"; };
@@ -331,8 +342,8 @@
 			isa = PBXGroup;
 			children = (
 				D972C1B72827D9FD00D85376 /* EditorMapNode.swift */,
-				D96A3BEC2879D94B008949A1 /* MoveToolNode.swift */,
 				D933B7412830D32200B63313 /* PointLightNode.swift */,
+				D90299782880B975002A7606 /* ToolNode.swift */,
 				D9CC420F276163700081A464 /* WorldGrid.swift */,
 			);
 			path = Nodes;
@@ -403,8 +414,10 @@
 				D9173DA62878E134002E652C /* EditableComponent.swift */,
 				D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */,
 				D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */,
+				D90299742880B857002A7606 /* ElevationToolComponent.swift */,
 				D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */,
 				D9405F6A2838E67E00CA953A /* PointLightComponent.swift */,
+				D902997C2880BEE3002A7606 /* ToolComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -415,6 +428,7 @@
 				D9405F6D2838EC0100CA953A /* Hoverable.swift */,
 				D9405F682838E49A00CA953A /* Selectable.swift */,
 				D96A3BEA2879D8C7008949A1 /* Tool.swift */,
+				D902997A2880BA92002A7606 /* ToolContext.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -444,6 +458,7 @@
 				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
 				D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */,
 				D9C132E52827008D00DE8457 /* Atlases */,
+				D9B374072881A49800C5E643 /* Events */,
 				D91061C02755F24100EA8A03 /* Map */,
 				D9E2C27E28018E9D00B17CD0 /* Materials */,
 				D9AF1F58280BE5E300BF34B3 /* Settings */,
@@ -532,6 +547,16 @@
 				D9AF1F59280BE5FF00BF34B3 /* ProjectSettings.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		D9B374072881A49800C5E643 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				D9B374102881A5A900C5E643 /* README.md */,
+				D9B374082881A4B800C5E643 /* Disposable.swift */,
+				D9B3740E2881A58F00C5E643 /* Event.swift */,
+			);
+			path = Events;
 			sourceTree = "<group>";
 		};
 		D9B8557A27F0C86F00D605F4 /* CiderKit-EditorTests */ = {
@@ -789,6 +814,7 @@
 				D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */,
 				D9405F6B2838E67E00CA953A /* PointLightComponent.swift in Sources */,
 				D96A3BF3287A2767008949A1 /* MoveToolComponent.swift in Sources */,
+				D90299792880B975002A7606 /* ToolNode.swift in Sources */,
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
 				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
 				D933B7442830D35B00B63313 /* PointLightNode.swift in Sources */,
@@ -798,7 +824,6 @@
 				D9405F692838E49A00CA953A /* Selectable.swift in Sources */,
 				D909FDBD287779790083EB8C /* InspectorHeaderView.swift in Sources */,
 				D96A3BF1287A1F28008949A1 /* ToolMode.swift in Sources */,
-				D96A3BED2879D94B008949A1 /* MoveToolNode.swift in Sources */,
 				D9173DA72878E134002E652C /* EditableComponent.swift in Sources */,
 				D9AF1F60280BE99400BF34B3 /* ProjectManager.swift in Sources */,
 				D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */,
@@ -806,6 +831,9 @@
 				D909FDB8287747640083EB8C /* MapCellInspector.swift in Sources */,
 				D96A3BEB2879D8C7008949A1 /* Tool.swift in Sources */,
 				D9405F702838F1A900CA953A /* EditorMapCellComponent.swift in Sources */,
+				D902997B2880BA92002A7606 /* ToolContext.swift in Sources */,
+				D90299752880B857002A7606 /* ElevationToolComponent.swift in Sources */,
+				D902997D2880BEE3002A7606 /* ToolComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -830,7 +858,9 @@
 				D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */,
 				D92002DB282FB009007D5AC1 /* PointLight.swift in Sources */,
 				D9A64CFC282C491F00CAF635 /* UIViewExtension.swift in Sources */,
+				D9B374092881A4B800C5E643 /* Disposable.swift in Sources */,
 				D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */,
+				D9B3740F2881A58F00C5E643 /* Event.swift in Sources */,
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,

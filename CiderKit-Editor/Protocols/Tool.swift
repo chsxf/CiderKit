@@ -10,6 +10,7 @@ protocol Tool: Hoverable {
     func moveTo(scenePosition: CGPoint) -> Void
     
     func dragInScene(byX x: CGFloat, y: CGFloat) -> Void
+    func mouseUp(atX x: CGFloat, y: CGFloat) -> Void
 }
 
 extension Tool where Self: GKComponent {
