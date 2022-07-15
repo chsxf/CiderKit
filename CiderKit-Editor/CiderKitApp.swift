@@ -59,7 +59,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         updateWindowTitle()
         observeMapDirtyFlag()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.onElevationChangeRequested), name: .elevationChangeRequested, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(CiderKitApp.onElevationChangeRequested(notification:)), name: .elevationChangeRequested, object: nil)
     }
     
     private func setupMainMenu() -> Void {
@@ -272,7 +272,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     @objc
-    private func onElevationChangeRequested(notification: NSNotification) {
+    private func onElevationChangeRequested(notification: Notification) {
         if
             let elevationToolContext = notification.object as? ElevationToolContext,
             let area = gameView.selectionModel.selectedArea

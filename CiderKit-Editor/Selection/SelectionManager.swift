@@ -16,8 +16,6 @@ class SelectionManager: NSResponder {
     
     private var selectionModel: SelectionModel { editorGameView.selectionModel }
     
-    private var selectableUpdatedHandle: Disposable? = nil
-
     private var editableSubscription: AnyCancellable? = nil
     
     var currentToolMode: ToolMode = .select {
@@ -37,7 +35,7 @@ class SelectionManager: NSResponder {
         
         super.init()
         
-        selectableUpdatedHandle = selectionModel.selectableUpdatedEvent.addListener(target: self, SelectionManager.updateFor)
+        NotificationCenter.default.addObserver(self, selector: #selector(SelectionManager.onSelectableUpdated(notification:)), name: .selectableUpdated, object: nil)
         
         let scene = editorGameView.scene!
         EditorMapCellComponent.initSelectionShapes(in: scene)
@@ -69,6 +67,13 @@ class SelectionManager: NSResponder {
         
         if let hoverableAndSelectable = selectionModel.hoverable as? Selectable {
             selectionModel.setSelectable(hoverableAndSelectable)
+        }
+    }
+    
+    @objc
+    private func onSelectableUpdated(notification: Notification) {
+        if let selectable = notification.object as? Selectable {
+            updateFor(selectable: selectable)
         }
     }
     

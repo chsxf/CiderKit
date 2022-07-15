@@ -81,8 +81,6 @@
 		D9AF1F5B280BE5FF00BF34B3 /* ProjectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F59280BE5FF00BF34B3 /* ProjectSettings.swift */; };
 		D9AF1F5D280BE7F800BF34B3 /* ProjectManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F5C280BE7F800BF34B3 /* ProjectManagerView.swift */; };
 		D9AF1F60280BE99400BF34B3 /* ProjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F5F280BE99400BF34B3 /* ProjectManager.swift */; };
-		D9B374092881A4B800C5E643 /* Disposable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B374082881A4B800C5E643 /* Disposable.swift */; };
-		D9B3740F2881A58F00C5E643 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B3740E2881A58F00C5E643 /* Event.swift */; };
 		D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BF52CC280A05F20093005B /* EditorMainView.swift */; };
 		D9CC3529285D16B7003EEB6F /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC3528285D16B7003EEB6F /* Pool.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
@@ -205,9 +203,6 @@
 		D9AF1F59280BE5FF00BF34B3 /* ProjectSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettings.swift; sourceTree = "<group>"; };
 		D9AF1F5C280BE7F800BF34B3 /* ProjectManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectManagerView.swift; sourceTree = "<group>"; };
 		D9AF1F5F280BE99400BF34B3 /* ProjectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectManager.swift; sourceTree = "<group>"; };
-		D9B374082881A4B800C5E643 /* Disposable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disposable.swift; sourceTree = "<group>"; };
-		D9B3740E2881A58F00C5E643 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		D9B374102881A5A900C5E643 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D9B8557227EFC1A000D605F4 /* MapArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapArea.swift; sourceTree = "<group>"; };
 		D9B8557927F0C86F00D605F4 /* CiderKit-EditorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CiderKit-EditorTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAreaTests.swift; sourceTree = "<group>"; };
@@ -458,7 +453,6 @@
 				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
 				D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */,
 				D9C132E52827008D00DE8457 /* Atlases */,
-				D9B374072881A49800C5E643 /* Events */,
 				D91061C02755F24100EA8A03 /* Map */,
 				D9E2C27E28018E9D00B17CD0 /* Materials */,
 				D9AF1F58280BE5E300BF34B3 /* Settings */,
@@ -547,16 +541,6 @@
 				D9AF1F59280BE5FF00BF34B3 /* ProjectSettings.swift */,
 			);
 			path = Settings;
-			sourceTree = "<group>";
-		};
-		D9B374072881A49800C5E643 /* Events */ = {
-			isa = PBXGroup;
-			children = (
-				D9B374102881A5A900C5E643 /* README.md */,
-				D9B374082881A4B800C5E643 /* Disposable.swift */,
-				D9B3740E2881A58F00C5E643 /* Event.swift */,
-			);
-			path = Events;
 			sourceTree = "<group>";
 		};
 		D9B8557A27F0C86F00D605F4 /* CiderKit-EditorTests */ = {
@@ -858,9 +842,7 @@
 				D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */,
 				D92002DB282FB009007D5AC1 /* PointLight.swift in Sources */,
 				D9A64CFC282C491F00CAF635 /* UIViewExtension.swift in Sources */,
-				D9B374092881A4B800C5E643 /* Disposable.swift in Sources */,
 				D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */,
-				D9B3740F2881A58F00C5E643 /* Event.swift in Sources */,
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,

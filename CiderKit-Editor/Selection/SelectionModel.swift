@@ -2,12 +2,14 @@ import Foundation
 import GameplayKit
 import CiderKit_Engine
 
+extension Notification.Name {
+    static let selectableUpdated = Notification.Name(rawValue: "selectableUpdated")
+}
+
 class SelectionModel: ObservableObject {
     
     @Published private(set) var hoverable: Hoverable?
     @Published private(set) var selectable: Selectable?
-    
-    let selectableUpdatedEvent = Event<Selectable>()
     
     var selectedArea: MapArea? {
         guard let mapCellComponent = selectable?.entity?.component(ofType: EditorMapCellComponent.self) else {
@@ -42,7 +44,7 @@ class SelectionModel: ObservableObject {
         self.selectable = selectable
         self.selectable?.highlight()
         if let validSelectable = self.selectable {
-            selectableUpdatedEvent.raise(validSelectable)
+            NotificationCenter.default.post(Notification(name: .selectableUpdated, object: validSelectable))
         }
     }
     
