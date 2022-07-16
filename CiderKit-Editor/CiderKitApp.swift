@@ -8,6 +8,7 @@ private extension NSToolbarItem.Identifier {
     static let tool = NSToolbarItem.Identifier(rawValue: "tool")
     static let ambientLightSettings = NSToolbarItem.Identifier(rawValue: "ambientlight_settings")
     static let toggleLighting = NSToolbarItem.Identifier(rawValue: "toogle_lighting")
+    static let spriteAssetEditor = NSToolbarItem.Identifier(rawValue: "sprite_asset_editor")
 }
 
 @main
@@ -23,11 +24,11 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     private var mapDirtyFlagCancellable: AnyCancellable?
     
     private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .flexibleSpace, .ambientLightSettings, .toggleLighting
+        .tool, .flexibleSpace, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
     ]
     
     private let defaultToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .flexibleSpace, .ambientLightSettings, .toggleLighting
+        .tool, .flexibleSpace, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
     ]
     
     private var definedToolbarItems: [NSToolbarItem.Identifier: NSToolbarItem] = [:]
@@ -118,6 +119,12 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         toggleLightingItem.image = NSImage(named: "lighting_on")
         toggleLightingItem.action = #selector(self.toggleLighting)
         definedToolbarItems[.toggleLighting] = toggleLightingItem
+        
+        let spriteAssetEditorItem = NSToolbarItem(itemIdentifier: .spriteAssetEditor)
+        spriteAssetEditorItem.label = "Sprite Asset Editor"
+        spriteAssetEditorItem.image = NSImage(named: "sprite_asset_editor")
+        spriteAssetEditorItem.action = #selector(self.openSpriteAssetEditor)
+        definedToolbarItems[.spriteAssetEditor] = spriteAssetEditorItem
     }
     
     private func openProjectManagerView() -> Void {
@@ -304,6 +311,11 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     private func toggleLighting() {
         gameView.lightingEnabled = !gameView.lightingEnabled
         definedToolbarItems[.toggleLighting]!.image = gameView.lightingEnabled ? NSImage(named: "lighting_on") : NSImage(named: "lighting_off")
+    }
+    
+    @objc
+    private func openSpriteAssetEditor() {
+        
     }
     
     static func main() -> Void {

@@ -58,6 +58,8 @@
 		D9405F6E2838EC0100CA953A /* Hoverable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6D2838EC0100CA953A /* Hoverable.swift */; };
 		D9405F702838F1A900CA953A /* EditorMapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */; };
 		D9422DC228720343004D53E8 /* HoverableSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9422DC128720343004D53E8 /* HoverableSequence.swift */; };
+		D95B8C38288319B80077DCA1 /* SpriteAssetDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */; };
+		D95B8C3A288319C50077DCA1 /* SpriteAssetDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C39288319C50077DCA1 /* SpriteAssetDatabase.swift */; };
 		D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */; };
 		D96A3BE92879909C008949A1 /* AmbientLightInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */; };
 		D96A3BEB2879D8C7008949A1 /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BEA2879D8C7008949A1 /* Tool.swift */; };
@@ -178,6 +180,8 @@
 		D9405F6D2838EC0100CA953A /* Hoverable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hoverable.swift; sourceTree = "<group>"; };
 		D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapCellComponent.swift; sourceTree = "<group>"; };
 		D9422DC128720343004D53E8 /* HoverableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverableSequence.swift; sourceTree = "<group>"; };
+		D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescription.swift; sourceTree = "<group>"; };
+		D95B8C39288319C50077DCA1 /* SpriteAssetDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDatabase.swift; sourceTree = "<group>"; };
 		D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightComponent.swift; sourceTree = "<group>"; };
 		D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightInspector.swift; sourceTree = "<group>"; };
 		D96A3BEA2879D8C7008949A1 /* Tool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
@@ -428,6 +432,15 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		D95B8C362883199B0077DCA1 /* SpriteAssets */ = {
+			isa = PBXGroup;
+			children = (
+				D95B8C39288319C50077DCA1 /* SpriteAssetDatabase.swift */,
+				D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */,
+			);
+			path = SpriteAssets;
+			sourceTree = "<group>";
+		};
 		D96BDEC627EBD5B80097A0BD /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -456,6 +469,7 @@
 				D91061C02755F24100EA8A03 /* Map */,
 				D9E2C27E28018E9D00B17CD0 /* Materials */,
 				D9AF1F58280BE5E300BF34B3 /* Settings */,
+				D95B8C362883199B0077DCA1 /* SpriteAssets */,
 				D96BDEC627EBD5B80097A0BD /* Views */,
 			);
 			path = Classes;
@@ -843,10 +857,12 @@
 				D92002DB282FB009007D5AC1 /* PointLight.swift in Sources */,
 				D9A64CFC282C491F00CAF635 /* UIViewExtension.swift in Sources */,
 				D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */,
+				D95B8C38288319B80077DCA1 /* SpriteAssetDescription.swift in Sources */,
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,
 				D9CC3529285D16B7003EEB6F /* Pool.swift in Sources */,
+				D95B8C3A288319C50077DCA1 /* SpriteAssetDatabase.swift in Sources */,
 				D93C24FB280227690023FE7A /* Materials.swift in Sources */,
 				D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */,
 				D92002D9282FAFCF007D5AC1 /* BaseLight.swift in Sources */,
