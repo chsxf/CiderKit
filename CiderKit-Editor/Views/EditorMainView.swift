@@ -8,18 +8,19 @@
 import SwiftUI
 
 struct EditorMainView: View {
+    
+    private var gameView: EditorGameView
+    
+    init(gameView: EditorGameView) {
+        self.gameView = gameView
+    }
+    
     var body: some View {
         HStack {
-            EditorGameViewRepresentable()
+            EditorGameViewRepresentable(gameView: gameView)
             InspectorView()
-                .environmentObject(EditorGameViewRepresentable.gameView!.selectionModel)
+                .environmentObject(gameView.selectionModel)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-struct EditorMainView_Previews: PreviewProvider {
-    static var previews: some View {
-        EditorMainView()
     }
 }
