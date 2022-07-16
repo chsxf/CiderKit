@@ -1,7 +1,7 @@
 import SpriteKit
 import GameplayKit
 
-open class MapNode: SKNode, Collection, ObservableObject {
+open class MapNode: SKNode, Collection {
     
     public static let elevationHeight: Int = 10
     

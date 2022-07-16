@@ -2,9 +2,19 @@ import Foundation
 import CiderKit_Engine
 import GameplayKit
 
+extension Notification.Name {
+    static let mapDirtyStatusChanged = Notification.Name(rawValue: "mapDirtyStatusChanged")
+}
+
 class EditorMapNode: MapNode {
 
-    @Published var dirty: Bool = false
+    var dirty: Bool = false {
+        didSet {
+            if dirty != oldValue {
+                NotificationCenter.default.post(Notification(name: .mapDirtyStatusChanged))
+            }
+        }
+    }
     
     private(set) var hoverableEntities: [GKEntity] = []
     

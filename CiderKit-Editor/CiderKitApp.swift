@@ -15,6 +15,7 @@ private extension NSToolbarItem.Identifier {
 class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarDelegate {
 
     public static let appName = "CiderKit Editor"
+    public static private(set) var mainWindow: NSWindow!
     
     private var window: NSWindow!
     private var gameView: EditorGameView!
@@ -48,7 +49,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         return saveCurrentMapIfModified()
     }
     
-    private func setup() -> Void {
+    private func setupMainWindow() -> NSWindow {
         let windowRect = CGRect(x: 100, y: 100, width: 640, height: 360)
         window = NSWindow(contentRect: windowRect, styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         window.delegate = self
@@ -57,9 +58,8 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         window.contentView = NSHostingView(rootView: EditorMainView(gameView: gameView))
         
         updateWindowTitle()
-        observeMapDirtyFlag()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(CiderKitApp.onElevationChangeRequested(notification:)), name: .elevationChangeRequested, object: nil)
+        return window
     }
     
     private func setupMainMenu() -> Void {
@@ -126,6 +126,11 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         definedToolbarItems[.spriteAssetEditor] = spriteAssetEditorItem
     }
     
+    private func setupNotifications() -> Void {
+        NotificationCenter.default.addObserver(self, selector: #selector(CiderKitApp.onElevationChangeRequested(notification:)), name: .elevationChangeRequested, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(CiderKitApp.onMapDirtyStatusChanged(notification:)), name: .mapDirtyStatusChanged, object: nil)
+    }
+    
     private func openProjectManagerView() -> Void {
         let windowRect = CGRect(x: 0, y: 0, width: 640, height: 360)
         let pmWindow = NSWindow(contentRect: windowRect, styleMask: [.titled], backing: .buffered, defer: false)
@@ -151,12 +156,9 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         return defaultToolbarIdentifiers
     }
     
-    private func observeMapDirtyFlag() {
-        mapDirtyFlagCancellable = gameView.map.objectWillChange.sink {
-            DispatchQueue.main.async {
-                self.updateWindowTitle()
-            }
-        }
+    @objc
+    private func onMapDirtyStatusChanged(notification: Notification) {
+        updateWindowTitle()
     }
     
     private func updateWindowTitle() {
@@ -233,7 +235,6 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
             gameView.unloadMap()
             currentMapURL = nil
             updateWindowTitle()
-            observeMapDirtyFlag()
         }
     }
     
@@ -252,7 +253,6 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
                 currentMapURL = openPanel.urls[0]
                 gameView.loadMap(file: currentMapURL!)
                 updateWindowTitle()
-                observeMapDirtyFlag()
             }
         }
     }
@@ -328,9 +328,10 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
             "grid": AtlasLocator(url: Bundle.main.url(forResource: "Grid Atlas", withExtension: "ckatlas")!, bundle: Bundle.main)
         ])
 
-        delegate.setup()
+        Self.mainWindow = delegate.setupMainWindow()
         delegate.setupMainMenu()
         delegate.setupToolbar()
+        delegate.setupNotifications()
         
         delegate.window.makeKeyAndOrderFront(nil)
         delegate.window.toggleFullScreen(nil)
