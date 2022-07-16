@@ -13,7 +13,7 @@ public struct ProjectSettings: Codable {
         else {
             return nil
         }
-        return URL(fileURLWithPath: "Maps/\(startMap).ckmap", relativeTo: currentProject.url)
+        return URL(fileURLWithPath: "Maps/\(startMap).ckmap", relativeTo: currentProject.projectRoot)
     }
     
     public init() {

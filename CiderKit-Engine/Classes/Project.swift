@@ -2,18 +2,31 @@ import Foundation
 
 public enum ProjectErrors: String, Error {
     case notProjectFolder = "Not project folder"
+    case spriteAssetDatabaseError = "Sprite Asset Database Error"
+    case spriteAssetDatabaseAlreadyDefined = "Sprite Asset Database Already Defined"
+    case defaultSpriteAssetDatabaseAlreadyDefined = "Default Sprite Asset Database Already Defined"
 }
 
 open class Project {
     public static var current: Project? = nil
     
-    public let url: URL
+    public let projectRoot: URL
     public let settings: ProjectSettings
     
-    public var mapsDirectoryURL: URL { URL(fileURLWithPath: "Maps", relativeTo: url) }
+    public var spriteAssetDatabases: [String: SpriteAssetDatabase] = [:]
     
-    private init(url: URL) throws {
-        let projectSettingsFileURL = URL(fileURLWithPath: "Settings/project.cksettings", relativeTo: url)
+    public var defaultSpriteAssetDatabase: SpriteAssetDatabase? {
+        spriteAssetDatabase(forId: SpriteAssetDatabase.defaultDatabaseId)
+    }
+    
+    public var mapsDirectoryURL: URL { URL(fileURLWithPath: "Maps", isDirectory: true, relativeTo: projectRoot) }
+    public var databasesDirectoryURL: URL { URL(fileURLWithPath: "Databases", isDirectory: true, relativeTo: projectRoot) }
+    public var spriteAssetsDatabasesDirectoryURL: URL { URL(fileURLWithPath: "SpriteAssets", isDirectory: true, relativeTo: databasesDirectoryURL) }
+    
+    private init(projectRoot: URL) throws {
+        self.projectRoot = projectRoot
+
+        let projectSettingsFileURL = URL(fileURLWithPath: "Settings/project.cksettings", relativeTo: projectRoot)
         do {
             settings = try Functions.load(projectSettingsFileURL)
         }
@@ -21,10 +34,65 @@ open class Project {
             throw ProjectErrors.notProjectFolder
         }
         
-        self.url = url
+        try initSpriteAssetDatabases()
+    }
+    
+    private func initSpriteAssetDatabases() throws {
+        let fileManager = FileManager.default
+        var isDirectory: ObjCBool = false
+        if fileManager.fileExists(atPath: spriteAssetsDatabasesDirectoryURL.path, isDirectory: &isDirectory) && isDirectory.boolValue {
+            do {
+                let fileNameRE = try NSRegularExpression(pattern: "\\.ckspriteassetdb$")
+                
+                let urls = try fileManager.contentsOfDirectory(at: spriteAssetsDatabasesDirectoryURL, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants])
+                var defaultSpriteAssetDatabaseFound: Bool = false
+                for url in urls {
+                    let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
+                    if resourceValues.isDirectory ?? false {
+                        continue
+                    }
+                    
+                    let filename = url.lastPathComponent
+                    if fileNameRE.firstMatch(in: filename, range: NSMakeRange(0, filename.count)) == nil {
+                        continue
+                    }
+                    
+                    let spriteAssetDatabase: SpriteAssetDatabase = try Functions.load(url)
+                    spriteAssetDatabase.sourceURL = url
+                    if spriteAssetDatabases[spriteAssetDatabase.id] != nil {
+                        throw ProjectErrors.spriteAssetDatabaseAlreadyDefined
+                    }
+                    spriteAssetDatabases[spriteAssetDatabase.id] = spriteAssetDatabase
+                    if spriteAssetDatabase.isDefault {
+                        if defaultSpriteAssetDatabaseFound {
+                            throw ProjectErrors.defaultSpriteAssetDatabaseAlreadyDefined
+                        }
+                        defaultSpriteAssetDatabaseFound = true
+                        spriteAssetDatabases[SpriteAssetDatabase.defaultDatabaseId] = spriteAssetDatabase
+                    }
+                }
+                
+                if !defaultSpriteAssetDatabaseFound {
+                    if let first = spriteAssetDatabases.first {
+                        spriteAssetDatabases[SpriteAssetDatabase.defaultDatabaseId] = first.value
+                    }
+                }
+            }
+            catch let e where e is ProjectErrors {
+                throw e
+            }
+            catch {
+                print(error)
+                throw ProjectErrors.spriteAssetDatabaseError
+            }
+        }
+    }
+    
+    public func spriteAssetDatabase(forId id: String) -> SpriteAssetDatabase? {
+        spriteAssetDatabases[id]
     }
     
     open class func open(at url: URL) throws {
-        current = try Project(url: url)
+        current = try Project(projectRoot: url)
     }
 }

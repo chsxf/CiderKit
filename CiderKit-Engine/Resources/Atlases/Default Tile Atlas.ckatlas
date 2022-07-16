@@ -1,4 +1,5 @@
 {
+  "editorOnly": false,
   "texture": "Default Tile Atlas",
   "variants": {
       "normals": "Default Tile Atlas - Normals",

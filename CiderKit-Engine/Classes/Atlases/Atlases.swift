@@ -5,23 +5,13 @@ enum AtlasesError: Error {
     case alreadyRegistered
 }
 
-public struct AtlasLocator {
-    public let url: URL
-    public let bundle: Bundle
-    
-    public init(url: URL, bundle: Bundle) {
-        self.url = url
-        self.bundle = bundle
-    }
-}
-
 final public class Atlases {
     
     public static let MAIN_ATLAS_KEY = "main"
     
-    private static var loadedAtlases: [String: Atlas] = [:]
+    public private(set) static var loadedAtlases: [String: Atlas] = [:]
     
-    static var main: Atlas { self[MAIN_ATLAS_KEY] }
+    static var main: Atlas? { self[MAIN_ATLAS_KEY] }
     
     public static func load(atlases: [String: AtlasLocator]) throws {
         for (key, locator) in atlases {
@@ -50,8 +40,24 @@ final public class Atlases {
         }
     }
     
-    public static subscript(name: String) -> Atlas {
-        return loadedAtlases[name]!
+    public static subscript(name: String) -> Atlas? {
+        return loadedAtlases[name]
+    }
+    
+    public static subscript(locator: SpriteLocator) -> SKTexture? {
+        guard let atlas = self[locator.atlasKey] else {
+            return nil
+        }
+        
+        var variant = atlas
+        if let variantKey = locator.atlasVariantKey {
+            guard let variantAtlas = atlas.variant(for: variantKey) else {
+                return nil
+            }
+            variant = variantAtlas
+        }
+        
+        return variant[locator.spriteName]
     }
     
 }

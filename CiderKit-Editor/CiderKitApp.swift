@@ -3,17 +3,20 @@ import SwiftUI
 import UniformTypeIdentifiers
 import Combine
 import CiderKit_Engine
+import SpriteKit
 
 private extension NSToolbarItem.Identifier {
     static let tool = NSToolbarItem.Identifier(rawValue: "tool")
     static let ambientLightSettings = NSToolbarItem.Identifier(rawValue: "ambientlight_settings")
     static let toggleLighting = NSToolbarItem.Identifier(rawValue: "toogle_lighting")
+    static let spriteAssetEditor = NSToolbarItem.Identifier(rawValue: "sprite_asset_editor")
 }
 
 @main
-class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarDelegate {
+class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarDelegate, SKViewDelegate {
 
     public static let appName = "CiderKit Editor"
+    public static private(set) var mainWindow: NSWindow!
     
     private var window: NSWindow!
     private var gameView: EditorGameView!
@@ -23,11 +26,11 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     private var mapDirtyFlagCancellable: AnyCancellable?
     
     private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .flexibleSpace, .ambientLightSettings, .toggleLighting
+        .tool, .flexibleSpace, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
     ]
     
     private let defaultToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .flexibleSpace, .ambientLightSettings, .toggleLighting
+        .tool, .flexibleSpace, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
     ]
     
     private var definedToolbarItems: [NSToolbarItem.Identifier: NSToolbarItem] = [:]
@@ -47,19 +50,22 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         return saveCurrentMapIfModified()
     }
     
-    private func setup() -> Void {
+    func view(_ view: SKView, shouldRenderAtTime time: TimeInterval) -> Bool {
+        return window.attachedSheet == nil
+    }
+    
+    private func setupMainWindow() -> NSWindow {
         let windowRect = CGRect(x: 100, y: 100, width: 640, height: 360)
         window = NSWindow(contentRect: windowRect, styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         window.delegate = self
         window.acceptsMouseMovedEvents = true
         gameView = EditorGameView(frame: windowRect)
-        EditorGameViewRepresentable.gameView = gameView
-        window.contentView = NSHostingView(rootView: EditorMainView())
+        gameView.delegate = self
+        window.contentView = NSHostingView(rootView: EditorMainView(gameView: gameView))
         
         updateWindowTitle()
-        observeMapDirtyFlag()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(CiderKitApp.onElevationChangeRequested(notification:)), name: .elevationChangeRequested, object: nil)
+        return window
     }
     
     private func setupMainMenu() -> Void {
@@ -118,12 +124,23 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         toggleLightingItem.image = NSImage(named: "lighting_on")
         toggleLightingItem.action = #selector(self.toggleLighting)
         definedToolbarItems[.toggleLighting] = toggleLightingItem
+        
+        let spriteAssetEditorItem = NSToolbarItem(itemIdentifier: .spriteAssetEditor)
+        spriteAssetEditorItem.label = "Sprite Asset Editor"
+        spriteAssetEditorItem.image = NSImage(named: "sprite_asset_editor")
+        spriteAssetEditorItem.action = #selector(self.openSpriteAssetEditor)
+        definedToolbarItems[.spriteAssetEditor] = spriteAssetEditorItem
+    }
+    
+    private func setupNotifications() -> Void {
+        NotificationCenter.default.addObserver(self, selector: #selector(CiderKitApp.onElevationChangeRequested(notification:)), name: .elevationChangeRequested, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(CiderKitApp.onMapDirtyStatusChanged(notification:)), name: .mapDirtyStatusChanged, object: nil)
     }
     
     private func openProjectManagerView() -> Void {
         let windowRect = CGRect(x: 0, y: 0, width: 640, height: 360)
         let pmWindow = NSWindow(contentRect: windowRect, styleMask: [.titled], backing: .buffered, defer: false)
-        let pmView = ProjectManagerView(parentWindow: window, hostingWindow: pmWindow).environmentObject(ProjectManager.default)
+        let pmView = ProjectManagerView(hostingWindow: pmWindow).environmentObject(ProjectManager.default)
         pmWindow.contentView = NSHostingView(rootView: pmView)
         
         window.beginSheet(pmWindow) { response in
@@ -145,12 +162,9 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         return defaultToolbarIdentifiers
     }
     
-    private func observeMapDirtyFlag() {
-        mapDirtyFlagCancellable = gameView.map.objectWillChange.sink {
-            DispatchQueue.main.async {
-                self.updateWindowTitle()
-            }
-        }
+    @objc
+    private func onMapDirtyStatusChanged(notification: Notification) {
+        updateWindowTitle()
     }
     
     private func updateWindowTitle() {
@@ -227,7 +241,6 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
             gameView.unloadMap()
             currentMapURL = nil
             updateWindowTitle()
-            observeMapDirtyFlag()
         }
     }
     
@@ -246,7 +259,6 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
                 currentMapURL = openPanel.urls[0]
                 gameView.loadMap(file: currentMapURL!)
                 updateWindowTitle()
-                observeMapDirtyFlag()
             }
         }
     }
@@ -306,6 +318,11 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         definedToolbarItems[.toggleLighting]!.image = gameView.lightingEnabled ? NSImage(named: "lighting_on") : NSImage(named: "lighting_off")
     }
     
+    @objc
+    private func openSpriteAssetEditor() {
+        SpriteAssetEditor.open()
+    }
+    
     static func main() -> Void {
         NSApp = NSApplication.shared
         
@@ -317,9 +334,10 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
             "grid": AtlasLocator(url: Bundle.main.url(forResource: "Grid Atlas", withExtension: "ckatlas")!, bundle: Bundle.main)
         ])
 
-        delegate.setup()
+        Self.mainWindow = delegate.setupMainWindow()
         delegate.setupMainMenu()
         delegate.setupToolbar()
+        delegate.setupNotifications()
         
         delegate.window.makeKeyAndOrderFront(nil)
         delegate.window.toggleFullScreen(nil)

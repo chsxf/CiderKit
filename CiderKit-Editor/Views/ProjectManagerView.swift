@@ -23,7 +23,6 @@ fileprivate struct ProjectOperationModifier: ViewModifier {
 struct ProjectManagerView: View {
     @EnvironmentObject var projectManager: ProjectManager
     
-    var parentWindow: NSWindow
     var hostingWindow: NSWindow
     
     @State private var newProjectAlertShown = false
@@ -52,7 +51,7 @@ struct ProjectManagerView: View {
     }
     
     fileprivate func dismiss(response: NSApplication.ModalResponse) {
-        parentWindow.endSheet(hostingWindow, returnCode: response)
+        CiderKitApp.mainWindow.endSheet(hostingWindow, returnCode: response)
     }
     
     fileprivate func openProject(at url: URL) {

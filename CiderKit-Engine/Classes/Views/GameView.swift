@@ -49,7 +49,7 @@ open class GameView: SKView, SKSceneDelegate {
     }
     
     func registerDefaultMaterialsAndRenderers() {
-        let defaultTileAtlas = Atlases["default_tile"]
+        let defaultTileAtlas = Atlases["default_tile"]!
         let shader = CiderKitEngine.instantianteUberShader(for: defaultTileAtlas)
         
         let defaultGroundMaterial = BaseMaterial(sprites: [ defaultTileAtlas["default_tile"]!, defaultTileAtlas["default_tile_green"]! ], shader: shader)

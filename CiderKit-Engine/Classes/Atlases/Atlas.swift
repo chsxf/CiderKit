@@ -3,15 +3,24 @@ import SpriteKit
 
 public final class Atlas {
     
+    public let editorOnly: Bool
+    public let isVariant: Bool
+    
     public let atlasTexture: SKTexture
-    private var atlasSprites: [String: SKTexture]
+    public private(set) var atlasSprites: [String: SKTexture]
     
     private var variants: [String: Atlas] = [:]
     
     init(from description: AtlasDescription, in bundle: Bundle, variant: String?) {
+        editorOnly = description.editorOnly
+        
         var textureName = description.texture
         if let variant = variant, let variants = description.variants {
             textureName = variants[variant]!
+            isVariant = true
+        }
+        else {
+            isVariant = false
         }
 
         #if os(macOS)

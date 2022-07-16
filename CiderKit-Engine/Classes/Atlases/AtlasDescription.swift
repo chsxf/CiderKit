@@ -23,6 +23,8 @@ struct AtlasSpriteDescription: Codable {
 
 struct AtlasDescription: Codable {
     
+    public let editorOnly: Bool
+
     public let texture: String
     public let sprites: [AtlasSpriteDescription]
     

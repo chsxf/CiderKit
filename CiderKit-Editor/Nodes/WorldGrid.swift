@@ -31,12 +31,14 @@ class WorldGrid: SKNode {
     private(set) var hoverableEntities: [GKEntity] = []
     
     override init() {
-        triaxis = SKSpriteNode(texture: Atlases["grid"]["triaxis"])
+        let atlas = Atlases["grid"]!
+        
+        triaxis = SKSpriteNode(texture: atlas["triaxis"])
         triaxis.anchorPoint = CGPoint(x: 0.5, y: 0.32)
         triaxis.zPosition = 10000
 
         for element in GridElement.allCases {
-            gridTileTextures[element] = Atlases["grid"]["grid_tile_\(element)"]
+            gridTileTextures[element] = atlas["grid_tile_\(element)"]
             spritePools[element] = SpritePool()
         }
         
