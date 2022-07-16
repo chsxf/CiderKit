@@ -60,6 +60,7 @@
 		D9422DC228720343004D53E8 /* HoverableSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9422DC128720343004D53E8 /* HoverableSequence.swift */; };
 		D95B8C38288319B80077DCA1 /* SpriteAssetDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */; };
 		D95B8C3A288319C50077DCA1 /* SpriteAssetDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C39288319C50077DCA1 /* SpriteAssetDatabase.swift */; };
+		D95B8C3D28836B8D0077DCA1 /* SpriteAssetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C3C28836B8D0077DCA1 /* SpriteAssetEditor.swift */; };
 		D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */; };
 		D96A3BE92879909C008949A1 /* AmbientLightInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */; };
 		D96A3BEB2879D8C7008949A1 /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BEA2879D8C7008949A1 /* Tool.swift */; };
@@ -182,6 +183,7 @@
 		D9422DC128720343004D53E8 /* HoverableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverableSequence.swift; sourceTree = "<group>"; };
 		D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescription.swift; sourceTree = "<group>"; };
 		D95B8C39288319C50077DCA1 /* SpriteAssetDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDatabase.swift; sourceTree = "<group>"; };
+		D95B8C3C28836B8D0077DCA1 /* SpriteAssetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetEditor.swift; sourceTree = "<group>"; };
 		D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightComponent.swift; sourceTree = "<group>"; };
 		D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightInspector.swift; sourceTree = "<group>"; };
 		D96A3BEA2879D8C7008949A1 /* Tool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
@@ -356,10 +358,10 @@
 				D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */,
 				D98663DE287E1B1100950DC0 /* DelayedObservableObject.swift */,
 				D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */,
-				D9AF1F5F280BE99400BF34B3 /* ProjectManager.swift */,
 				D96A3BF0287A1F28008949A1 /* ToolMode.swift */,
 				D91ED91227E7AA520016D818 /* EditorAssets.xcassets */,
 				D9405F672838E45B00CA953A /* Components */,
+				D95B8C3B28836B700077DCA1 /* Managers */,
 				D933B7432830D34C00B63313 /* Nodes */,
 				D9405F6C2838EBE800CA953A /* Protocols */,
 				D972C1B32827D1AD00D85376 /* Resources */,
@@ -439,6 +441,15 @@
 				D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */,
 			);
 			path = SpriteAssets;
+			sourceTree = "<group>";
+		};
+		D95B8C3B28836B700077DCA1 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				D9AF1F5F280BE99400BF34B3 /* ProjectManager.swift */,
+				D95B8C3C28836B8D0077DCA1 /* SpriteAssetEditor.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 		D96BDEC627EBD5B80097A0BD /* Views */ = {
@@ -804,6 +815,7 @@
 				D9405F6E2838EC0100CA953A /* Hoverable.swift in Sources */,
 				D909FDBA287748DD0083EB8C /* PointLightInspector.swift in Sources */,
 				D98663DF287E1B1100950DC0 /* DelayedObservableObject.swift in Sources */,
+				D95B8C3D28836B8D0077DCA1 /* SpriteAssetEditor.swift in Sources */,
 				D9422DC228720343004D53E8 /* HoverableSequence.swift in Sources */,
 				D9A7D22A27F84C7A00A0EA70 /* EditorFunctions.swift in Sources */,
 				D96A3BE92879909C008949A1 /* AmbientLightInspector.swift in Sources */,

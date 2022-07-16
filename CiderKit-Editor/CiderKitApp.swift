@@ -314,7 +314,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     
     @objc
     private func openSpriteAssetEditor() {
-        
+        SpriteAssetEditor.open()
     }
     
     static func main() -> Void {
