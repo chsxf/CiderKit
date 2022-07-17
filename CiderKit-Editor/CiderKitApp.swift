@@ -134,7 +134,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     private func openProjectManagerView() -> Void {
         let windowRect = CGRect(x: 0, y: 0, width: 640, height: 360)
         let pmWindow = NSWindow(contentRect: windowRect, styleMask: [.titled], backing: .buffered, defer: false)
-        let pmView = ProjectManagerView(parentWindow: window, hostingWindow: pmWindow).environmentObject(ProjectManager.default)
+        let pmView = ProjectManagerView(hostingWindow: pmWindow).environmentObject(ProjectManager.default)
         pmWindow.contentView = NSHostingView(rootView: pmView)
         
         window.beginSheet(pmWindow) { response in

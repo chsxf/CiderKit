@@ -73,10 +73,10 @@ class ProjectManager: ObservableObject {
             }
         }
         
-        let foldersToCreate = [ "Settings", "Maps", "Materials", "Textures", "Sounds", "Music" ]
+        let foldersToCreate = [ "Databases/SpriteAssets", "Settings", "Maps", "Materials", "Music", "Sounds", "Textures" ]
         do {
             for folder in foldersToCreate {
-                let folderURL = URL(fileURLWithPath: folder, relativeTo: url)
+                let folderURL = URL(fileURLWithPath: folder, isDirectory: true, relativeTo: url)
                 try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true)
             }
         }
@@ -84,7 +84,7 @@ class ProjectManager: ObservableObject {
             throw ProjectManagerErrors.unableToCreateSettingsFolder
         }
         
-        let settingsFolderURL = URL(fileURLWithPath: "Settings", relativeTo: url)
+        let settingsFolderURL = URL(fileURLWithPath: "Settings", isDirectory: true, relativeTo: url)
         let projectSettingsFileURL = URL(fileURLWithPath: "project.cksettings", relativeTo: settingsFolderURL)
         let projectSettings = ProjectSettings()
         do {
