@@ -112,7 +112,7 @@ struct PointLightInspector_Previews: PreviewProvider {
     
     static var previews: some View {
         PointLightInspector()
-            .environmentObject(stubData)
+            .environmentObject(stubData.delayed())
             .frame(width: 200, height: 600, alignment: .leading)
             .padding()
     }

@@ -1,6 +1,7 @@
 import AppKit
 import UniformTypeIdentifiers
 import CiderKit_Engine
+import SwiftUI
 
 final class SpriteAssetEditor {
     
@@ -112,6 +113,8 @@ final class SpriteAssetEditor {
         }
         
         let window = NSWindow(contentRect: windowRect, styleMask: [.resizable], backing: .buffered, defer: false)
+        let view = SpriteAssetEditorView(hostingWindow: window)
+        window.contentView = NSHostingView(rootView: view)
         
         CiderKitApp.mainWindow.beginSheet(window) { _ in
             

@@ -24,6 +24,7 @@
 		D92002DB282FB009007D5AC1 /* PointLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92002DA282FB009007D5AC1 /* PointLight.swift */; };
 		D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92002DC282FB0E0007D5AC1 /* LightingDescription.swift */; };
 		D9254463281AB55B002DCA4C /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9254461281AB55B002DCA4C /* Project.swift */; };
+		D92D20D728860E23000B8DA9 /* SpriteAssetEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92D20D628860E23000B8DA9 /* SpriteAssetEditorView.swift */; };
 		D92EE975281DD3F2009B2055 /* CustomSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92EE973281DD3F2009B2055 /* CustomSettings.swift */; };
 		D933B7442830D35B00B63313 /* PointLightNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D933B7412830D32200B63313 /* PointLightNode.swift */; };
 		D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187A27E71D77009A14E2 /* EditorGameView.swift */; };
@@ -164,6 +165,7 @@
 		D92002DA282FB009007D5AC1 /* PointLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLight.swift; sourceTree = "<group>"; };
 		D92002DC282FB0E0007D5AC1 /* LightingDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightingDescription.swift; sourceTree = "<group>"; };
 		D9254461281AB55B002DCA4C /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		D92D20D628860E23000B8DA9 /* SpriteAssetEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetEditorView.swift; sourceTree = "<group>"; };
 		D92EE973281DD3F2009B2055 /* CustomSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettings.swift; sourceTree = "<group>"; };
 		D933B7412830D32200B63313 /* PointLightNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLightNode.swift; sourceTree = "<group>"; };
 		D936187827E71CE5009A14E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -339,6 +341,14 @@
 				D92002DA282FB009007D5AC1 /* PointLight.swift */,
 			);
 			path = Lights;
+			sourceTree = "<group>";
+		};
+		D92D20D528860E03000B8DA9 /* SpriteAssetEditor */ = {
+			isa = PBXGroup;
+			children = (
+				D92D20D628860E23000B8DA9 /* SpriteAssetEditorView.swift */,
+			);
+			path = SpriteAssetEditor;
 			sourceTree = "<group>";
 		};
 		D933B7432830D34C00B63313 /* Nodes */ = {
@@ -540,6 +550,7 @@
 				D985E7E827DDEBBC00AC2465 /* InspectorView.swift */,
 				D9AF1F5C280BE7F800BF34B3 /* ProjectManagerView.swift */,
 				D909FDB6287747500083EB8C /* InspectorViews */,
+				D92D20D528860E03000B8DA9 /* SpriteAssetEditor */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -839,6 +850,7 @@
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
 				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
 				D933B7442830D35B00B63313 /* PointLightNode.swift in Sources */,
+				D92D20D728860E23000B8DA9 /* SpriteAssetEditorView.swift in Sources */,
 				D9173DA92878E69A002E652C /* EditableComponentDelegate.swift in Sources */,
 				D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */,
 				D972C1B82827D9FD00D85376 /* EditorMapNode.swift in Sources */,
