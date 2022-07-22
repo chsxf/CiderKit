@@ -1,26 +1,34 @@
 import SwiftUI
-import SpriteKit
 import CiderKit_Engine
 
 struct SpriteAssetDatabaseView: View {
-    @EnvironmentObject private var database: SpriteAssetDatabase
+    @EnvironmentObject private var database: SpriteAssetDatabase {
+        didSet {
+            selectedAsset = database.spriteAssets.first
+            selectedAssetUUID = selectedAsset?.id
+        }
+    }
     
-    @State private var zoom: Int = 4
+    @State private var selectedAssetUUID: UUID? = nil
+    @State private var selectedAsset: SpriteAssetDescription? = nil
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("Sprite Assets")
-                List {
-                    ForEach(database.spriteAssets) { asset in
-                        Text(asset.name)
-                    }
+                
+                List(database.spriteAssets, selection: $selectedAssetUUID) { asset in
+                    Text(asset.name)
                 }
-                .border(Color.gray, width: 1)
+                .listStyle(.bordered)
+                
                 HStack {
                     Spacer()
                     Button("+") {
-                        database.spriteAssets.append(SpriteAssetDescription(name: "Unnamed Sprite Asset"))
+                        let newAsset = SpriteAssetDescription(name: "Unnamed Sprite Asset")
+                        database.spriteAssets.append(newAsset)
+                        selectedAssetUUID = newAsset.id
+                        selectedAsset = newAsset
                     }
                     Button("-") {
                         
@@ -29,56 +37,14 @@ struct SpriteAssetDatabaseView: View {
             }
             .frame(width: 200)
             
-            VStack {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Asset Hierarchy")
-                        List {
-                            
-                        }
-                        .border(Color.gray, width: 1)
-                        HStack {
-                            Spacer()
-                            Button("+") {
-                                
-                            }
-                            Button("-") {
-                                
-                            }
-                        }
-                    }
-                    .frame(width: 200)
-                    
-                    ZStack(alignment: .bottomTrailing) {
-                        SpriteView(scene: SKScene())
-                        HStack {
-                            Text("Current zoom: x\(zoom)")
-                            Button("+") {
-                                zoom *= 2
-                            }
-                            Button("100%") {
-                                zoom = 1
-                            }
-                            .disabled(zoom == 1)
-                            Button("-") {
-                                if zoom > 1 {
-                                    zoom /= 2
-                                }
-                            }
-                            .disabled(zoom == 1)
-                        }
-                        .padding()
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .border(Color.gray)
-                    
-                    VStack {
-                        
-                    }
-                    .frame(width: 200)
-                }
+            if selectedAsset != nil {
+                SpriteAssetDescriptionView()
+                    .environmentObject(selectedAsset!)
             }
-            .frame(maxWidth: .infinity)
+            else {
+                Text("No selected asset")
+                    .frame(maxWidth: .infinity)
+            }
         }
     }
 }

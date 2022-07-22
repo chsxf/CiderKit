@@ -36,7 +36,8 @@ struct SpriteAssetEditorView: View {
                 }
             }
             
-            
+            SpriteAssetDatabaseView()
+                .environmentObject(selectedDatabase)
         }
         .padding()
     }

@@ -4,7 +4,7 @@ public class SpriteAssetDatabase: Identifiable, Codable, ObservableObject {
         case id = "id"
         case isDefault = "isDefault"
         case version = "version"
-        case assets = "assets"
+        case assets = "spriteAssets"
     }
     
     public static let defaultDatabaseId = "_default"

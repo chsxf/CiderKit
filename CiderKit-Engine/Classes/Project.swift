@@ -81,6 +81,7 @@ open class Project {
                 throw e
             }
             catch {
+                print(error)
                 throw ProjectErrors.spriteAssetDatabaseError
             }
         }
