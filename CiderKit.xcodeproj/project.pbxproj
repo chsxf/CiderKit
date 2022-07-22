@@ -58,6 +58,7 @@
 		D9405F6B2838E67E00CA953A /* PointLightComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6A2838E67E00CA953A /* PointLightComponent.swift */; };
 		D9405F6E2838EC0100CA953A /* Hoverable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6D2838EC0100CA953A /* Hoverable.swift */; };
 		D9405F702838F1A900CA953A /* EditorMapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */; };
+		D941492A2889BF3B00BAEBC2 /* SpriteAssetDatabaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94149292889BF3B00BAEBC2 /* SpriteAssetDatabaseView.swift */; };
 		D9422DC228720343004D53E8 /* HoverableSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9422DC128720343004D53E8 /* HoverableSequence.swift */; };
 		D95B8C38288319B80077DCA1 /* SpriteAssetDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */; };
 		D95B8C3A288319C50077DCA1 /* SpriteAssetDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C39288319C50077DCA1 /* SpriteAssetDatabase.swift */; };
@@ -183,6 +184,7 @@
 		D9405F6A2838E67E00CA953A /* PointLightComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLightComponent.swift; sourceTree = "<group>"; };
 		D9405F6D2838EC0100CA953A /* Hoverable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hoverable.swift; sourceTree = "<group>"; };
 		D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapCellComponent.swift; sourceTree = "<group>"; };
+		D94149292889BF3B00BAEBC2 /* SpriteAssetDatabaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDatabaseView.swift; sourceTree = "<group>"; };
 		D9422DC128720343004D53E8 /* HoverableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverableSequence.swift; sourceTree = "<group>"; };
 		D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescription.swift; sourceTree = "<group>"; };
 		D95B8C39288319C50077DCA1 /* SpriteAssetDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDatabase.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 			isa = PBXGroup;
 			children = (
 				D92D20D628860E23000B8DA9 /* SpriteAssetEditorView.swift */,
+				D94149292889BF3B00BAEBC2 /* SpriteAssetDatabaseView.swift */,
 			);
 			path = SpriteAssetEditor;
 			sourceTree = "<group>";
@@ -854,6 +857,7 @@
 				D9173DA92878E69A002E652C /* EditableComponentDelegate.swift in Sources */,
 				D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */,
 				D972C1B82827D9FD00D85376 /* EditorMapNode.swift in Sources */,
+				D941492A2889BF3B00BAEBC2 /* SpriteAssetDatabaseView.swift in Sources */,
 				D9405F692838E49A00CA953A /* Selectable.swift in Sources */,
 				D909FDBD287779790083EB8C /* InspectorHeaderView.swift in Sources */,
 				D96A3BF1287A1F28008949A1 /* ToolMode.swift in Sources */,
