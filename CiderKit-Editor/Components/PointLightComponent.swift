@@ -1,7 +1,6 @@
 import Foundation
 import GameplayKit
 import CiderKit_Engine
-import SwiftUI
 import Combine
 
 class PointLightComponent: GKComponent, Selectable, ObservableObject, EditableComponentDelegate {
@@ -14,18 +13,10 @@ class PointLightComponent: GKComponent, Selectable, ObservableObject, EditableCo
     
     var inspectableDescription: String = "Point Light"
     
-    private var bakedView: AnyView? = nil
-    
-    var inspectorView: AnyView {
-        if let bakedView = bakedView {
-            return bakedView
-        }
-        
-        bakedView = AnyView(
-            PointLightInspector()
-                .environmentObject(lightDescription.delayed())
-        )
-        return bakedView!
+    var inspectorView: BaseInspectorView? {
+        let view = InspectorViewFactory.getView(forClass: Self.self, generator: { PointLightInspector() })
+        view.setObservableObject(lightDescription)
+        return view
     }
     
     fileprivate var lightNode: PointLightNode? { entity?.component(ofType: GKSKNodeComponent.self)?.node as? PointLightNode }

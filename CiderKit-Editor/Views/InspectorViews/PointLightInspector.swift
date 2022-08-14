@@ -1,119 +1,146 @@
-import SwiftUI
 import CiderKit_Engine
+import AppKit
 
-struct PointLightInspector: View {
+class PointLightInspector: BaseInspectorView, FloatFieldDelegate, NSTextFieldDelegate {
     
-    @EnvironmentObject private var pointLight: DelayedObservableObject<PointLight>
+    private let enabledCheckbox: NSButton
+    private let colorWell: NSColorWell
     
-    var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            HStack {
-                Toggle(isOn: $pointLight.enabled) {
-                    Text("Enabled")
-                }
-                
-                Spacer()
-
-                ColorPicker(selection: $pointLight.color, supportsOpacity: false) { }
-            }
+    private let nameField: NSTextField
+    
+    private let positionXField: FloatField
+    private let positionYField: FloatField
+    private let elevationField: FloatField
+    
+    private let nearFalloffField: FloatField
+    private let farFalloffField: FloatField
+    private let exponentFalloffField: FloatField
+    
+    init() {
+        enabledCheckbox = NSButton(checkboxWithTitle: "Enabled", target: nil, action: #selector(Self.onEnabledToggled))
+        
+        colorWell = NSColorWell(frame: NSZeroRect)
+        let colorLabel = NSTextField(labelWithString: "Color")
+        let colorRow = NSStackView(views: [colorLabel, colorWell])
+        
+        nameField = NSTextField(string: "")
+        
+        positionXField = FloatField(title: "X")
+        positionYField = FloatField(title: "Y")
+        elevationField = FloatField(title: "E")
+        
+        nearFalloffField = FloatField(title: "Near", minValue: 0)
+        farFalloffField = FloatField(title: "Far", minValue: 0)
+        exponentFalloffField = FloatField(title: "Exp", minValue: 0)
+        
+        super.init(stackedViews: [
+            enabledCheckbox,
+            VSpacer(),
+            colorRow,
+            VSpacer(),
+            InspectorHeader(title: "Name"),
+            nameField,
+            VSpacer(),
+            InspectorHeader(title: "Position"),
+            positionXField,
+            positionYField,
+            elevationField,
+            VSpacer(),
+            InspectorHeader(title: "Falloff"),
+            nearFalloffField,
+            farFalloffField,
+            exponentFalloffField
+        ])
+        
+        enabledCheckbox.target = self
+        
+        colorWell.addObserver(self, forKeyPath: "color", context: nil)
+        
+        nameField.delegate = self
+        
+        positionXField.delegate = self
+        positionYField.delegate = self
+        elevationField.delegate = self
+        
+        nearFalloffField.delegate = self
+        farFalloffField.delegate = self
+        exponentFalloffField.delegate = self
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func updateContent() {
+        super.updateContent()
+        
+        if let pointLight = observableObject as? PointLight {
+            enabledCheckbox.state = pointLight.enabled ? .on : .off
+            colorWell.color = NSColor(cgColor: pointLight.color)!
             
-            Group {
-                InspectorHeaderView("Name")
-                TextField(text: $pointLight.name) { }
-            }
-
-            Group {
-                InspectorHeaderView("Position")
-                Form {
-                    let xBinding = $pointLight.position.x
-                    HStack {
-                        TextField(value: xBinding, format: .number) {
-                            Text("X")
-                        }
-                        Stepper(value: xBinding, step: 0.1) { }
-                    }
-
-                    let yBinding = $pointLight.position.y
-                    HStack {
-                        TextField(value: yBinding, format: .number) {
-                            Text("Y")
-                        }
-                        Stepper(value: yBinding, step: 0.1) { }
-                    }
-
-                    let elevationBinding = $pointLight.position.z
-                    HStack {
-                        TextField(value: elevationBinding, format: .number) {
-                            Text("E")
-                        }
-                        Stepper(value: elevationBinding, step: 0.1) { }
-                    }
-                }
-            }
-
-            Group {
-                InspectorHeaderView("Falloff")
-                Form {
-                    let nearBinding = $pointLight.falloff.near
-                    HStack {
-                        TextField(value: nearBinding, format: .number) {
-                            Text("Near")
-                        }
-                        Stepper(value: nearBinding, step: 0.1) { }
-                    }
-
-                    let farBinding = $pointLight.falloff.far
-                    HStack {
-                        TextField(value: farBinding, format: .number) {
-                            Text("Far")
-                        }
-                        Stepper(value: farBinding, step: 0.1) { }
-                    }
-
-                    let expBinding = $pointLight.falloff.exponent
-                    HStack {
-                        TextField(value: expBinding, format: .number) {
-                            Text("Exp")
-                        }
-                        Stepper(value: expBinding, step: 0.1) { }
-                    }
-                }
-            }
+            nameField.stringValue = pointLight.name
             
-            Spacer()
+            positionXField.value = pointLight.position.x
+            positionYField.value = pointLight.position.y
+            elevationField.value = pointLight.position.z
 
-            HStack {
-                Button("Duplicate") {
-                    
-                }
-                .disabled(true)
-                
-                Button("Delete") {
-
-                }
-                .disabled(true)
-            }
-            .frame(maxWidth: .infinity)
+            nearFalloffField.value = pointLight.falloff.near
+            farFalloffField.value = pointLight.falloff.far
+            exponentFalloffField.value = pointLight.falloff.exponent
         }
     }
     
-}
-
-struct PointLightInspector_Previews: PreviewProvider {
-    static var stubData: PointLight {
-        let falloff = PointLight.Falloff(near: 0.1, far: 2, exponent: 1)
-        return PointLight(
-            name: "Stub Light 01",
-            color: .white,
-            position: .zero,
-            falloff: falloff
-        )
+    @objc
+    private func onEnabledToggled() {
+        if let pointLight = observableObject as? PointLight {
+            isEditing = true
+            pointLight.enabled = enabledCheckbox.state == .on
+            isEditing = false
+        }
     }
     
-    static var previews: some View {
-        PointLightInspector()
-            .environmentObject(stubData.delayed())
-            .frame(width: 200, height: 600, alignment: .leading)
-            .padding()
+    func floatField(_ field: FloatField, valueChanged newValue: Float) {
+        if let pointLight = observableObject as? PointLight {
+            isEditing = true
+            switch field {
+            case positionXField:
+                pointLight.position.x = positionXField.value
+            case positionYField:
+                pointLight.position.y = positionYField.value
+            case elevationField:
+                pointLight.position.z = elevationField.value
+            case nearFalloffField:
+                pointLight.falloff.near = nearFalloffField.value
+            case farFalloffField:
+                pointLight.falloff.far = farFalloffField.value
+            case exponentFalloffField:
+                pointLight.falloff.exponent = exponentFalloffField.value
+            default:
+                break
+            }
+            isEditing = false
+        }
     }
+    
+    func controlTextDidChange(_ obj: Notification) {
+        if let pointLight = observableObject as? PointLight {
+            isEditing = true
+            pointLight.name = nameField.stringValue
+            isEditing = false
+        }
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if
+            let pointLight = observableObject as? PointLight,
+            let keyPath = keyPath,
+            keyPath == "color",
+            colorWell.isActive
+        {
+            isEditing = true
+            pointLight.color = colorWell.color.cgColor
+            isEditing = false
+        }
+    }
+    
 }

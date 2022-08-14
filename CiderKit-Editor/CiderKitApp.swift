@@ -61,7 +61,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         window.acceptsMouseMovedEvents = true
         gameView = EditorGameView(frame: windowRect)
         gameView.delegate = self
-        window.contentView = NSHostingView(rootView: EditorMainView(gameView: gameView))
+        window.contentView = EditorMainView(gameView: gameView, frame: windowRect)
         
         updateWindowTitle()
         

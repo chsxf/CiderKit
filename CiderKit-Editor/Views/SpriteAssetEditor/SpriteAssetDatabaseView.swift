@@ -120,7 +120,6 @@ class SpriteAssetDatabaseView: NSStackView, NSCollectionViewDelegate, NSCollecti
     }
     
     func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
-        print(collectionView.frame.size.width)
         return NSSize(width: collectionView.frame.size.width, height: 20)
     }
     

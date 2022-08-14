@@ -1,5 +1,4 @@
 import GameplayKit
-import SwiftUI
 import CiderKit_Engine
 import Combine
 
@@ -11,18 +10,10 @@ class AmbientLightComponent: GKComponent, Selectable, EditableComponentDelegate 
     
     var inspectableDescription: String { "Ambient Light"}
     
-    private var bakedView: AnyView? = nil
-    
-    var inspectorView: AnyView {
-        if let bakedView = bakedView {
-            return bakedView
-        }
-        
-        bakedView = AnyView(
-            AmbientLightInspector()
-                .environmentObject(lightDescription.delayed())
-        )
-        return bakedView!
+    var inspectorView: BaseInspectorView? {
+        let view = InspectorViewFactory.getView(forClass: Self.self, generator: { AmbientLightInspector() })
+        view.setObservableObject(lightDescription)
+        return view
     }
     
     fileprivate init(from lightDescription: BaseLight) {

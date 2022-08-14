@@ -1,26 +1,23 @@
-//
-//  EditorMainView.swift
-//  CiderKit-Editor
-//
-//  Created by Christophe SAUVEUR on 15/04/2022.
-//
+import AppKit
 
-import SwiftUI
-
-struct EditorMainView: View {
+class EditorMainView: NSStackView {
     
-    private var gameView: EditorGameView
-    
-    init(gameView: EditorGameView) {
-        self.gameView = gameView
+    init(gameView: EditorGameView, frame: NSRect) {
+        super.init(frame: frame)
+        
+        orientation = .horizontal
+        spacing = 0
+        
+        addArrangedSubview(gameView)
+        
+        let inspectorView = InspectorView(selectionModel: gameView.selectionModel, frame: frame)
+        addArrangedSubview(inspectorView)
+        
+        addConstraint(NSLayoutConstraint(item: inspectorView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 200))
     }
     
-    var body: some View {
-        HStack {
-            EditorGameViewRepresentable(gameView: gameView)
-            InspectorView()
-                .environmentObject(gameView.selectionModel)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
+    
 }

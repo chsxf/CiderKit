@@ -2,7 +2,6 @@ import Foundation
 import CiderKit_Engine
 import SpriteKit
 import GameplayKit
-import SwiftUI
 
 class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
     
@@ -13,20 +12,12 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
         elevation != nil ? "Map Cell" : "Map Cell (Empty)"
     }
     
-    private var bakedView: AnyView? = nil
-    
     let supportedToolModes: ToolMode = .elevation
     
-    var inspectorView: AnyView {
-        if let bakedView = bakedView {
-            return bakedView
-        }
-        
-        bakedView = AnyView(
-            MapCellInspector()
-                .environmentObject(self)
-        )
-        return bakedView!
+    var inspectorView: BaseInspectorView? {
+        let view = InspectorViewFactory.getView(forClass: Self.self, generator: { MapCellInspector() })
+        view.setObservableObject(self)
+        return view
     }
     
     func highlight() {

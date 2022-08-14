@@ -1,7 +1,7 @@
 import AppKit
 import CiderKit_Engine
 
-class SpriteAssetElementView: NSStackView, NSTextFieldDelegate {
+class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelegate {
     
     weak var element: SpriteAssetElement? = nil {
         didSet {
@@ -12,12 +12,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate {
     weak var elementViewDelegate: SpriteAssetElementViewDelegate? = nil
     
     private let nameField: NSTextField
-    private let xOffsetField: NSTextField
-    private let xOffsetStepper: NSStepper
-    private let yOffsetField: NSTextField
-    private let yOffsetStepper: NSStepper
-    private let rotationField: NSTextField
-    private let rotationStepper: NSStepper
+    private let xOffsetField: FloatField
+    private let yOffsetField: FloatField
+    private let rotationField: FloatField
     private let spriteField: NSTextField
     private let selectSpriteButton: NSButton
     private let removeSpriteButton: NSButton
@@ -32,44 +29,11 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate {
         formatter.format = "###0.#####"
         formatter.maximumFractionDigits = 5
         
-        let spacer1 = NSTextField(labelWithString: "")
-        let offsetLabel = NSTextField(labelWithString: "Offset")
-        let xLabel = NSTextField(labelWithString: "X")
-        xOffsetField = NSTextField(string: "")
-        xOffsetField.formatter = formatter
-        xOffsetField.floatValue = 0
-        xOffsetStepper = NSStepper()
-        xOffsetStepper.floatValue = 0
-        xOffsetStepper.maxValue = Double.infinity
-        xOffsetStepper.minValue = -Double.infinity
-        xOffsetStepper.action = #selector(Self.stepperValueDidChange(_:))
-        let xOffsetRow = NSStackView(views: [xOffsetField, xOffsetStepper])
-        xOffsetRow.orientation = .horizontal
-        let yLabel = NSTextField(labelWithString: "Y")
-        yOffsetField = NSTextField(string: "")
-        yOffsetField.formatter = formatter
-        yOffsetField.floatValue = 0
-        yOffsetStepper = NSStepper()
-        yOffsetStepper.maxValue = Double.infinity
-        yOffsetStepper.minValue = -Double.infinity
-        yOffsetStepper.action = #selector(Self.stepperValueDidChange(_:))
-        let yOffsetRow = NSStackView(views: [yOffsetField, yOffsetStepper])
-        yOffsetRow.orientation = .horizontal
+        xOffsetField = FloatField(title: "X", step: 1)
+        yOffsetField = FloatField(title: "Y", step: 1)
         
-        let spacer2 = NSTextField(labelWithString: "")
-        let rotationLabel = NSTextField(labelWithString: "Rotation")
-        rotationField = NSTextField(string: "")
-        rotationField.formatter = formatter
-        rotationField.floatValue = 0
-        rotationStepper = NSStepper()
-        rotationStepper.floatValue = 0
-        rotationStepper.maxValue = Double.infinity
-        rotationStepper.minValue = -Double.infinity
-        rotationStepper.action = #selector(Self.stepperValueDidChange(_:))
-        let rotationRow = NSStackView(views: [rotationField, rotationStepper])
-        rotationRow.orientation = .horizontal
+        rotationField = FloatField(title: "Rotation", step: 1)
         
-        let spacer3 = NSTextField(labelWithString: "")
         let spriteLabel = NSTextField(labelWithString: "Sprite")
         spriteField = NSTextField(string: "None")
         spriteField.isEditable = false
@@ -84,12 +48,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate {
         nameField.delegate = self
         
         xOffsetField.delegate = self
-        xOffsetStepper.target = self
         yOffsetField.delegate = self
-        yOffsetStepper.target = self
         
         rotationField.delegate = self
-        rotationStepper.target = self
         
         selectSpriteButton.target = self
         removeSpriteButton.target = self
@@ -103,18 +64,15 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate {
         addArrangedSubview(nameLabel)
         addArrangedSubview(nameField)
         
-        addArrangedSubview(spacer1)
-        addArrangedSubview(offsetLabel)
-        addArrangedSubview(xLabel)
-        addArrangedSubview(xOffsetRow)
-        addArrangedSubview(yLabel)
-        addArrangedSubview(yOffsetRow)
+        addArrangedSubview(VSpacer())
+        addArrangedSubview(InspectorHeader(title: "Offset"))
+        addArrangedSubview(xOffsetField)
+        addArrangedSubview(yOffsetField)
         
-        addArrangedSubview(spacer2)
-        addArrangedSubview(rotationLabel)
-        addArrangedSubview(rotationRow)
+        addArrangedSubview(VSpacer())
+        addArrangedSubview(rotationField)
         
-        addArrangedSubview(spacer3)
+        addArrangedSubview(VSpacer())
         addArrangedSubview(spriteLabel)
         addArrangedSubview(spriteField)
         addArrangedSubview(buttonRow)
@@ -130,25 +88,19 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate {
         if let element = element {
             let editable = !element.isRoot
             
-            nameField.isEditable = editable
+            nameField.isEnabled = editable
             nameField.stringValue = element.name
             
             let xOffset = Float(element.offset.x)
-            xOffsetField.isEditable = editable
-            xOffsetField.floatValue = xOffset
-            xOffsetStepper.floatValue = xOffset
-            xOffsetStepper.isHidden = !editable
+            xOffsetField.isEnabled = editable
+            xOffsetField.value = xOffset
             
             let yOffset = Float(element.offset.y)
-            yOffsetField.isEditable = editable
-            yOffsetField.floatValue = yOffset
-            yOffsetStepper.floatValue = yOffset
-            yOffsetStepper.isHidden = !editable
+            yOffsetField.isEnabled = editable
+            yOffsetField.value = yOffset
             
-            rotationField.isEditable = editable
-            rotationField.floatValue = element.rotation
-            rotationStepper.floatValue = element.rotation
-            rotationStepper.isHidden = !editable
+            rotationField.isEnabled = editable
+            rotationField.value = element.rotation
             
             selectSpriteButton.isEnabled = editable
             if let spriteLocator = element.spriteLocator {
@@ -162,19 +114,16 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate {
         }
         else {
             nameField.stringValue = ""
-            nameField.isEditable = false
+            nameField.isEnabled = false
             
-            xOffsetField.floatValue = 0
-            xOffsetField.isEditable = false
-            xOffsetStepper.isHidden = true
+            xOffsetField.value = 0
+            xOffsetField.isEnabled = false
             
-            yOffsetField.floatValue = 0
-            yOffsetField.isEditable = false
-            yOffsetStepper.isHidden = true
+            yOffsetField.value = 0
+            yOffsetField.isEnabled = false
             
-            rotationField.floatValue = 0
-            rotationField.isEditable = false
-            rotationStepper.isHidden = true
+            rotationField.value = 0
+            rotationField.isEnabled = false
             
             spriteField.stringValue = "None"
             selectSpriteButton.isEnabled = false
@@ -208,39 +157,12 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate {
         elementViewDelegate?.elementView(self, spriteChanged: nil)
     }
     
-    func controlTextDidEndEditing(_ obj: Notification) {
-        if let textField = obj.object as? NSTextField {
-            if textField === nameField {
-                elementViewDelegate?.elementView(self, nameChanged: textField.stringValue)
-            }
-            else if textField === xOffsetField {
-                xOffsetStepper.floatValue = xOffsetField.floatValue
-                elementViewDelegate?.elementView(self, offsetChanged: CGPoint(x: CGFloat(xOffsetField.floatValue), y: CGFloat(yOffsetField.floatValue)))
-            }
-            else if textField === yOffsetField {
-                yOffsetStepper.floatValue = yOffsetField.floatValue
-                elementViewDelegate?.elementView(self, offsetChanged: CGPoint(x: CGFloat(xOffsetField.floatValue), y: CGFloat(yOffsetField.floatValue)))
-            }
-            else if textField === rotationStepper {
-                rotationStepper.floatValue = rotationField.floatValue
-                elementViewDelegate?.elementView(self, rotationChanged: rotationField.floatValue)
-            }
+    func floatField(_ field: FloatField, valueChanged newValue: Float) {
+        if field === xOffsetField || field === yOffsetField {
+            elementViewDelegate?.elementView(self, offsetChanged: CGPoint(x: CGFloat(xOffsetField.value), y: CGFloat(yOffsetField.value)))
         }
-    }
-    
-    @objc
-    private func stepperValueDidChange(_ obj: NSStepper) {
-        if obj === xOffsetStepper {
-            xOffsetField.floatValue = xOffsetStepper.floatValue
-            elementViewDelegate?.elementView(self, offsetChanged: CGPoint(x: CGFloat(xOffsetField.floatValue), y: CGFloat(yOffsetField.floatValue)))
-        }
-        else if obj === yOffsetStepper {
-            yOffsetField.floatValue = yOffsetStepper.floatValue
-            elementViewDelegate?.elementView(self, offsetChanged: CGPoint(x: CGFloat(xOffsetField.floatValue), y: CGFloat(yOffsetField.floatValue)))
-        }
-        else if obj === rotationStepper {
-            rotationField.floatValue = rotationStepper.floatValue
-            elementViewDelegate?.elementView(self, rotationChanged: rotationField.floatValue)
+        else if field === rotationField {
+            elementViewDelegate?.elementView(self, rotationChanged: rotationField.value)
         }
     }
     
