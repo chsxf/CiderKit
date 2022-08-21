@@ -43,6 +43,7 @@ class FloatField: NSView, NSTextFieldDelegate {
         stepper.minValue = Double(minValue)
         stepper.maxValue = Double(maxValue)
         stepper.increment = Double(step)
+        stepper.valueWraps = false
         stepper.action = #selector(Self.stepperValueDidChange(_:))
         
         super.init(frame: NSZeroRect)

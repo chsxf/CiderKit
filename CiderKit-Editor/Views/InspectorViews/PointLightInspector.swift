@@ -31,7 +31,7 @@ class PointLightInspector: BaseInspectorView, FloatFieldDelegate, NSTextFieldDel
         
         nearFalloffField = FloatField(title: "Near", minValue: 0)
         farFalloffField = FloatField(title: "Far", minValue: 0)
-        exponentFalloffField = FloatField(title: "Exp", minValue: 0)
+        exponentFalloffField = FloatField(title: "Exp", minValue: -1)
         
         super.init(stackedViews: [
             enabledCheckbox,

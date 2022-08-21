@@ -3,7 +3,7 @@ import GameplayKit
 import CiderKit_Engine
 import Combine
 
-class PointLightComponent: GKComponent, Selectable, ObservableObject, EditableComponentDelegate {
+class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
     
     let lightDescription: PointLight
     
