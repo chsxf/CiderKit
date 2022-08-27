@@ -17,8 +17,6 @@ final class SpriteAssetEditor {
         
         if project.spriteAssetDatabases.isEmpty {
             do {
-                print(project.databasesDirectoryURL)
-                print(project.spriteAssetsDatabasesDirectoryURL)
                 try FileManager.default.createDirectory(at: project.spriteAssetsDatabasesDirectoryURL, withIntermediateDirectories: true)
             }
             catch {

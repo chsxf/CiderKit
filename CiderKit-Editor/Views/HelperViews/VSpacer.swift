@@ -15,10 +15,4 @@ class VSpacer: NSView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewWillDraw() {
-        super.viewWillDraw()
-        
-        print(frame.size)
-    }
-    
 }
