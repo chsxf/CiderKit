@@ -42,7 +42,7 @@ public struct CustomSettings: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         if container.contains(CodingKeys.bools) {
-            let boolContainer = try container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: CodingKeys.bools)
+            let boolContainer = try container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: .bools)
             if !boolContainer.allKeys.isEmpty {
                 boolSettings = [String: Bool]()
                 for key in boolContainer.allKeys {
@@ -52,7 +52,7 @@ public struct CustomSettings: Codable {
         }
         
         if container.contains(CodingKeys.ints) {
-            let intContainer = try container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: CodingKeys.ints)
+            let intContainer = try container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: .ints)
             if !intContainer.allKeys.isEmpty {
                 intSettings = [String: Int]()
                 for key in intContainer.allKeys {
@@ -62,7 +62,7 @@ public struct CustomSettings: Codable {
         }
         
         if container.contains(CodingKeys.floats) {
-            let floatContainer = try container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: CodingKeys.floats)
+            let floatContainer = try container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: .floats)
             if !floatContainer.allKeys.isEmpty {
                 floatSettings = [String: Float]()
                 for key in floatContainer.allKeys {
@@ -72,7 +72,7 @@ public struct CustomSettings: Codable {
         }
         
         if container.contains(CodingKeys.doubles) {
-            let doubleContainer = try container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: CodingKeys.doubles)
+            let doubleContainer = try container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: .doubles)
             if !doubleContainer.allKeys.isEmpty {
                 doubleSettings = [String: Double]()
                 for key in doubleContainer.allKeys {
@@ -82,7 +82,7 @@ public struct CustomSettings: Codable {
         }
         
         if container.contains(CodingKeys.strings) {
-            let stringContainer = try container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: CodingKeys.strings)
+            let stringContainer = try container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: .strings)
             if !stringContainer.allKeys.isEmpty {
                 stringSettings = [String: String]()
                 for key in stringContainer.allKeys {
@@ -96,35 +96,35 @@ public struct CustomSettings: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         if let boolSettings = boolSettings {
-            var boolContainer = container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: CodingKeys.bools)
+            var boolContainer = container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: .bools)
             for (key, value) in boolSettings {
                 try boolContainer.encode(value, forKey: CustomCodingKey(stringValue: key))
             }
         }
 
         if let intSettings = intSettings {
-            var intContainer = container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: CodingKeys.ints)
+            var intContainer = container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: .ints)
             for (key, value) in intSettings {
                 try intContainer.encode(value, forKey: CustomCodingKey(stringValue: key))
             }
         }
         
         if let floatSettings = floatSettings {
-            var floatContainer = container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: CodingKeys.floats)
+            var floatContainer = container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: .floats)
             for (key, value) in floatSettings {
                 try floatContainer.encode(value, forKey: CustomCodingKey(stringValue: key))
             }
         }
         
         if let doubleSettings = doubleSettings {
-            var doubleContainer = container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: CodingKeys.doubles)
+            var doubleContainer = container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: .doubles)
             for (key, value) in doubleSettings {
                 try doubleContainer.encode(value, forKey: CustomCodingKey(stringValue: key))
             }
         }
         
         if let stringSettings = stringSettings {
-            var stringContainer = container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: CodingKeys.strings)
+            var stringContainer = container.nestedContainer(keyedBy: CustomCodingKey.self, forKey: .strings)
             for (key, value) in stringSettings {
                 try stringContainer.encode(value, forKey: CustomCodingKey(stringValue: key))
             }

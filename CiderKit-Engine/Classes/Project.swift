@@ -8,6 +8,7 @@ public enum ProjectErrors: String, Error {
 }
 
 open class Project {
+    
     public static var current: Project? = nil
     
     public let projectRoot: URL
@@ -95,4 +96,5 @@ open class Project {
     open class func open(at url: URL) throws {
         current = try Project(projectRoot: url)
     }
+    
 }

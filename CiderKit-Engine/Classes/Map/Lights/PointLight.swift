@@ -43,17 +43,17 @@ public class PointLight: BaseLight {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        enabled = (try? container.decode(Bool.self, forKey: CodingKeys.enabled)) ?? true
-        name = (try? container.decode(String.self, forKey: CodingKeys.name)) ?? "PointLight"
+        enabled = (try? container.decode(Bool.self, forKey: .enabled)) ?? true
+        name = (try? container.decode(String.self, forKey: .name)) ?? "PointLight"
         
-        let x = (try? container.decode(Float.self, forKey: CodingKeys.positionX)) ?? 0
-        let y = (try? container.decode(Float.self, forKey: CodingKeys.positionY)) ?? 0
-        let z = ((try? container.decode(Float.self, forKey: CodingKeys.elevation)) ?? 0)
+        let x = (try? container.decode(Float.self, forKey: .positionX)) ?? 0
+        let y = (try? container.decode(Float.self, forKey: .positionY)) ?? 0
+        let z = ((try? container.decode(Float.self, forKey: .elevation)) ?? 0)
         position = vector_float3(x, y, z)
         
-        let near = (try? container.decode(Float.self, forKey: CodingKeys.falloffNear)) ?? 0
-        let far = (try? container.decode(Float.self, forKey: CodingKeys.falloffFar)) ?? 1
-        let exponent = (try? container.decode(Float.self, forKey: CodingKeys.falloffExponent)) ?? 1
+        let near = (try? container.decode(Float.self, forKey: .falloffNear)) ?? 0
+        let far = (try? container.decode(Float.self, forKey: .falloffFar)) ?? 1
+        let exponent = (try? container.decode(Float.self, forKey: .falloffExponent)) ?? 1
         falloff = Falloff(near: near, far: far, exponent: exponent)
         
         try super.init(from: decoder)
@@ -64,16 +64,16 @@ public class PointLight: BaseLight {
         
         var container = encoder.container(keyedBy: CodingKeys.self)
         
-        try container.encode(enabled, forKey: CodingKeys.enabled)
-        try container.encode(name, forKey: CodingKeys.name)
+        try container.encode(enabled, forKey: .enabled)
+        try container.encode(name, forKey: .name)
         
-        try container.encode(position.x, forKey: CodingKeys.positionX)
-        try container.encode(position.y, forKey: CodingKeys.positionY)
-        try container.encode(position.z, forKey: CodingKeys.elevation)
+        try container.encode(position.x, forKey: .positionX)
+        try container.encode(position.y, forKey: .positionY)
+        try container.encode(position.z, forKey: .elevation)
         
-        try container.encode(falloff.near, forKey: CodingKeys.falloffNear)
-        try container.encode(falloff.far, forKey: CodingKeys.falloffFar)
-        try container.encode(falloff.exponent, forKey: CodingKeys.falloffExponent)
+        try container.encode(falloff.near, forKey: .falloffNear)
+        try container.encode(falloff.far, forKey: .falloffFar)
+        try container.encode(falloff.exponent, forKey: .falloffExponent)
     }
     
 }

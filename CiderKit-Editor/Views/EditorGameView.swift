@@ -1,24 +1,7 @@
 import CoreFoundation
 import SpriteKit
 import GameplayKit
-import SwiftUI
 import CiderKit_Engine
-
-struct EditorGameViewRepresentable: NSViewRepresentable {
-    
-    private var gameView: EditorGameView
-    
-    init(gameView: EditorGameView) {
-        self.gameView = gameView
-    }
-    
-    func makeNSView(context: Context) -> EditorGameView {
-        return gameView
-    }
-
-    func updateNSView(_ nsView: EditorGameView, context: Context) { }
-    
-}
 
 class EditorGameView: GameView {
     

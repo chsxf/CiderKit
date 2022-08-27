@@ -2,11 +2,14 @@ import SwiftUI
 import CiderKit_Engine
 
 fileprivate struct ProjectDetails {
+    
     let url: URL
     let error: String
+    
 }
 
 fileprivate struct ProjectOperationModifier: ViewModifier {
+    
     var isPresented: Binding<Bool>
     var projectDetails: ProjectDetails?
     
@@ -18,9 +21,11 @@ fileprivate struct ProjectOperationModifier: ViewModifier {
                 Text(details.error)
             }
     }
+    
 }
 
 struct ProjectManagerView: View {
+    
     @EnvironmentObject var projectManager: ProjectManager
     
     var hostingWindow: NSWindow
@@ -128,4 +133,5 @@ struct ProjectManagerView: View {
         }
         .padding()
     }
+    
 }

@@ -1,4 +1,5 @@
 public struct AtlasLocator {
+    
     public let url: URL
     public let bundle: Bundle
     
@@ -6,4 +7,5 @@ public struct AtlasLocator {
         self.url = url
         self.bundle = bundle
     }
+    
 }

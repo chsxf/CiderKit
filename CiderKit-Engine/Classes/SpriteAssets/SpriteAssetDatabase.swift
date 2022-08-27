@@ -1,4 +1,5 @@
 public class SpriteAssetDatabase: Identifiable, Codable, CustomStringConvertible {
+    
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case isDefault = "isDefault"
