@@ -63,6 +63,8 @@
 		D93C4CBC2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */; };
 		D93C4CC92800CC25000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
 		D93C4CCA2800CC25000955E1 /* CiderKit_Engine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D93FE0DA28BA2B4300215D83 /* FloatSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93FE0D928BA2B4300215D83 /* FloatSlider.swift */; };
+		D93FE0DF28BA43C800215D83 /* LabelledColorWell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93FE0DE28BA43C800215D83 /* LabelledColorWell.swift */; };
 		D9405F692838E49A00CA953A /* Selectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F682838E49A00CA953A /* Selectable.swift */; };
 		D9405F6B2838E67E00CA953A /* PointLightComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6A2838E67E00CA953A /* PointLightComponent.swift */; };
 		D9405F6E2838EC0100CA953A /* Hoverable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6D2838EC0100CA953A /* Hoverable.swift */; };
@@ -206,6 +208,8 @@
 		D93C4CB92800CC18000955E1 /* CiderKit-PlayerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CiderKit-PlayerSample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKit_PlayerSampleApp.swift; sourceTree = "<group>"; };
 		D93C4CC42800CC1B000955E1 /* CiderKit_PlayerSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit_PlayerSample.entitlements; sourceTree = "<group>"; };
+		D93FE0D928BA2B4300215D83 /* FloatSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatSlider.swift; sourceTree = "<group>"; };
+		D93FE0DE28BA43C800215D83 /* LabelledColorWell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelledColorWell.swift; sourceTree = "<group>"; };
 		D9405F682838E49A00CA953A /* Selectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Selectable.swift; sourceTree = "<group>"; };
 		D9405F6A2838E67E00CA953A /* PointLightComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLightComponent.swift; sourceTree = "<group>"; };
 		D9405F6D2838EC0100CA953A /* Hoverable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hoverable.swift; sourceTree = "<group>"; };
@@ -321,7 +325,9 @@
 			children = (
 				D99ADB6328955E6F00A4980D /* CollectionTextViewItem.swift */,
 				D928562528B18BB5000F2D86 /* FloatField.swift */,
+				D93FE0D928BA2B4300215D83 /* FloatSlider.swift */,
 				D909FDBC287779790083EB8C /* InspectorHeader.swift */,
+				D93FE0DE28BA43C800215D83 /* LabelledColorWell.swift */,
 				D928562328B18271000F2D86 /* VSpacer.swift */,
 			);
 			path = HelperViews;
@@ -900,6 +906,7 @@
 				D9019A86289F9B5E00A298D6 /* SpriteAssetElementViewDelegate.swift in Sources */,
 				D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */,
 				D96CC97128971AE100187314 /* SpriteAssetDatabaseView.swift in Sources */,
+				D93FE0DA28BA2B4300215D83 /* FloatSlider.swift in Sources */,
 				D99ADB6028955D9000A4980D /* SpriteAssetDescriptionCollectionDataSource.swift in Sources */,
 				D98B89F72897FA35006D60AF /* SpriteAssetDescriptionView.swift in Sources */,
 				D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */,
@@ -926,6 +933,7 @@
 				D9A9331728A862D500A45CEB /* SpriteAssetDescriptionViewDelegate.swift in Sources */,
 				D928562628B18BB5000F2D86 /* FloatField.swift in Sources */,
 				D9387C19289D3A6800558E02 /* SpriteSelectorView.swift in Sources */,
+				D93FE0DF28BA43C800215D83 /* LabelledColorWell.swift in Sources */,
 				D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */,
 				D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */,
 				D909FDB8287747640083EB8C /* MapCellInspector.swift in Sources */,

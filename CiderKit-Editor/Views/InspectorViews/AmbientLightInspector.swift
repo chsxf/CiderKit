@@ -1,19 +1,16 @@
 import AppKit
 import CiderKit_Engine
 
-class AmbientLightInspector: BaseInspectorView {
+class AmbientLightInspector: BaseInspectorView, LabelledColorWellDelegate {
     
-    private let colorWell: NSColorWell
+    private let colorWell: LabelledColorWell
     
     init() {
-        colorWell = NSColorWell(frame: NSZeroRect)
+        colorWell = LabelledColorWell(title: "Color")
         
-        let label = NSTextField(labelWithString: "Color")
-        let colorRow = NSStackView(views: [label, colorWell])
+        super.init(stackedViews: [colorWell])
         
-        super.init(stackedViews: [colorRow])
-        
-        colorWell.addObserver(self, forKeyPath: "color", context: nil)
+        colorWell.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -24,19 +21,14 @@ class AmbientLightInspector: BaseInspectorView {
         super.updateContent()
         
         if let lightDescription = observableObject as? BaseLight {
-            colorWell.color = NSColor(cgColor: lightDescription.color)!
+            colorWell.color = lightDescription.color
         }
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if
-            let lightDescription = observableObject as? BaseLight,
-            let keyPath = keyPath,
-            keyPath == "color",
-            colorWell.isActive
-        {
+    func labelledColorWell(_ colorWell: LabelledColorWell, colorChanged color: CGColor) {
+        if let lightDescription = observableObject as? BaseLight {
             isEditing = true
-            lightDescription.color = colorWell.color.cgColor
+            lightDescription.color = color
             isEditing = false
         }
     }

@@ -29,17 +29,17 @@ class FloatField: NSView, NSTextFieldDelegate {
     
     weak var delegate: FloatFieldDelegate? = nil
     
-    init(title: String, floatValue: Float = 0, minValue: Float = -Float.infinity, maxValue: Float = Float.infinity, step: Float = 0.1) {
+    init(title: String, value: Float = 0, minValue: Float = -Float.infinity, maxValue: Float = Float.infinity, step: Float = 0.1) {
         let formatter = NumberFormatter()
         formatter.format = "###0.#####"
         formatter.maximumFractionDigits = 5
         
         field = NSTextField()
         field.formatter = formatter
-        field.floatValue = floatValue
+        field.floatValue = value
         
         stepper = NSStepper()
-        stepper.floatValue = floatValue
+        stepper.floatValue = value
         stepper.minValue = Double(minValue)
         stepper.maxValue = Double(maxValue)
         stepper.increment = Double(step)

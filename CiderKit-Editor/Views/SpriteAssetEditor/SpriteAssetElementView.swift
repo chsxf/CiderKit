@@ -1,7 +1,7 @@
 import AppKit
 import CiderKit_Engine
 
-class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelegate {
+class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelegate, FloatSliderDelegate, LabelledColorWellDelegate {
     
     weak var element: SpriteAssetElement? = nil {
         didSet {
@@ -15,6 +15,8 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     private let xOffsetField: FloatField
     private let yOffsetField: FloatField
     private let rotationField: FloatField
+    private let colorWell: LabelledColorWell
+    private let colorBlendField: FloatSlider
     private let spriteField: NSTextField
     private let selectSpriteButton: NSButton
     private let removeSpriteButton: NSButton
@@ -34,6 +36,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         
         rotationField = FloatField(title: "Rotation", step: 1)
         
+        colorWell = LabelledColorWell(title: "Color")
+        colorBlendField = FloatSlider(title: "Color Blend")
+        
         let spriteLabel = NSTextField(labelWithString: "Sprite")
         spriteField = NSTextField(string: "None")
         spriteField.isEditable = false
@@ -51,6 +56,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         yOffsetField.delegate = self
         
         rotationField.delegate = self
+        
+        colorWell.delegate = self
+        colorBlendField.delegate = self
         
         selectSpriteButton.target = self
         removeSpriteButton.target = self
@@ -71,6 +79,10 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         
         addArrangedSubview(VSpacer())
         addArrangedSubview(rotationField)
+        
+        addArrangedSubview(VSpacer())
+        addArrangedSubview(colorWell)
+        addArrangedSubview(colorBlendField)
         
         addArrangedSubview(VSpacer())
         addArrangedSubview(spriteLabel)
@@ -102,6 +114,12 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
             rotationField.isEnabled = editable
             rotationField.value = element.rotation
             
+            colorWell.isEnabled = editable
+            colorWell.color = element.color
+            
+            colorBlendField.isEnabled = editable
+            colorBlendField.value = element.colorBlend
+            
             selectSpriteButton.isEnabled = editable
             if let spriteLocator = element.spriteLocator {
                 spriteField.stringValue = spriteLocator.description
@@ -124,6 +142,12 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
             
             rotationField.value = 0
             rotationField.isEnabled = false
+            
+            colorWell.color = .white
+            colorWell.isEnabled = false
+            
+            colorBlendField.value = 0
+            colorBlendField.isEnabled = false
             
             spriteField.stringValue = "None"
             selectSpriteButton.isEnabled = false
@@ -164,6 +188,14 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         else if field === rotationField {
             elementViewDelegate?.elementView(self, rotationChanged: rotationField.value)
         }
+    }
+    
+    func floatSlider(_ slider: FloatSlider, valueChanged newValue: Float) {
+        elementViewDelegate?.elementView(self, colorChanged: colorWell.color, colorBlend: newValue)
+    }
+    
+    func labelledColorWell(_ colorWell: LabelledColorWell, colorChanged color: CGColor) {
+        elementViewDelegate?.elementView(self, colorChanged: color, colorBlend: colorBlendField.value)
     }
     
 }

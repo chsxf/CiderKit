@@ -1,10 +1,10 @@
 import CiderKit_Engine
 import AppKit
 
-class PointLightInspector: BaseInspectorView, FloatFieldDelegate, NSTextFieldDelegate {
+class PointLightInspector: BaseInspectorView, FloatFieldDelegate, NSTextFieldDelegate, LabelledColorWellDelegate {
     
     private let enabledCheckbox: NSButton
-    private let colorWell: NSColorWell
+    private let colorWell: LabelledColorWell
     
     private let nameField: NSTextField
     
@@ -19,9 +19,7 @@ class PointLightInspector: BaseInspectorView, FloatFieldDelegate, NSTextFieldDel
     init() {
         enabledCheckbox = NSButton(checkboxWithTitle: "Enabled", target: nil, action: #selector(Self.onEnabledToggled))
         
-        colorWell = NSColorWell(frame: NSZeroRect)
-        let colorLabel = NSTextField(labelWithString: "Color")
-        let colorRow = NSStackView(views: [colorLabel, colorWell])
+        colorWell = LabelledColorWell(title: "Color")
         
         nameField = NSTextField(string: "")
         
@@ -36,7 +34,7 @@ class PointLightInspector: BaseInspectorView, FloatFieldDelegate, NSTextFieldDel
         super.init(stackedViews: [
             enabledCheckbox,
             VSpacer(),
-            colorRow,
+            colorWell,
             VSpacer(),
             InspectorHeader(title: "Name"),
             nameField,
@@ -54,7 +52,7 @@ class PointLightInspector: BaseInspectorView, FloatFieldDelegate, NSTextFieldDel
         
         enabledCheckbox.target = self
         
-        colorWell.addObserver(self, forKeyPath: "color", context: nil)
+        colorWell.delegate = self
         
         nameField.delegate = self
         
@@ -76,7 +74,7 @@ class PointLightInspector: BaseInspectorView, FloatFieldDelegate, NSTextFieldDel
         
         if let pointLight = observableObject as? PointLight {
             enabledCheckbox.state = pointLight.enabled ? .on : .off
-            colorWell.color = NSColor(cgColor: pointLight.color)!
+            colorWell.color = pointLight.color
             
             nameField.stringValue = pointLight.name
             
@@ -130,15 +128,10 @@ class PointLightInspector: BaseInspectorView, FloatFieldDelegate, NSTextFieldDel
         }
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if
-            let pointLight = observableObject as? PointLight,
-            let keyPath = keyPath,
-            keyPath == "color",
-            colorWell.isActive
-        {
+    func labelledColorWell(_ colorWell: LabelledColorWell, colorChanged color: CGColor) {
+        if let pointLight = observableObject as? PointLight {
             isEditing = true
-            pointLight.color = colorWell.color.cgColor
+            pointLight.color = colorWell.color
             isEditing = false
         }
     }

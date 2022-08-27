@@ -1,7 +1,6 @@
 import Foundation
 import AppKit
 import CiderKit_Engine
-import SwiftUI
 import SpriteKit
 
 extension NSUserInterfaceItemIdentifier {
@@ -265,7 +264,11 @@ class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         let node: SKNode
         if let spriteLocator = element.spriteLocator {
             let texture = Atlases[spriteLocator]!
-            node = SKSpriteNode(texture: texture)
+            let spriteNode = SKSpriteNode(texture: texture)
+            node = spriteNode
+            
+            spriteNode.color = SKColor(cgColor: element.color)!
+            spriteNode.colorBlendFactor = CGFloat(element.colorBlend)
         }
         else {
             node = SKNode()
@@ -362,6 +365,16 @@ class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
             let node = nodeByElement[selectedItem]!
             node.zRotation = CGFloat(radians.value)
             selectedItem.rotation = rotation
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, colorChanged color: CGColor, colorBlend: Float) {
+        if let selectedItem = outline?.item(atRow: outline!.selectedRow) as? SpriteAssetElement {
+            let node = nodeByElement[selectedItem] as! SKSpriteNode
+            node.color = SKColor(cgColor: color)!
+            node.colorBlendFactor = CGFloat(colorBlend)
+            selectedItem.color = color
+            selectedItem.colorBlend = colorBlend
         }
     }
     
