@@ -28,7 +28,9 @@ class WorldGrid: SKNode {
     
     private var currentViewport: CGRect = CGRect()
     
-    private(set) var hoverableEntities: [GKEntity] = []
+    private var hoverableEntitiesByPosition: [IntPoint: GKEntity] = [:]
+    
+    var hoverableEntities: [GKEntity] { [GKEntity](hoverableEntitiesByPosition.values) }
     
     override init() {
         let atlas = Atlases["grid"]!
@@ -84,7 +86,6 @@ class WorldGrid: SKNode {
         let roundedViewportBottomRight = worldCoordinatesToGridBlock(transformedViewportBottomRight)
         
         spritePools.forEach { $1.returnAll() }
-        hoverableEntities.removeAll()
         
         for x in stride(from: Int(roundedViewportTopLeft.x), to: Int(roundedViewportBottomRight.x), by: 10) {
             for y in stride(from: Int(roundedViewportTopRight.y), to: Int(roundedViewportBottomLeft.y), by: 10) {
@@ -168,10 +169,17 @@ class WorldGrid: SKNode {
                     sprite.zPosition = -10
                     addChild(sprite)
                     
-                    let entity = GKEntity()
-                    entity.addComponent(GKSKNodeComponent(node: sprite))
-                    entity.addComponent(EditorMapCellComponent(mapX: mapX + x, mapY: mapY + y))
-                    hoverableEntities.append(entity)
+                    let position = IntPoint(x: mapX + x, y: mapY + y)
+                    if let entity = hoverableEntitiesByPosition[position] {
+                        let nodeComponent = entity.component(ofType: GKSKNodeComponent.self)!
+                        nodeComponent.node = sprite
+                    }
+                    else {
+                        let newEntity = GKEntity()
+                        newEntity.addComponent(GKSKNodeComponent(node: sprite))
+                        newEntity.addComponent(EditorMapCellComponent(mapX: mapX + x, mapY: mapY + y))
+                        hoverableEntitiesByPosition[position] = newEntity
+                    }
                 }
             }
         }

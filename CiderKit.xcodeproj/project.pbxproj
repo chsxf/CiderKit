@@ -108,6 +108,7 @@
 		D9CC3529285D16B7003EEB6F /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC3528285D16B7003EEB6F /* Pool.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
 		D9E9C9D1289879CA00067D80 /* SpriteAssetDescriptionOutlineDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9C9D0289879CA00067D80 /* SpriteAssetDescriptionOutlineDatabase.swift */; };
+		D9EA6DB228BAD07A00233F79 /* IntPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA6DB128BAD07A00233F79 /* IntPoint.swift */; };
 		D9FBAA0428946A1400A3982D /* SpriteAssetElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBAA0328946A1400A3982D /* SpriteAssetElement.swift */; };
 /* End PBXBuildFile section */
 
@@ -263,6 +264,7 @@
 		D9E2C2832801903800B17CD0 /* SequenceMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceMaterial.swift; sourceTree = "<group>"; };
 		D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizedMaterial.swift; sourceTree = "<group>"; };
 		D9E9C9D0289879CA00067D80 /* SpriteAssetDescriptionOutlineDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescriptionOutlineDatabase.swift; sourceTree = "<group>"; };
+		D9EA6DB128BAD07A00233F79 /* IntPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntPoint.swift; sourceTree = "<group>"; };
 		D9FBAA0328946A1400A3982D /* SpriteAssetElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetElement.swift; sourceTree = "<group>"; };
 		D9FBC5722765EA6A004A30BB /* SpritePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpritePool.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -369,12 +371,12 @@
 		D91061C02755F24100EA8A03 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				D92002D5282FA50F007D5AC1 /* Lights */,
 				D9B8557227EFC1A000D605F4 /* MapArea.swift */,
 				D9A87A8227DD320B0079C831 /* MapCellComponent.swift */,
 				D91061C22755F24100EA8A03 /* MapDescription.swift */,
 				D91061C32755F24100EA8A03 /* MapNode.swift */,
 				D91061C12755F24100EA8A03 /* MapRegion.swift */,
+				D92002D5282FA50F007D5AC1 /* Lights */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -539,6 +541,7 @@
 				D972C1AD2827B46500D85376 /* CiderKitEngine.swift */,
 				D92EE973281DD3F2009B2055 /* CustomSettings.swift */,
 				D91061CA2755F27600EA8A03 /* Functions.swift */,
+				D9EA6DB128BAD07A00233F79 /* IntPoint.swift */,
 				D91061C72755F27600EA8A03 /* Keycode.swift */,
 				D9730B1427B795A40007513C /* Math.swift */,
 				D9CC3528285D16B7003EEB6F /* Pool.swift */,
@@ -967,6 +970,7 @@
 				D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */,
 				D93C4CAD2800CBE0000955E1 /* SpritePool.swift in Sources */,
 				D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */,
+				D9EA6DB228BAD07A00233F79 /* IntPoint.swift in Sources */,
 				D92002DB282FB009007D5AC1 /* PointLight.swift in Sources */,
 				D9A64CFC282C491F00CAF635 /* UIViewExtension.swift in Sources */,
 				D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */,
