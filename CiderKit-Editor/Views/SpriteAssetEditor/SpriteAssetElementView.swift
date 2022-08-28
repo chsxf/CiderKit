@@ -15,6 +15,8 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     private let xOffsetField: FloatField
     private let yOffsetField: FloatField
     private let rotationField: FloatField
+    private let xScaleField: FloatField
+    private let yScaleField: FloatField
     private let colorWell: LabelledColorWell
     private let colorBlendField: FloatSlider
     private let spriteField: NSTextField
@@ -36,6 +38,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         
         rotationField = FloatField(title: "Rotation", step: 1)
         
+        xScaleField = FloatField(title: "X", step: 1)
+        yScaleField = FloatField(title: "Y", step: 1)
+        
         colorWell = LabelledColorWell(title: "Color")
         colorBlendField = FloatSlider(title: "Color Blend")
         
@@ -56,6 +61,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         yOffsetField.delegate = self
         
         rotationField.delegate = self
+        
+        xScaleField.delegate = self
+        yScaleField.delegate = self
         
         colorWell.delegate = self
         colorBlendField.delegate = self
@@ -79,6 +87,11 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         
         addArrangedSubview(VSpacer())
         addArrangedSubview(rotationField)
+        
+        addArrangedSubview(VSpacer())
+        addArrangedSubview(InspectorHeader(title: "Scale"))
+        addArrangedSubview(xScaleField)
+        addArrangedSubview(yScaleField)
         
         addArrangedSubview(VSpacer())
         addArrangedSubview(colorWell)
@@ -114,6 +127,14 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
             rotationField.isEnabled = editable
             rotationField.value = element.rotation
             
+            let xScale = Float(element.scale.x)
+            xScaleField.isEnabled = editable
+            xScaleField.value = xScale
+            
+            let yScale = Float(element.scale.y)
+            yScaleField.isEnabled = editable
+            yScaleField.value = yScale
+            
             colorWell.isEnabled = editable
             colorWell.color = element.color
             
@@ -142,6 +163,12 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
             
             rotationField.value = 0
             rotationField.isEnabled = false
+            
+            xScaleField.value = 0
+            xScaleField.isEnabled = false
+            
+            yScaleField.value = 0
+            yScaleField.isEnabled = false
             
             colorWell.color = .white
             colorWell.isEnabled = false
@@ -182,11 +209,18 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     }
     
     func floatField(_ field: FloatField, valueChanged newValue: Float) {
-        if field === xOffsetField || field === yOffsetField {
+        switch field {
+        case xOffsetField, yOffsetField:
             elementViewDelegate?.elementView(self, offsetChanged: CGPoint(x: CGFloat(xOffsetField.value), y: CGFloat(yOffsetField.value)))
-        }
-        else if field === rotationField {
+            
+        case rotationField:
             elementViewDelegate?.elementView(self, rotationChanged: rotationField.value)
+            
+        case xScaleField, yScaleField:
+            elementViewDelegate?.elementView(self, scaleChanged: CGPoint(x: CGFloat(xScaleField.value), y: CGFloat(yScaleField.value)))
+            
+        default:
+            break
         }
     }
     

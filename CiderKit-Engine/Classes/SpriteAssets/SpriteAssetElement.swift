@@ -6,6 +6,7 @@ public class SpriteAssetElement: Identifiable, Hashable, Codable {
         case name = "n"
         case offset = "o"
         case rotation = "r"
+        case scale = "sc"
         case sprite = "s"
         case color = "cl"
         case colorBlend = "cb"
@@ -35,6 +36,7 @@ public class SpriteAssetElement: Identifiable, Hashable, Codable {
     public var spriteLocator: SpriteLocator?
     public var offset: CGPoint
     public var rotation: Float
+    public var scale: CGPoint
     
     public var color: CGColor
     public var colorBlend: Float
@@ -45,9 +47,10 @@ public class SpriteAssetElement: Identifiable, Hashable, Codable {
         self.name = name
         offset = CGPoint()
         rotation = 0
-        children = []
+        scale = CGPoint(x: 1, y: 1)
         color = CGColor.white
         colorBlend = 0
+        children = []
     }
     
     public required init(from decoder: Decoder) throws {
@@ -57,6 +60,7 @@ public class SpriteAssetElement: Identifiable, Hashable, Codable {
         spriteLocator = try? container.decode(SpriteLocator.self, forKey: .sprite)
         offset = try container.decode(CGPoint.self, forKey: .offset)
         rotation = try container.decode(Float.self, forKey: .rotation)
+        scale = (try container.decodeIfPresent(CGPoint.self, forKey: .scale)) ?? CGPoint(x: 1, y: 1)
         
         children = []
         var childrenSubContainer = try? container.nestedUnkeyedContainer(forKey: .children)
@@ -95,6 +99,7 @@ public class SpriteAssetElement: Identifiable, Hashable, Codable {
         }
         try container.encode(offset, forKey: .offset)
         try container.encode(rotation, forKey: .rotation)
+        try container.encode(scale, forKey: .scale)
         
         if !children.isEmpty {
             var subContainer = container.nestedUnkeyedContainer(forKey: .children)

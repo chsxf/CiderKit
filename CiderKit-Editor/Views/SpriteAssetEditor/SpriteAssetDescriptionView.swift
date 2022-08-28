@@ -276,6 +276,8 @@ class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         node.name = element.name
         node.position = element.offset
         node.zRotation = CGFloat(element.rotation)
+        node.xScale = element.scale.x
+        node.yScale = element.scale.y
         parentNode?.addChild(node)
         nodeByElement[element] = node
         
@@ -365,6 +367,15 @@ class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
             let node = nodeByElement[selectedItem]!
             node.zRotation = CGFloat(radians.value)
             selectedItem.rotation = rotation
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, scaleChanged scale: CGPoint) {
+        if let selectedItem = outline?.item(atRow: outline!.selectedRow) as? SpriteAssetElement {
+            let node = nodeByElement[selectedItem]!
+            node.xScale = scale.x
+            node.yScale = scale.y
+            selectedItem.scale = scale
         }
     }
     
