@@ -4,6 +4,7 @@ public class SpriteAssetElement: Identifiable, Hashable, Codable {
     
     enum CodingKeys: String, CodingKey {
         case name = "n"
+        case visible = "v"
         case offset = "o"
         case rotation = "r"
         case scale = "sc"
@@ -33,6 +34,7 @@ public class SpriteAssetElement: Identifiable, Hashable, Codable {
     }
     
     public var name: String
+    public var visible: Bool
     public var spriteLocator: SpriteLocator?
     public var offset: CGPoint
     public var rotation: Float
@@ -45,6 +47,7 @@ public class SpriteAssetElement: Identifiable, Hashable, Codable {
     
     public init(name: String) {
         self.name = name
+        visible = true
         offset = CGPoint()
         rotation = 0
         scale = CGPoint(x: 1, y: 1)
@@ -57,6 +60,7 @@ public class SpriteAssetElement: Identifiable, Hashable, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         name = try container.decode(String.self, forKey: .name)
+        visible = (try container.decodeIfPresent(Bool.self, forKey: .visible)) ?? true
         spriteLocator = try? container.decode(SpriteLocator.self, forKey: .sprite)
         offset = try container.decode(CGPoint.self, forKey: .offset)
         rotation = try container.decode(Float.self, forKey: .rotation)
@@ -94,6 +98,7 @@ public class SpriteAssetElement: Identifiable, Hashable, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(name, forKey: .name)
+        try container.encode(visible, forKey: .visible)
         if let spriteLocator = spriteLocator {
             try container.encode(spriteLocator, forKey: .sprite)
         }

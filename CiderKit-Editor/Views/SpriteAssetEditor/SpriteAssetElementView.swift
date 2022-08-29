@@ -12,6 +12,7 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     weak var elementViewDelegate: SpriteAssetElementViewDelegate? = nil
     
     private let nameField: NSTextField
+    private let visibleCheckbox: NSButton
     private let xOffsetField: FloatField
     private let yOffsetField: FloatField
     private let rotationField: FloatField
@@ -28,6 +29,8 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         
         let nameLabel = NSTextField(labelWithString: "Name")
         nameField = NSTextField(string: "")
+        
+        visibleCheckbox = NSButton(checkboxWithTitle: "Visible", target: nil, action: #selector(Self.visibleCheckboxClicked))
         
         let formatter = NumberFormatter()
         formatter.format = "###0.#####"
@@ -57,6 +60,8 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         
         nameField.delegate = self
         
+        visibleCheckbox.target = self
+        
         xOffsetField.delegate = self
         yOffsetField.delegate = self
         
@@ -79,6 +84,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         
         addArrangedSubview(nameLabel)
         addArrangedSubview(nameField)
+        
+        addArrangedSubview(VSpacer())
+        addArrangedSubview(visibleCheckbox)
         
         addArrangedSubview(VSpacer())
         addArrangedSubview(InspectorHeader(title: "Offset"))
@@ -115,6 +123,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
             
             nameField.isEnabled = editable
             nameField.stringValue = element.name
+            
+            visibleCheckbox.isEnabled = editable
+            visibleCheckbox.state = element.visible ? .on : .off
             
             let xOffset = Float(element.offset.x)
             xOffsetField.isEnabled = editable
@@ -154,6 +165,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         else {
             nameField.stringValue = ""
             nameField.isEnabled = false
+            
+            visibleCheckbox.state = .on
+            visibleCheckbox.isEnabled = false
             
             xOffsetField.value = 0
             xOffsetField.isEnabled = false
@@ -206,6 +220,17 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         spriteField.stringValue = "None"
         removeSpriteButton.isEnabled = false
         elementViewDelegate?.elementView(self, spriteChanged: nil)
+    }
+    
+    @objc
+    private func visibleCheckboxClicked() {
+        elementViewDelegate?.elementView(self, visibilityChanged: visibleCheckbox.state == .on)
+    }
+    
+    func controlTextDidEndEditing(_ obj: Notification) {
+        if let textField = obj.object as? NSTextField {
+            elementViewDelegate?.elementView(self, nameChanged: textField.stringValue)
+        }
     }
     
     func floatField(_ field: FloatField, valueChanged newValue: Float) {

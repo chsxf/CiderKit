@@ -274,6 +274,7 @@ class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
             node = SKNode()
         }
         node.name = element.name
+        node.isHidden = !element.visible
         node.position = element.offset
         node.zRotation = CGFloat(element.rotation)
         node.xScale = element.scale.x
@@ -327,6 +328,14 @@ class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
                 selectedItem.name = newName
                 outline!.reloadItem(selectedItem, reloadChildren: false)
             }
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, visibilityChanged visible: Bool) {
+        if let selectedItem = outline?.item(atRow: outline!.selectedRow) as? SpriteAssetElement {
+            let node = nodeByElement[selectedItem]!
+            node.isHidden = !visible
+            selectedItem.visible = visible
         }
     }
     
