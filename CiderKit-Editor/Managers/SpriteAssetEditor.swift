@@ -110,6 +110,7 @@ final class SpriteAssetEditor {
         }
         
         let window = NSWindow(contentRect: windowRect, styleMask: [.resizable, .titled], backing: .buffered, defer: false)
+        window.acceptsMouseMovedEvents = true
         window.contentView = SpriteAssetEditorView(frame: windowRect)
         
         CiderKitApp.mainWindow.beginSheet(window) { _ in

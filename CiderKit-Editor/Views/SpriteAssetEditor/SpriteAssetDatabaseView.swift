@@ -71,8 +71,8 @@ class SpriteAssetDatabaseView: NSStackView, NSCollectionViewDelegate, NSCollecti
         scroll.documentView = spriteAssetCollection
         scroll.borderType = .bezelBorder
         
-        let addButton = NSButton(title: "+", target: self, action: #selector(Self.addSpriteAsset))
-        removeButton = NSButton(title: "-", target: self, action: #selector(Self.removeSpriteAsset))
+        let addButton = NSButton(systemSymbolName: "plus", target: self, action: #selector(Self.addSpriteAsset))
+        removeButton = NSButton(systemSymbolName: "minus", target: self, action: #selector(Self.removeSpriteAsset))
         let buttonRow = NSStackView(views: [addButton, removeButton])
         buttonRow.orientation = .horizontal
         

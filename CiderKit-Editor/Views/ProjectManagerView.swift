@@ -90,6 +90,8 @@ struct ProjectManagerView: View {
                             }
                         }
                         .buttonStyle(.borderless)
+                        
+                        Divider()
                     }
                 }
             }

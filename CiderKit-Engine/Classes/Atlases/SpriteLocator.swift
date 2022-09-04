@@ -23,6 +23,31 @@ public struct SpriteLocator: Codable, CustomStringConvertible, Equatable {
         spriteName = sprite
     }
     
+    public init?(description: String) {
+        let re = try! NSRegularExpression(pattern: "^(.+)(?:~(.+))?/(.+)$")
+        let results = re.matches(in: description, range: NSRange(location: 0, length: description.count))
+        if results.count == 1 && results[0].numberOfRanges == 4 {
+            var range = results[0].range(at: 1)
+            let atlasStringRange = Range(range, in: description)!
+            atlasKey = String(description[atlasStringRange])
+            
+            range = results[0].range(at: 2)
+            if let variantStringRange = Range(range, in: description) {
+                atlasVariantKey = String(description[variantStringRange])
+            }
+            else {
+                atlasVariantKey = nil
+            }
+            
+            range = results[0].range(at: 3)
+            let spriteStringRange = Range(range, in: description)!
+            spriteName = String(description[spriteStringRange])
+        }
+        else {
+            return nil
+        }
+    }
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         

@@ -3,6 +3,8 @@ import CiderKit_Engine
 
 class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelegate, FloatSliderDelegate, LabelledColorWellDelegate {
     
+    weak var assetDescription: SpriteAssetDescription? = nil
+    
     weak var element: SpriteAssetElement? = nil {
         didSet {
             updateForCurrentElement()
@@ -10,6 +12,19 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     }
     
     weak var elementViewDelegate: SpriteAssetElementViewDelegate? = nil
+    
+    weak var animationControlDelegate: SpriteAssetAnimationControlDelegate? = nil {
+        didSet {
+            if oldValue !== animationControlDelegate {
+                NotificationCenter.default.removeObserver(self)
+            }
+            
+            if let animationControlDelegate {
+                NotificationCenter.default.addObserver(self, selector: #selector(Self.currentFrameDidChange(_:)), name: .animationCurrentFrameDidChange, object: animationControlDelegate)
+                updateForCurrentElement()
+            }
+        }
+    }
     
     private let nameField: NSTextField
     private let visibleCheckbox: NSButton
@@ -24,7 +39,8 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     private let selectSpriteButton: NSButton
     private let removeSpriteButton: NSButton
     
-    init(element: SpriteAssetElement) {
+    init(assetDescription: SpriteAssetDescription, element: SpriteAssetElement) {
+        self.assetDescription = assetDescription
         self.element = element
         
         let nameLabel = NSTextField(labelWithString: "Name")
@@ -118,42 +134,40 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     }
     
     private func updateForCurrentElement() {
-        if let element = element {
+        if let element, let assetDescription, let animationControlDelegate {
+            let animationData = assetDescription.getAnimationData(for: element.uuid, in: animationControlDelegate.currentAnimationState, at: animationControlDelegate.currentAnimationFrame)
+            
             let editable = !element.isRoot
             
             nameField.isEnabled = editable
             nameField.stringValue = element.name
             
-            visibleCheckbox.isEnabled = editable
-            visibleCheckbox.state = element.visible ? .on : .off
+            visibleCheckbox.isEnabled = editable && animationData.isKeyValue(for: .visibility)
+            visibleCheckbox.state = animationData.elementData.visible ? .on : .off
             
-            let xOffset = Float(element.offset.x)
-            xOffsetField.isEnabled = editable
-            xOffsetField.value = xOffset
+            xOffsetField.isEnabled = editable && animationData.isKeyValue(for: .xOffset)
+            xOffsetField.value = Float(animationData.elementData.offset.x)
             
-            let yOffset = Float(element.offset.y)
-            yOffsetField.isEnabled = editable
-            yOffsetField.value = yOffset
+            yOffsetField.isEnabled = editable && animationData.isKeyValue(for: .yOffset)
+            yOffsetField.value = Float(animationData.elementData.offset.y)
             
-            rotationField.isEnabled = editable
-            rotationField.value = element.rotation
+            rotationField.isEnabled = editable && animationData.isKeyValue(for: .rotation)
+            rotationField.value = animationData.elementData.rotation.toDegrees()
             
-            let xScale = Float(element.scale.x)
-            xScaleField.isEnabled = editable
-            xScaleField.value = xScale
+            xScaleField.isEnabled = editable && animationData.isKeyValue(for: .xScale)
+            xScaleField.value = Float(animationData.elementData.scale.x)
             
-            let yScale = Float(element.scale.y)
-            yScaleField.isEnabled = editable
-            yScaleField.value = yScale
+            yScaleField.isEnabled = editable && animationData.isKeyValue(for: .yScale)
+            yScaleField.value = Float(animationData.elementData.scale.y)
             
-            colorWell.isEnabled = editable
-            colorWell.color = element.color
+            colorWell.isEnabled = editable && animationData.isKeyValue(for: .color)
+            colorWell.color = animationData.elementData.color
             
-            colorBlendField.isEnabled = editable
-            colorBlendField.value = element.colorBlend
+            colorBlendField.isEnabled = editable && animationData.isKeyValue(for: .colorBlendFactor)
+            colorBlendField.value = animationData.elementData.colorBlend
             
-            selectSpriteButton.isEnabled = editable
-            if let spriteLocator = element.spriteLocator {
+            selectSpriteButton.isEnabled = editable && animationData.isKeyValue(for: .sprite)
+            if let spriteLocator = animationData.elementData.spriteLocator {
                 spriteField.stringValue = spriteLocator.description
                 removeSpriteButton.isEnabled = true
             }
@@ -235,14 +249,20 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     
     func floatField(_ field: FloatField, valueChanged newValue: Float) {
         switch field {
-        case xOffsetField, yOffsetField:
-            elementViewDelegate?.elementView(self, offsetChanged: CGPoint(x: CGFloat(xOffsetField.value), y: CGFloat(yOffsetField.value)))
+        case xOffsetField:
+            elementViewDelegate?.elementView(self, xOffsetChanged: xOffsetField.value)
+            
+        case yOffsetField:
+            elementViewDelegate?.elementView(self, yOffsetChanged: yOffsetField.value)
             
         case rotationField:
-            elementViewDelegate?.elementView(self, rotationChanged: rotationField.value)
+            elementViewDelegate?.elementView(self, rotationChanged: rotationField.value.toRadians())
             
-        case xScaleField, yScaleField:
-            elementViewDelegate?.elementView(self, scaleChanged: CGPoint(x: CGFloat(xScaleField.value), y: CGFloat(yScaleField.value)))
+        case xScaleField:
+            elementViewDelegate?.elementView(self, xScaleChanged: xScaleField.value)
+            
+        case yScaleField:
+            elementViewDelegate?.elementView(self, yScaleChanged: yScaleField.value)
             
         default:
             break
@@ -250,11 +270,16 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     }
     
     func floatSlider(_ slider: FloatSlider, valueChanged newValue: Float) {
-        elementViewDelegate?.elementView(self, colorChanged: colorWell.color, colorBlend: newValue)
+        elementViewDelegate?.elementView(self, colorBlendChanged: newValue)
     }
     
     func labelledColorWell(_ colorWell: LabelledColorWell, colorChanged color: CGColor) {
-        elementViewDelegate?.elementView(self, colorChanged: color, colorBlend: colorBlendField.value)
+        elementViewDelegate?.elementView(self, colorChanged: color)
+    }
+    
+    @objc
+    private func currentFrameDidChange(_ notif: Notification) {
+        updateForCurrentElement()
     }
     
 }
