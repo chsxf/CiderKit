@@ -49,17 +49,10 @@ open class GameView: SKView, SKSceneDelegate {
     }
     
     func registerDefaultMaterialsAndRenderers() {
-        let defaultTileAtlas = Atlases["default_tile"]!
-        let shader = CiderKitEngine.instantianteUberShader(for: defaultTileAtlas)
+        MaterialFactory.registerBuiltinMaterialTypes()
         
-        let defaultGroundMaterial = SingleTextureMaterial(texture: defaultTileAtlas["default_tile"]!, shader: shader)
-        try! Materials.register(material: defaultGroundMaterial, forName: "default_ground")
-        
-        let defaultLeftElevationMaterial = SingleTextureMaterial(texture: defaultTileAtlas["default_elevation_left"]!, shader: shader)
-        try! Materials.register(material: defaultLeftElevationMaterial, forName: "default_elevation_left")
-        
-        let defaultRightElevationMaterial = SingleTextureMaterial(texture: defaultTileAtlas["default_elevation_right"]!, shader: shader)
-        try! Materials.register(material: defaultRightElevationMaterial, forName: "default_elevation_right")
+        let url = CiderKitEngine.bundle.url(forResource: "Default Materials", withExtension: "ckmatdb")
+        let _: Materials = try! Functions.load(url!)
         
         let defaultRenderer = CellRenderer(
             groundMaterialName: "default_ground",

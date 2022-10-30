@@ -93,9 +93,13 @@ public class CiderKitEngine {
         return _lightModelFinalGatheringShader!
     }
     
-    public private(set) static var uberShaderInstances: [SKShader] = []
+    public private(set) static var uberShaderInstances: [String:SKShader] = [:]
     
     public static func instantianteUberShader(for atlas: Atlas) -> SKShader {
+        if let uberShader = uberShaderInstances[atlas.name] {
+            return uberShader
+        }
+        
         let source = try! String(contentsOf: bundle.url(forResource: "UberShader", withExtension: "fsh")!, encoding: .utf8)
         
         let textureSize = atlas.atlasTexture.size()
@@ -112,17 +116,16 @@ public class CiderKitEngine {
             SKAttribute(name: ShaderAttributeName.position.rawValue, type: .vectorFloat3)
         ]
         
-        uberShaderInstances.append(uberShader)
-        
+        uberShaderInstances[atlas.name] = uberShader
         return uberShader
     }
     
     public static func releaseUberShaderInstance(_ shader: SKShader) {
-        uberShaderInstances.removeAll { $0 == shader }
+        uberShaderInstances = uberShaderInstances.filter { $0.value === shader }
     }
     
     static func setUberShaderShadeMode(_ shadeMode: UberShaderShadeMode) {
-        for shader in uberShaderInstances {
+        for (_, shader) in uberShaderInstances {
             if let uniform = shader.uniformNamed(ShaderUniformName.shadeMode.rawValue) {
                 uniform.floatValue = Float(shadeMode.rawValue)
             }
@@ -130,7 +133,7 @@ public class CiderKitEngine {
     }
     
     static func setUberShaderPositionRanges(_ positionMatrix: matrix_float3x3) {
-        for shader in uberShaderInstances {
+        for (_, shader) in uberShaderInstances {
             if let uniform = shader.uniformNamed(ShaderUniformName.positionRanges.rawValue) {
                 uniform.matrixFloat3x3Value = positionMatrix
             }

@@ -71,6 +71,7 @@
 		D9405F6B2838E67E00CA953A /* PointLightComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6A2838E67E00CA953A /* PointLightComponent.swift */; };
 		D9405F6E2838EC0100CA953A /* Hoverable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6D2838EC0100CA953A /* Hoverable.swift */; };
 		D9405F702838F1A900CA953A /* EditorMapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */; };
+		D940EB73291338D60036B101 /* StringCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D940EB72291338D60036B101 /* StringCodingKey.swift */; };
 		D9422DC228720343004D53E8 /* HoverableSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9422DC128720343004D53E8 /* HoverableSequence.swift */; };
 		D94302CD290E86D70013B4CA /* SingleTextureMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94302CC290E86D70013B4CA /* SingleTextureMaterial.swift */; };
 		D94302D0290E89EF0013B4CA /* Default Materials.ckmatdb in Resources */ = {isa = PBXBuildFile; fileRef = D94302CF290E89EF0013B4CA /* Default Materials.ckmatdb */; };
@@ -87,6 +88,7 @@
 		D96A3BF3287A2767008949A1 /* MoveToolComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */; };
 		D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */; };
 		D96CC97128971AE100187314 /* SpriteAssetDatabaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96CC97028971AE100187314 /* SpriteAssetDatabaseView.swift */; };
+		D96D3188291C4C5A00CD498E /* MaterialFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96D3187291C4C5A00CD498E /* MaterialFactory.swift */; };
 		D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D972C1AD2827B46500D85376 /* CiderKitEngine.swift */; };
 		D972C1B12827D11300D85376 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D978AE3028271857008F8D0E /* Assets.xcassets */; };
 		D972C1B42827D1BB00D85376 /* Default Tile Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */; };
@@ -238,6 +240,7 @@
 		D9405F6A2838E67E00CA953A /* PointLightComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLightComponent.swift; sourceTree = "<group>"; };
 		D9405F6D2838EC0100CA953A /* Hoverable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hoverable.swift; sourceTree = "<group>"; };
 		D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapCellComponent.swift; sourceTree = "<group>"; };
+		D940EB72291338D60036B101 /* StringCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringCodingKey.swift; sourceTree = "<group>"; };
 		D9422DC128720343004D53E8 /* HoverableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverableSequence.swift; sourceTree = "<group>"; };
 		D94302CC290E86D70013B4CA /* SingleTextureMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTextureMaterial.swift; sourceTree = "<group>"; };
 		D94302CF290E89EF0013B4CA /* Default Materials.ckmatdb */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Default Materials.ckmatdb"; sourceTree = "<group>"; };
@@ -254,6 +257,7 @@
 		D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveToolComponent.swift; sourceTree = "<group>"; };
 		D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionManager.swift; sourceTree = "<group>"; };
 		D96CC97028971AE100187314 /* SpriteAssetDatabaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDatabaseView.swift; sourceTree = "<group>"; };
+		D96D3187291C4C5A00CD498E /* MaterialFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialFactory.swift; sourceTree = "<group>"; };
 		D972C1AD2827B46500D85376 /* CiderKitEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKitEngine.swift; sourceTree = "<group>"; };
 		D972C1B72827D9FD00D85376 /* EditorMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapNode.swift; sourceTree = "<group>"; };
 		D9730B1427B795A40007513C /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
@@ -554,6 +558,14 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		D94302CE290E89B40013B4CA /* Materials */ = {
+			isa = PBXGroup;
+			children = (
+				D94302CF290E89EF0013B4CA /* Default Materials.ckmatdb */,
+			);
+			path = Materials;
+			sourceTree = "<group>";
+		};
 		D95B8C362883199B0077DCA1 /* SpriteAssets */ = {
 			isa = PBXGroup;
 			children = (
@@ -605,6 +617,7 @@
 				D9254461281AB55B002DCA4C /* Project.swift */,
 				D9CECB2627E91DB0000E8CC7 /* Screen.swift */,
 				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
+				D940EB72291338D60036B101 /* StringCodingKey.swift */,
 				D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */,
 				D9C132E52827008D00DE8457 /* Atlases */,
 				D91061C02755F24100EA8A03 /* Map */,
@@ -620,6 +633,7 @@
 			isa = PBXGroup;
 			children = (
 				D978C42828281B3F00BDF0BB /* Atlases */,
+				D94302CE290E89B40013B4CA /* Materials */,
 				D978C42928281B4800BDF0BB /* Shaders */,
 			);
 			path = Resources;
@@ -739,6 +753,7 @@
 			isa = PBXGroup;
 			children = (
 				D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */,
+				D96D3187291C4C5A00CD498E /* MaterialFactory.swift */,
 				D93C24F9280227500023FE7A /* Materials.swift */,
 				D94302CC290E86D70013B4CA /* SingleTextureMaterial.swift */,
 			);
@@ -919,6 +934,7 @@
 				D978C42B28281B6000BDF0BB /* UberShader.fsh in Resources */,
 				D972C1B12827D11300D85376 /* Assets.xcassets in Resources */,
 				D972C1B42827D1BB00D85376 /* Default Tile Atlas.ckatlas in Resources */,
+				D94302D0290E89EF0013B4CA /* Default Materials.ckmatdb in Resources */,
 				D981239228292E3B00CC5897 /* LightModelFinalGathering.fsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1038,6 +1054,7 @@
 				D93C4CAE2800CBE0000955E1 /* Keycode.swift in Sources */,
 				D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */,
 				D93C4CAD2800CBE0000955E1 /* SpritePool.swift in Sources */,
+				D940EB73291338D60036B101 /* StringCodingKey.swift in Sources */,
 				D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */,
 				D9EA6DB228BAD07A00233F79 /* IntPoint.swift in Sources */,
 				D92002DB282FB009007D5AC1 /* PointLight.swift in Sources */,
@@ -1045,6 +1062,7 @@
 				D9A64CFC282C491F00CAF635 /* UIViewExtension.swift in Sources */,
 				D9F1106E28CCB5A600203EF1 /* SpriteAssetAnimationTrackType.swift in Sources */,
 				D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */,
+				D96D3188291C4C5A00CD498E /* MaterialFactory.swift in Sources */,
 				D9FBAA0428946A1400A3982D /* SpriteAssetElement.swift in Sources */,
 				D95B8C38288319B80077DCA1 /* SpriteAssetDescription.swift in Sources */,
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,

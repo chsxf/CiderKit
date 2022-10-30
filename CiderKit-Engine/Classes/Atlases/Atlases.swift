@@ -14,24 +14,24 @@ final public class Atlases {
     static var main: Atlas? { self[MAIN_ATLAS_KEY] }
     
     public static func load(atlases: [String: AtlasLocator]) throws {
-        for (key, locator) in atlases {
-            if loadedAtlases[key] != nil {
+        for (name, locator) in atlases {
+            if loadedAtlases[name] != nil {
                 throw AtlasesError.alreadyRegistered
             }
             
             let description: AtlasDescription = try Functions.load(locator.url)
-            let atlas = Atlas(from: description, in: locator.bundle, variant: nil)
-            loadedAtlases[key] = atlas
+            let atlas = Atlas(named: name, from: description, in: locator.bundle, variant: nil)
+            loadedAtlases[name] = atlas
             
             if let variants = description.variants {
                 for (variantKey, _) in variants {
-                    let fullVariantKey = "\(key)~\(variantKey)"
+                    let fullVariantKey = "\(name)~\(variantKey)"
                     
                     if loadedAtlases[fullVariantKey] != nil {
                         throw AtlasesError.alreadyRegistered
                     }
                     
-                    let variantAtlas = Atlas(from: description, in: locator.bundle, variant: variantKey)
+                    let variantAtlas = Atlas(named: name, from: description, in: locator.bundle, variant: variantKey)
                     loadedAtlases[fullVariantKey] = variantAtlas
                     
                     atlas.add(variant: variantAtlas, for: variantKey)

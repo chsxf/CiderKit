@@ -1,0 +1,28 @@
+{
+    "materials": [
+        {
+            "name": "default_ground",
+            "type": "single_texture",
+            "data": {
+                "atlas": "default_tile",
+                "sprite": "default_tile"
+            }
+        },
+        {
+            "name": "default_elevation_left",
+            "type": "single_texture",
+            "data": {
+                "atlas": "default_tile",
+                "sprite": "default_elevation_left"
+            }
+        },
+        {
+            "name": "default_elevation_right",
+            "type": "single_texture",
+            "data": {
+                "atlas": "default_tile",
+                "sprite": "default_elevation_right"
+            }
+        }
+    ]
+}

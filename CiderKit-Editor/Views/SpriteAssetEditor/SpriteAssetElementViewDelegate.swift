@@ -1,4 +1,5 @@
 import CiderKit_Engine
+import CoreGraphics
 
 protocol SpriteAssetElementViewDelegate: AnyObject {
     

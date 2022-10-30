@@ -3,6 +3,8 @@ import SpriteKit
 
 public final class Atlas {
     
+    public let name: String
+    
     public let editorOnly: Bool
     public let isVariant: Bool
     
@@ -11,7 +13,8 @@ public final class Atlas {
     
     private var variants: [String: Atlas] = [:]
     
-    init(from description: AtlasDescription, in bundle: Bundle, variant: String?) {
+    init(named name: String, from description: AtlasDescription, in bundle: Bundle, variant: String?) {
+        self.name = name
         editorOnly = description.editorOnly
         
         var textureName = description.texture
