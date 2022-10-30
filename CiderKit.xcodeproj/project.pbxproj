@@ -39,9 +39,7 @@
 		D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187A27E71D77009A14E2 /* EditorGameView.swift */; };
 		D9387C17289D2B1000558E02 /* SpriteAssetDescriptionScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9387C16289D2B1000558E02 /* SpriteAssetDescriptionScene.swift */; };
 		D9387C19289D3A6800558E02 /* SpriteSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9387C18289D3A6800558E02 /* SpriteSelectorView.swift */; };
-		D93C24F42801EBBE0023FE7A /* RandomizedMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */; };
 		D93C24F52801EBBE0023FE7A /* BaseMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */; };
-		D93C24F62801EBBE0023FE7A /* SequenceMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C2832801903800B17CD0 /* SequenceMaterial.swift */; };
 		D93C24F82801EBC90023FE7A /* CellRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */; };
 		D93C24FB280227690023FE7A /* Materials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24F9280227500023FE7A /* Materials.swift */; };
 		D93C24FE2802E2680023FE7A /* CellRenderers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24FC2802E2680023FE7A /* CellRenderers.swift */; };
@@ -74,6 +72,8 @@
 		D9405F6E2838EC0100CA953A /* Hoverable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6D2838EC0100CA953A /* Hoverable.swift */; };
 		D9405F702838F1A900CA953A /* EditorMapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */; };
 		D9422DC228720343004D53E8 /* HoverableSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9422DC128720343004D53E8 /* HoverableSequence.swift */; };
+		D94302CD290E86D70013B4CA /* SingleTextureMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94302CC290E86D70013B4CA /* SingleTextureMaterial.swift */; };
+		D94302D0290E89EF0013B4CA /* Default Materials.ckmatdb in Resources */ = {isa = PBXBuildFile; fileRef = D94302CF290E89EF0013B4CA /* Default Materials.ckmatdb */; };
 		D947DF1D28D0A9B800669AE5 /* SpriteAssetAnimationTrackNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D947DF1C28D0A9B800669AE5 /* SpriteAssetAnimationTrackNameView.swift */; };
 		D95302E72894805C006E6285 /* SpriteAssetDatabaseDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95302E62894805C006E6285 /* SpriteAssetDatabaseDataSource.swift */; };
 		D95B8C38288319B80077DCA1 /* SpriteAssetDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */; };
@@ -239,6 +239,8 @@
 		D9405F6D2838EC0100CA953A /* Hoverable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hoverable.swift; sourceTree = "<group>"; };
 		D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapCellComponent.swift; sourceTree = "<group>"; };
 		D9422DC128720343004D53E8 /* HoverableSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverableSequence.swift; sourceTree = "<group>"; };
+		D94302CC290E86D70013B4CA /* SingleTextureMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTextureMaterial.swift; sourceTree = "<group>"; };
+		D94302CF290E89EF0013B4CA /* Default Materials.ckmatdb */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Default Materials.ckmatdb"; sourceTree = "<group>"; };
 		D947DF1C28D0A9B800669AE5 /* SpriteAssetAnimationTrackNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTrackNameView.swift; sourceTree = "<group>"; };
 		D95302E62894805C006E6285 /* SpriteAssetDatabaseDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDatabaseDataSource.swift; sourceTree = "<group>"; };
 		D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescription.swift; sourceTree = "<group>"; };
@@ -296,8 +298,6 @@
 		D9DE549D28CDD8BF00E3761B /* SpriteAssetAnimationTracksDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTracksDataSource.swift; sourceTree = "<group>"; };
 		D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellRenderer.swift; sourceTree = "<group>"; };
 		D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMaterial.swift; sourceTree = "<group>"; };
-		D9E2C2832801903800B17CD0 /* SequenceMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceMaterial.swift; sourceTree = "<group>"; };
-		D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizedMaterial.swift; sourceTree = "<group>"; };
 		D9E9C9D0289879CA00067D80 /* SpriteAssetDescriptionOutlineDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescriptionOutlineDataSource.swift; sourceTree = "<group>"; };
 		D9EA6DB128BAD07A00233F79 /* IntPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntPoint.swift; sourceTree = "<group>"; };
 		D9F037C428CC7625003308C1 /* ContextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextButton.swift; sourceTree = "<group>"; };
@@ -740,8 +740,7 @@
 			children = (
 				D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */,
 				D93C24F9280227500023FE7A /* Materials.swift */,
-				D9E2C285280192FC00B17CD0 /* RandomizedMaterial.swift */,
-				D9E2C2832801903800B17CD0 /* SequenceMaterial.swift */,
+				D94302CC290E86D70013B4CA /* SingleTextureMaterial.swift */,
 			);
 			path = Materials;
 			sourceTree = "<group>";
@@ -1042,6 +1041,7 @@
 				D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */,
 				D9EA6DB228BAD07A00233F79 /* IntPoint.swift in Sources */,
 				D92002DB282FB009007D5AC1 /* PointLight.swift in Sources */,
+				D94302CD290E86D70013B4CA /* SingleTextureMaterial.swift in Sources */,
 				D9A64CFC282C491F00CAF635 /* UIViewExtension.swift in Sources */,
 				D9F1106E28CCB5A600203EF1 /* SpriteAssetAnimationTrackType.swift in Sources */,
 				D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */,
@@ -1063,8 +1063,6 @@
 				D9741C5F290D64E10078571B /* FloatExtension.swift in Sources */,
 				D92EE975281DD3F2009B2055 /* CustomSettings.swift in Sources */,
 				D9AF1F5B280BE5FF00BF34B3 /* ProjectSettings.swift in Sources */,
-				D93C24F42801EBBE0023FE7A /* RandomizedMaterial.swift in Sources */,
-				D93C24F62801EBBE0023FE7A /* SequenceMaterial.swift in Sources */,
 				D93C24FE2802E2680023FE7A /* CellRenderers.swift in Sources */,
 				D9DE549A28CDC58600E3761B /* SpriteAssetAnimationState.swift in Sources */,
 			);
