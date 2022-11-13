@@ -20,9 +20,12 @@ open class Project {
         spriteAssetDatabase(forId: SpriteAssetDatabase.defaultDatabaseId)
     }
     
-    public var mapsDirectoryURL: URL { URL(fileURLWithPath: "Maps", isDirectory: true, relativeTo: projectRoot) }
+    public var atlasesDirectoryURL: URL { URL(fileURLWithPath: "Atlases", isDirectory: true, relativeTo: projectRoot) }
     public var databasesDirectoryURL: URL { URL(fileURLWithPath: "Databases", isDirectory: true, relativeTo: projectRoot) }
+    public var mapsDirectoryURL: URL { URL(fileURLWithPath: "Maps", isDirectory: true, relativeTo: projectRoot) }
+    public var materialDatabasesDirectoryURL: URL { URL(fileURLWithPath: "Materials", isDirectory: true, relativeTo: databasesDirectoryURL) }
     public var spriteAssetsDatabasesDirectoryURL: URL { URL(fileURLWithPath: "SpriteAssets", isDirectory: true, relativeTo: databasesDirectoryURL) }
+    public var texturesDirectoryURL: URL { URL(fileURLWithPath: "Textures", isDirectory: true, relativeTo: projectRoot) }
     
     private init(projectRoot: URL) throws {
         self.projectRoot = projectRoot
@@ -36,6 +39,8 @@ open class Project {
         }
         
         try initSpriteAssetDatabases()
+        try preloadAtlases()
+        try preloadMaterialDatabases()
     }
     
     private func initSpriteAssetDatabases() throws {
@@ -86,6 +91,22 @@ open class Project {
                 print(error)
                 throw ProjectErrors.spriteAssetDatabaseError
             }
+        }
+    }
+    
+    private func preloadAtlases() throws {
+        var atlasURLsByName = [String:URL]()
+        for (name, fileName) in settings.preloadedAtlases {
+            atlasURLsByName[name] = URL(fileURLWithPath: "\(fileName).ckatlas", relativeTo: atlasesDirectoryURL)
+        }
+        
+        try Atlases.load(atlases: atlasURLsByName, withTexturesDirectoryURL: texturesDirectoryURL)
+    }
+    
+    private func preloadMaterialDatabases() throws {
+        for fileName in settings.preloadedMaterialDatabases {
+            let url = URL(fileURLWithPath: "\(fileName).ckmatdb", relativeTo: materialDatabasesDirectoryURL)
+            let _: Materials = try Functions.load(url)
         }
     }
     

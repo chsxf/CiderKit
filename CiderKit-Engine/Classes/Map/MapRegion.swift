@@ -29,19 +29,20 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         cellEntities.removeAll()
         removeAllChildren()
         
-        let defaultRenderer = try! CellRenderers["default_cell"]
+        let rendererName = regionDescription.renderer ?? "default_cell"
+        let renderer = try! CellRenderers[rendererName]
         
-        let groundMaterial = try! defaultRenderer.groundMaterial
-        let leftElevationMaterial = try! defaultRenderer.leftElevationMaterial
-        let rightElevationMaterial = try! defaultRenderer.rightElevationMaterial
+        let groundMaterial = try! renderer.groundMaterial
+        let leftElevationMaterial = try! renderer.leftElevationMaterial
+        let rightElevationMaterial = try! renderer.rightElevationMaterial
         
-        if defaultRenderer.groundMaterialResetPolicy == .resetWithEachRegion {
+        if renderer.groundMaterialResetPolicy == .resetWithEachRegion {
             groundMaterial.reset()
         }
-        if defaultRenderer.leftElevationMaterialResetPolicy == .resetWithEachRegion {
+        if renderer.leftElevationMaterialResetPolicy == .resetWithEachRegion {
             leftElevationMaterial.reset()
         }
-        if defaultRenderer.rightElevationMaterialResetPolicy == .resetWithEachRegion {
+        if renderer.rightElevationMaterialResetPolicy == .resetWithEachRegion {
             rightElevationMaterial.reset()
         }
         
@@ -60,12 +61,12 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 
                 let zForShader = Float(regionDescription.elevation) / 4.0
                 
-                if defaultRenderer.leftElevationMaterialResetPolicy == .resetWithEachCell {
+                if renderer.leftElevationMaterialResetPolicy == .resetWithEachCell {
                     leftElevationMaterial.reset()
                 }
                 let leftElevationCount = map!.getLeftVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<leftElevationCount {
-                    if defaultRenderer.leftElevationMaterialResetPolicy == .resetAlways {
+                    if renderer.leftElevationMaterialResetPolicy == .resetAlways {
                         leftElevationMaterial.reset()
                     }
                     
@@ -83,12 +84,12 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     addChild(sprite)
                 }
 
-                if defaultRenderer.rightElevationMaterialResetPolicy == .resetWithEachCell {
+                if renderer.rightElevationMaterialResetPolicy == .resetWithEachCell {
                     rightElevationMaterial.reset()
                 }
                 let rightElevationCount = map!.getRightVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<rightElevationCount {
-                    if defaultRenderer.rightElevationMaterialResetPolicy == .resetAlways {
+                    if renderer.rightElevationMaterialResetPolicy == .resetAlways {
                         rightElevationMaterial.reset()
                     }
                     
@@ -106,7 +107,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     addChild(sprite)
                 }
             
-                let groundMaterialResetPolicy = defaultRenderer.groundMaterialResetPolicy
+                let groundMaterialResetPolicy = renderer.groundMaterialResetPolicy
                 if groundMaterialResetPolicy == .resetAlways || groundMaterialResetPolicy == .resetWithEachCell {
                     groundMaterial.reset()
                 }

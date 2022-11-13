@@ -4,11 +4,26 @@ public enum CellRendererError: Error {
     case invalidResetPolicy
 }
 
-public enum CellRendererMaterialResetPolicy {
-    case inherit
-    case resetWithEachCell
-    case resetWithEachRegion
-    case resetAlways
+public enum CellRendererMaterialResetPolicy: Int, Codable {
+    case inherit = 0
+    case resetWithEachCell = 1
+    case resetWithEachRegion = 2
+    case resetAlways = 3
+}
+
+struct CellRendererDescription: Codable {
+    enum CodingKeys: String, CodingKey {
+        case groundMaterialName = "g"
+        case leftElevationMaterialName = "l"
+        case rightElevationMaterialName = "r"
+        case resetPolicy = "rp"
+    }
+    
+    let groundMaterialName: String
+    let leftElevationMaterialName: String
+    let rightElevationMaterialName: String
+    let resetPolicy: CellRendererMaterialResetPolicy
+    
 }
 
 public struct CellRenderer {
@@ -44,6 +59,10 @@ public struct CellRenderer {
     }
     
     public let resetPolicy: CellRendererMaterialResetPolicy
+    
+    init(from description: CellRendererDescription) {
+        self.init(groundMaterialName: description.groundMaterialName, leftElevationMaterialName: description.leftElevationMaterialName, rightElevationMaterialName: description.rightElevationMaterialName, resetPolicy: description.resetPolicy)
+    }
     
     public init(groundMaterialName: String, leftElevationMaterialName: String, rightElevationMaterialName: String, resetPolicy: CellRendererMaterialResetPolicy = .resetAlways) {
         self.groundMaterialName = groundMaterialName

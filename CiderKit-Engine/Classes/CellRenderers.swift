@@ -9,12 +9,16 @@ final public class CellRenderers {
     
     private static var renderers: [String: CellRenderer] = [:]
     
-    public static func register(cellRenderer: CellRenderer, forName name: String) throws {
+    public static func register(cellRenderer: CellRenderer, named name: String) throws {
         if renderers[name] != nil {
             throw CellRenderersError.alreadyExisting
         }
         
         renderers[name] = cellRenderer
+    }
+    
+    public static func unregister(named name: String) {
+        renderers[name] = nil
     }
     
     public static subscript(name: String) -> CellRenderer {

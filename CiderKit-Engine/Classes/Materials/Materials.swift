@@ -45,7 +45,7 @@ final public class Materials: Decodable {
             let type = try materialContainer.decode(String.self, forKey: .type)
             
             let dataContainer = try materialContainer.nestedContainer(keyedBy: StringCodingKey.self, forKey: .data)
-            let material = try MaterialFactory.instantiateMaterial(of: type, dataContainer: dataContainer)
+            let material = try MaterialFactory.instantiateMaterial(named: type, dataContainer: dataContainer)
             try Self.register(material: material, forName: name)
         }
     }

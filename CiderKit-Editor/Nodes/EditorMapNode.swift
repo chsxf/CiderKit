@@ -47,7 +47,7 @@ class EditorMapNode: MapNode {
         }
         
         if !appliedOnRegion {
-            let newDescription = MapRegionDescription(area: area!, elevation: 1)
+            let newDescription = MapRegionDescription(area: area!, elevation: 1, renderer: nil)
             let newRegion = MapRegion(forMap: self, description: newDescription)
             newRegions.append(newRegion)
             needsRebuilding = true

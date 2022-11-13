@@ -6,6 +6,9 @@ public struct ProjectSettings: Codable {
     
     let startMap: String?
     
+    public let preloadedAtlases: [String:String]
+    public let preloadedMaterialDatabases: [String]
+    
     public var startMapURL: URL? {
         guard
             let currentProject = Project.current,
@@ -21,5 +24,8 @@ public struct ProjectSettings: Codable {
         targetResolutionHeight = 360
         
         startMap = nil
+        
+        preloadedAtlases = [:]
+        preloadedMaterialDatabases = []
     }
 }

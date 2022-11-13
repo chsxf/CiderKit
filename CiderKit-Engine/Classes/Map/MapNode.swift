@@ -30,6 +30,8 @@ open class MapNode: SKNode, Collection {
         
         super.init()
         
+        registerCellRenderers()
+        
         for regionDescription in mapDescription.regions {
             let region = MapRegion(forMap: self, description: regionDescription)
             regions.append(region)
@@ -54,6 +56,7 @@ open class MapNode: SKNode, Collection {
             newMapDescription.regions.append(region.regionDescription)
         }
         newMapDescription.lighting = mapDescription.lighting
+        newMapDescription.renderers = mapDescription.renderers
         return newMapDescription
     }
     
@@ -62,6 +65,13 @@ open class MapNode: SKNode, Collection {
         for region in regions {
             region.zPosition = CGFloat(index)
             index += layerCount
+        }
+    }
+    
+    private func registerCellRenderers() {
+        for (name, rendererDescription) in mapDescription.renderers {
+            let renderer = CellRenderer(from: rendererDescription)
+            try! CellRenderers.register(cellRenderer: renderer, named: name)
         }
     }
     

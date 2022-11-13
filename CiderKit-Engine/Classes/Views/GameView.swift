@@ -49,8 +49,6 @@ open class GameView: SKView, SKSceneDelegate {
     }
     
     func registerDefaultMaterialsAndRenderers() {
-        MaterialFactory.registerBuiltinMaterialTypes()
-        
         let url = CiderKitEngine.bundle.url(forResource: "Default Materials", withExtension: "ckmatdb")
         let _: Materials = try! Functions.load(url!)
         
@@ -59,7 +57,7 @@ open class GameView: SKView, SKSceneDelegate {
             leftElevationMaterialName: "default_elevation_left",
             rightElevationMaterialName: "default_elevation_right"
         )
-        try! CellRenderers.register(cellRenderer: defaultRenderer, forName: "default_cell")
+        try! CellRenderers.register(cellRenderer: defaultRenderer, named: "default_cell")
     }
     
     open func mapNode(from description: MapDescription) -> MapNode {

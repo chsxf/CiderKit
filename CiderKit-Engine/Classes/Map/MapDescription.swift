@@ -3,10 +3,12 @@ import Foundation
 public struct MapDescription: Codable {
     var regions: [MapRegionDescription]
     var lighting: LightingDescription
+    var renderers: [String:CellRendererDescription]
     
     init() {
         regions = []
         lighting = LightingDescription()
+        renderers = [:]
     }
 }
 
@@ -27,25 +29,27 @@ public struct MapRegionDescription: Codable {
     private var materialOverrides: [String: [CustomSettings?]]?
     
     var elevation: Int
+    let renderer: String?
     
     public var area: MapArea { MapArea(x: x, y: y, width: width, height: height) }
     
-    public init(x: Int, y: Int, width: Int, height: Int, elevation: Int) {
+    public init(x: Int, y: Int, width: Int, height: Int, elevation: Int, renderer: String?) {
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.elevation = elevation
         
+        self.renderer = renderer
         materialOverrides = nil
     }
     
-    public init(area: MapArea, elevation: Int) {
-        self.init(x: area.minX, y: area.minY, width: area.width, height: area.height, elevation: elevation)
+    public init(area: MapArea, elevation: Int, renderer: String?) {
+        self.init(x: area.minX, y: area.minY, width: area.width, height: area.height, elevation: elevation, renderer: renderer)
     }
     
     init(byExporting area: MapArea, from other: MapRegionDescription) {
-        self.init(area: area, elevation: other.elevation)
+        self.init(area: area, elevation: other.elevation, renderer: other.renderer)
         importMaterialOverrides(from: other)
     }
     
@@ -73,7 +77,7 @@ public struct MapRegionDescription: Codable {
     }
     
     public func merging(with other: MapRegionDescription) -> MapRegionDescription? {
-        guard elevation == other.elevation else {
+        guard elevation == other.elevation, renderer == other.renderer else {
             return nil
         }
         
@@ -86,7 +90,8 @@ public struct MapRegionDescription: Codable {
                 y: min(area.minY, other.area.minY),
                 width: area.width,
                 height: area.height + other.area.height,
-                elevation: elevation
+                elevation: elevation,
+                renderer: renderer
             )
         }
         else if area.height == other.area.height && area.minY == other.area.minY
@@ -96,7 +101,8 @@ public struct MapRegionDescription: Codable {
                 y: area.minY,
                 width: area.width + other.area.width,
                 height: area.height,
-                elevation: elevation
+                elevation: elevation,
+                renderer: renderer
             )
         }
 

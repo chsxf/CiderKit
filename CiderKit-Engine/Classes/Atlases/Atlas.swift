@@ -41,6 +41,35 @@ public final class Atlas {
         }
     }
     
+    init(named name: String, from description: AtlasDescription, withTextureDirectoryURL directoryURL: URL, variant: String?) {
+        self.name = name
+        editorOnly = description.editorOnly
+        
+        var textureName = description.texture
+        if let variant = variant, let variants = description.variants {
+            textureName = variants[variant]!
+            isVariant = true
+        }
+        else {
+            isVariant = false
+        }
+        
+        let url = URL(fileURLWithPath: "\(textureName).png", relativeTo: directoryURL)
+        #if os(macOS)
+        let image = NSImage(contentsOf: url)!
+        #else
+        let image = UIImage(contentsOfFile: url.path)!
+        #endif
+        atlasTexture = SKTexture(image: image)
+        atlasTexture.filteringMode = .nearest
+        atlasSprites = [:]
+        for spriteDescription in description.sprites {
+            let normalizedRect = spriteDescription.normalizedRect(in: atlasTexture)
+            let sprite = SKTexture(rect: normalizedRect, in: atlasTexture)
+            atlasSprites[spriteDescription.name] = sprite
+        }
+    }
+    
     public subscript(spriteName: String) -> SKTexture? {
         return atlasSprites[spriteName]
     }

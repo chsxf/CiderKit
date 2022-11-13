@@ -40,6 +40,33 @@ final public class Atlases {
         }
     }
     
+    public static func load(atlases: [String: URL], withTexturesDirectoryURL directoryURL: URL) throws {
+        for (name, url) in atlases {
+            if loadedAtlases[name] != nil {
+                throw AtlasesError.alreadyRegistered
+            }
+            
+            let description: AtlasDescription = try Functions.load(url)
+            let atlas = Atlas(named: name, from: description, withTextureDirectoryURL: directoryURL, variant: nil)
+            loadedAtlases[name] = atlas
+            
+            if let variants = description.variants {
+                for (variantKey, _) in variants {
+                    let fullVariantKey = "\(name)~\(variantKey)"
+                    
+                    if loadedAtlases[fullVariantKey] != nil {
+                        throw AtlasesError.alreadyRegistered
+                    }
+                    
+                    let variantAtlas = Atlas(named: name, from: description, withTextureDirectoryURL: directoryURL, variant: variantKey)
+                    loadedAtlases[fullVariantKey] = variantAtlas
+                    
+                    atlas.add(variant: variantAtlas, for: variantKey)
+                }
+            }
+        }
+    }
+    
     public static subscript(name: String) -> Atlas? {
         return loadedAtlases[name]
     }
