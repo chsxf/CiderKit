@@ -134,7 +134,7 @@ open class GameView: SKView, SKSceneDelegate {
             uniform.vectorFloat3Value = lightingEnabled ? map.ambientLight.vector : vector_float3(1, 1, 1)
         }
         
-        let definedLightCount = map.lights?.count ?? 0
+        let definedLightCount = map.lights.count
         for lightIndex in 0...CiderKitEngine.ShaderUniformName.maxLightIndex {
             guard
                 let lightUniformName = CiderKitEngine.ShaderUniformName(lightIndex: lightIndex),
@@ -142,7 +142,7 @@ open class GameView: SKView, SKSceneDelegate {
             else {
                 break
             }
-            let lightMatrix = (lightingEnabled && lightIndex < definedLightCount) ? map.lights![lightIndex].matrix : matrix_float3x3();
+            let lightMatrix = (lightingEnabled && lightIndex < definedLightCount) ? map.lights[lightIndex].matrix : matrix_float3x3();
             uniform.matrixFloat3x3Value = lightMatrix
         }
     }

@@ -12,9 +12,9 @@ open class MapNode: SKNode, Collection {
     
     private let mapDescription: MapDescription
     
-    public var ambientLight: BaseLight { mapDescription.lighting?.ambientLight ?? BaseLight(color: CGColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)) }
+    public var ambientLight: BaseLight { mapDescription.lighting.ambientLight }
     
-    public var lights: [PointLight]? { mapDescription.lighting?.lights }
+    public var lights: [PointLight] { mapDescription.lighting.lights }
     
     var layerCount:Int { 3 } // Temporary code
     

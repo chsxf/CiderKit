@@ -1,8 +1,14 @@
 import Foundation
+import CoreGraphics
 
 struct LightingDescription: Codable {
     
-    let ambientLight: BaseLight?
-    let lights: [PointLight]?
+    let ambientLight: BaseLight
+    var lights: [PointLight]
+
+    init() {
+        ambientLight = BaseLight(color: CGColor(srgbRed: 1, green: 1, blue: 1, alpha: 1))
+        lights = []
+    }
     
 }
