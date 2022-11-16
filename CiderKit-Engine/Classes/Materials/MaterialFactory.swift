@@ -17,6 +17,7 @@ final public class MaterialFactory {
     public static func registerBuiltinMaterialTypes() {
         if !Self.builtinMaterialTypesRegistered {
             try! Self.registerMaterialType(SingleTextureMaterial.self, named: "single_texture")
+            try! Self.registerMaterialType(SequenceMaterial.self, named: "sequence")
             Self.builtinMaterialTypesRegistered = true
         }
     }

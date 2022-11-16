@@ -125,6 +125,7 @@
 		D9DE549A28CDC58600E3761B /* SpriteAssetAnimationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DE549928CDC58600E3761B /* SpriteAssetAnimationState.swift */; };
 		D9DE549C28CDD6B200E3761B /* SpriteAssetAnimationTracksHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DE549B28CDD6B200E3761B /* SpriteAssetAnimationTracksHeaderView.swift */; };
 		D9DE549E28CDD8BF00E3761B /* SpriteAssetAnimationTracksDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DE549D28CDD8BF00E3761B /* SpriteAssetAnimationTracksDataSource.swift */; };
+		D9E7E3AA2924BA15003B61F0 /* SequenceMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E7E3A92924BA15003B61F0 /* SequenceMaterial.swift */; };
 		D9E9C9D1289879CA00067D80 /* SpriteAssetDescriptionOutlineDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9C9D0289879CA00067D80 /* SpriteAssetDescriptionOutlineDataSource.swift */; };
 		D9EA6DB228BAD07A00233F79 /* IntPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA6DB128BAD07A00233F79 /* IntPoint.swift */; };
 		D9F037C528CC7625003308C1 /* ContextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F037C428CC7625003308C1 /* ContextButton.swift */; };
@@ -302,6 +303,7 @@
 		D9DE549D28CDD8BF00E3761B /* SpriteAssetAnimationTracksDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTracksDataSource.swift; sourceTree = "<group>"; };
 		D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellRenderer.swift; sourceTree = "<group>"; };
 		D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMaterial.swift; sourceTree = "<group>"; };
+		D9E7E3A92924BA15003B61F0 /* SequenceMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceMaterial.swift; sourceTree = "<group>"; };
 		D9E9C9D0289879CA00067D80 /* SpriteAssetDescriptionOutlineDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescriptionOutlineDataSource.swift; sourceTree = "<group>"; };
 		D9EA6DB128BAD07A00233F79 /* IntPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntPoint.swift; sourceTree = "<group>"; };
 		D9F037C428CC7625003308C1 /* ContextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextButton.swift; sourceTree = "<group>"; };
@@ -755,6 +757,7 @@
 				D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */,
 				D96D3187291C4C5A00CD498E /* MaterialFactory.swift */,
 				D93C24F9280227500023FE7A /* Materials.swift */,
+				D9E7E3A92924BA15003B61F0 /* SequenceMaterial.swift */,
 				D94302CC290E86D70013B4CA /* SingleTextureMaterial.swift */,
 			);
 			path = Materials;
@@ -1048,6 +1051,7 @@
 				D9960DAE28CBDEC200FC876E /* SpriteAssetDescriptionType.swift in Sources */,
 				D9C26B7A28D196960087CD60 /* SpriteAssetAnimationTrackIdentifier.swift in Sources */,
 				D93C24F82801EBC90023FE7A /* CellRenderer.swift in Sources */,
+				D9E7E3AA2924BA15003B61F0 /* SequenceMaterial.swift in Sources */,
 				D90BB9BD289B247000833C49 /* SpriteLocator.swift in Sources */,
 				D93C4CA62800CBE0000955E1 /* Atlases.swift in Sources */,
 				D93C4CAC2800CBE0000955E1 /* Math.swift in Sources */,
