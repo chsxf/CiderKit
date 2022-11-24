@@ -108,26 +108,28 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     
     private func initToolbarItems() -> Void {
         let toolItemGroup = NSToolbarItemGroup(itemIdentifier: .tool, images: [
-            NSImage(named: "toolbar-select")!, NSImage(named: "toolbar-move")!, NSImage(named: "toolbar-elevation")!
+            NSImage(systemSymbolName: "cursorarrow", accessibilityDescription: "Select")!,
+            NSImage(systemSymbolName: "move.3d", accessibilityDescription: "Move")!,
+            NSImage(systemSymbolName: "arrow.up.arrow.down", accessibilityDescription: "Elevation")!
         ], selectionMode: .selectOne, labels: ["Select", "Move", "Elevation"], target: self, action: #selector(self.switchTool))
         toolItemGroup.selectedIndex = 0
         definedToolbarItems[.tool] = toolItemGroup
         
         let ambientLightSettingsItem = NSToolbarItem(itemIdentifier: .ambientLightSettings)
         ambientLightSettingsItem.label = "Ambient Light Settings"
-        ambientLightSettingsItem.image = NSImage(named: "ambientlight_settings")
+        ambientLightSettingsItem.image = NSImage(systemSymbolName: "sun.max.fill", accessibilityDescription: "Ambient Light Settings")
         ambientLightSettingsItem.action = #selector(self.selectAmbientLight)
         definedToolbarItems[.ambientLightSettings] = ambientLightSettingsItem
         
         let toggleLightingItem = NSToolbarItem(itemIdentifier: .toggleLighting)
         toggleLightingItem.label = "Toggle Lighting"
-        toggleLightingItem.image = NSImage(named: "lighting_on")
+        toggleLightingItem.image = NSImage(systemSymbolName: "lightbulb.circle.fill", accessibilityDescription: "Toggle Lighting")
         toggleLightingItem.action = #selector(self.toggleLighting)
         definedToolbarItems[.toggleLighting] = toggleLightingItem
         
         let spriteAssetEditorItem = NSToolbarItem(itemIdentifier: .spriteAssetEditor)
         spriteAssetEditorItem.label = "Sprite Asset Editor"
-        spriteAssetEditorItem.image = NSImage(named: "sprite_asset_editor")
+        spriteAssetEditorItem.image = NSImage(systemSymbolName: "photo.fill", accessibilityDescription: "Sprite Asset Editor")
         spriteAssetEditorItem.action = #selector(self.openSpriteAssetEditor)
         definedToolbarItems[.spriteAssetEditor] = spriteAssetEditorItem
     }
@@ -315,7 +317,8 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     @objc
     private func toggleLighting() {
         gameView.lightingEnabled = !gameView.lightingEnabled
-        definedToolbarItems[.toggleLighting]!.image = gameView.lightingEnabled ? NSImage(named: "lighting_on") : NSImage(named: "lighting_off")
+        let symbolName = gameView.lightingEnabled ? "lightbulb.circle.fill" : "lightbulb.circle"
+        definedToolbarItems[.toggleLighting]!.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Toggle Lighting")
     }
     
     @objc
