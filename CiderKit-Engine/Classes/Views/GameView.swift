@@ -74,8 +74,26 @@ open class GameView: SKView, SKSceneDelegate {
         finalGatheringNode.shouldEnableEffects = true
     }
     
+    private func computePositionMatrix() -> matrix_float3x3 {
+        var minVector = vector_float3(Float.infinity, Float.infinity, 0)
+        var maxVector = vector_float3(-Float.infinity, -Float.infinity, 0)
+        
+        for region in map.regions {
+            let area = region.regionDescription.area
+            
+            minVector.x = min(minVector.x, Float(area.minX))
+            minVector.y = min(minVector.y, Float(area.minY))
+            
+            maxVector.x = max(maxVector.x, Float(area.maxX))
+            maxVector.y = max(maxVector.y, Float(area.maxY))
+            maxVector.z = max(maxVector.z, Float(region.regionDescription.elevation))
+        }
+        
+        return matrix_float3x3(minVector, maxVector, vector_float3())
+    }
+    
     open func didFinishUpdate(for scene: SKScene) {
-        let positionMatrix = matrix_float3x3([vector_float3(-1, -1, 0), vector_float3(10, 10, 5), vector_float3()])
+        let positionMatrix = computePositionMatrix()
         
         CiderKitEngine.setUberShaderPositionRanges(positionMatrix)
         
