@@ -212,16 +212,22 @@ class EditorGameView: GameView {
     }
     
     func buildLightNodes() {
-        for light in map.lights {
-            let lightEntity = PointLightComponent.entity(from: light)
-            if let lightNode = lightEntity.component(ofType: GKSKNodeComponent.self)?.node {
-                lightsRoot.addChild(lightNode)
-            }
-            lightEntities.append(lightEntity)
-            editableComponents.addComponent(foundIn: lightEntity)
-        }
-        
+        map.lights.forEach { setupPointLight($0) }
         ambientLightEntity = AmbientLightComponent.entity(from: map.ambientLight)
+    }
+    
+    private func setupPointLight(_ light: PointLight) {
+        let lightEntity = PointLightComponent.entity(from: light)
+        if let lightNode = lightEntity.component(ofType: GKSKNodeComponent.self)?.node {
+            lightsRoot.addChild(lightNode)
+        }
+        lightEntities.append(lightEntity)
+        editableComponents.addComponent(foundIn: lightEntity)
+    }
+    
+    func addLight(_ light: PointLight) {
+        mutableMap.addLight(light)
+        setupPointLight(light)
     }
     
 }

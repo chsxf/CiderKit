@@ -10,11 +10,10 @@ open class MapNode: SKNode, Collection {
     
     public var regions: [MapRegion] = [MapRegion]()
     
-    private let mapDescription: MapDescription
+    private let cellRenderers: [String:CellRendererDescription]
     
-    public var ambientLight: BaseLight { mapDescription.lighting.ambientLight }
-    
-    public var lights: [PointLight] { mapDescription.lighting.lights }
+    public let ambientLight: BaseLight
+    public var lights: [PointLight]
     
     var layerCount:Int { 3 } // Temporary code
     
@@ -26,7 +25,10 @@ open class MapNode: SKNode, Collection {
     }
     
     public init(description mapDescription: MapDescription) {
-        self.mapDescription = mapDescription
+        cellRenderers = mapDescription.renderers
+        
+        ambientLight = mapDescription.lighting.ambientLight
+        lights = mapDescription.lighting.lights
         
         super.init()
         
@@ -55,8 +57,13 @@ open class MapNode: SKNode, Collection {
         for region in regions {
             newMapDescription.regions.append(region.regionDescription)
         }
-        newMapDescription.lighting = mapDescription.lighting
-        newMapDescription.renderers = mapDescription.renderers
+        
+        newMapDescription.renderers = cellRenderers
+        
+        var lighting = LightingDescription(ambientLight: ambientLight)
+        lighting.lights = lights
+        newMapDescription.lighting = lighting
+        
         return newMapDescription
     }
     
@@ -69,7 +76,7 @@ open class MapNode: SKNode, Collection {
     }
     
     private func registerCellRenderers() {
-        for (name, rendererDescription) in mapDescription.renderers {
+        for (name, rendererDescription) in cellRenderers {
             let renderer = CellRenderer(from: rendererDescription)
             try! CellRenderers.register(cellRenderer: renderer, named: name)
         }

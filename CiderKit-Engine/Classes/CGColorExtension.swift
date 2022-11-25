@@ -4,6 +4,17 @@ import simd
 
 extension CGColor {
     
+    func toRGB() -> CGColor? {
+        guard let sRGBColorSpace = CGColorSpace(name: CGColorSpace.sRGB) else { return nil }
+        
+        if self.colorSpace == sRGBColorSpace {
+            return self
+        }
+        else {
+            return self.converted(to: sRGBColorSpace, intent: .perceptual, options: nil)
+        }
+    }
+    
     class func interpolateRGB(from: CGColor, to: CGColor, t: Float) -> CGColor? {
         guard let sRGBColorSpace = CGColorSpace(name: CGColorSpace.sRGB) else { return nil }
         

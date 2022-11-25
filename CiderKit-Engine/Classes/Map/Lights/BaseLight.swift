@@ -22,7 +22,7 @@ public class BaseLight: Codable, ObservableObject {
     var vector: vector_float3 { vector_float3(Float(color.components![0]), Float(color.components![1]), Float(color.components![2])) }
     
     init(color: CGColor) {
-        self.color = color
+        self.color = color.toRGB()!
     }
     
     public required init(from decoder: Decoder) throws {

@@ -140,4 +140,9 @@ class EditorMapNode: MapNode {
         return EditorMapCellComponent(region: region, mapX: x, mapY: y, elevation: elevation)
     }
     
+    func addLight(_ light: PointLight) {
+        lights.append(light)
+        dirty = true
+    }
+    
 }
