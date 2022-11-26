@@ -23,20 +23,27 @@ class LabelledColorWell: NSView {
     weak var delegate: LabelledColorWellDelegate? = nil
     
     init(title: String) {
-        colorWell = NSColorWell(frame: NSZeroRect)
+        colorWell = NSColorWell()
+        colorWell.translatesAutoresizingMaskIntoConstraints = false
         
         super.init(frame: NSZeroRect)
         
         colorWell.addObserver(self, forKeyPath: "color", context: nil)
         
         let label = NSTextField(labelWithString: title)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(label)
         
-        let stack = NSStackView(views: [label, colorWell])
-        addSubview(stack)
+        addSubview(colorWell)
         
         addConstraints([
-            NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: stack, attribute: .height, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: self, attribute: .width, relatedBy: .equal, toItem: stack, attribute: .width, multiplier: 1, constant: 0)
+            NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 20),
+            
+            NSLayoutConstraint(item: colorWell, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: colorWell, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.66, constant: 0),
+            NSLayoutConstraint(item: colorWell, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0),
+            
+            NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
         ])
     }
     
