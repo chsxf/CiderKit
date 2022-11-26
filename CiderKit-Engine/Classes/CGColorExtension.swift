@@ -16,25 +16,11 @@ extension CGColor {
     }
     
     class func interpolateRGB(from: CGColor, to: CGColor, t: Float) -> CGColor? {
-        guard let sRGBColorSpace = CGColorSpace(name: CGColorSpace.sRGB) else { return nil }
-        
-        var convertedFrom: CGColor?
-        if from.colorSpace == sRGBColorSpace {
-            convertedFrom = from
-        }
-        else {
-            convertedFrom = from.converted(to: sRGBColorSpace, intent: .perceptual, options: nil)
-        }
-        
-        var convertedTo: CGColor?
-        if to.colorSpace == sRGBColorSpace {
-            convertedTo = to
-        }
-        else {
-            convertedTo = to.converted(to: sRGBColorSpace, intent: .perceptual, options: nil)
-        }
-
-        guard let convertedFrom, let convertedTo else { return nil }
+        guard
+            let sRGBColorSpace = CGColorSpace(name: CGColorSpace.sRGB),
+            let convertedFrom = from.toRGB(),
+            let convertedTo = to.toRGB()
+        else { return nil }
         
         let clampedT = simd_clamp(t, 0, 1)
         let tVector = simd_float4(clampedT, clampedT, clampedT, clampedT)
