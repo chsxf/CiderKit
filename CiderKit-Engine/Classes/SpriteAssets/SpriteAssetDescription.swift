@@ -84,7 +84,7 @@ public class SpriteAssetDescription: Identifiable, Codable, ObservableObject {
     public func getElement(uuid: UUID) -> SpriteAssetElement? { rootElement.getElement(uuid: uuid) }
     
     public func getElementOrder(uuid: UUID) -> Int? { rootElement.getElementRelativeOrder(uuid: uuid) }
-
+    
     public func hasAnimationState(named stateName: String) -> Bool { animationStates[stateName] != nil }
     
     public func hasAnimationTrack(_ type: SpriteAssetAnimationTrackType, for elementUUID: UUID, in stateName: String) -> Bool {

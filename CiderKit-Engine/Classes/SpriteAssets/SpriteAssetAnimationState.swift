@@ -1,4 +1,4 @@
-public class SpriteAssetAnimationState: Codable {
+public final class SpriteAssetAnimationState: Codable {
     
     enum CodingKeys: String, CodingKey {
         case animationTracks = "tracks"
@@ -30,6 +30,10 @@ public class SpriteAssetAnimationState: Codable {
     public func hasAnimationTrack(_ type: SpriteAssetAnimationTrackType, for elementUUID: UUID) -> Bool {
         let identifier = SpriteAssetAnimationTrackIdentifier(elementUUID: elementUUID, type: type)
         return animationTracks[identifier] != nil
+    }
+    
+    public func removeAnimationTracks(for elementUUID: UUID) {
+        animationTracks = animationTracks.filter { $0.key.elementUUID != elementUUID }
     }
     
 }

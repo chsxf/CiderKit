@@ -9,7 +9,7 @@ extension NSUserInterfaceItemIdentifier {
     
 }
 
-class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDelegate, SpriteAssetElementViewDelegate, SpriteAssetDescriptionSceneViewDelegate, ContextButtonDelegate {
+final class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDelegate, SpriteAssetElementViewDelegate, SpriteAssetDescriptionSceneViewDelegate, ContextButtonDelegate {
     
     private static let noSpriteMessage = "No sprite asset selected"
 
@@ -207,11 +207,7 @@ class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
     
     @objc
     private func removeSpriteElement() {
-        if let item = outline!.item(atRow: outline!.selectedRow) as? SpriteAssetElement {
-            if item.isRoot {
-                return
-            }
-            
+        if let item = outline!.item(atRow: outline!.selectedRow) as? SpriteAssetElement, !item.isRoot {
             let parent = item.parent
             item.removeFromParent()
             outline!.reloadItem(parent, reloadChildren: true)
@@ -219,6 +215,13 @@ class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
             outline!.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
             
             scene?.removeNodes(from: item)
+            
+            if let assetDescription {
+                for (_, state) in assetDescription.animationStates {
+                    state.removeAnimationTracks(for: item.uuid)
+                }
+                animationView?.reloadCurrentState()
+            }
         }
     }
     

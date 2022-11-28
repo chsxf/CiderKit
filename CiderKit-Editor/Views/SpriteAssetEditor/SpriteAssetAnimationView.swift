@@ -8,7 +8,7 @@ extension NSUserInterfaceItemIdentifier {
     
 }
 
-class SpriteAssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate, SpriteAssetAnimationControlDelegate, SpriteAssetAnimationTrackNameViewDelegate {
+final class SpriteAssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate, SpriteAssetAnimationControlDelegate, SpriteAssetAnimationTrackNameViewDelegate {
     
     private let splitView: NSSplitView
     
