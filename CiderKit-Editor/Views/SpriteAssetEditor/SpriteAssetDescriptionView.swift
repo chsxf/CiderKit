@@ -19,6 +19,7 @@ class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
     
     private weak var selectedAssetElement: SpriteAssetElement? = nil {
         didSet {
+            elementView?.assetDescription = assetDescription
             elementView?.element = selectedAssetElement
         }
     }
@@ -49,6 +50,8 @@ class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
                     updateControls()
                 }
             }
+            
+            elementView?.assetDescription = assetDescription
         }
     }
     
