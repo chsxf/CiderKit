@@ -15,8 +15,7 @@ class SpriteAssetDescriptionScene: SKScene {
         let gridTexture = Atlases["grid"]!["grid_tile_Base"]!
         
         let sprite = SKSpriteNode(texture: gridTexture)
-        sprite.anchorPoint = CGPoint(x: 0.5, y: 0)
-        sprite.position = CGPoint(x: 0, y: -Int(gridTexture.size().height / 2))
+        sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         addChild(sprite)
         
         let camera = SKCameraNode()
