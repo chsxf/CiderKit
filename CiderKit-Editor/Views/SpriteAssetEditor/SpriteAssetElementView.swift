@@ -26,6 +26,13 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         }
     }
     
+    private let assetXPositionField: FloatField
+    private let assetYPositionField: FloatField
+    private let assetZPositionField: FloatField
+    private let assetXSizeField: FloatField
+    private let assetYSizeField: FloatField
+    private let assetZSizeField: FloatField
+    
     private let nameField: NSTextField
     private let visibleCheckbox: NSButton
     private let xOffsetField: FloatField
@@ -39,11 +46,27 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     private let selectSpriteButton: NSButton
     private let removeSpriteButton: NSButton
     
+    private let spriteAssetViews: [NSView]
+    private let spriteAssetElementViews: [NSView]
+    
     init(assetDescription: SpriteAssetDescription, element: SpriteAssetElement) {
         self.assetDescription = assetDescription
         self.element = element
         
-        let nameLabel = NSTextField(labelWithString: "Name")
+        assetXPositionField = FloatField(title: "X", step: 0.1)
+        assetYPositionField = FloatField(title: "Y", step: 0.1)
+        assetZPositionField = FloatField(title: "Z", step: 0.2)
+        
+        assetXSizeField = FloatField(title: "X", step: 0.1)
+        assetYSizeField = FloatField(title: "Y", step: 0.1)
+        assetZSizeField = FloatField(title: "Z", step: 0.2)
+        
+        spriteAssetViews = [
+            InspectorHeader(title: "Asset Position"), assetXPositionField, assetYPositionField, assetZPositionField,
+            VSpacer(),
+            InspectorHeader(title: "Asset Size"), assetXSizeField, assetYSizeField, assetZSizeField
+        ]
+        
         nameField = NSTextField(string: "")
 
         visibleCheckbox = NSButton(checkboxWithTitle: "Visible", target: nil, action: #selector(Self.visibleCheckboxClicked))
@@ -59,7 +82,6 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         colorWell = LabelledColorWell(title: "Color")
         colorBlendField = FloatSlider(title: "Color Blend")
 
-        let spriteLabel = NSTextField(labelWithString: "Sprite")
         spriteField = NSTextField(string: "None")
         spriteField.isEditable = false
         spriteField.isBezeled = true
@@ -68,7 +90,25 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         let buttonRow = NSStackView(views: [selectSpriteButton, removeSpriteButton])
         buttonRow.orientation = .horizontal
         
+        spriteAssetElementViews = [
+            InspectorHeader(title: "Element Name"), nameField,
+            VSpacer(), visibleCheckbox,
+            VSpacer(), InspectorHeader(title: "Offset"), xOffsetField, yOffsetField,
+            VSpacer(), rotationField,
+            VSpacer(), InspectorHeader(title: "Scale"), xScaleField, yScaleField,
+            VSpacer(), colorWell, colorBlendField,
+            VSpacer(), InspectorHeader(title: "Sprite"), spriteField, buttonRow
+        ]
+        
         super.init(frame: NSZeroRect)
+        
+        assetXPositionField.delegate = self
+        assetYPositionField.delegate = self
+        assetZPositionField.delegate = self
+        
+        assetXSizeField.delegate = self
+        assetYSizeField.delegate = self
+        assetZSizeField.delegate = self
         
         nameField.delegate = self
 
@@ -94,15 +134,7 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         alignment = .left
         spacing = 4
         
-        let stackedViews = [
-            nameLabel, nameField,
-            VSpacer(), visibleCheckbox,
-            VSpacer(), InspectorHeader(title: "Offset"), xOffsetField, yOffsetField,
-            VSpacer(), rotationField,
-            VSpacer(), InspectorHeader(title: "Scale"), xScaleField, yScaleField,
-            VSpacer(), colorWell, colorBlendField,
-            VSpacer(), spriteLabel, spriteField, buttonRow
-        ]
+        let stackedViews = spriteAssetViews + spriteAssetElementViews
         setViews(stackedViews, in: .leading)
         
         updateForCurrentElement()
@@ -116,76 +148,41 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         if let element, let assetDescription, let animationControlDelegate {
             let animationData = assetDescription.getAnimationData(for: element.uuid, in: animationControlDelegate.currentAnimationState, at: animationControlDelegate.currentAnimationFrame)
 
-            let editable = !element.isRoot
-
-            nameField.isEnabled = editable
-            nameField.stringValue = element.name
-
-            visibleCheckbox.isEnabled = editable && animationData.isKeyValue(for: .visibility)
-            visibleCheckbox.state = animationData.elementData.visible ? .on : .off
-
-            xOffsetField.isEnabled = editable && animationData.isKeyValue(for: .xOffset)
-            xOffsetField.value = Float(animationData.elementData.offset.x)
-
-            yOffsetField.isEnabled = editable && animationData.isKeyValue(for: .yOffset)
-            yOffsetField.value = Float(animationData.elementData.offset.y)
-
-            rotationField.isEnabled = editable && animationData.isKeyValue(for: .rotation)
-            rotationField.value = animationData.elementData.rotation.toDegrees()
-
-            xScaleField.isEnabled = editable && animationData.isKeyValue(for: .xScale)
-            xScaleField.value = Float(animationData.elementData.scale.x)
-
-            yScaleField.isEnabled = editable && animationData.isKeyValue(for: .yScale)
-            yScaleField.value = Float(animationData.elementData.scale.y)
-
-            colorWell.isEnabled = editable && animationData.isKeyValue(for: .color)
-            colorWell.color = animationData.elementData.color
-
-            colorBlendField.isEnabled = editable && animationData.isKeyValue(for: .colorBlendFactor)
-            colorBlendField.value = animationData.elementData.colorBlend
-
-            selectSpriteButton.isEnabled = editable && animationData.isKeyValue(for: .sprite)
-            if let spriteLocator = animationData.elementData.spriteLocator {
-                spriteField.stringValue = spriteLocator.description
-                removeSpriteButton.isEnabled = true
+            spriteAssetViews.forEach { $0.isHidden = !element.isRoot }
+            spriteAssetElementViews.forEach { $0.isHidden = element.isRoot }
+            
+            if element.isRoot {
+                assetXPositionField.value = assetDescription.position.x
+                assetYPositionField.value = assetDescription.position.y
+                assetZPositionField.value = assetDescription.position.z
+                
+                assetXSizeField.value = assetDescription.size.x
+                assetYSizeField.value = assetDescription.size.y
+                assetZSizeField.value = assetDescription.size.z
             }
             else {
-                spriteField.stringValue = "None"
-                removeSpriteButton.isEnabled = false
+                nameField.stringValue = element.name
+                visibleCheckbox.state = animationData.elementData.visible ? .on : .off
+                xOffsetField.value = Float(animationData.elementData.offset.x)
+                yOffsetField.value = Float(animationData.elementData.offset.y)
+                rotationField.value = animationData.elementData.rotation.toDegrees()
+                xScaleField.value = Float(animationData.elementData.scale.x)
+                yScaleField.value = Float(animationData.elementData.scale.y)
+                colorWell.color = animationData.elementData.color
+                colorBlendField.value = animationData.elementData.colorBlend
+                if let spriteLocator = animationData.elementData.spriteLocator {
+                    spriteField.stringValue = spriteLocator.description
+                    removeSpriteButton.isEnabled = true
+                }
+                else {
+                    spriteField.stringValue = "None"
+                    removeSpriteButton.isEnabled = false
+                }
             }
         }
         else {
-            nameField.stringValue = ""
-            nameField.isEnabled = false
-
-            visibleCheckbox.state = .on
-            visibleCheckbox.isEnabled = false
-
-            xOffsetField.value = 0
-            xOffsetField.isEnabled = false
-
-            yOffsetField.value = 0
-            yOffsetField.isEnabled = false
-
-            rotationField.value = 0
-            rotationField.isEnabled = false
-
-            xScaleField.value = 0
-            xScaleField.isEnabled = false
-
-            yScaleField.value = 0
-            yScaleField.isEnabled = false
-
-            colorWell.color = .white
-            colorWell.isEnabled = false
-
-            colorBlendField.value = 0
-            colorBlendField.isEnabled = false
-
-            spriteField.stringValue = "None"
-            selectSpriteButton.isEnabled = false
-            removeSpriteButton.isEnabled = false
+            spriteAssetViews.forEach { $0.isHidden = true }
+            spriteAssetElementViews.forEach { $0.isHidden = true }
         }
     }
     
@@ -228,6 +225,24 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     
     func floatField(_ field: FloatField, valueChanged newValue: Float) {
         switch field {
+        case assetXPositionField:
+            elementViewDelegate?.elementView(self, assetXPositionChanged: assetXPositionField.value)
+            
+        case assetYPositionField:
+            elementViewDelegate?.elementView(self, assetYPositionChanged: assetYPositionField.value)
+            
+        case assetZPositionField:
+            elementViewDelegate?.elementView(self, assetZPositionChanged: assetZPositionField.value)
+            
+        case assetXSizeField:
+            elementViewDelegate?.elementView(self, assetXSizeChanged: assetXSizeField.value)
+            
+        case assetYSizeField:
+            elementViewDelegate?.elementView(self, assetYSizeChanged: assetYSizeField.value)
+            
+        case assetZSizeField:
+            elementViewDelegate?.elementView(self, assetZSizeChanged: assetZSizeField.value)
+            
         case xOffsetField:
             elementViewDelegate?.elementView(self, xOffsetChanged: xOffsetField.value)
 

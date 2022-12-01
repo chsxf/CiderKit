@@ -3,6 +3,13 @@ import CoreGraphics
 
 protocol SpriteAssetElementViewDelegate: AnyObject {
     
+    func elementView(_ view: SpriteAssetElementView, assetXPositionChanged position: Float)
+    func elementView(_ view: SpriteAssetElementView, assetYPositionChanged position: Float)
+    func elementView(_ view: SpriteAssetElementView, assetZPositionChanged position: Float)
+    func elementView(_ view: SpriteAssetElementView, assetXSizeChanged size: Float)
+    func elementView(_ view: SpriteAssetElementView, assetYSizeChanged size: Float)
+    func elementView(_ view: SpriteAssetElementView, assetZSizeChanged size: Float)
+    
     func elementView(_ view: SpriteAssetElementView, nameChanged newName: String)
     func elementView(_ view: SpriteAssetElementView, visibilityChanged visible: Bool)
     func elementView(_ view: SpriteAssetElementView, spriteChanged spriteLocator: SpriteLocator?)

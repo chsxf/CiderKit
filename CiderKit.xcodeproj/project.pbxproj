@@ -102,6 +102,8 @@
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
 		D98663DF287E1B1100950DC0 /* DelayedObservableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98663DE287E1B1100950DC0 /* DelayedObservableObject.swift */; };
 		D987296328D6E7FC00066DC5 /* SpriteAssetAnimationTrackBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D987296228D6E7FC00066DC5 /* SpriteAssetAnimationTrackBaseView.swift */; };
+		D9878FAC293AB6280016AABE /* SIMDExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9878FAB293AB6280016AABE /* SIMDExtensions.swift */; };
+		D9878FAE293AB7AD0016AABE /* CGMutablePathExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9878FAD293AB7AD0016AABE /* CGMutablePathExtension.swift */; };
 		D98B89F72897FA35006D60AF /* SpriteAssetDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98B89F62897FA35006D60AF /* SpriteAssetDescriptionView.swift */; };
 		D992529E2884B337007C1B26 /* SpriteAssetDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D992529D2884B337007C1B26 /* SpriteAssetDatabaseTests.swift */; };
 		D9960DAE28CBDEC200FC876E /* SpriteAssetDescriptionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9960DAD28CBDEC200FC876E /* SpriteAssetDescriptionType.swift */; };
@@ -273,6 +275,8 @@
 		D985E7EA27DE38D300AC2465 /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
 		D98663DE287E1B1100950DC0 /* DelayedObservableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayedObservableObject.swift; sourceTree = "<group>"; };
 		D987296228D6E7FC00066DC5 /* SpriteAssetAnimationTrackBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTrackBaseView.swift; sourceTree = "<group>"; };
+		D9878FAB293AB6280016AABE /* SIMDExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SIMDExtensions.swift; sourceTree = "<group>"; };
+		D9878FAD293AB7AD0016AABE /* CGMutablePathExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGMutablePathExtension.swift; sourceTree = "<group>"; };
 		D98B89F62897FA35006D60AF /* SpriteAssetDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescriptionView.swift; sourceTree = "<group>"; };
 		D992529D2884B337007C1B26 /* SpriteAssetDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDatabaseTests.swift; sourceTree = "<group>"; };
 		D9960DAD28CBDEC200FC876E /* SpriteAssetDescriptionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescriptionType.swift; sourceTree = "<group>"; };
@@ -607,6 +611,7 @@
 				D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */,
 				D93C24FC2802E2680023FE7A /* CellRenderers.swift */,
 				D91657F3290878B700510386 /* CGColorExtension.swift */,
+				D9878FAD293AB7AD0016AABE /* CGMutablePathExtension.swift */,
 				D91061C92755F27600EA8A03 /* CharacterComponent.swift */,
 				D972C1AD2827B46500D85376 /* CiderKitEngine.swift */,
 				D92EE973281DD3F2009B2055 /* CustomSettings.swift */,
@@ -618,6 +623,7 @@
 				D9CC3528285D16B7003EEB6F /* Pool.swift */,
 				D9254461281AB55B002DCA4C /* Project.swift */,
 				D9CECB2627E91DB0000E8CC7 /* Screen.swift */,
+				D9878FAB293AB6280016AABE /* SIMDExtensions.swift */,
 				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
 				D940EB72291338D60036B101 /* StringCodingKey.swift */,
 				D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */,
@@ -1068,11 +1074,13 @@
 				D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */,
 				D96D3188291C4C5A00CD498E /* MaterialFactory.swift in Sources */,
 				D9FBAA0428946A1400A3982D /* SpriteAssetElement.swift in Sources */,
+				D9878FAC293AB6280016AABE /* SIMDExtensions.swift in Sources */,
 				D95B8C38288319B80077DCA1 /* SpriteAssetDescription.swift in Sources */,
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D91657F4290878B700510386 /* CGColorExtension.swift in Sources */,
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,
+				D9878FAE293AB7AD0016AABE /* CGMutablePathExtension.swift in Sources */,
 				D9CC3529285D16B7003EEB6F /* Pool.swift in Sources */,
 				D95B8C3A288319C50077DCA1 /* SpriteAssetDatabase.swift in Sources */,
 				D93C24FB280227690023FE7A /* Materials.swift in Sources */,

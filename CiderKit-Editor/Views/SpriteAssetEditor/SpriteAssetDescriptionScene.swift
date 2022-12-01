@@ -5,9 +5,20 @@ class SpriteAssetDescriptionScene: SKScene {
     
     private static let defaultSize: CGFloat = 320
     
+    private let backBoundingBoxShape: SKShapeNode
+    private let frontBoundingBoxShape: SKShapeNode
+    private let elementsRoot: SKNode
+    
     private var nodeByElement: [SpriteAssetElement: SKNode] = [:]
     
     override init() {
+        backBoundingBoxShape = SKShapeNode()
+        backBoundingBoxShape.strokeColor = .purple
+        frontBoundingBoxShape = SKShapeNode()
+        frontBoundingBoxShape.strokeColor = .purple
+        
+        elementsRoot = SKNode()
+        
         super.init(size: CGSize(width: 320, height: 320))
         
         scaleMode = .aspectFill
@@ -17,6 +28,12 @@ class SpriteAssetDescriptionScene: SKScene {
         let sprite = SKSpriteNode(texture: gridTexture)
         sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         addChild(sprite)
+        
+        backBoundingBoxShape.position = CGPoint(x: 0, y: gridTexture.size().height / 2)
+        addChild(backBoundingBoxShape)
+        addChild(elementsRoot)
+        frontBoundingBoxShape.position = backBoundingBoxShape.position
+        addChild(frontBoundingBoxShape)
         
         let camera = SKCameraNode()
         self.camera = camera
@@ -50,13 +67,51 @@ class SpriteAssetDescriptionScene: SKScene {
         }
     }
     
+    public func setBoundingBox(position: vector_float3, size: vector_float3) {
+        let xVector = vector_float2(Float(MapNode.halfWidth), Float(-MapNode.halfHeight))
+        let yVector = vector_float2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
+        let zVector = vector_float2(0, Float(MapNode.elevationHeight))
+        
+        let origin = xVector * position.x + yVector * position.y + zVector * position.z
+        
+        let topBack = origin + zVector * size.z
+        let topLeft = topBack + yVector * size.y
+        let topRight = topBack + xVector * size.x
+        let topFront = topLeft + xVector * size.x
+        let bottomLeft = origin + yVector * size.y
+        let bottomFront = bottomLeft + xVector * size.x
+        let bottomRight = origin + xVector * size.x
+        
+        let pathBack = CGMutablePath()
+        pathBack.move(to: bottomLeft)
+        pathBack.addLine(to: origin)
+        pathBack.addLine(to: topBack)
+        pathBack.addLine(to: topLeft)
+        pathBack.addLine(to: bottomLeft)
+        pathBack.addLine(to: bottomFront)
+        pathBack.addLine(to: bottomRight)
+        pathBack.addLine(to: topRight)
+        pathBack.addLine(to: topBack)
+        pathBack.move(to: origin)
+        pathBack.addLine(to: bottomRight)
+        backBoundingBoxShape.path = pathBack
+        
+        let pathFront = CGMutablePath()
+        pathFront.move(to: topLeft)
+        pathFront.addLine(to: topFront)
+        pathFront.addLine(to: bottomFront)
+        pathFront.move(to: topFront)
+        pathFront.addLine(to: topRight)
+        frontBoundingBoxShape.path = pathFront
+    }
+    
     public func createChildElementNode(element: SpriteAssetElement, parentElement: SpriteAssetElement?) -> SKNode {
         if let parentElement {
             let parentNode = nodeByElement[parentElement]!
             return createChildElementNode(element: element, parentNode: parentNode)
         }
         else {
-            return createChildElementNode(element: element, parentNode: self)
+            return createChildElementNode(element: element, parentNode: elementsRoot)
         }
     }
     

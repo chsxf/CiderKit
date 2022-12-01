@@ -230,6 +230,7 @@ final class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFie
 
         let newScene = SpriteAssetDescriptionScene()
         let _ = newScene.createChildElementNode(element: rootElement, parentElement: nil)
+        newScene.setBoundingBox(position: assetDescription!.position, size: assetDescription!.size)
         return newScene
     }
     
@@ -253,6 +254,48 @@ final class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFie
         if let selectedItem = outline?.item(atRow: outline!.selectedRow) as? SpriteAssetElement {
             removeButton?.isEnabled = !selectedItem.isRoot
             selectedAssetElement = selectedItem
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, assetXPositionChanged position: Float) {
+        if let assetDescription, let scene {
+            assetDescription.position.x = position
+            scene.setBoundingBox(position: assetDescription.position, size: assetDescription.size)
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, assetYPositionChanged position: Float) {
+        if let assetDescription, let scene {
+            assetDescription.position.y = position
+            scene.setBoundingBox(position: assetDescription.position, size: assetDescription.size)
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, assetZPositionChanged position: Float) {
+        if let assetDescription, let scene {
+            assetDescription.position.z = position
+            scene.setBoundingBox(position: assetDescription.position, size: assetDescription.size)
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, assetXSizeChanged size: Float) {
+        if let assetDescription, let scene {
+            assetDescription.size.x = size
+            scene.setBoundingBox(position: assetDescription.position, size: assetDescription.size)
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, assetYSizeChanged size: Float) {
+        if let assetDescription, let scene {
+            assetDescription.size.y = size
+            scene.setBoundingBox(position: assetDescription.position, size: assetDescription.size)
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, assetZSizeChanged size: Float) {
+        if let assetDescription, let scene {
+            assetDescription.size.z = size
+            scene.setBoundingBox(position: assetDescription.position, size: assetDescription.size)
         }
     }
     
