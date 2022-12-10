@@ -83,6 +83,7 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
         let pointLight = PointLightNode()
         pointLight.position = scenePosition
         pointLight.enabled = lightDescription.enabled
+        pointLight.setLightColor(lightDescription.color)
         newEntity.addComponent(GKSKNodeComponent(node: pointLight))
         
         let pointLightComponent = PointLightComponent(from: lightDescription)
@@ -100,6 +101,7 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
         
         pointLight.position = Self.computeScenePosition(from: lightDescription)
         pointLight.enabled = lightDescription.enabled
+        pointLight.setLightColor(lightDescription.color)
         
         return true
     }

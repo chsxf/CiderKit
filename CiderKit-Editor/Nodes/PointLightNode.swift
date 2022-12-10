@@ -10,6 +10,8 @@ class PointLightNode: SKNode {
     let lightbulbOnNode: SKSpriteNode
     let lightbulbOffNode: SKSpriteNode
     
+    let ringNode: SKShapeNode
+    
     var enabled: Bool {
         get { lightbulbOffNode.isHidden }
         set {
@@ -29,7 +31,7 @@ class PointLightNode: SKNode {
             updateSpriteColor()
         }
     }
-    
+
     override init() {
         if Self.lightbulbOnTexture == nil {
             Self.lightbulbOnTexture = SKTexture(imageNamed: "lightbulb_on")
@@ -44,7 +46,13 @@ class PointLightNode: SKNode {
         lightbulbOnNode = SKSpriteNode(texture: Self.lightbulbOnTexture)
         lightbulbOffNode = SKSpriteNode(texture: Self.lightbulbOfftexture)
         
+        ringNode = SKShapeNode(circleOfRadius: 5)
+        ringNode.strokeColor = .gray
+        ringNode.fillColor = .black
+        
         super.init()
+        
+        addChild(ringNode)
         
         setupLightBulb(lightbulbOnNode)
         setupLightBulb(lightbulbOffNode)
@@ -52,6 +60,10 @@ class PointLightNode: SKNode {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setLightColor(_ color: CGColor) {
+        ringNode.fillColor = SKColor(cgColor: color)!
     }
     
     fileprivate func setupLightBulb(_ lightbulb: SKSpriteNode) {
@@ -63,17 +75,12 @@ class PointLightNode: SKNode {
     
     fileprivate func updateSpriteColor() {
         if !selected && !hovered {
-            setSpriteColor(SKColor.white)
+            ringNode.strokeColor = .gray
         }
         else {
             let color = selected ? SKColor.green : SKColor.red
-            setSpriteColor(color)
+            ringNode.strokeColor = color
         }
-    }
-    
-    fileprivate func setSpriteColor(_ color: SKColor) {
-        lightbulbOnNode.color = color
-        lightbulbOffNode.color = color
     }
     
 }

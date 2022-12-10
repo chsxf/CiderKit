@@ -22,7 +22,6 @@ open class GameView: SKView, SKSceneDelegate {
         showsNodeCount = true
         ignoresSiblingOrder = true
         allowsTransparency = true
-        disableDepthStencilBuffer = true
         
         let scene = SKScene(size: frameRect.size)
         self.gameScene = scene
