@@ -196,7 +196,7 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
 
         self.window?.beginSheet(window) { responseCode in
             if responseCode == .OK {
-                if let locator = selectorView.selectedSpriteLocator {
+                if let locator = selectorView.getResult() {
                     self.spriteField.stringValue = locator.description
                     self.removeSpriteButton.isEnabled = true
                     self.elementViewDelegate?.elementView(self, spriteChanged: locator)

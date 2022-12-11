@@ -121,6 +121,8 @@
 		D9AF1F5D280BE7F800BF34B3 /* ProjectManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F5C280BE7F800BF34B3 /* ProjectManagerView.swift */; };
 		D9AF1F60280BE99400BF34B3 /* ProjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF1F5F280BE99400BF34B3 /* ProjectManager.swift */; };
 		D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BF52CC280A05F20093005B /* EditorMainView.swift */; };
+		D9C0E2332945F2EC002E6147 /* ItemSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C0E2322945F2EC002E6147 /* ItemSelectorView.swift */; };
+		D9C0E23529461DFC002E6147 /* StringKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C0E23429461DFC002E6147 /* StringKeysProvider.swift */; };
 		D9C26B7A28D196960087CD60 /* SpriteAssetAnimationTrackIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C26B7928D196950087CD60 /* SpriteAssetAnimationTrackIdentifier.swift */; };
 		D9CC3529285D16B7003EEB6F /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC3528285D16B7003EEB6F /* Pool.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
@@ -298,6 +300,8 @@
 		D9B8557927F0C86F00D605F4 /* CiderKit-EditorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CiderKit-EditorTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9B8558527F0C8CD00D605F4 /* MapAreaTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapAreaTests.swift; sourceTree = "<group>"; };
 		D9BF52CC280A05F20093005B /* EditorMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMainView.swift; sourceTree = "<group>"; };
+		D9C0E2322945F2EC002E6147 /* ItemSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSelectorView.swift; sourceTree = "<group>"; };
+		D9C0E23429461DFC002E6147 /* StringKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringKeysProvider.swift; sourceTree = "<group>"; };
 		D9C26B7928D196950087CD60 /* SpriteAssetAnimationTrackIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTrackIdentifier.swift; sourceTree = "<group>"; };
 		D9CC3528285D16B7003EEB6F /* Pool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pool.swift; sourceTree = "<group>"; };
 		D9CC420F276163700081A464 /* WorldGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldGrid.swift; sourceTree = "<group>"; };
@@ -626,6 +630,7 @@
 				D9878FAB293AB6280016AABE /* SIMDExtensions.swift */,
 				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
 				D940EB72291338D60036B101 /* StringCodingKey.swift */,
+				D9C0E23429461DFC002E6147 /* StringKeysProvider.swift */,
 				D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */,
 				D9C132E52827008D00DE8457 /* Atlases */,
 				D91061C02755F24100EA8A03 /* Map */,
@@ -687,6 +692,7 @@
 				D936187A27E71D77009A14E2 /* EditorGameView.swift */,
 				D9BF52CC280A05F20093005B /* EditorMainView.swift */,
 				D985E7E827DDEBBC00AC2465 /* InspectorView.swift */,
+				D9C0E2322945F2EC002E6147 /* ItemSelectorView.swift */,
 				D9AF1F5C280BE7F800BF34B3 /* ProjectManagerView.swift */,
 				D909FDBB287779630083EB8C /* HelperViews */,
 				D909FDB6287747500083EB8C /* InspectorViews */,
@@ -1024,6 +1030,7 @@
 				D9AF1F60280BE99400BF34B3 /* ProjectManager.swift in Sources */,
 				D92FD11A28AA72790097945B /* BaseInspectorView.swift in Sources */,
 				D9A9331728A862D500A45CEB /* SpriteAssetDescriptionViewDelegate.swift in Sources */,
+				D9C0E2332945F2EC002E6147 /* ItemSelectorView.swift in Sources */,
 				D928562628B18BB5000F2D86 /* FloatField.swift in Sources */,
 				D9387C19289D3A6800558E02 /* SpriteSelectorView.swift in Sources */,
 				D93F23A328D59180002276EE /* SpriteAssetAnimationDopeSheetHeaderView.swift in Sources */,
@@ -1089,6 +1096,7 @@
 				D90BB9BB289B242800833C49 /* AtlasLocator.swift in Sources */,
 				D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */,
 				D92002D9282FAFCF007D5AC1 /* BaseLight.swift in Sources */,
+				D9C0E23529461DFC002E6147 /* StringKeysProvider.swift in Sources */,
 				D93C4CAB2800CBE0000955E1 /* Screen.swift in Sources */,
 				D9741C5F290D64E10078571B /* FloatExtension.swift in Sources */,
 				D92EE975281DD3F2009B2055 /* CustomSettings.swift in Sources */,

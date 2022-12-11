@@ -1,8 +1,8 @@
 import Foundation
 import SpriteKit
 
-public final class Atlas {
-    
+public final class Atlas: StringKeysProvider {
+
     public let name: String
     
     public let editorOnly: Bool
@@ -12,6 +12,8 @@ public final class Atlas {
     public private(set) var atlasSprites: [String: SKTexture]
     
     private var variants: [String: Atlas] = [:]
+    
+    public var keys: any Collection<String> { atlasSprites.keys }
     
     init(named name: String, from description: AtlasDescription, in bundle: Bundle, variant: String?) {
         self.name = name
