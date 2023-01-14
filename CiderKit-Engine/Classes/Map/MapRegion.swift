@@ -14,6 +14,9 @@ public class MapRegion : SKNode, Identifiable, Comparable {
     
     public var cellEntities: [GKEntity] = []
     
+    var layerCount: Int { 10 }
+    public var elevation: Int { regionDescription.elevation }
+    
     public init(forMap map: MapNode, description: MapRegionDescription) {
         _id = MapRegion.nextRegionId
         MapRegion.nextRegionId += 1
@@ -76,7 +79,10 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.zPosition = -2
                     
                     let z = zForShader - Float(i + 1) * 0.25
-                    sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)), forAttribute: CiderKitEngine.ShaderAttributeName.position.rawValue)
+                    sprite.attributeValues = [
+                        CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)),
+                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: vector_float3(1, 1, 0.25))
+                    ]
                     
                     localLeftElevationMaterialOverride = regionDescription.leftElevationMaterialOverride(at: indexInRegion)
                     leftElevationMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localLeftElevationMaterialOverride)
@@ -99,7 +105,10 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.zPosition = -1
                     
                     let z = zForShader - Float(i + 1) * 0.25
-                    sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)), forAttribute: CiderKitEngine.ShaderAttributeName.position.rawValue)
+                    sprite.attributeValues = [
+                        CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)),
+                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: vector_float3(1, 1, 0.25))
+                    ]
                     
                     localRightElevationMaterialOverride = regionDescription.rightElevationMaterialOverride(at: indexInRegion)
                     rightElevationMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localRightElevationMaterialOverride)
@@ -118,7 +127,10 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 let localGroundMaterialOverride = regionDescription.groundMaterialOverride(at: indexInRegion)
                 groundMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localGroundMaterialOverride)
                 
-                sprite.setValue(SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), zForShader)), forAttribute: CiderKitEngine.ShaderAttributeName.position.rawValue)
+                sprite.attributeValues = [
+                    CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), zForShader)),
+                    CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: vector_float3(1, 1, 0))
+                ]
                 
                 addChild(sprite)
                 
@@ -131,16 +143,15 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 cellEntities.append(entity)
             }
         }
+        
+        regionDescription.spriteAssets?.forEach { self.instantiateSpriteAssetNode(placement: $0) }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func containsMapCoordinates(x: Int, y: Int) -> Bool {
-        return (x >= Int(regionDescription.area.minX) && x < Int(regionDescription.area.maxX)
-                && y >= Int(regionDescription.area.minY) && y < Int(regionDescription.area.maxY))
-    }
+    func containsMapCoordinates(x: Int, y: Int) -> Bool { regionDescription.area.contains(x: x, y: y) }
     
     public static func < (lhs: MapRegion, rhs: MapRegion) -> Bool {
         let regionsOverlapOnX = (lhs.regionDescription.area.maxX > rhs.regionDescription.area.minX && lhs.regionDescription.area.minX < rhs.regionDescription.area.maxX)
@@ -220,6 +231,31 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         }
         
         return (mainSubdivision, otherSubdivisions)
+    }
+    
+    private func instantiateSpriteAssetNode(placement: SpriteAssetPlacement) {
+        guard let assetDescription = placement.spriteAssetLocator.assetDescription else { return }
+        
+        let absoluteCoords = regionDescription.area.convert(localX: placement.x, y: placement.y)
+        var worldPosition = simd_float3(Float(absoluteCoords.x), Float(absoluteCoords.y), Float(elevation)) + placement.worldOffset.toSIMDFloat3()
+        worldPosition.z *= 0.25
+        
+        let assetNode = map!.instantiateSpriteAssetNode(placement: placement, description: assetDescription, at: worldPosition)
+        var scenePosition = Math.cellToScene(CGPoint(x: absoluteCoords.x, y: absoluteCoords.y) + CGPoint(x: 0.5, y: 0.5), halfTileSize: CGSize(width: MapNode.halfWidth, height: MapNode.halfHeight)) + placement.worldOffset
+        scenePosition = scenePosition + CGPoint(x: 0, y: elevation * MapNode.elevationHeight)
+        assetNode.position = scenePosition
+        assetNode.zPosition = 1
+        addChild(assetNode)
+    }
+    
+    public func addSpriteAsset(_ spriteAsset: SpriteAssetLocator, atX x: Int, y: Int) {
+        regionDescription.spriteAssets = regionDescription.spriteAssets ?? []
+        
+        let coordsInRegion = regionDescription.area.convert(absoluteX: x, y: y)
+        let placement = SpriteAssetPlacement(spriteAssetLocator: spriteAsset, atX: coordsInRegion.x, y: coordsInRegion.y, worldOffset: CGPoint())
+        regionDescription.spriteAssets!.append(placement)
+        
+        instantiateSpriteAssetNode(placement: placement)
     }
     
 }

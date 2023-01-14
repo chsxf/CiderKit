@@ -8,6 +8,8 @@ extension Notification.Name {
 
 class EditorMapNode: MapNode {
 
+    weak var delegate: EditorMapNodeDelegate? = nil
+    
     var dirty: Bool = false {
         didSet {
             if dirty != oldValue {
@@ -117,7 +119,7 @@ class EditorMapNode: MapNode {
                 let region = regions[i]
                 for i2 in i+1..<regions.count {
                     let region2 = regions[i2]
-                    if let newRegionDescription = region.regionDescription.merging(with: region2.regionDescription) {
+                    if let newRegionDescription = region.regionDescription.merged(with: region2.regionDescription) {
                         let newRegion = MapRegion(forMap: self, description: newRegionDescription)
                         regions[i] = newRegion
                         regions.remove(at: i2)
@@ -128,6 +130,12 @@ class EditorMapNode: MapNode {
                 i += 1
             }
         } while regionsHaveChanged
+    }
+    
+    override func buildRegions() {
+        hoverableEntities = []
+        super.buildRegions()
+        updateAdditionalEntities()
     }
     
     override func mapCellEntity(node: SKNode, for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> GKEntity {
@@ -143,6 +151,24 @@ class EditorMapNode: MapNode {
     func addLight(_ light: PointLight) {
         lights.append(light)
         dirty = true
+    }
+
+    func updateAdditionalEntities() {
+        updateSpriteAssetEntities()
+    }
+    
+    private func updateSpriteAssetEntities() {
+        guard let scene else { return }
+        
+        scene.enumerateChildNodes(withName: "//*") { node, _ in
+            if let spriteAssetNode = node as? SpriteAssetNode {
+                self.hoverableEntities.append(SpriteAssetComponent.entity(from: spriteAssetNode.placement, with: spriteAssetNode))
+            }
+        }
+    }
+    
+    override func instantiateSpriteAssetNode(placement: SpriteAssetPlacement, description: SpriteAssetDescription, at worldPosition: simd_float3) -> SpriteAssetNode {
+        EditorSpriteAssetNode(placement: placement, description: description, at: worldPosition)
     }
     
 }

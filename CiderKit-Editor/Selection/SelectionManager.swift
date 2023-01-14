@@ -132,6 +132,10 @@ class SelectionManager: NSResponder {
     }
     
     override func rightMouseUp(with event: NSEvent) {
+        deselect();
+    }
+    
+    func deselect() {
         selectionModel.setSelectable(nil)
         disableAllTools()
         editableSubscription?.cancel()

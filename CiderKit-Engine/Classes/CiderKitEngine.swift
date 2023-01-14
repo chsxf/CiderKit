@@ -46,6 +46,7 @@ public class CiderKitEngine {
 
     enum ShaderAttributeName: String {
         case position = "a_position"
+        case size = "a_size"
     }
     
     public static var bundle: Bundle { Bundle(for: Self.self) }
@@ -113,7 +114,8 @@ public class CiderKitEngine {
             SKUniform(name: ShaderUniformName.positionRanges.rawValue, matrixFloat3x3: matrix_float3x3())
         ])
         uberShader.attributes = [
-            SKAttribute(name: ShaderAttributeName.position.rawValue, type: .vectorFloat3)
+            SKAttribute(name: ShaderAttributeName.position.rawValue, type: .vectorFloat3),
+            SKAttribute(name: ShaderAttributeName.size.rawValue, type: .vectorFloat3)
         ]
         
         uberShaderInstances[atlas.name] = uberShader

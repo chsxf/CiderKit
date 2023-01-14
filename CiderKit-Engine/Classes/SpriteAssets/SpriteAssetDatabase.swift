@@ -1,4 +1,4 @@
-public class SpriteAssetDatabase: Identifiable, Codable, CustomStringConvertible {
+public class SpriteAssetDatabase: Identifiable, Codable, CustomStringConvertible, StringKeysProvider {
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -18,6 +18,8 @@ public class SpriteAssetDatabase: Identifiable, Codable, CustomStringConvertible
     public var spriteAssets: [SpriteAssetDescription] = []
     
     public var sourceURL: URL? = nil
+    
+    public var keys: any Collection<String> { spriteAssets.map { $0.uuid.description } }
     
     public init(id: String) {
         self.id = id

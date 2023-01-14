@@ -85,7 +85,7 @@ open class GameView: SKView, SKSceneDelegate {
             
             maxVector.x = max(maxVector.x, Float(area.maxX))
             maxVector.y = max(maxVector.y, Float(area.maxY))
-            maxVector.z = max(maxVector.z, Float(region.regionDescription.elevation))
+            maxVector.z = max(maxVector.z, Float(region.regionDescription.elevation + 1) * 0.25)
         }
         
         return matrix_float3x3(minVector, maxVector, vector_float3())
@@ -127,7 +127,7 @@ open class GameView: SKView, SKSceneDelegate {
         let finalGatherViewNormalizedMaxY = Float(finalGatherMaxInView.y / frame.height)
 
         if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed(CiderKitEngine.ShaderUniformName.frameInViewSpace.rawValue) {
-            #if os(iOS) || os(tvOS) || arch(arm64)
+            #if os(iOS) || os(tvOS)
             let matrix = matrix_float2x2([vector_float2(finalGatherViewNormalizedMinX, 1.0 - finalGatherViewNormalizedMinY), vector_float2(finalGatherViewNormalizedMaxX, 1.0 - finalGatherViewNormalizedMaxY)])
             #else
             let matrix = matrix_float2x2([vector_float2(finalGatherViewNormalizedMinX, finalGatherViewNormalizedMinY), vector_float2(finalGatherViewNormalizedMaxX, finalGatherViewNormalizedMaxY)])

@@ -10,7 +10,7 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
     public static let appName = "CiderKit Editor"
     public static private(set) var mainWindow: NSWindow!
     
-    private var window: NSWindow!
+    private(set) var window: NSWindow!
     private var gameView: EditorGameView!
     
     private var actionsManager: MainActionsManager!
@@ -74,7 +74,8 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
         mapMenu.submenu = NSMenu(title: "Map")
         mapMenu.submenu?.items = [
             NSMenuItem(title: "Increase Elevation for All Regions", target: actionsManager, action: #selector(MainActionsManager.increaseElevationForWholeMap), keyEquivalent: ""),
-            NSMenuItem(title: "Decrease Elevation for All Regions", target: actionsManager, action: #selector(MainActionsManager.decreaseElevationForWholeMap), keyEquivalent: "")
+            NSMenuItem(title: "Decrease Elevation for All Regions", target: actionsManager, action: #selector(MainActionsManager.decreaseElevationForWholeMap), keyEquivalent: ""),
+            NSMenuItem(title: "Deselect All", target: actionsManager, action: #selector(MainActionsManager.deselectAll), keyEquivalent: "")
         ]
         
         mainMenu.items = [menuItemOne, fileMenu, mapMenu]

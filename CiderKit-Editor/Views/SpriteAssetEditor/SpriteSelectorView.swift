@@ -4,8 +4,8 @@ import CiderKit_Engine
 class SpriteSelectorView: ItemSelectorView<SpriteLocator, Atlas> {
     
     override func getResult() -> SpriteLocator? {
-        guard let selectedGroup, let selectedItem else { return nil }
-        return SpriteLocator(key: selectedGroup, sprite: selectedItem)
+        guard let selectedGroup, let selectedItemKey else { return nil }
+        return SpriteLocator(key: selectedGroup, sprite: selectedItemKey)
     }
     
     override class func generateOrderedGroupKeys() -> [String] {
@@ -21,3 +21,4 @@ class SpriteSelectorView: ItemSelectorView<SpriteLocator, Atlas> {
     override class func getGroup(with key: String) -> Atlas? { Atlases[key] }
     
 }
+

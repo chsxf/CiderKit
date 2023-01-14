@@ -3,7 +3,7 @@ import SpriteKit
 import GameplayKit
 import CiderKit_Engine
 
-class EditorGameView: GameView {
+class EditorGameView: GameView, EditorMapNodeDelegate {
     
     private(set) var worldGrid: WorldGrid!
     
@@ -178,6 +178,7 @@ class EditorGameView: GameView {
     
     override func mapNode(from description: MapDescription) -> MapNode {
         mutableMap = EditorMapNode(description: description)
+        mutableMap.delegate = self
         return mutableMap
     }
     
@@ -191,6 +192,7 @@ class EditorGameView: GameView {
     
     override func loadMap(file: URL) {
         super.loadMap(file: file)
+        mutableMap.updateAdditionalEntities()
         selectionModel.clear()
         buildLightNodes()
     }
@@ -211,7 +213,7 @@ class EditorGameView: GameView {
         lightsRoot.isHidden = false
     }
     
-    func buildLightNodes() {
+    private func buildLightNodes() {
         map.lights.forEach { setupPointLight($0) }
         ambientLightEntity = AmbientLightComponent.entity(from: map.ambientLight)
     }
@@ -228,6 +230,16 @@ class EditorGameView: GameView {
     func addLight(_ light: PointLight) {
         mutableMap.addLight(light)
         setupPointLight(light)
+    }
+    
+    func addSpriteAsset(_ spriteAsset: SpriteAssetLocator, atX x: Int, y: Int) {
+        if let region = mutableMap.regionAt(x: x, y: y) {
+            region.addSpriteAsset(spriteAsset, atX: x, y: y)
+        }
+    }
+
+    func editorMapNode(_ node: EditorMapNode, addedEditableComponent editableComponent: EditableComponent) {
+        
     }
     
 }

@@ -35,7 +35,7 @@ void main() {
     if (albedo.a > 0) {
         vec2 lerped_tex_coord = mix(u_frame_in_view[0], u_frame_in_view[1], v_tex_coord);
         vec3 normals = texture2D(u_normals_texture, lerped_tex_coord).rgb;
-
+ 
         vec3 normalizedPos = texture2D(u_position_texture, lerped_tex_coord).rgb;
         vec3 pos = mix(u_position_ranges[0], u_position_ranges[1], normalizedPos);
 

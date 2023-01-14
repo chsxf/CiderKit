@@ -4,13 +4,13 @@ import CiderKit_Engine
 class ItemSelectorView<ResultType, GroupType: StringKeysProvider>: NSView, NSComboBoxDelegate, NSComboBoxDataSource, NSCollectionViewDataSource, NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout {
     
     let orderedGroupKeys: [String]
-    private(set) var orderedItemNames: [String]? = nil
+    private(set) var orderedItems: [Dictionary<String, String>.Element]? = nil
     
     private let selectButton: NSButton
     private let collectionView: NSCollectionView
     
     private(set) var selectedGroup: String? = nil
-    private(set) var selectedItem: String? = nil
+    private(set) var selectedItemKey: String? = nil
     
     init() {
         selectButton = NSButton(title: "Select", target: nil, action: #selector(Self.confirmSelection))
@@ -69,6 +69,8 @@ class ItemSelectorView<ResultType, GroupType: StringKeysProvider>: NSView, NSCom
     
     class func getGroup(with key: String) -> GroupType? { nil }
     
+    class func itemLabel(in group: GroupType, with key: String) -> String? { key }
+    
     @objc
     private func confirmSelection() {
         window!.sheetParent!.endSheet(window!, returnCode: .OK)
@@ -101,28 +103,34 @@ class ItemSelectorView<ResultType, GroupType: StringKeysProvider>: NSView, NSCom
         
         if let group = Self.getGroup(with: groupKey) {
             selectedGroup = groupKey
-            orderedItemNames = group.keys.sorted()
+            var items = [String:String]()
+            group.keys.forEach { key in
+                items[key] = Self.itemLabel(in: group, with: key)
+            }
+            orderedItems = items.sorted(by: { firstItem, secondItem in
+                firstItem.value < secondItem.value
+            })
         }
         else {
             selectedGroup = nil
-            orderedItemNames = nil
+            orderedItems = nil
         }
         
         collectionView.reloadData()
         selectButton.isEnabled = false
-        selectedItem = nil
+        selectedItemKey = nil
     }
     
     func numberOfSections(in collectionView: NSCollectionView) -> Int { 1 }
     
     func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        orderedItemNames?.count ?? 0
+        orderedItems?.count ?? 0
     }
     
     func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         let item = collectionView.makeItem(withIdentifier: .textViewItem, for: indexPath)
-        if let orderedItemNames {
-            item.textField?.stringValue = orderedItemNames[indexPath.item]
+        if let orderedItems {
+            item.textField?.stringValue = orderedItems[indexPath.item].value
         }
         else {
             item.textField?.stringValue = "NA"
@@ -136,12 +144,12 @@ class ItemSelectorView<ResultType, GroupType: StringKeysProvider>: NSView, NSCom
     
     func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
         if let selectedIndexPath = indexPaths.first {
-            selectedItem = orderedItemNames?[selectedIndexPath.item]
+            selectedItemKey = orderedItems?[selectedIndexPath.item].key
         }
         else {
-            selectedItem = nil
+            selectedItemKey = nil
         }
-        selectButton.isEnabled = selectedItem != nil
+        selectButton.isEnabled = selectedItemKey != nil
     }
     
 }

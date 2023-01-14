@@ -3,8 +3,8 @@ import UniformTypeIdentifiers
 import SpriteKit
 import CiderKit_Engine
 
-final class MainActionsManager {
-    
+final class MainActionsManager : NSObject, NSToolbarItemValidation {
+
     private weak var app: CiderKitApp? = nil
     private weak var gameView: EditorGameView? = nil
     
@@ -15,10 +15,39 @@ final class MainActionsManager {
         self.gameView = gameView
     }
     
+    func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
+        if item.itemIdentifier == .addAsset {
+            guard
+                let selectedArea = gameView?.selectionModel.selectedArea,
+                gameView?.map.hasCell(forX: selectedArea.x, y: selectedArea.y) ?? false
+            else {
+                return false
+            }
+        }
+        return true
+    }
+    
     @objc
     func switchTool(_ sender: NSToolbarItemGroup) {
         let toolMode = ToolMode(rawValue: 1 << sender.selectedIndex)
         gameView?.selectionManager?.currentToolMode = toolMode
+    }
+    
+    @objc
+    func addAsset() {
+        let windowRect: CGRect = CGRect(x: 0, y: 0, width: 400, height: 600)
+
+        let window = NSWindow(contentRect: windowRect, styleMask: [.resizable, .titled], backing: .buffered, defer: false)
+        let selectorView = SpriteAssetSelectorView()
+        window.contentView = selectorView
+
+        app!.window.beginSheet(window) { responseCode in
+            if responseCode == .OK {
+                if let locator = selectorView.getResult(), let selectedArea = self.gameView?.selectionModel.selectedArea {
+                    self.gameView?.addSpriteAsset(locator, atX: selectedArea.x, y: selectedArea.y)
+                }
+            }
+        }
     }
     
     @objc
@@ -155,6 +184,11 @@ final class MainActionsManager {
     @objc
     func decreaseElevationForWholeMap() {
         gameView?.decreaseElevation(area: nil)
+    }
+    
+    @objc
+    func deselectAll() {
+        gameView?.selectionManager?.deselect()
     }
     
 }

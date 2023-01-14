@@ -11,7 +11,7 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
     
     let supportedToolModes: ToolMode = .move
     
-    var inspectableDescription: String = "Point Light"
+    var inspectableDescription: String { "Point Light" }
     
     var inspectorView: BaseInspectorView? {
         let view = InspectorViewFactory.getView(forClass: Self.self, generator: { PointLightInspector() })
@@ -37,35 +37,25 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
     }
     
     func contains(sceneCoordinates: CGPoint) -> Bool {
-        guard let lightNode = lightNode else {
-            return false
-        }
+        guard let lightNode = lightNode else { return false }
         let frame = lightNode.calculateAccumulatedFrame()
         return frame.contains(sceneCoordinates)
     }
 
     func hovered() {
-        if let lightNode = lightNode {
-            lightNode.hovered = true
-        }
+        lightNode?.hovered = true
     }
     
     func departed() {
-        if let lightNode = lightNode {
-            lightNode.hovered = false
-        }
+        lightNode?.hovered = false
     }
     
     func highlight() {
-        if let lightNode = lightNode {
-            lightNode.selected = true
-        }
+        lightNode?.selected = true
     }
     
     func demphasize() {
-        if let lightNode = lightNode {
-            lightNode.selected = false
-        }
+        lightNode?.selected = false
     }
     
     private class func computeScenePosition(from lightDescription: PointLight) -> CGPoint {

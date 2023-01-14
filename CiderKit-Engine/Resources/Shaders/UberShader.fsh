@@ -12,8 +12,8 @@ vec3 inverseLerp(vec3 min, vec3 max, vec3 value) {
     return vec3(inverseLerp(min[0], max[0], value[0]), inverseLerp(min[1], max[1], value[1]), inverseLerp(min[2], max[2], value[2]));
 }
 
-vec4 shadeWithPosition(vec4 posTexColor, vec3 pos, mat3 posRanges) {
-    vec3 adjustedPos = inverseLerp(posRanges[0], posRanges[1], pos + vec3(posTexColor.r, posTexColor.g, posTexColor.b * 0.25));
+vec4 shadeWithPosition(vec4 posTexColor, vec3 pos, vec3 size, mat3 posRanges) {
+    vec3 adjustedPos = inverseLerp(posRanges[0], posRanges[1], pos + posTexColor.rgb * size);
     return vec4(adjustedPos * posTexColor.a, posTexColor.a);
 }
 
@@ -25,10 +25,9 @@ void main() {
     }
     else if (u_shadeMode > 0.0) {
         vec4 texColor = texture2D(u_position_texture, tc);
-        gl_FragColor = shadeWithPosition(texColor, a_position, u_position_ranges);
+        gl_FragColor = shadeWithPosition(texColor, a_position, a_size, u_position_ranges);
     }
     else {
         gl_FragColor = texture2D(u_texture, tc);
     }
 }
-

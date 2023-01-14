@@ -15,8 +15,6 @@ open class MapNode: SKNode, Collection {
     public let ambientLight: BaseLight
     public var lights: [PointLight]
     
-    var layerCount:Int { 3 } // Temporary code
-    
     public var startIndex: Int { regions.startIndex }
     public var endIndex: Int { regions.endIndex }
     
@@ -52,6 +50,12 @@ open class MapNode: SKNode, Collection {
     
     public func index(after i: Int) -> Int { regions.index(after: i) }
     
+    public func regionAt(x: Int, y: Int) -> MapRegion? {
+        regions.first(where: { $0.containsMapCoordinates(x: x, y: y) })
+    }
+    
+    public func hasCell(forX x: Int, y: Int) -> Bool { regionAt(x: x, y: y) != nil }
+    
     public func toMapDescription() -> MapDescription {
         var newMapDescription = MapDescription()
         for region in regions {
@@ -71,7 +75,7 @@ open class MapNode: SKNode, Collection {
         var index = 0
         for region in regions {
             region.zPosition = CGFloat(index)
-            index += layerCount
+            index += region.layerCount
         }
     }
     
@@ -84,23 +88,13 @@ open class MapNode: SKNode, Collection {
     
     public func sortRegions() {
         regions.sort()
-        updateRegionsZPosition()
     }
     
-    public func buildRegions() {
+    open func buildRegions() {
         for region in regions {
             region.build()
         }
         updateRegionsZPosition()
-    }
-    
-    public func hasCell(forX x: Int, y: Int) -> Bool {
-        for region in regions {
-            if region.regionDescription.area.contains(x: x, y: y) {
-                return true
-            }
-        }
-        return false;
     }
     
     func getLeftVisibleElevation(forX x: Int, y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
@@ -173,5 +167,18 @@ open class MapNode: SKNode, Collection {
     
     open func mapCellComponent(for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> MapCellComponent {
         return MapCellComponent(region: region, mapX: x, mapY: y, elevation: elevation)
+    }
+    
+    public func getSpriteAssetPlacement(by id: UUID) -> SpriteAssetPlacement? {
+        for region in regions {
+            if let placement = region.regionDescription.spriteAssets?.first(where: { $0.id == id }) {
+                return placement
+            }
+        }
+        return nil
+    }
+    
+    open func instantiateSpriteAssetNode(placement: SpriteAssetPlacement, description: SpriteAssetDescription, at worldPosition: simd_float3) -> SpriteAssetNode {
+        SpriteAssetNode(placement: placement, description: description, at: worldPosition)
     }
 }

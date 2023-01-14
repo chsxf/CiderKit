@@ -1,7 +1,8 @@
 import AppKit
 
-private extension NSToolbarItem.Identifier {
+extension NSToolbarItem.Identifier {
     static let tool = NSToolbarItem.Identifier(rawValue: "tool")
+    static let addAsset = NSToolbarItem.Identifier(rawValue: "addAsset")
     static let addLight = NSToolbarItem.Identifier(rawValue: "addLight")
     static let ambientLightSettings = NSToolbarItem.Identifier(rawValue: "ambientlight_settings")
     static let toggleLighting = NSToolbarItem.Identifier(rawValue: "toogle_lighting")
@@ -11,11 +12,11 @@ private extension NSToolbarItem.Identifier {
 final class MainToolbar: NSObject, NSToolbarDelegate {
     
     private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .flexibleSpace, .addLight, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
+        .tool, .space, .addLight, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
     ]
     
     private let defaultToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .flexibleSpace, .addLight, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
+        .tool, .space, .addAsset, .space, .addLight, .ambientLightSettings, .toggleLighting, .space, .spriteAssetEditor
     ]
     
     private weak var actionsManager: MainActionsManager? = nil
@@ -32,6 +33,8 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
         toolbar.displayMode = .iconOnly
         toolbar.delegate = self
         window.toolbar = toolbar
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(Self.onSelectableUpdated), name: .selectableUpdated, object: nil)
     }
     
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
@@ -53,7 +56,17 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
             NSImage(systemSymbolName: "arrow.up.arrow.down", accessibilityDescription: "Elevation")!
         ], selectionMode: .selectOne, labels: ["Select", "Move", "Elevation"], target: actionsManager, action: #selector(MainActionsManager.switchTool))
         toolItemGroup.selectedIndex = 0
+        for i in 1...2 {
+            toolItemGroup.subitems[i].isEnabled = false
+        }
         definedToolbarItems[.tool] = toolItemGroup
+        
+        let addAssetItem = NSToolbarItem(itemIdentifier: .addAsset)
+        addAssetItem.label = "Add Asset"
+        addAssetItem.image = NSImage(systemSymbolName: "cube.fill", accessibilityDescription: "Add Asset")
+        addAssetItem.target = actionsManager
+        addAssetItem.action = #selector(MainActionsManager.addAsset)
+        definedToolbarItems[.addAsset] = addAssetItem
         
         let addLightItem = NSToolbarItem(itemIdentifier: .addLight)
         addLightItem.label = "Add Light"
@@ -82,6 +95,17 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
         spriteAssetEditorItem.target = actionsManager
         spriteAssetEditorItem.action = #selector(MainActionsManager.openSpriteAssetEditor)
         definedToolbarItems[.spriteAssetEditor] = spriteAssetEditorItem
+    }
+    
+    @objc
+    private func onSelectableUpdated(_ notif: Notification) {
+        let hasSelection = notif.object != nil
+        
+        let toolGroup = definedToolbarItems[.tool] as! NSToolbarItemGroup
+        let tools = toolGroup.subitems
+        for i in 1...2 {
+            tools[i].isEnabled = hasSelection
+        }
     }
     
 }

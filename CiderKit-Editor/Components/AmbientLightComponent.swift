@@ -8,7 +8,7 @@ class AmbientLightComponent: GKComponent, Selectable, EditableComponentDelegate 
     
     var lightDescriptionChangeCancellable: AnyCancellable?
     
-    var inspectableDescription: String { "Ambient Light"}
+    var inspectableDescription: String { "Ambient Light" }
     
     var inspectorView: BaseInspectorView? {
         let view = InspectorViewFactory.getView(forClass: Self.self, generator: { AmbientLightInspector() })

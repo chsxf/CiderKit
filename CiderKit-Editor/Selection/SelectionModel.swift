@@ -43,9 +43,7 @@ class SelectionModel: ObservableObject {
         self.selectable?.demphasize()
         self.selectable = selectable
         self.selectable?.highlight()
-        if let validSelectable = self.selectable {
-            NotificationCenter.default.post(Notification(name: .selectableUpdated, object: validSelectable))
-        }
+        NotificationCenter.default.post(name: .selectableUpdated, object: self.selectable)
     }
     
 }
