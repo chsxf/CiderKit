@@ -5,14 +5,6 @@ import Combine
 import CiderKit_Engine
 import SpriteKit
 
-private extension NSToolbarItem.Identifier {
-    static let tool = NSToolbarItem.Identifier(rawValue: "tool")
-    static let addLight = NSToolbarItem.Identifier(rawValue: "addLight")
-    static let ambientLightSettings = NSToolbarItem.Identifier(rawValue: "ambientlight_settings")
-    static let toggleLighting = NSToolbarItem.Identifier(rawValue: "toogle_lighting")
-    static let spriteAssetEditor = NSToolbarItem.Identifier(rawValue: "sprite_asset_editor")
-}
-
 @main
 class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarDelegate, SKViewDelegate {
 
@@ -25,16 +17,6 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     private var currentMapURL: URL? = nil
     
     private var mapDirtyFlagCancellable: AnyCancellable?
-    
-    private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .flexibleSpace, .addLight, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
-    ]
-    
-    private let defaultToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .flexibleSpace, .addLight, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
-    ]
-    
-    private var definedToolbarItems: [NSToolbarItem.Identifier: NSToolbarItem] = [:]
     
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         if saveCurrentMapIfModified() {
@@ -99,46 +81,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     private func setupToolbar() -> Void {
-        initToolbarItems()
-        
-        let toolbar = NSToolbar(identifier: "main")
-        toolbar.displayMode = .iconOnly
-        toolbar.delegate = self
-        window.toolbar = toolbar
-    }
-    
-    private func initToolbarItems() -> Void {
-        let toolItemGroup = NSToolbarItemGroup(itemIdentifier: .tool, images: [
-            NSImage(systemSymbolName: "cursorarrow", accessibilityDescription: "Select")!,
-            NSImage(systemSymbolName: "move.3d", accessibilityDescription: "Move")!,
-            NSImage(systemSymbolName: "arrow.up.arrow.down", accessibilityDescription: "Elevation")!
-        ], selectionMode: .selectOne, labels: ["Select", "Move", "Elevation"], target: self, action: #selector(self.switchTool))
-        toolItemGroup.selectedIndex = 0
-        definedToolbarItems[.tool] = toolItemGroup
-        
-        let addLightItem = NSToolbarItem(itemIdentifier: .addLight)
-        addLightItem.label = "Add Light"
-        addLightItem.image = NSImage(systemSymbolName: "lightbulb.fill", accessibilityDescription: "Add Light")
-        addLightItem.action = #selector(Self.addLight)
-        definedToolbarItems[.addLight] = addLightItem
-        
-        let ambientLightSettingsItem = NSToolbarItem(itemIdentifier: .ambientLightSettings)
-        ambientLightSettingsItem.label = "Ambient Light Settings"
-        ambientLightSettingsItem.image = NSImage(systemSymbolName: "sun.max.fill", accessibilityDescription: "Ambient Light Settings")
-        ambientLightSettingsItem.action = #selector(self.selectAmbientLight)
-        definedToolbarItems[.ambientLightSettings] = ambientLightSettingsItem
-        
-        let toggleLightingItem = NSToolbarItem(itemIdentifier: .toggleLighting)
-        toggleLightingItem.label = "Toggle Lighting"
-        toggleLightingItem.image = NSImage(systemSymbolName: "lightbulb.circle.fill", accessibilityDescription: "Toggle Lighting")
-        toggleLightingItem.action = #selector(self.toggleLighting)
-        definedToolbarItems[.toggleLighting] = toggleLightingItem
-        
-        let spriteAssetEditorItem = NSToolbarItem(itemIdentifier: .spriteAssetEditor)
-        spriteAssetEditorItem.label = "Sprite Asset Editor"
-        spriteAssetEditorItem.image = NSImage(systemSymbolName: "photo.fill", accessibilityDescription: "Sprite Asset Editor")
-        spriteAssetEditorItem.action = #selector(self.openSpriteAssetEditor)
-        definedToolbarItems[.spriteAssetEditor] = spriteAssetEditorItem
+        let _ = MainToolbar(app: self, window: window)
     }
     
     private func setupNotifications() -> Void {
@@ -157,18 +100,6 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
                 NSApp.terminate(self)
             }
         }
-    }
-    
-    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
-        return definedToolbarItems[itemIdentifier]
-    }
-    
-    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return allowedToolbarIdentifiers
-    }
-    
-    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        return defaultToolbarIdentifiers
     }
     
     @objc
@@ -309,32 +240,30 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     @objc
-    private func switchTool() {
-        if let toolItemGroup = definedToolbarItems[.tool] as? NSToolbarItemGroup {
-            let toolMode = ToolMode(rawValue: 1 << toolItemGroup.selectedIndex)
-            gameView.selectionManager!.currentToolMode = toolMode
-        }
+    func switchTool(sender: NSToolbarItemGroup) {
+        let toolMode = ToolMode(rawValue: 1 << sender.selectedIndex)
+        gameView.selectionManager!.currentToolMode = toolMode
     }
     
     @objc
-    private func addLight() {
+    func addLight() {
         gameView.addLight(PointLight(name: "New Light", color: CGColor.white, position: vector_float3(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
     }
     
     @objc
-    private func selectAmbientLight() {
+    func selectAmbientLight() {
         gameView.selectionModel.setSelectable(gameView.ambientLightEntity?.findSelectableComponent())
     }
     
     @objc
-    private func toggleLighting() {
+    func toggleLighting(sender: NSToolbarItem) {
         gameView.lightingEnabled = !gameView.lightingEnabled
         let symbolName = gameView.lightingEnabled ? "lightbulb.circle.fill" : "lightbulb.circle"
-        definedToolbarItems[.toggleLighting]!.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Toggle Lighting")
+        sender.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Toggle Lighting")
     }
     
     @objc
-    private func openSpriteAssetEditor() {
+    func openSpriteAssetEditor() {
         SpriteAssetEditor.open()
     }
     
