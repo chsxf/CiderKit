@@ -8,7 +8,7 @@ private extension NSToolbarItem.Identifier {
     static let spriteAssetEditor = NSToolbarItem.Identifier(rawValue: "sprite_asset_editor")
 }
 
-class MainToolbar: NSObject, NSToolbarDelegate {
+final class MainToolbar: NSObject, NSToolbarDelegate {
     
     private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
         .tool, .flexibleSpace, .addLight, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
@@ -18,11 +18,11 @@ class MainToolbar: NSObject, NSToolbarDelegate {
         .tool, .flexibleSpace, .addLight, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
     ]
     
-    private weak var app: CiderKitApp? = nil
+    private weak var actionsManager: MainActionsManager? = nil
     private var definedToolbarItems: [NSToolbarItem.Identifier: NSToolbarItem] = [:]
     
-    init(app: CiderKitApp, window: NSWindow) {
-        self.app = app
+    init(actionsManager: MainActionsManager, window: NSWindow) {
+        self.actionsManager = actionsManager
         
         super.init()
         
@@ -51,32 +51,36 @@ class MainToolbar: NSObject, NSToolbarDelegate {
             NSImage(systemSymbolName: "cursorarrow", accessibilityDescription: "Select")!,
             NSImage(systemSymbolName: "move.3d", accessibilityDescription: "Move")!,
             NSImage(systemSymbolName: "arrow.up.arrow.down", accessibilityDescription: "Elevation")!
-        ], selectionMode: .selectOne, labels: ["Select", "Move", "Elevation"], target: app, action: #selector(CiderKitApp.switchTool))
+        ], selectionMode: .selectOne, labels: ["Select", "Move", "Elevation"], target: actionsManager, action: #selector(MainActionsManager.switchTool))
         toolItemGroup.selectedIndex = 0
         definedToolbarItems[.tool] = toolItemGroup
         
         let addLightItem = NSToolbarItem(itemIdentifier: .addLight)
         addLightItem.label = "Add Light"
         addLightItem.image = NSImage(systemSymbolName: "lightbulb.fill", accessibilityDescription: "Add Light")
-        addLightItem.action = #selector(CiderKitApp.addLight)
+        addLightItem.target = actionsManager
+        addLightItem.action = #selector(MainActionsManager.addLight)
         definedToolbarItems[.addLight] = addLightItem
         
         let ambientLightSettingsItem = NSToolbarItem(itemIdentifier: .ambientLightSettings)
         ambientLightSettingsItem.label = "Ambient Light Settings"
         ambientLightSettingsItem.image = NSImage(systemSymbolName: "sun.max.fill", accessibilityDescription: "Ambient Light Settings")
-        ambientLightSettingsItem.action = #selector(CiderKitApp.selectAmbientLight)
+        ambientLightSettingsItem.target = actionsManager
+        ambientLightSettingsItem.action = #selector(MainActionsManager.selectAmbientLight)
         definedToolbarItems[.ambientLightSettings] = ambientLightSettingsItem
         
         let toggleLightingItem = NSToolbarItem(itemIdentifier: .toggleLighting)
         toggleLightingItem.label = "Toggle Lighting"
         toggleLightingItem.image = NSImage(systemSymbolName: "lightbulb.circle.fill", accessibilityDescription: "Toggle Lighting")
-        toggleLightingItem.action = #selector(CiderKitApp.toggleLighting)
+        toggleLightingItem.target = actionsManager
+        toggleLightingItem.action = #selector(MainActionsManager.toggleLighting)
         definedToolbarItems[.toggleLighting] = toggleLightingItem
         
         let spriteAssetEditorItem = NSToolbarItem(itemIdentifier: .spriteAssetEditor)
         spriteAssetEditorItem.label = "Sprite Asset Editor"
         spriteAssetEditorItem.image = NSImage(systemSymbolName: "photo.fill", accessibilityDescription: "Sprite Asset Editor")
-        spriteAssetEditorItem.action = #selector(CiderKitApp.openSpriteAssetEditor)
+        spriteAssetEditorItem.target = actionsManager
+        spriteAssetEditorItem.action = #selector(MainActionsManager.openSpriteAssetEditor)
         definedToolbarItems[.spriteAssetEditor] = spriteAssetEditorItem
     }
     

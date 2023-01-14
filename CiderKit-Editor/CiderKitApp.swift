@@ -1,12 +1,11 @@
 import Cocoa
 import SwiftUI
-import UniformTypeIdentifiers
 import Combine
 import CiderKit_Engine
 import SpriteKit
 
 @main
-class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarDelegate, SKViewDelegate {
+final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarDelegate, SKViewDelegate {
 
     public static let appName = "CiderKit Editor"
     public static private(set) var mainWindow: NSWindow!
@@ -14,12 +13,12 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     private var window: NSWindow!
     private var gameView: EditorGameView!
     
-    private var currentMapURL: URL? = nil
+    private var actionsManager: MainActionsManager!
     
     private var mapDirtyFlagCancellable: AnyCancellable?
     
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        if saveCurrentMapIfModified() {
+        if actionsManager.saveCurrentMapIfModified() {
             return .terminateNow
         }
         return .terminateCancel
@@ -30,7 +29,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     func windowShouldClose(_ sender: NSWindow) -> Bool {
-        return saveCurrentMapIfModified()
+        return actionsManager.saveCurrentMapIfModified()
     }
     
     func view(_ view: SKView, shouldRenderAtTime time: TimeInterval) -> Bool {
@@ -45,6 +44,8 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         gameView = EditorGameView(frame: windowRect)
         gameView.delegate = self
         window.contentView = EditorMainView(gameView: gameView, frame: windowRect)
+        
+        actionsManager = MainActionsManager(app: self, gameView: gameView)
         
         updateWindowTitle()
         
@@ -63,17 +64,17 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         let fileMenu = NSMenuItem()
         fileMenu.submenu = NSMenu(title: "File")
         fileMenu.submenu?.items = [
-            NSMenuItem(title: "New Map", action: #selector(self.newMap), keyEquivalent: ""),
-            NSMenuItem(title: "Load Map...", action: #selector(self.loadMap), keyEquivalent: ""),
-            NSMenuItem(title: "Save Map", action: #selector(self.saveMap), keyEquivalent: ""),
-            NSMenuItem(title: "Save Map As...", action: #selector(self.saveMapAs), keyEquivalent: "")
+            NSMenuItem(title: "New Map", target: actionsManager, action: #selector(MainActionsManager.newMap), keyEquivalent: ""),
+            NSMenuItem(title: "Load Map...", target: actionsManager, action: #selector(MainActionsManager.loadMap), keyEquivalent: ""),
+            NSMenuItem(title: "Save Map", target: actionsManager, action: #selector(MainActionsManager.saveMap), keyEquivalent: ""),
+            NSMenuItem(title: "Save Map As...", target: actionsManager, action: #selector(MainActionsManager.saveMapAs), keyEquivalent: "")
         ]
         
         let mapMenu = NSMenuItem()
         mapMenu.submenu = NSMenu(title: "Map")
         mapMenu.submenu?.items = [
-            NSMenuItem(title: "Increase Elevation for Whole Map", action: #selector(self.increaseElevationForWholeMap), keyEquivalent: ""),
-            NSMenuItem(title: "Decrease Elevation for Whole Map", action: #selector(self.decreaseElevationForWholeMap), keyEquivalent: "")
+            NSMenuItem(title: "Increase Elevation for All Regions", target: actionsManager, action: #selector(MainActionsManager.increaseElevationForWholeMap), keyEquivalent: ""),
+            NSMenuItem(title: "Decrease Elevation for All Regions", target: actionsManager, action: #selector(MainActionsManager.decreaseElevationForWholeMap), keyEquivalent: "")
         ]
         
         mainMenu.items = [menuItemOne, fileMenu, mapMenu]
@@ -81,7 +82,7 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
     }
     
     private func setupToolbar() -> Void {
-        let _ = MainToolbar(app: self, window: window)
+        let _ = MainToolbar(actionsManager: actionsManager, window: window)
     }
     
     private func setupNotifications() -> Void {
@@ -107,120 +108,12 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
         updateWindowTitle()
     }
     
-    private func updateWindowTitle() {
-        var title = "\(CiderKitApp.appName) - \(currentMapURL?.lastPathComponent ?? "Untitled")"
+    func updateWindowTitle() {
+        var title = "\(CiderKitApp.appName) - \(actionsManager.currentMapURL?.lastPathComponent ?? "Untitled")"
         if gameView.mutableMap.dirty {
             title += " *"
         }
         window.title = title
-    }
-    
-    private func saveCurrentMapIfModified() -> Bool {
-        var shouldSave = false
-        if gameView.mutableMap.dirty {
-            let alert = NSAlert()
-            alert.messageText = "Would you like to save the current map?"
-            alert.informativeText = "Confirmation"
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: "Yes")
-            alert.addButton(withTitle: "No")
-            alert.addButton(withTitle: "Cancel")
-            switch alert.runModal() {
-            case .alertFirstButtonReturn:
-                shouldSave = true
-            case .alertSecondButtonReturn:
-                shouldSave = false
-                gameView.unloadMap()
-                currentMapURL = nil
-            default:
-                return false
-            }
-        }
-        return !shouldSave || saveCurrentMap()
-    }
-    
-    private func saveCurrentMap(forceFileSelection: Bool = false) -> Bool {
-        var selectedURL: URL? = currentMapURL
-        if forceFileSelection {
-            selectedURL = nil
-        }
-        if selectedURL == nil {
-            let savePanel = NSSavePanel()
-            savePanel.directoryURL = Project.current?.mapsDirectoryURL
-            if let type = UTType("com.xhaleera.CiderKit.map") {
-                savePanel.allowedContentTypes = [ type ]
-            }
-            let response = savePanel.runModal()
-            if response == .OK {
-                selectedURL = savePanel.url
-            }
-        }
-        
-        if let validURL = selectedURL {
-            do {
-                let mapDescription = gameView.map.toMapDescription()
-                try EditorFunctions.save(mapDescription, to: validURL, prettyPrint: true)
-                currentMapURL = validURL
-                gameView.mutableMap.dirty = false
-                return true
-            }
-            catch {
-                let alert = NSAlert()
-                alert.informativeText = "Error"
-                alert.messageText = "Unable to save map to file \(validURL)"
-                alert.addButton(withTitle: "OK")
-                let _ = alert.runModal()
-            }
-        }
-        return false
-    }
-    
-    @objc
-    private func newMap() {
-        if saveCurrentMapIfModified() {
-            gameView.unloadMap()
-            currentMapURL = nil
-            updateWindowTitle()
-        }
-    }
-    
-    @objc
-    private func loadMap() {
-        if saveCurrentMapIfModified() {
-            let openPanel = NSOpenPanel()
-            openPanel.canChooseFiles = true
-            openPanel.canChooseDirectories = false
-            openPanel.directoryURL = Project.current?.mapsDirectoryURL
-            if let type = UTType("com.xhaleera.CiderKit.map") {
-                openPanel.allowedContentTypes = [ type ]
-            }
-            let response = openPanel.runModal()
-            if response == .OK {
-                currentMapURL = openPanel.urls[0]
-                gameView.loadMap(file: currentMapURL!)
-                updateWindowTitle()
-            }
-        }
-    }
-    
-    @objc
-    private func saveMap() {
-        let _ = saveCurrentMap()
-    }
-    
-    @objc
-    private func saveMapAs() {
-        let _ = saveCurrentMap(forceFileSelection: true)
-    }
-    
-    @objc
-    private func increaseElevationForWholeMap() {
-        gameView.increaseElevation(area: nil)
-    }
-    
-    @objc
-    private func decreaseElevationForWholeMap() {
-        gameView.decreaseElevation(area: nil)
     }
     
     @objc
@@ -237,34 +130,6 @@ class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarD
                 gameView.decreaseElevation(area: area)
             }
         }
-    }
-    
-    @objc
-    func switchTool(sender: NSToolbarItemGroup) {
-        let toolMode = ToolMode(rawValue: 1 << sender.selectedIndex)
-        gameView.selectionManager!.currentToolMode = toolMode
-    }
-    
-    @objc
-    func addLight() {
-        gameView.addLight(PointLight(name: "New Light", color: CGColor.white, position: vector_float3(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
-    }
-    
-    @objc
-    func selectAmbientLight() {
-        gameView.selectionModel.setSelectable(gameView.ambientLightEntity?.findSelectableComponent())
-    }
-    
-    @objc
-    func toggleLighting(sender: NSToolbarItem) {
-        gameView.lightingEnabled = !gameView.lightingEnabled
-        let symbolName = gameView.lightingEnabled ? "lightbulb.circle.fill" : "lightbulb.circle"
-        sender.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Toggle Lighting")
-    }
-    
-    @objc
-    func openSpriteAssetEditor() {
-        SpriteAssetEditor.open()
     }
     
     static func main() -> Void {

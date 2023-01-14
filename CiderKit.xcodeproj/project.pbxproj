@@ -28,6 +28,8 @@
 		D92002DB282FB009007D5AC1 /* PointLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92002DA282FB009007D5AC1 /* PointLight.swift */; };
 		D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92002DC282FB0E0007D5AC1 /* LightingDescription.swift */; };
 		D923F9E829736658000F040C /* MainToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D923F9E729736658000F040C /* MainToolbar.swift */; };
+		D923F9EA29736D74000F040C /* MainActionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D923F9E929736D74000F040C /* MainActionsManager.swift */; };
+		D923F9EC2973731C000F040C /* NSMenuItemExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D923F9EB2973731B000F040C /* NSMenuItemExtension.swift */; };
 		D9254463281AB55B002DCA4C /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9254461281AB55B002DCA4C /* Project.swift */; };
 		D928562428B18271000F2D86 /* VSpacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928562328B18271000F2D86 /* VSpacer.swift */; };
 		D928562628B18BB5000F2D86 /* FloatField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928562528B18BB5000F2D86 /* FloatField.swift */; };
@@ -217,6 +219,8 @@
 		D92002DA282FB009007D5AC1 /* PointLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLight.swift; sourceTree = "<group>"; };
 		D92002DC282FB0E0007D5AC1 /* LightingDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightingDescription.swift; sourceTree = "<group>"; };
 		D923F9E729736658000F040C /* MainToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainToolbar.swift; sourceTree = "<group>"; };
+		D923F9E929736D74000F040C /* MainActionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainActionsManager.swift; sourceTree = "<group>"; };
+		D923F9EB2973731B000F040C /* NSMenuItemExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSMenuItemExtension.swift; sourceTree = "<group>"; };
 		D9254461281AB55B002DCA4C /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		D928562328B18271000F2D86 /* VSpacer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSpacer.swift; sourceTree = "<group>"; };
 		D928562528B18BB5000F2D86 /* FloatField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatField.swift; sourceTree = "<group>"; };
@@ -493,7 +497,9 @@
 				D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */,
 				D98663DE287E1B1100950DC0 /* DelayedObservableObject.swift */,
 				D9A7D22927F84C7A00A0EA70 /* EditorFunctions.swift */,
+				D923F9E929736D74000F040C /* MainActionsManager.swift */,
 				D923F9E729736658000F040C /* MainToolbar.swift */,
+				D923F9EB2973731B000F040C /* NSMenuItemExtension.swift */,
 				D96A3BF0287A1F28008949A1 /* ToolMode.swift */,
 				D91ED91227E7AA520016D818 /* EditorAssets.xcassets */,
 				D9405F672838E45B00CA953A /* Components */,
@@ -891,7 +897,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					D91061AA2755F0B200EA8A03 = {
 						CreatedOnToolsVersion = 13.1;
@@ -1038,7 +1044,9 @@
 				D928562628B18BB5000F2D86 /* FloatField.swift in Sources */,
 				D9387C19289D3A6800558E02 /* SpriteSelectorView.swift in Sources */,
 				D93F23A328D59180002276EE /* SpriteAssetAnimationDopeSheetHeaderView.swift in Sources */,
+				D923F9EC2973731C000F040C /* NSMenuItemExtension.swift in Sources */,
 				D93FE0DF28BA43C800215D83 /* LabelledColorWell.swift in Sources */,
+				D923F9EA29736D74000F040C /* MainActionsManager.swift in Sources */,
 				D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */,
 				D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */,
 				D9DE549E28CDD8BF00E3761B /* SpriteAssetAnimationTracksDataSource.swift in Sources */,
@@ -1347,7 +1355,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1385,7 +1394,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
