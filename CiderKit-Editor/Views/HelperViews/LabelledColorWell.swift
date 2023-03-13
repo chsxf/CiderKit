@@ -36,15 +36,18 @@ class LabelledColorWell: NSView {
         
         addSubview(colorWell)
         
-        addConstraints([
+        var constraints = [
             NSLayoutConstraint(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 20),
             
             NSLayoutConstraint(item: colorWell, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: colorWell, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.66, constant: 0),
             NSLayoutConstraint(item: colorWell, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0),
             
             NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
-        ])
+        ]
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 13 {
+            constraints.append(NSLayoutConstraint(item: colorWell, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.66, constant: 0))
+        }
+        addConstraints(constraints)
     }
     
     required init?(coder: NSCoder) {
