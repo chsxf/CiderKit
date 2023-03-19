@@ -9,6 +9,40 @@
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
+			<key>UTTypeDescription</key>
+			<string>CiderKit Cascading Style Sheet</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.xml</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>dev.chsxf.CiderKit.uiml</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ckuiml</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeDescription</key>
+			<string>CiderKit Cascading Style Sheet</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.css</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>dev.chsxf.CiderKit.css</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ckcss</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.json</string>
@@ -16,7 +50,7 @@
 			<key>UTTypeDescription</key>
 			<string>CiderKit Settings File</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.xhaleera.CiderKit.settings</string>
+			<string>dev.chsxf.CiderKit.settings</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -33,7 +67,7 @@
 			<key>UTTypeDescription</key>
 			<string>CiderKit Map File</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.xhaleera.CiderKit.map</string>
+			<string>dev.chsxf.CiderKit.map</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -52,7 +86,7 @@
 			<key>UTTypeIcons</key>
 			<dict/>
 			<key>UTTypeIdentifier</key>
-			<string>com.xhaleera.CiderKit.atlas</string>
+			<string>dev.chsxf.CiderKit.atlas</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -71,7 +105,7 @@
 			<key>UTTypeIcons</key>
 			<dict/>
 			<key>UTTypeIdentifier</key>
-			<string>com.xhaleera.CiderKit.spriteAssetDatabase</string>
+			<string>dev.chsxf.CiderKit.spriteAssetDatabase</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -90,7 +124,7 @@
 			<key>UTTypeIcons</key>
 			<dict/>
 			<key>UTTypeIdentifier</key>
-			<string>com.xhaleera.CiderKit.materialDatabase</string>
+			<string>dev.chsxf.CiderKit.materialDatabase</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

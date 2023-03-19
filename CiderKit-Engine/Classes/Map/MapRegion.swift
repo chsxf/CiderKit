@@ -78,7 +78,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -2
                     
-                    let z = zForShader - Float(i + 1) * 0.25
+                    let z = zForShader - Float(i + 1) * Float(0.25)
                     sprite.attributeValues = [
                         CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)),
                         CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: vector_float3(1, 1, 0.25))
@@ -104,7 +104,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -1
                     
-                    let z = zForShader - Float(i + 1) * 0.25
+                    let z = zForShader - Float(i + 1) * Float(0.25)
                     sprite.attributeValues = [
                         CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)),
                         CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: vector_float3(1, 1, 0.25))

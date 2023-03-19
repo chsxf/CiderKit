@@ -205,7 +205,7 @@ final class SpriteAssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDe
     }
     
     func splitView(_ splitView: NSSplitView, constrainMaxCoordinate proposedMaximumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
-        return splitView.frame.width * 2 / 3
+        return splitView.frame.width * CGFloat(2.0 / 3.0)
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {

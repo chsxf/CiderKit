@@ -4,6 +4,8 @@ public struct ProjectSettings: Codable {
     public let targetResolutionWidth: Int
     public let targetResolutionHeight: Int
     
+    let styleSheets: [String]?
+    
     let startMap: String?
     
     public let preloadedAtlases: [String:String]
@@ -22,6 +24,8 @@ public struct ProjectSettings: Codable {
     public init() {
         targetResolutionWidth = 640
         targetResolutionHeight = 360
+        
+        styleSheets = nil
         
         startMap = nil
         

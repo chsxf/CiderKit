@@ -12,9 +12,21 @@ open class GameView: SKView, SKSceneDelegate {
     private var normalsTexture: SKTexture?
     private var positionTexture: SKTexture?
     
+    public let uiOverlayCanvas: CKUICanvas
+    
     public var lightingEnabled: Bool = true
     
     override public init(frame frameRect: CGRect) {
+        let defaultStyleSheetURL = CiderKitEngine.bundle.url(forResource: "Default Style Sheet", withExtension: "ckcss")!
+        let styleSheet = try! CKUIStyleSheet(contentsOf: defaultStyleSheetURL)
+        if let currentProject = Project.current, let projectStyleSheets = currentProject.settings.styleSheets {
+            for styleSheetName in projectStyleSheets {
+                let styleSheetURL = URL(fileURLWithPath: "\(styleSheetName).ckcss", isDirectory: false, relativeTo: Project.current!.styleSheetsDirectoryURL)
+                try! styleSheet.addStyleSheet(contentsOf: styleSheetURL)
+            }
+        }
+        uiOverlayCanvas = CKUICanvas(styleSheet: styleSheet)
+        
         super.init(frame: frameRect)
 
         showsFPS = true
@@ -27,19 +39,21 @@ open class GameView: SKView, SKSceneDelegate {
         self.gameScene = scene
         scene.delegate = self
         
-        let cam = SKCameraNode()
-        gameScene.camera = cam
-        gameScene.addChild(cam)
-        
         finalGatheringNode = SKEffectNode();
         finalGatheringNode.shader = CiderKitEngine.lightModelFinalGatheringShader
         finalGatheringNode.shouldEnableEffects = false
         gameScene.addChild(finalGatheringNode)
         
+        let cam = SKCameraNode()
+        gameScene.camera = cam
+        gameScene.addChild(cam)
+        
+        cam.addChild(uiOverlayCanvas)
+        
         presentScene(gameScene)
         
         unloadMap(removePreviousMap: false)
-      
+        
         registerDefaultMaterialsAndRenderers()
         
         #if os(macOS)
@@ -67,7 +81,9 @@ open class GameView: SKView, SKSceneDelegate {
         return MapNode(description: description)
     }
     
-    open func update(_ currentTime: TimeInterval, for scene: SKScene) { }
+    open func update(_ currentTime: TimeInterval, for scene: SKScene) {
+        uiOverlayCanvas.update()
+    }
     
     open func prepareSceneForPrepasses() {
         finalGatheringNode.shouldEnableEffects = false
@@ -89,7 +105,7 @@ open class GameView: SKView, SKSceneDelegate {
             
             maxVector.x = max(maxVector.x, Float(area.maxX))
             maxVector.y = max(maxVector.y, Float(area.maxY))
-            maxVector.z = max(maxVector.z, Float(region.regionDescription.elevation + 1) * 0.25)
+            maxVector.z = max(maxVector.z, Float(region.regionDescription.elevation + 1) * Float(0.25))
         }
         
         return matrix_float3x3(minVector, maxVector, vector_float3())

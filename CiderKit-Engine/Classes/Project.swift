@@ -25,7 +25,9 @@ open class Project {
     public var mapsDirectoryURL: URL { URL(fileURLWithPath: "Maps", isDirectory: true, relativeTo: projectRoot) }
     public var materialDatabasesDirectoryURL: URL { URL(fileURLWithPath: "Materials", isDirectory: true, relativeTo: databasesDirectoryURL) }
     public var spriteAssetsDatabasesDirectoryURL: URL { URL(fileURLWithPath: "SpriteAssets", isDirectory: true, relativeTo: databasesDirectoryURL) }
+    public var styleSheetsDirectoryURL: URL { URL(fileURLWithPath: "StyleSheets", isDirectory: true, relativeTo: projectRoot) }
     public var texturesDirectoryURL: URL { URL(fileURLWithPath: "Textures", isDirectory: true, relativeTo: projectRoot) }
+    public var userInterfaceDirectoryURL: URL { URL(fileURLWithPath: "UI", isDirectory: true, relativeTo: projectRoot) }
     
     private init(projectRoot: URL) throws {
         self.projectRoot = projectRoot
