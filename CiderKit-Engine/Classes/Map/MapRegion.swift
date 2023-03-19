@@ -154,18 +154,21 @@ public class MapRegion : SKNode, Identifiable, Comparable {
     func containsMapCoordinates(x: Int, y: Int) -> Bool { regionDescription.area.contains(x: x, y: y) }
     
     public static func < (lhs: MapRegion, rhs: MapRegion) -> Bool {
-        let regionsOverlapOnX = (lhs.regionDescription.area.maxX > rhs.regionDescription.area.minX && lhs.regionDescription.area.minX < rhs.regionDescription.area.maxX)
-        let regionsOverlapOnY = (lhs.regionDescription.area.maxY > rhs.regionDescription.area.minY && lhs.regionDescription.area.minY < rhs.regionDescription.area.maxY)
+        let lhsArea = lhs.regionDescription.area
+        let rhsArea = rhs.regionDescription.area
+        
+        let regionsOverlapOnX = (lhsArea.maxX > rhsArea.minX && lhsArea.minX < rhsArea.maxX)
+        let regionsOverlapOnY = (lhsArea.maxY > rhsArea.minY && lhsArea.minY < rhsArea.maxY)
         
         var result: Bool
         if regionsOverlapOnX {
-            result = lhs.regionDescription.area.minY < rhs.regionDescription.area.minY
+            result = lhsArea.minY < rhsArea.minY
         }
         else if regionsOverlapOnY {
-            result = lhs.regionDescription.area.minX < rhs.regionDescription.area.minX
+            result = lhsArea.minX < rhsArea.minX
         }
         else {
-            result = lhs.regionDescription.area.minY < rhs.regionDescription.area.minY
+            result = (lhsArea.minX + lhsArea.minY) < (rhsArea.minX + rhsArea.minY)
         }
         return result
     }
