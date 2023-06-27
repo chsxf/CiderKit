@@ -41,6 +41,10 @@ open class GameView: SKView, SKSceneDelegate {
         unloadMap(removePreviousMap: false)
       
         registerDefaultMaterialsAndRenderers()
+        
+        #if os(macOS)
+        NotificationCenter.default.addObserver(self, selector: #selector(Self.updateSceneSize), name: NSView.frameDidChangeNotification, object: self)
+        #endif
     }
     
     required public init?(coder: NSCoder) {
@@ -198,7 +202,8 @@ open class GameView: SKView, SKSceneDelegate {
     }
     
     #if os(macOS)
-    override open func viewDidEndLiveResize() {
+    @objc
+    private func updateSceneSize() {
         let sceneWidth = Project.current?.settings.targetResolutionWidth ?? 640
         let sceneHeight = Project.current?.settings.targetResolutionHeight ?? 360
         let sceneSize = getBestMatchingSceneSize(CGSize(width: sceneWidth, height: sceneHeight))
