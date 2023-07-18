@@ -6,36 +6,54 @@ public class CKUICSSValidationConfiguration: CSSValidationConfiguration {
     
     private static let customValueTypesByAttribute: [String : [CSSValueType]] = [
         CKUICSSAttributes.anchoredPosition: [.number],
-        CKUICSSAttributes.anchoredPositionX: [.number],
-        CKUICSSAttributes.anchoredPositionY: [.number],
-        CKUICSSAttributes.sizeDelta: [.number],
-        CKUICSSAttributes.sizeDeltaWidth: [.number],
-        CKUICSSAttributes.sizeDeltaHeight: [.number],
         CKUICSSAttributes.anchors: [.number],
-        CKUICSSAttributes.anchorsXMin: [.number],
-        CKUICSSAttributes.anchorsXMax: [.number],
-        CKUICSSAttributes.anchorsYMin: [.number],
-        CKUICSSAttributes.anchorsYMax: [.number],
-        CKUICSSAttributes.pivot: [.number],
-        CKUICSSAttributes.pivotX: [.number],
-        CKUICSSAttributes.pivotY: [.number],
-        "color": [.color]
+        CKUICSSAttributes.backgroundColor: [.color],
+        CKUICSSAttributes.backgroundImage: [.custom("CKUISpriteDescriptor")],
+        CKUICSSAttributes.color: [.color],
+        CKUICSSAttributes.fontFamily: [.string],
+        CKUICSSAttributes.fontSize: [.number],
+        CKUICSSAttributes.fontStyle: [.string],
+        CKUICSSAttributes.fontWeight: [.number],
+        CKUICSSAttributes.sizeDelta: [.number],
+        CKUICSSAttributes.transformOrigin: [.number],
     ]
     
-    private static let positionKeywords: [String: CSSValue] = [
-        "bottom": .number(0, .none),
+    private static let horizontalPositionalKeywords: [String: CSSValue] = [
         "center": .number(0.5, .none),
         "left": .number(0, .none),
         "right": .number(1, .none),
+    ]
+    
+    private static let verticalPositionalKeywords: [String: CSSValue] = [
+        "bottom": .number(0, .none),
         "middle": .number(0.5, .none),
         "top": .number(1, .none)
     ]
     
+    #if os(watchOS)
+    private static let sansSerifFontName = "SF Compact"
+    #else
+    private static let sansSerifFontName = "SF Pro"
+    #endif
+    
+    private static let fontFamilyKeywords: [String: CSSValue] = [
+        "sans-serif": .string(sansSerifFontName),
+        "serif": .string("New York"),
+        "monospace": .string("SF Mono")
+    ]
+    
+    private static let fontStyleKeywords: [String: CSSValue] = [
+        "normal": .string("normal"),
+        "italic": .string("italic")
+    ]
+        
+    private static let fontWeightKeywords: [String: CSSValue] = [
+        "normal": .number(400, .none),
+        "bold": .number(700, .none)
+    ]
+    
     private static let expansionMethodByShorthandAttribute: [String: CSSShorthandAttributeExpansion] = [
-        CKUICSSAttributes.anchoredPosition: CKUICSSShorthandAttributeExpanders.expandAnchoredPosition(attributeToken:values:),
-        CKUICSSAttributes.sizeDelta: CKUICSSShorthandAttributeExpanders.expandSizeDelta(attributeToken:values:),
         CKUICSSAttributes.anchors: CKUICSSShorthandAttributeExpanders.expandAnchors(attributeToken:values:),
-        CKUICSSAttributes.pivot: CKUICSSShorthandAttributeExpanders.expandPivot(attributeToken:values:)
     ]
     
     public override var valueTypesByAttribute: [String : [CSSValueType]] { Self.customValueTypesByAttribute }
@@ -54,36 +72,55 @@ public class CKUICSSValidationConfiguration: CSSValidationConfiguration {
         }
     }
     
-    override open func parseKeyword(stringToken: CSSToken) throws -> CSSValue {
-        guard stringToken.type == .string else { throw CSSParserErrors.invalidToken(stringToken) }
-        
-        let stringTokenValue = stringToken.value as! String
-        
-        if let positionKeyword = Self.positionKeywords[stringTokenValue] {
-            return positionKeyword
+    override open func parseKeyword(attributeToken: CSSToken, potentialKeyword: CSSToken) throws -> CSSValue {
+        guard attributeToken.type == .string, let attributeName = attributeToken.value as? String else {
+            throw CSSParserErrors.invalidToken(attributeToken)
         }
         
-        if let scalingMethod = CKUIScalingMethod(rawValue: stringTokenValue) {
-            return .custom(scalingMethod)
+        guard potentialKeyword.type == .string, let stringTokenValue = potentialKeyword.value as? String else {
+            throw CSSParserErrors.invalidToken(potentialKeyword)
         }
         
-        throw CSSParserErrors.invalidKeyword(stringToken)
+        switch attributeName {
+        case CKUICSSAttributes.anchoredPosition, CKUICSSAttributes.anchors, CKUICSSAttributes.transformOrigin:
+            if let keyword = Self.horizontalPositionalKeywords[stringTokenValue] ?? Self.verticalPositionalKeywords[stringTokenValue] {
+                return keyword
+            }
+        case CKUICSSAttributes.fontFamily:
+            if let keyword = Self.fontFamilyKeywords[stringTokenValue] {
+                return keyword
+            }
+        case CKUICSSAttributes.fontStyle:
+            if let keyword = Self.fontStyleKeywords[stringTokenValue] {
+                return keyword
+            }
+        case CKUICSSAttributes.fontWeight:
+            if let keyword = Self.fontWeightKeywords[stringTokenValue] {
+                return keyword
+            }
+        default:
+            if let scalingMethod = CKUIScalingMethod(rawValue: stringTokenValue) {
+                return .custom(scalingMethod)
+            }
+        }
+        
+        throw CSSParserErrors.invalidKeyword(attributeToken: attributeToken, potentialKeyword: potentialKeyword)
     }
     
     private static func parseSpriteFunction(functionToken: CSSToken, attributes: [CSSValue]) throws -> CSSValue {
         if attributes.count < 2 {
-            throw CSSParserErrors.tooFewFunctionAttributes(functionToken, attributes)
+            throw CSSParserErrors.tooFewFunctionAttributes(functionToken: functionToken, values: attributes)
         }
 
         guard case let .string(spriteName) = attributes[0] else {
-            throw CSSParserErrors.invalidFunctionAttribute(functionToken, attributes[0])
+            throw CSSParserErrors.invalidFunctionAttribute(functionToken: functionToken, value: attributes[0])
         }
         
         guard
             case let .custom(equatable) = attributes[1],
             let scalingMethod = equatable as? CKUIScalingMethod
         else {
-            throw CSSParserErrors.invalidFunctionAttribute(functionToken, attributes[1])
+            throw CSSParserErrors.invalidFunctionAttribute(functionToken: functionToken, value: attributes[1])
         }
 
         switch scalingMethod {
@@ -98,14 +135,14 @@ public class CKUICSSValidationConfiguration: CSSValidationConfiguration {
 
     private static func parseSpriteReferenceFunction(functionToken: CSSToken, attributes: [CSSValue]) throws -> CSSValue {
         if attributes.count < 1 {
-            throw CSSParserErrors.tooFewFunctionAttributes(functionToken, attributes)
+            throw CSSParserErrors.tooFewFunctionAttributes(functionToken: functionToken, values: attributes)
         }
         else if attributes.count > 1 {
-            throw CSSParserErrors.tooManyFunctionAttributes(functionToken, attributes)
+            throw CSSParserErrors.tooManyFunctionAttributes(functionToken: functionToken, values: attributes)
         }
 
         guard case let .string(reference) = attributes[0] else {
-            throw CSSParserErrors.invalidFunctionAttribute(functionToken, attributes[0])
+            throw CSSParserErrors.invalidFunctionAttribute(functionToken: functionToken, value: attributes[0])
         }
 
         return .custom(CKUISpriteDescriptor.spriteref(reference))

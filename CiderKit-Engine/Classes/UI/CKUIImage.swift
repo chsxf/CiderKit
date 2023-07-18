@@ -35,7 +35,7 @@ open class CKUIImage: CKUIBaseNode {
         image.anchorPoint = CGPoint()
         image.size = localFrame.size
         image.position = localFrame.origin
-        image.color = getStyleColor(key: "color")
+        image.color = getStyleColor(key: "background-color")
     }
     
 }

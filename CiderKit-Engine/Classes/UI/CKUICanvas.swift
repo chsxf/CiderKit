@@ -9,7 +9,7 @@ public final class CKUICanvas: CKUIBaseNode {
     
     public init(style: CKUIStyle? = nil, styleSheet: CKUIStyleSheet? = nil) {
         self.canvasStyleSheet = styleSheet
-        super.init(type: "canvas", style: style ?? CKUIStyle(attributes: "anchors: left right bottom top; pivot: center middle;"))
+        super.init(type: "canvas", style: style ?? CKUIStyle(attributes: "anchors: left right bottom top; transform-origin: center middle;"))
     }
     
     required public init?(coder aDecoder: NSCoder) {

@@ -16,13 +16,7 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
             return CKUIAnchoredPosition(values: values)
         }
         
-        set {
-            let values = newValue.toCSSValues()
-            let expanded = CKUICSSShorthandAttributeExpanders.expandAnchoredPositionUnchecked(values: values)
-            for entry in expanded {
-                setStyleValues(key: entry.key, values: entry.value)
-            }
-        }
+        set { setStyleValues(key: CKUICSSAttributes.anchoredPosition, values: newValue.toCSSValues()) }
     }
     
     public var sizeDelta: CKUISizeDelta {
@@ -33,13 +27,7 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
             return CKUISizeDelta(values: values)
         }
         
-        set {
-            let values = newValue.toCSSValues()
-            let expanded = CKUICSSShorthandAttributeExpanders.expandSizeDeltaUnchecked(values: values)
-            for entry in expanded {
-                setStyleValues(key: entry.key, values: entry.value)
-            }
-        }
+        set { setStyleValues(key: CKUICSSAttributes.sizeDelta, values: newValue.toCSSValues()) }
     }
     
     public var anchors: CKUIAnchors {
@@ -61,19 +49,13 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     
     public var pivot: CKUIPivot {
         get {
-            guard let values = getStyleValues(key: CKUICSSAttributes.pivot) else {
-                return CKUIPivot()
+            guard let values = getStyleValues(key: CKUICSSAttributes.transformOrigin) else {
+                return CKUIPivot(x: 0.5, y: 0.5)
             }
             return CKUIPivot(values: values)
         }
         
-        set {
-            let values = newValue.toCSSValues()
-            let expanded = CKUICSSShorthandAttributeExpanders.expandPivotUnchecked(values: values)
-            for entry in expanded {
-                setStyleValues(key: entry.key, values: entry.value)
-            }
-        }
+        set { setStyleValues(key: CKUICSSAttributes.transformOrigin, values: newValue.toCSSValues()) }
     }
     
     private let style: CKUIStyle
