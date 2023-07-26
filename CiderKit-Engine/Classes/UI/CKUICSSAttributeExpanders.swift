@@ -1,26 +1,20 @@
 import CiderCSSKit
 
-final class CKUICSSShorthandAttributeExpanders {
+final class CKUICSSAttributeExpanders {
     
-    private class func validateAttributeValues(token: CSSToken, values: [CSSValue], min: Int, max: Int) throws {
+    private class func validateAttributeValueCount(token: CSSToken, values: [CSSValue], min: Int, max: Int) throws {
         if values.count < min {
             throw CSSParserErrors.tooFewShorthandAttributeValues(attributeToken: token, values: values)
         }
         if values.count > max {
             throw CSSParserErrors.tooManyShorthandAttributeValues(attributeToken: token, values: values)
         }
-        
-        for value in values {
-            guard case .number = value else {
-                throw CSSParserErrors.invalidShorthandAttributeValue(attributeToken: token, value: value)
-            }
-        }
     }
     
     class func expandAnchors(attributeToken token: CSSToken, values: [CSSValue]) throws -> [String:[CSSValue]] {
-        try validateAttributeValues(token: token, values: values, min: 2, max: 4)
+        try validateAttributeValueCount(token: token, values: values, min: 2, max: 4)
         guard let expandedAnchors = expandAnchorsUnchecked(values: values) else {
-            throw CSSParserErrors.invalidAttributeValue(attributonToken: token, value: values[2])
+            throw CSSParserErrors.invalidAttributeValue(attributeToken: token, value: values[2])
         }
         return expandedAnchors
     }

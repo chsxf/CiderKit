@@ -24,7 +24,7 @@
 		D91657F4290878B700510386 /* CGColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91657F3290878B700510386 /* CGColorExtension.swift */; };
 		D9173DA72878E134002E652C /* EditableComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9173DA62878E134002E652C /* EditableComponent.swift */; };
 		D9173DA92878E69A002E652C /* EditableComponentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */; };
-		D918D2DA2A63139B00226B0E /* CKUICSSShorthandAttributeExpanders.swift in Sources */ = {isa = PBXBuildFile; fileRef = D918D2D92A63139B00226B0E /* CKUICSSShorthandAttributeExpanders.swift */; };
+		D918D2DA2A63139B00226B0E /* CKUICSSAttributeExpanders.swift in Sources */ = {isa = PBXBuildFile; fileRef = D918D2D92A63139B00226B0E /* CKUICSSAttributeExpanders.swift */; };
 		D918D2DC2A63373900226B0E /* CKUICSSAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */; };
 		D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91ED91227E7AA520016D818 /* EditorAssets.xcassets */; };
 		D92002D9282FAFCF007D5AC1 /* BaseLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92002D8282FAFCF007D5AC1 /* BaseLight.swift */; };
@@ -117,6 +117,7 @@
 		D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D978AE1B282703C7008F8D0E /* AtlasDescription.swift */; };
 		D978AE2028270EE8008F8D0E /* Grid Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */; };
 		D978C42B28281B6000BDF0BB /* UberShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D978C42A28281B6000BDF0BB /* UberShader.fsh */; };
+		D97DB8BA2A70ECF4001C671D /* CKUIPivot.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97DB8B92A70ECF4001C671D /* CKUIPivot.swift */; };
 		D981239228292E3B00CC5897 /* LightModelFinalGathering.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D981239128292E3B00CC5897 /* LightModelFinalGathering.fsh */; };
 		D985E7E927DDEBBC00AC2465 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7E827DDEBBC00AC2465 /* InspectorView.swift */; };
 		D985E7EB27DE38D300AC2465 /* SelectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D985E7EA27DE38D300AC2465 /* SelectionModel.swift */; };
@@ -246,7 +247,7 @@
 		D91657F3290878B700510386 /* CGColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGColorExtension.swift; sourceTree = "<group>"; };
 		D9173DA62878E134002E652C /* EditableComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableComponent.swift; sourceTree = "<group>"; };
 		D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableComponentDelegate.swift; sourceTree = "<group>"; };
-		D918D2D92A63139B00226B0E /* CKUICSSShorthandAttributeExpanders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUICSSShorthandAttributeExpanders.swift; sourceTree = "<group>"; };
+		D918D2D92A63139B00226B0E /* CKUICSSAttributeExpanders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUICSSAttributeExpanders.swift; sourceTree = "<group>"; };
 		D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUICSSAttributes.swift; sourceTree = "<group>"; };
 		D91ED91227E7AA520016D818 /* EditorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = EditorAssets.xcassets; sourceTree = "<group>"; };
 		D92002D8282FAFCF007D5AC1 /* BaseLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLight.swift; sourceTree = "<group>"; };
@@ -326,6 +327,7 @@
 		D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Default Tile Atlas.ckatlas"; sourceTree = "<group>"; };
 		D978AE3028271857008F8D0E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D978C42A28281B6000BDF0BB /* UberShader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = UberShader.fsh; sourceTree = "<group>"; };
+		D97DB8B92A70ECF4001C671D /* CKUIPivot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIPivot.swift; sourceTree = "<group>"; };
 		D981239128292E3B00CC5897 /* LightModelFinalGathering.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = LightModelFinalGathering.fsh; sourceTree = "<group>"; };
 		D985E7E827DDEBBC00AC2465 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		D985E7EA27DE38D300AC2465 /* SelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModel.swift; sourceTree = "<group>"; };
@@ -892,9 +894,10 @@
 				D92B7DAF2A3F56040088E847 /* CKUIBaseNodeExtensions.swift */,
 				D938EE6A2A192E2F00D0D3AD /* CKUICanvas.swift */,
 				D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */,
-				D918D2D92A63139B00226B0E /* CKUICSSShorthandAttributeExpanders.swift */,
+				D918D2D92A63139B00226B0E /* CKUICSSAttributeExpanders.swift */,
 				D9CF6DBE2A07D16E00DE3876 /* CKUICSSValidationConfiguration.swift */,
 				D92B7DAD2A3DC58D0088E847 /* CKUIImage.swift */,
+				D97DB8B92A70ECF4001C671D /* CKUIPivot.swift */,
 				D92B7DAB2A3DBEA00088E847 /* CKUISizeDelta.swift */,
 				D9CF6DC02A07D2F500DE3876 /* CKUISpriteDescriptor.swift */,
 				D9B603692A1026AD00621996 /* CKUIStyle.swift */,
@@ -1230,6 +1233,7 @@
 				D92002DB282FB009007D5AC1 /* PointLight.swift in Sources */,
 				D94302CD290E86D70013B4CA /* SingleTextureMaterial.swift in Sources */,
 				D9A64CFC282C491F00CAF635 /* UIViewExtension.swift in Sources */,
+				D97DB8BA2A70ECF4001C671D /* CKUIPivot.swift in Sources */,
 				D9F1106E28CCB5A600203EF1 /* SpriteAssetAnimationTrackType.swift in Sources */,
 				D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */,
 				D96D3188291C4C5A00CD498E /* MaterialFactory.swift in Sources */,
@@ -1238,7 +1242,7 @@
 				D9878FAC293AB6280016AABE /* SIMDExtensions.swift in Sources */,
 				D9B6036E2A10BB6B00621996 /* StringExtension.swift in Sources */,
 				D9CF6DC12A07D2F500DE3876 /* CKUISpriteDescriptor.swift in Sources */,
-				D918D2DA2A63139B00226B0E /* CKUICSSShorthandAttributeExpanders.swift in Sources */,
+				D918D2DA2A63139B00226B0E /* CKUICSSAttributeExpanders.swift in Sources */,
 				D95B8C38288319B80077DCA1 /* SpriteAssetDescription.swift in Sources */,
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,

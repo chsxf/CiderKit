@@ -1,6 +1,6 @@
 import CiderCSSKit
 
-public struct CKUIAnchoredPosition {
+public struct CKUIPivot {
     
     var x: Float
     var y: Float
@@ -12,19 +12,19 @@ public struct CKUIAnchoredPosition {
     
     init(values: [CSSValue]) {
         guard
-            values.count == 2,
-            case let .length(x, _) = values[0],
-            case let .length(y, _) = values[1]
+            values.count >= 2,
+            case let .percentage(x) = values[0],
+            case let .percentage(y) = values[1]
         else {
             self.init()
             return
         }
         
-        self.init(x: x, y: y)
+        self.init(x: x / 100, y: y / 100)
     }
     
     func toCSSValues() -> [CSSValue] {
-        [ .length(x, .px), .length(y, .px) ]
+        [ .percentage(x * 100), .percentage(y * 100), .length(0, .px) ]
     }
     
 }

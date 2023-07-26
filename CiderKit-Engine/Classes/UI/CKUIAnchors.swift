@@ -17,24 +17,24 @@ public struct CKUIAnchors {
     init(values: [CSSValue]) {
         guard
             values.count == 4,
-            case let .number(xmin, _) = values[0],
-            case let .number(xmax, _) = values[1],
-            case let .number(ymin, _) = values[2],
-            case let .number(ymax, _) = values[3]
+            case let .percentage(xmin) = values[0],
+            case let .percentage(xmax) = values[1],
+            case let .percentage(ymin) = values[2],
+            case let .percentage(ymax) = values[3]
         else {
             self.init()
             return
         }
         
-        self.init(xmin: xmin, xmax: xmax, ymin: ymin, ymax: ymax)
+        self.init(xmin: xmin / 100, xmax: xmax / 100, ymin: ymin / 100, ymax: ymax / 100)
     }
     
     func toCSSValues() -> [CSSValue] {
         [
-            .number(xmin, .none),
-            .number(xmax, .none),
-            .number(ymin, .none),
-            .number(ymax, .none)
+            .percentage(xmin * 100),
+            .percentage(xmax * 100),
+            .percentage(ymin * 100),
+            .percentage(ymax * 100)
         ]
     }
     

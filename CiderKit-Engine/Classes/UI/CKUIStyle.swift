@@ -26,7 +26,7 @@ public class CKUIStyle {
             for property in properties {
                 let name = property.attribute(forName: "name")!.stringValue!
                 let value = property.attribute(forName: "value")!.stringValue!
-                let parsedValues = try! CSSParser.parse(attributeValue: value, validationConfiguration: CKUICSSValidationConfiguration.default)
+                let parsedValues = try! CSSParser.parse(attributeName: name, attributeValue: value, validationConfiguration: CKUICSSValidationConfiguration.default)
                 propertiesBuffer[name] = parsedValues
             }
         }

@@ -13,8 +13,8 @@ public struct CKUISizeDelta {
     init(values: [CSSValue]) {
         guard
             values.count == 2,
-            case let .number(h, _) = values[0],
-            case let .number(v, _) = values[1]
+            case let .length(h, _) = values[0],
+            case let .length(v, _) = values[1]
         else {
             self.init()
             return
@@ -24,7 +24,7 @@ public struct CKUISizeDelta {
     }
     
     func toCSSValues() -> [CSSValue] {
-        [ .number(horizontal, .none), .number(vertical, .none) ]
+        [ .length(horizontal, .px), .length(vertical, .px) ]
     }
     
 }

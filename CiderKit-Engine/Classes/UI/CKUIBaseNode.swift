@@ -40,7 +40,7 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         
         set {
             let values = newValue.toCSSValues()
-            let expanded = CKUICSSShorthandAttributeExpanders.expandAnchorsUnchecked(values: values)!
+            let expanded = CKUICSSAttributeExpanders.expandAnchorsUnchecked(values: values)!
             for entry in expanded {
                 setStyleValues(key: entry.key, values: entry.value)
             }
@@ -49,13 +49,13 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     
     public var pivot: CKUIPivot {
         get {
-            guard let values = getStyleValues(key: CKUICSSAttributes.transformOrigin) else {
+            guard let values = getStyleValues(key: CSSAttributes.transformOrigin) else {
                 return CKUIPivot(x: 0.5, y: 0.5)
             }
             return CKUIPivot(values: values)
         }
         
-        set { setStyleValues(key: CKUICSSAttributes.transformOrigin, values: newValue.toCSSValues()) }
+        set { setStyleValues(key: CSSAttributes.transformOrigin, values: newValue.toCSSValues()) }
     }
     
     private let style: CKUIStyle

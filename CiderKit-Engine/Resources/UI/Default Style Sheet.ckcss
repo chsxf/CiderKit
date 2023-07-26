@@ -1,12 +1,12 @@
 * {
-    anchored-position: 0 0;
-    anchors: center middle;
+    anchored-position: 0px 0px;
+    anchors: center center;
     background-color: white;
     color: black;
     font-family: sans-serif;
     font-size: 12px;
     font-style: normal;
     font-weight: normal;
-    size-delta: 0 0;
+    size-delta: 0px 0px;
     transform-origin: 50% 50%;
 }
