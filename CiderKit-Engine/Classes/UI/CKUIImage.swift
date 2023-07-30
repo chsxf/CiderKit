@@ -24,18 +24,4 @@ open class CKUIImage: CKUIBaseNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    open override func updateLayout() {
-        super.updateLayout()
-        
-        guard parent != nil else { return }
-        
-        let pos = position
-        let localFrame = frame.offsetBy(dx: -pos.x, dy: -pos.y)
-        
-        image.anchorPoint = CGPoint()
-        image.size = localFrame.size
-        image.position = localFrame.origin
-        image.color = getStyleColor(key: "background-color")
-    }
-    
 }

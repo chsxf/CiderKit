@@ -14,6 +14,7 @@
 		D90299792880B975002A7606 /* ToolNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90299782880B975002A7606 /* ToolNode.swift */; };
 		D902997B2880BA92002A7606 /* ToolContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D902997A2880BA92002A7606 /* ToolContext.swift */; };
 		D902997D2880BEE3002A7606 /* ToolComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D902997C2880BEE3002A7606 /* ToolComponent.swift */; };
+		D909E4D92A7851B600978163 /* CKUIURLResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909E4D82A7851B600978163 /* CKUIURLResolver.swift */; };
 		D909FDB8287747640083EB8C /* MapCellInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909FDB7287747640083EB8C /* MapCellInspector.swift */; };
 		D909FDBA287748DD0083EB8C /* PointLightInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909FDB9287748DD0083EB8C /* PointLightInspector.swift */; };
 		D909FDBD287779790083EB8C /* InspectorHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909FDBC287779790083EB8C /* InspectorHeader.swift */; };
@@ -26,6 +27,7 @@
 		D9173DA92878E69A002E652C /* EditableComponentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */; };
 		D918D2DA2A63139B00226B0E /* CKUICSSAttributeExpanders.swift in Sources */ = {isa = PBXBuildFile; fileRef = D918D2D92A63139B00226B0E /* CKUICSSAttributeExpanders.swift */; };
 		D918D2DC2A63373900226B0E /* CKUICSSAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */; };
+		D91BE3C92A76D77E004BC75C /* CKUIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91BE3C82A76D77E004BC75C /* CKUIContainer.swift */; };
 		D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91ED91227E7AA520016D818 /* EditorAssets.xcassets */; };
 		D92002D9282FAFCF007D5AC1 /* BaseLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92002D8282FAFCF007D5AC1 /* BaseLight.swift */; };
 		D92002DB282FB009007D5AC1 /* PointLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92002DA282FB009007D5AC1 /* PointLight.swift */; };
@@ -40,7 +42,6 @@
 		D92B739A29FFFD9D00B53BE0 /* XMLNodeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92B739929FFFD9D00B53BE0 /* XMLNodeExtension.swift */; };
 		D92B7DAC2A3DBEA00088E847 /* CKUISizeDelta.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92B7DAB2A3DBEA00088E847 /* CKUISizeDelta.swift */; };
 		D92B7DAE2A3DC58D0088E847 /* CKUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92B7DAD2A3DC58D0088E847 /* CKUIImage.swift */; };
-		D92B7DB02A3F56040088E847 /* CKUIBaseNodeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92B7DAF2A3F56040088E847 /* CKUIBaseNodeExtensions.swift */; };
 		D92D20D728860E23000B8DA9 /* SpriteAssetEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92D20D628860E23000B8DA9 /* SpriteAssetEditorView.swift */; };
 		D92EE975281DD3F2009B2055 /* CustomSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92EE973281DD3F2009B2055 /* CustomSettings.swift */; };
 		D92FD11828AA719A0097945B /* InspectorViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92FD11728AA719A0097945B /* InspectorViewFactory.swift */; };
@@ -153,6 +154,7 @@
 		D9C0E2332945F2EC002E6147 /* ItemSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C0E2322945F2EC002E6147 /* ItemSelectorView.swift */; };
 		D9C0E23529461DFC002E6147 /* StringKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C0E23429461DFC002E6147 /* StringKeysProvider.swift */; };
 		D9C26B7A28D196960087CD60 /* SpriteAssetAnimationTrackIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C26B7928D196950087CD60 /* SpriteAssetAnimationTrackIdentifier.swift */; };
+		D9CBDAFE2A78D9A900C51C69 /* RemoteCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBDAFD2A78D9A900C51C69 /* RemoteCacheManager.swift */; };
 		D9CC3529285D16B7003EEB6F /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC3528285D16B7003EEB6F /* Pool.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
 		D9CF3B9C2A64A606008BDA3C /* Default Style Sheet.ckcss in Resources */ = {isa = PBXBuildFile; fileRef = D9CF3B9B2A64A606008BDA3C /* Default Style Sheet.ckcss */; };
@@ -225,6 +227,7 @@
 		D90299782880B975002A7606 /* ToolNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolNode.swift; sourceTree = "<group>"; };
 		D902997A2880BA92002A7606 /* ToolContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolContext.swift; sourceTree = "<group>"; };
 		D902997C2880BEE3002A7606 /* ToolComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolComponent.swift; sourceTree = "<group>"; };
+		D909E4D82A7851B600978163 /* CKUIURLResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIURLResolver.swift; sourceTree = "<group>"; };
 		D909FDB7287747640083EB8C /* MapCellInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCellInspector.swift; sourceTree = "<group>"; };
 		D909FDB9287748DD0083EB8C /* PointLightInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLightInspector.swift; sourceTree = "<group>"; };
 		D909FDBC287779790083EB8C /* InspectorHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorHeader.swift; sourceTree = "<group>"; };
@@ -249,6 +252,7 @@
 		D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableComponentDelegate.swift; sourceTree = "<group>"; };
 		D918D2D92A63139B00226B0E /* CKUICSSAttributeExpanders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUICSSAttributeExpanders.swift; sourceTree = "<group>"; };
 		D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUICSSAttributes.swift; sourceTree = "<group>"; };
+		D91BE3C82A76D77E004BC75C /* CKUIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIContainer.swift; sourceTree = "<group>"; };
 		D91ED91227E7AA520016D818 /* EditorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = EditorAssets.xcassets; sourceTree = "<group>"; };
 		D92002D8282FAFCF007D5AC1 /* BaseLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLight.swift; sourceTree = "<group>"; };
 		D92002DA282FB009007D5AC1 /* PointLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLight.swift; sourceTree = "<group>"; };
@@ -263,7 +267,6 @@
 		D92B739929FFFD9D00B53BE0 /* XMLNodeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLNodeExtension.swift; sourceTree = "<group>"; };
 		D92B7DAB2A3DBEA00088E847 /* CKUISizeDelta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUISizeDelta.swift; sourceTree = "<group>"; };
 		D92B7DAD2A3DC58D0088E847 /* CKUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIImage.swift; sourceTree = "<group>"; };
-		D92B7DAF2A3F56040088E847 /* CKUIBaseNodeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIBaseNodeExtensions.swift; sourceTree = "<group>"; };
 		D92D20D628860E23000B8DA9 /* SpriteAssetEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetEditorView.swift; sourceTree = "<group>"; };
 		D92EE973281DD3F2009B2055 /* CustomSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettings.swift; sourceTree = "<group>"; };
 		D92FD11728AA719A0097945B /* InspectorViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorViewFactory.swift; sourceTree = "<group>"; };
@@ -367,6 +370,7 @@
 		D9C0E2322945F2EC002E6147 /* ItemSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSelectorView.swift; sourceTree = "<group>"; };
 		D9C0E23429461DFC002E6147 /* StringKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringKeysProvider.swift; sourceTree = "<group>"; };
 		D9C26B7928D196950087CD60 /* SpriteAssetAnimationTrackIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTrackIdentifier.swift; sourceTree = "<group>"; };
+		D9CBDAFD2A78D9A900C51C69 /* RemoteCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCacheManager.swift; sourceTree = "<group>"; };
 		D9CC3528285D16B7003EEB6F /* Pool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pool.swift; sourceTree = "<group>"; };
 		D9CC420F276163700081A464 /* WorldGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldGrid.swift; sourceTree = "<group>"; };
 		D9CECB2627E91DB0000E8CC7 /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
@@ -713,6 +717,7 @@
 				D9730B1427B795A40007513C /* Math.swift */,
 				D9CC3528285D16B7003EEB6F /* Pool.swift */,
 				D9254461281AB55B002DCA4C /* Project.swift */,
+				D9CBDAFD2A78D9A900C51C69 /* RemoteCacheManager.swift */,
 				D9CECB2627E91DB0000E8CC7 /* Screen.swift */,
 				D9878FAB293AB6280016AABE /* SIMDExtensions.swift */,
 				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
@@ -891,10 +896,10 @@
 				D98C061A2A00F44A00750F0A /* CKUIAnchoredPosition.swift */,
 				D98C061C2A00F5A600750F0A /* CKUIAnchors.swift */,
 				D9E7A3C329BFB77200F09A2E /* CKUIBaseNode.swift */,
-				D92B7DAF2A3F56040088E847 /* CKUIBaseNodeExtensions.swift */,
 				D938EE6A2A192E2F00D0D3AD /* CKUICanvas.swift */,
-				D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */,
+				D91BE3C82A76D77E004BC75C /* CKUIContainer.swift */,
 				D918D2D92A63139B00226B0E /* CKUICSSAttributeExpanders.swift */,
+				D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */,
 				D9CF6DBE2A07D16E00DE3876 /* CKUICSSValidationConfiguration.swift */,
 				D92B7DAD2A3DC58D0088E847 /* CKUIImage.swift */,
 				D97DB8B92A70ECF4001C671D /* CKUIPivot.swift */,
@@ -902,6 +907,7 @@
 				D9CF6DC02A07D2F500DE3876 /* CKUISpriteDescriptor.swift */,
 				D9B603692A1026AD00621996 /* CKUIStyle.swift */,
 				D9B67F3B2A3F9F6800464E57 /* CKUIStyleSheet.swift */,
+				D909E4D82A7851B600978163 /* CKUIURLResolver.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1212,6 +1218,7 @@
 				D93C4CA72800CBE0000955E1 /* CharacterComponent.swift in Sources */,
 				D93C4CB02800CBE8000955E1 /* MapCellComponent.swift in Sources */,
 				D93C24F52801EBBE0023FE7A /* BaseMaterial.swift in Sources */,
+				D909E4D92A7851B600978163 /* CKUIURLResolver.swift in Sources */,
 				D93C4CB42800CBED000955E1 /* GameView.swift in Sources */,
 				D98C061B2A00F44A00750F0A /* CKUIAnchoredPosition.swift in Sources */,
 				D93C4C932800CBD6000955E1 /* CiderKit_Engine.docc in Sources */,
@@ -1247,7 +1254,6 @@
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D91657F4290878B700510386 /* CGColorExtension.swift in Sources */,
-				D92B7DB02A3F56040088E847 /* CKUIBaseNodeExtensions.swift in Sources */,
 				D9CFEF842A2D3BF400991D7B /* CGFloatExtension.swift in Sources */,
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,
 				D9878FAE293AB7AD0016AABE /* CGMutablePathExtension.swift in Sources */,
@@ -1259,6 +1265,7 @@
 				D9F1107028CCB5E800203EF1 /* SpriteAssetAnimationTrack.swift in Sources */,
 				D90BB9BB289B242800833C49 /* AtlasLocator.swift in Sources */,
 				D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */,
+				D9CBDAFE2A78D9A900C51C69 /* RemoteCacheManager.swift in Sources */,
 				D9418FF429A18A000027E52E /* CGPointExtension.swift in Sources */,
 				D92002D9282FAFCF007D5AC1 /* BaseLight.swift in Sources */,
 				D92B7DAC2A3DBEA00088E847 /* CKUISizeDelta.swift in Sources */,
@@ -1272,6 +1279,7 @@
 				D9418FF029A16E900027E52E /* SpriteAssetPlacement.swift in Sources */,
 				D93C24FE2802E2680023FE7A /* CellRenderers.swift in Sources */,
 				D9DE549A28CDC58600E3761B /* SpriteAssetAnimationState.swift in Sources */,
+				D91BE3C92A76D77E004BC75C /* CKUIContainer.swift in Sources */,
 				D96A552929FF12580030E54F /* XMLElementExtension.swift in Sources */,
 				D938EE6B2A192E2F00D0D3AD /* CKUICanvas.swift in Sources */,
 			);

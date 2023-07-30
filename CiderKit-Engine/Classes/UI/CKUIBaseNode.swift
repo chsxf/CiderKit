@@ -180,6 +180,26 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     }
     
     final func getStyleValues(key: String) -> [CSSValue]? { style[key] ?? styleSheet?.getValue(with: key, for: self) }
+    final func getStyleValue(key: String, index: Int = 0) -> CSSValue? {
+        guard
+            let styleValues = getStyleValues(key: key),
+            index < styleValues.count
+        else {
+            return nil
+        }
+        return styleValues[index]
+    }
+    
+    final func getStyleColor(key: String) -> SKColor? {
+        guard
+            let value = getStyleValue(key: key),
+            case let CSSValue.color(r, g, b, a) = value
+        else {
+            return nil
+        }
+        
+        return SKColor(red: CGFloat(r), green: CGFloat(g), blue: CGFloat(b), alpha: CGFloat(a))
+    }
     
     final func setStyleValues(key: String, values: [CSSValue]) { style[key] = values }
     final func setStyleValue(key: String, value: CSSValue) { setStyleValues(key: key, values: [value]) }
