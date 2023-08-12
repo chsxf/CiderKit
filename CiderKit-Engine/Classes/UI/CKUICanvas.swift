@@ -1,3 +1,4 @@
+import CoreGraphics
 import CiderCSSKit
 
 public final class CKUICanvas: CKUIBaseNode {
@@ -5,15 +6,27 @@ public final class CKUICanvas: CKUIBaseNode {
     private let canvasStyleSheet: CKUIStyleSheet?
     public override var styleSheet: CKUIStyleSheet? { canvasStyleSheet }
     
-    public override var referenceFrame: CGRect { CGRect(origin: CGPoint(), size: scene?.size ?? CGSize()) }
+    public override var frame: CGRect {
+        let size = scene?.size ?? CGSize()
+        return CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height)
+    }
     
-    public init(style: CKUIStyle? = nil, styleSheet: CKUIStyleSheet? = nil) {
+    public override var position: CGPoint {
+        get { CGPoint() }
+        set { }
+    }
+    
+    public init(styleSheet: CKUIStyleSheet? = nil) {
         self.canvasStyleSheet = styleSheet
-        super.init(type: "canvas", style: style ?? CKUIStyle(attributes: "anchors: left right bottom top; transform-origin: center center;"))
+        super.init(type: "canvas", style: CKUIStyle(attributes: "anchors: left bottom; transform-origin: center center;"))
     }
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    public override func updatePosition() { }
+    
+    public override func updateLayout() { }
     
 }

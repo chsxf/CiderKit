@@ -2,7 +2,7 @@
 import Foundation
 import AppKit
 
-public class Screen {
+public final class Screen {
     
     public class func getBestMatchingSceneSizeOnMainScreen(_ size: CGSize) -> CGSize {
         let baseAspectRatio = size.width / size.height

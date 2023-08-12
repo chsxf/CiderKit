@@ -83,25 +83,23 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     }
     
     open override var frame: CGRect {
-        guard let parent else { return CGRect() }
+        guard let parentUINode = parent as? CKUIBaseNode else { return CGRect() }
         
-        let refFrame = referenceFrame.offsetBy(dx: -parent.position.x, dy: -parent.position.y)
-        let anchoredFrame = anchors.computeAnchoredFrame(from: refFrame)
+        let referenceFrame = parentUINode.frame
+        let anchors = anchors
+        let anchoredFrame = anchors.computeAnchoredFrame(from: referenceFrame)
+        
         let sd = sizeDelta
-        let frameSize = CGSize(width: anchoredFrame.width + sd.horizontal, height: anchoredFrame.height + sd.vertical)
-    
-        let halfWidth = anchoredFrame.width * 0.5
-        let halfHeight = anchoredFrame.height * 0.5
-        
-        let adjustedSizeDeltaHorizontal = sd.horizontal * pivot.x
-        let adjustedSizeDeltaVertical = sd.vertical * pivot.y
-        
         let anchoredPos = anchoredPosition
+        let pivot = pivot
+        let parentPivot = parentUINode.pivot
         
-        let frameXmin = anchoredFrame.minX + anchoredPos.x - adjustedSizeDeltaHorizontal - halfWidth
-        let frameYmin = anchoredFrame.minY + anchoredPos.y - adjustedSizeDeltaVertical - halfHeight
-        
-        return CGRect(x: frameXmin, y: frameYmin, width: frameSize.width, height: frameSize.height)
+        let frameXmin = referenceFrame.width * (anchors.xmin - parentPivot.x) + anchoredPos.x - sd.horizontal * pivot.x
+        let frameYmin = referenceFrame.height * (anchors.ymin - parentPivot.y) + anchoredPos.y - sd.vertical * pivot.y
+
+        let frameSize = CGSize(width: anchoredFrame.width + sd.horizontal, height: anchoredFrame.height + sd.vertical)
+
+        return CGRect(x: CGFloat(frameXmin), y: CGFloat(frameYmin), width: frameSize.width, height: frameSize.height)
     }
     
     open var referenceFrame: CGRect { parent?.frame ?? CGRect() }
@@ -118,6 +116,12 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         self.classes = classes
         self.style = style ?? CKUIStyle()
         super.init()
+        zPosition = 1
+        
+        let shape = SKShapeNode(circleOfRadius: 1)
+        shape.fillColor = SKColor.red
+        shape.strokeColor = SKColor.orange
+        addChild(shape)
     }
     
     public init(xmlElement: XMLElement) {
@@ -142,6 +146,8 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         style = CKUIStyle(xmlElement: styleElement)
         
         super.init()
+        
+        zPosition = 1
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -151,17 +157,17 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     open func updateLayout() { }
     
     open func updatePosition() {
-        guard let parent else {
+        guard parent != nil else {
             super.position = CGPoint()
             return
         }
         
-        let frameInParent = frame
-        let parentPosition = parent.position
-
-        let x = frameInParent.minX - parentPosition.x + (frameInParent.size.width * pivot.x)
-        let y = frameInParent.minY - parentPosition.y + (frameInParent.size.height * pivot.y)
+        let localFrame = frame
+        let pivot = pivot
         
+        let x = localFrame.minX + localFrame.width * pivot.x
+        let y = localFrame.minY + localFrame.height * pivot.y
+
         super.position = CGPoint(x: x, y: y)
     }
     

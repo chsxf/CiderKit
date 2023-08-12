@@ -26,7 +26,8 @@ final class CKUIURLResolver {
             else {
                 var path = url.relativePath
                 if path.starts(with: "/") {
-                    path = path.substring(from: path.index(after: path.startIndex))
+                    let substringIndex = path.index(after: path.startIndex)
+                    path = String(path[substringIndex...])
                 }
                 localURL = URL(fileURLWithPath: path, relativeTo: Project.current!.texturesDirectoryURL)
             }

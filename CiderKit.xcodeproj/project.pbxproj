@@ -14,6 +14,7 @@
 		D90299792880B975002A7606 /* ToolNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90299782880B975002A7606 /* ToolNode.swift */; };
 		D902997B2880BA92002A7606 /* ToolContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D902997A2880BA92002A7606 /* ToolContext.swift */; };
 		D902997D2880BEE3002A7606 /* ToolComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D902997C2880BEE3002A7606 /* ToolComponent.swift */; };
+		D90440582A8590B8009DBADE /* CKUILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90440572A8590B8009DBADE /* CKUILabel.swift */; };
 		D909E4D92A7851B600978163 /* CKUIURLResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909E4D82A7851B600978163 /* CKUIURLResolver.swift */; };
 		D909FDB8287747640083EB8C /* MapCellInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909FDB7287747640083EB8C /* MapCellInspector.swift */; };
 		D909FDBA287748DD0083EB8C /* PointLightInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909FDB9287748DD0083EB8C /* PointLightInspector.swift */; };
@@ -174,6 +175,7 @@
 		D9F1106E28CCB5A600203EF1 /* SpriteAssetAnimationTrackType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F037C628CC89A7003308C1 /* SpriteAssetAnimationTrackType.swift */; };
 		D9F1107028CCB5E800203EF1 /* SpriteAssetAnimationTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F1106F28CCB5E800203EF1 /* SpriteAssetAnimationTrack.swift */; };
 		D9FBAA0428946A1400A3982D /* SpriteAssetElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBAA0328946A1400A3982D /* SpriteAssetElement.swift */; };
+		D9FD1A632A8C38D900713A8E /* FontHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD1A622A8C38D900713A8E /* FontHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -227,6 +229,7 @@
 		D90299782880B975002A7606 /* ToolNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolNode.swift; sourceTree = "<group>"; };
 		D902997A2880BA92002A7606 /* ToolContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolContext.swift; sourceTree = "<group>"; };
 		D902997C2880BEE3002A7606 /* ToolComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolComponent.swift; sourceTree = "<group>"; };
+		D90440572A8590B8009DBADE /* CKUILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUILabel.swift; sourceTree = "<group>"; };
 		D909E4D82A7851B600978163 /* CKUIURLResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIURLResolver.swift; sourceTree = "<group>"; };
 		D909FDB7287747640083EB8C /* MapCellInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCellInspector.swift; sourceTree = "<group>"; };
 		D909FDB9287748DD0083EB8C /* PointLightInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLightInspector.swift; sourceTree = "<group>"; };
@@ -394,6 +397,7 @@
 		D9F1106F28CCB5E800203EF1 /* SpriteAssetAnimationTrack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTrack.swift; sourceTree = "<group>"; };
 		D9FBAA0328946A1400A3982D /* SpriteAssetElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetElement.swift; sourceTree = "<group>"; };
 		D9FBC5722765EA6A004A30BB /* SpritePool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpritePool.swift; sourceTree = "<group>"; };
+		D9FD1A622A8C38D900713A8E /* FontHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -711,6 +715,7 @@
 				D92EE973281DD3F2009B2055 /* CustomSettings.swift */,
 				D9CF6DC52A07F2FF00DE3876 /* EquatableExtension.swift */,
 				D9741C5E290D64E10078571B /* FloatExtension.swift */,
+				D9FD1A622A8C38D900713A8E /* FontHelpers.swift */,
 				D91061CA2755F27600EA8A03 /* Functions.swift */,
 				D9EA6DB128BAD07A00233F79 /* IntPoint.swift */,
 				D91061C72755F27600EA8A03 /* Keycode.swift */,
@@ -902,6 +907,7 @@
 				D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */,
 				D9CF6DBE2A07D16E00DE3876 /* CKUICSSValidationConfiguration.swift */,
 				D92B7DAD2A3DC58D0088E847 /* CKUIImage.swift */,
+				D90440572A8590B8009DBADE /* CKUILabel.swift */,
 				D97DB8B92A70ECF4001C671D /* CKUIPivot.swift */,
 				D92B7DAB2A3DBEA00088E847 /* CKUISizeDelta.swift */,
 				D9CF6DC02A07D2F500DE3876 /* CKUISpriteDescriptor.swift */,
@@ -1244,6 +1250,7 @@
 				D9F1106E28CCB5A600203EF1 /* SpriteAssetAnimationTrackType.swift in Sources */,
 				D92002DD282FB0E0007D5AC1 /* LightingDescription.swift in Sources */,
 				D96D3188291C4C5A00CD498E /* MaterialFactory.swift in Sources */,
+				D9FD1A632A8C38D900713A8E /* FontHelpers.swift in Sources */,
 				D9FBAA0428946A1400A3982D /* SpriteAssetElement.swift in Sources */,
 				D918D2DC2A63373900226B0E /* CKUICSSAttributes.swift in Sources */,
 				D9878FAC293AB6280016AABE /* SIMDExtensions.swift in Sources */,
@@ -1265,6 +1272,7 @@
 				D9F1107028CCB5E800203EF1 /* SpriteAssetAnimationTrack.swift in Sources */,
 				D90BB9BB289B242800833C49 /* AtlasLocator.swift in Sources */,
 				D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */,
+				D90440582A8590B8009DBADE /* CKUILabel.swift in Sources */,
 				D9CBDAFE2A78D9A900C51C69 /* RemoteCacheManager.swift in Sources */,
 				D9418FF429A18A000027E52E /* CGPointExtension.swift in Sources */,
 				D92002D9282FAFCF007D5AC1 /* BaseLight.swift in Sources */,

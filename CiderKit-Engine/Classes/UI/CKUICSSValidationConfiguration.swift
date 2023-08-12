@@ -10,10 +10,10 @@ public class CKUICSSValidationConfiguration: CSSValidationConfiguration {
     private static let sansSerifFontName = "SF Pro"
     #endif
     
-    public static let fontFamilyByKeyword: [String: CSSValue] = [
-        "sans-serif": .string(sansSerifFontName),
-        "serif": .string("New York"),
-        "monospace": .string("SF Mono")
+    public static let fontFamilyByKeyword: [String: String] = [
+        "sans-serif": sansSerifFontName,
+        "serif": "Times New Roman",
+        "monospace": "SF Mono"
     ]
     
     public override var valueGroupingTypeByAttribute: [String:CSSValueGroupingType] {
