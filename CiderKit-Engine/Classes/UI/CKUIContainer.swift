@@ -8,11 +8,11 @@ open class CKUIContainer : CKUIBaseNode {
     
     private var borderImageURL: URL? = nil
     
-    public init(identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
+    public override init(type: String = "container", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
         backgroundImage = SKSpriteNode(texture: nil, color: SKColor.white, size: CGSize())
         backgroundImage.zPosition = -1
         
-        super.init(type: "container", identifier: identifier, classes: classes, style: style)
+        super.init(type: type, identifier: identifier, classes: classes, style: style)
         
         zPosition = 2
 

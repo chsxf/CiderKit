@@ -1,20 +1,22 @@
 import SpriteKit
 import CiderCSSKit
 
-public final class CKUILabel : CKUIBaseNode {
+public final class CKUILabel : CKUIBaseNode, CKUILabelControl {
     
-    private let label: SKLabelNode
+    internal var label: SKLabelNode!
     
     public init(text: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
-        label = Self.initLabel(text: text)
         super.init(type: "label", identifier: identifier, classes: classes, style: style)
+        
+        label = Self.initLabel(text: text)
         addChild(label)
     }
     
     override init(xmlElement: XMLElement) {
+        super.init(xmlElement: xmlElement)
+        
         let text = xmlElement.getDataPropertyValue(forName: "text")?.stringValue ?? ""
         label = Self.initLabel(text: text)
-        super.init(xmlElement: xmlElement)
         addChild(label)
     }
     
@@ -39,43 +41,10 @@ public final class CKUILabel : CKUIBaseNode {
         
         let localFrame = frame.offsetBy(dx: -position.x, dy: -position.y)
         
-        if let color = getStyleColor(key: CSSAttributes.color) {
-            label.fontColor = color
-        }
-        else {
-            label.fontColor = SKColor.black
-        }
+        updateFontColor()
+        updateFontName()
+        updateFontSize()
         
-        var fontFamily: String = CKUICSSValidationConfiguration.fontFamilyByKeyword["serif"]!
-        if let fontFamilyValue = getStyleValue(key: CSSAttributes.fontFamily) {
-            if case let CSSValue.string(fontFamilyName) = fontFamilyValue {
-                fontFamily = fontFamilyName
-            }
-        }
-        let isItalic = getStyleValue(key: CSSAttributes.fontStyle) == CSSValue.keyword("italic")
-        var isBold = false
-        if let fontWeightValue = getStyleValue(key: CSSAttributes.fontWeight) {
-            if case let CSSValue.number(fontWeightNumber) = fontWeightValue {
-                if fontWeightNumber > 700 {
-                    isBold = true
-                }
-            }
-        }
-        label.fontName = FontHelpers.fontName(with: fontFamily, italic: isItalic, bold: isBold)
-        
-        var fontSize: Float = 12
-        if let fontSizeValue = getStyleValue(key: CSSAttributes.fontSize) {
-            if case let CSSValue.length(fontSizeLength, fontSizeUnit) = fontSizeValue {
-                if fontSizeUnit != .pt {
-                    fontSize = try! fontSizeUnit.convert(amount: fontSizeLength, to: .pt)
-                }
-                else {
-                    fontSize = fontSizeLength
-                }
-            }
-        }
-        label.fontSize = CGFloat(fontSize)
-            
         var horizontalAlign: SKLabelHorizontalAlignmentMode = .left
         if let textAlignValue = getStyleValue(key: CSSAttributes.textAlign) {
             if case let CSSValue.keyword(textAlignKeyword) = textAlignValue {

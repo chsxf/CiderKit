@@ -58,6 +58,8 @@ open class GameView: SKView, SKSceneDelegate {
         
         #if os(macOS)
         NotificationCenter.default.addObserver(self, selector: #selector(Self.updateSceneSize), name: NSView.frameDidChangeNotification, object: self)
+
+        TrackingAreaManager.scene = gameScene
         #endif
     }
     
@@ -82,6 +84,9 @@ open class GameView: SKView, SKSceneDelegate {
     }
     
     open func update(_ currentTime: TimeInterval, for scene: SKScene) {
+        #if os(macOS)
+        TrackingAreaManager.update()
+        #endif
         uiOverlayCanvas.update()
     }
     

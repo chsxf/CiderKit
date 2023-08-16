@@ -8,56 +8,6 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         return parentUINode.styleSheet
     }
     
-    public var anchoredPosition: CKUIAnchoredPosition {
-        get {
-            guard let values = getStyleValues(key: CKUICSSAttributes.anchoredPosition) else {
-                return CKUIAnchoredPosition()
-            }
-            return CKUIAnchoredPosition(values: values)
-        }
-        
-        set { setStyleValues(key: CKUICSSAttributes.anchoredPosition, values: newValue.toCSSValues()) }
-    }
-    
-    public var sizeDelta: CKUISizeDelta {
-        get {
-            guard let values = getStyleValues(key: CKUICSSAttributes.sizeDelta) else {
-                return CKUISizeDelta()
-            }
-            return CKUISizeDelta(values: values)
-        }
-        
-        set { setStyleValues(key: CKUICSSAttributes.sizeDelta, values: newValue.toCSSValues()) }
-    }
-    
-    public var anchors: CKUIAnchors {
-        get {
-            guard let values = getStyleValues(key: CKUICSSAttributes.anchors) else {
-                return CKUIAnchors()
-            }
-            return CKUIAnchors(values: values)
-        }
-        
-        set {
-            let values = newValue.toCSSValues()
-            let expanded = CKUICSSAttributeExpanders.expandAnchorsUnchecked(values: values)!
-            for entry in expanded {
-                setStyleValues(key: entry.key, values: entry.value)
-            }
-        }
-    }
-    
-    public var pivot: CKUIPivot {
-        get {
-            guard let values = getStyleValues(key: CSSAttributes.transformOrigin) else {
-                return CKUIPivot(x: 0.5, y: 0.5)
-            }
-            return CKUIPivot(values: values)
-        }
-        
-        set { setStyleValues(key: CSSAttributes.transformOrigin, values: newValue.toCSSValues()) }
-    }
-    
     private let style: CKUIStyle
     
     public override var zRotation: CGFloat {
@@ -107,6 +57,7 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     public let type: String
     public let identifier: String?
     public private(set) var classes: [String]?
+    public private(set) var pseudoClasses: [String]? = []
     
     public var ancestor: CSSConsumer? { parent as? CSSConsumer }
     
@@ -156,7 +107,7 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     
     open func updateLayout() { }
     
-    open func updatePosition() {
+    internal func updatePosition() {
         guard parent != nil else {
             super.position = CGPoint()
             return
@@ -196,9 +147,9 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         return styleValues[index]
     }
     
-    final func getStyleColor(key: String) -> SKColor? {
+    final func getStyleColor(key: String, index: Int = 0) -> SKColor? {
         guard
-            let value = getStyleValue(key: key),
+            let value = getStyleValue(key: key, index: index),
             case let CSSValue.color(r, g, b, a) = value
         else {
             return nil
@@ -207,7 +158,76 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         return SKColor(red: CGFloat(r), green: CGFloat(g), blue: CGFloat(b), alpha: CGFloat(a))
     }
     
+    final func getStyleLength(key: String, unit: CSSLengthUnit = .px, index: Int = 1, allowZero: Bool = true) -> Float? {
+        guard let value = getStyleValue(key: key, index: index) else { return nil }
+        
+        switch value {
+        case let CSSValue.length(length, lengthUnit):
+            return try! lengthUnit.convert(amount: length, to: unit)
+        case let CSSValue.number(number):
+            return allowZero && number == 0 ? 0 : nil
+        default:
+            return nil
+        }
+    }
+    
     final func setStyleValues(key: String, values: [CSSValue]) { style[key] = values }
     final func setStyleValue(key: String, value: CSSValue) { setStyleValues(key: key, values: [value]) }
+    
+    public final func add(class: String) {
+        if classes == nil {
+            classes = [`class`]
+            return
+        }
+        
+        if !has(class: `class`) {
+            classes!.append(`class`)
+        }
+    }
+    
+    public final func remove(class: String) {
+        classes?.removeAll { $0 == `class` }
+    }
+    
+    public final func toggle(class: String) {
+        if has(class: `class`) {
+            remove(class: `class`)
+        }
+        else {
+            add(class: `class`)
+        }
+    }
+    
+    public final func has(class: String) -> Bool {
+        classes?.contains(`class`) ?? false
+    }
+    
+    public final func add(pseudoClass: String) {
+        if pseudoClasses == nil {
+            pseudoClasses = [pseudoClass]
+            return
+        }
+        
+        if !has(pseudoClass: pseudoClass) {
+            pseudoClasses!.append(pseudoClass)
+        }
+    }
+    
+    public final func remove(pseudoClass: String) {
+        pseudoClasses?.removeAll { $0 == pseudoClass }
+    }
+    
+    public final func toggle(pseudoClass: String) {
+        if has(pseudoClass: pseudoClass) {
+            remove(pseudoClass: pseudoClass)
+        }
+        else {
+            add(pseudoClass: pseudoClass)
+        }
+    }
+    
+    public final func has(pseudoClass: String) -> Bool {
+        pseudoClasses?.contains(pseudoClass) ?? false
+    }
     
 }
