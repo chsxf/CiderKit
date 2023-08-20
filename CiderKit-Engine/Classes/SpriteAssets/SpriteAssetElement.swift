@@ -118,7 +118,7 @@ public class SpriteAssetElement: Hashable, Codable {
     public init(name: String) {
         uuid = UUID()
         self.name = name
-        data = SpriteAssetElementData(visible: true, offset: CGPoint(), rotation: 0, scale: CGPoint(x: 1, y: 1), color: CGColor.white, colorBlend: 0)
+        data = SpriteAssetElementData(visible: true, offset: CGPoint(), rotation: 0, scale: CGPoint(x: 1, y: 1), color: CGColor(gray: 1, alpha: 1), colorBlend: 0)
         children = []
     }
     
@@ -129,7 +129,9 @@ public class SpriteAssetElement: Hashable, Codable {
         
         name = try container.decode(String.self, forKey: .name)
         
-        data = SpriteAssetElementData(visible: true, offset: CGPoint(), rotation: 0, scale: CGPoint(x: 1, y: 1), color: CGColor.white, colorBlend: 0)
+        let whiteColor = CGColor(gray: 1, alpha: 1)
+        
+        data = SpriteAssetElementData(visible: true, offset: CGPoint(), rotation: 0, scale: CGPoint(x: 1, y: 1), color: whiteColor, colorBlend: 0)
         data.visible = (try container.decodeIfPresent(Bool.self, forKey: .visible)) ?? true
         data.spriteLocator = try? container.decode(SpriteLocator.self, forKey: .sprite)
         data.offset = try container.decode(CGPoint.self, forKey: .offset)
@@ -157,7 +159,7 @@ public class SpriteAssetElement: Hashable, Codable {
             data.colorBlend = try container.decode(Float.self, forKey: .colorBlend)
         }
         else {
-            data.color = CGColor.white
+            data.color = whiteColor
             data.colorBlend = 0
         }
         

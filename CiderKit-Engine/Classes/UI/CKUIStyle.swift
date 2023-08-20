@@ -18,19 +18,9 @@ public class CKUIStyle {
     public init(attributes: String) {
         styleProperties = try! CSSParser.parse(ruleBlock: attributes, validationConfiguration: CKUICSSValidationConfiguration.default)
     }
-    
-    init(xmlElement: XMLElement?) {
-        var propertiesBuffer: [String: [CSSValue]] = [:]
-        if let xmlElement {
-            let properties = xmlElement.elements(forName: "property")
-            for property in properties {
-                let name = property.attribute(forName: "name")!.stringValue!
-                let value = property.attribute(forName: "value")!.stringValue!
-                let parsedValues = try! CSSParser.parse(attributeName: name, attributeValue: value, validationConfiguration: CKUICSSValidationConfiguration.default)
-                propertiesBuffer[name] = parsedValues
-            }
-        }
-        styleProperties = propertiesBuffer
+
+    public init(properties: [String: [CSSValue]]) {
+        styleProperties = properties
     }
     
 }

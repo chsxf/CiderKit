@@ -19,17 +19,6 @@ open class CKUIContainer : CKUIBaseNode {
         addChild(backgroundImage)
     }
     
-    override init(xmlElement: XMLElement) {
-        backgroundImage = SKSpriteNode(texture: nil, color: SKColor.white, size: CGSize())
-        backgroundImage.zPosition = -1
-        
-        super.init(xmlElement: xmlElement)
-        
-        zPosition = 2
-        
-        addChild(backgroundImage)
-    }
-    
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -75,32 +75,6 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         addChild(shape)
     }
     
-    public init(xmlElement: XMLElement) {
-        self.type = xmlElement.attribute(forName: "type")!.stringValue!
-        
-        if let identifierAttribute = xmlElement.attribute(forName: "id") {
-            identifier = identifierAttribute.stringValue!
-        }
-        else {
-            identifier = nil
-        }
-        
-        if let classAttribute = xmlElement.attribute(forName: "class") {
-            let splitClasses = classAttribute.stringValue!.split(separator: " ")
-            classes = splitClasses.map { String($0) }
-        }
-        else {
-            classes = nil
-        }
-        
-        let styleElement = xmlElement.firstElement(forName: "style")
-        style = CKUIStyle(xmlElement: styleElement)
-        
-        super.init()
-        
-        zPosition = 1
-    }
-    
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

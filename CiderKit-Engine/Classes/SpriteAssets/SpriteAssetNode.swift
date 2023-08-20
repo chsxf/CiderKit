@@ -53,7 +53,7 @@ open class SpriteAssetNode: SKNode {
             let spriteNode = SKSpriteNode(texture: texture)
             node = spriteNode
             
-            spriteNode.color = SKColor(cgColor: element.data.color)!
+            spriteNode.color = SKColorFromCGColor(element.data.color)
             spriteNode.colorBlendFactor = CGFloat(element.data.colorBlend)
             
             let atlas = Atlases[spriteLocator.atlasKey]!

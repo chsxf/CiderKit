@@ -2,29 +2,27 @@ final class RemoteCacheManager {
     
     private class var cachesDirectory: URL {
         var cachesDirectory: URL
-        if #available(macOS 13.0, *) {
-            cachesDirectory = URL(filePath: "CiderKit", directoryHint: .isDirectory, relativeTo: URL.cachesDirectory)
+        
+        let systemCacheDirectory = try! FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        
+        if #available(macOS 13.0, iOS 16.0, *) {
+            cachesDirectory = URL(filePath: "CiderKit", directoryHint: .isDirectory, relativeTo: systemCacheDirectory)
         } else {
-            let fileManager = FileManager.default
-            let libraryURL = URL(fileURLWithPath: "Library", isDirectory: true, relativeTo: fileManager.homeDirectoryForCurrentUser)
-            let mainCachesDirectory = URL(fileURLWithPath: "Caches", isDirectory: true, relativeTo: libraryURL)
-            cachesDirectory = URL(fileURLWithPath: "CiderKit", isDirectory: true, relativeTo: mainCachesDirectory)
+            cachesDirectory = URL(fileURLWithPath: "CiderKit", isDirectory: true, relativeTo: systemCacheDirectory)
         }
+        
+        if !FileManager.default.fileExists(atPath: cachesDirectory.path) {
+            try! FileManager.default.createDirectory(at: cachesDirectory, withIntermediateDirectories: false)
+        }
+        
         return cachesDirectory
-    }
-    
-    private class func createCacheDirectoryIfNeeded() throws {
-        let fileManager = FileManager.default
-        if !fileManager.fileExists(atPath: cachesDirectory.path) {
-            try fileManager.createDirectory(at: cachesDirectory, withIntermediateDirectories: false)
-        }
     }
     
     class func get(url: URL) throws -> URL {
         let filename = "\(url.absoluteString.toSHA256())-\(url.lastPathComponent)"
         
         var cachesURL: URL
-        if #available(macOS 13.0, *) {
+        if #available(macOS 13.0, iOS 16.0, *) {
             cachesURL = URL(filePath: filename, directoryHint: .notDirectory, relativeTo: cachesDirectory)
         } else {
             cachesURL = URL(fileURLWithPath: filename, relativeTo: cachesDirectory)

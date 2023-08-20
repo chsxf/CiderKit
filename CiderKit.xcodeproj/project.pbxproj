@@ -44,9 +44,7 @@
 		D928562428B18271000F2D86 /* VSpacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928562328B18271000F2D86 /* VSpacer.swift */; };
 		D928562628B18BB5000F2D86 /* FloatField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928562528B18BB5000F2D86 /* FloatField.swift */; };
 		D92A1ACD28D7C5DD0096972B /* SpriteAssetAnimationKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92A1ACC28D7C5DD0096972B /* SpriteAssetAnimationKey.swift */; };
-		D92B739A29FFFD9D00B53BE0 /* XMLNodeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92B739929FFFD9D00B53BE0 /* XMLNodeExtension.swift */; };
 		D92B7DAC2A3DBEA00088E847 /* CKUISizeDelta.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92B7DAB2A3DBEA00088E847 /* CKUISizeDelta.swift */; };
-		D92B7DAE2A3DC58D0088E847 /* CKUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92B7DAD2A3DC58D0088E847 /* CKUIImage.swift */; };
 		D92D20D728860E23000B8DA9 /* SpriteAssetEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92D20D628860E23000B8DA9 /* SpriteAssetEditorView.swift */; };
 		D92EE975281DD3F2009B2055 /* CustomSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92EE973281DD3F2009B2055 /* CustomSettings.swift */; };
 		D92FD11828AA719A0097945B /* InspectorViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92FD11728AA719A0097945B /* InspectorViewFactory.swift */; };
@@ -98,6 +96,7 @@
 		D94302CD290E86D70013B4CA /* SingleTextureMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94302CC290E86D70013B4CA /* SingleTextureMaterial.swift */; };
 		D94302D0290E89EF0013B4CA /* Default Materials.ckmatdb in Resources */ = {isa = PBXBuildFile; fileRef = D94302CF290E89EF0013B4CA /* Default Materials.ckmatdb */; };
 		D947DF1D28D0A9B800669AE5 /* SpriteAssetAnimationTrackNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D947DF1C28D0A9B800669AE5 /* SpriteAssetAnimationTrackNameView.swift */; };
+		D94A83D72A9214B20017311B /* SKColorHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94A83D62A9214B20017311B /* SKColorHelpers.swift */; };
 		D94C153B29AE73840065DD64 /* EditorMapNodeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94C153A29AE73840065DD64 /* EditorMapNodeDelegate.swift */; };
 		D94C153D29AE748B0065DD64 /* SpriteAssetComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94C153C29AE748B0065DD64 /* SpriteAssetComponent.swift */; };
 		D95302E72894805C006E6285 /* SpriteAssetDatabaseDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95302E62894805C006E6285 /* SpriteAssetDatabaseDataSource.swift */; };
@@ -111,7 +110,6 @@
 		D96A3BEB2879D8C7008949A1 /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BEA2879D8C7008949A1 /* Tool.swift */; };
 		D96A3BF1287A1F28008949A1 /* ToolMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BF0287A1F28008949A1 /* ToolMode.swift */; };
 		D96A3BF3287A2767008949A1 /* MoveToolComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */; };
-		D96A552929FF12580030E54F /* XMLElementExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A552829FF12580030E54F /* XMLElementExtension.swift */; };
 		D96BDEC527EBD2DA0097A0BD /* SelectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */; };
 		D96CC97128971AE100187314 /* SpriteAssetDatabaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96CC97028971AE100187314 /* SpriteAssetDatabaseView.swift */; };
 		D96D3188291C4C5A00CD498E /* MaterialFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96D3187291C4C5A00CD498E /* MaterialFactory.swift */; };
@@ -278,9 +276,7 @@
 		D928562328B18271000F2D86 /* VSpacer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSpacer.swift; sourceTree = "<group>"; };
 		D928562528B18BB5000F2D86 /* FloatField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatField.swift; sourceTree = "<group>"; };
 		D92A1ACC28D7C5DD0096972B /* SpriteAssetAnimationKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationKey.swift; sourceTree = "<group>"; };
-		D92B739929FFFD9D00B53BE0 /* XMLNodeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLNodeExtension.swift; sourceTree = "<group>"; };
 		D92B7DAB2A3DBEA00088E847 /* CKUISizeDelta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUISizeDelta.swift; sourceTree = "<group>"; };
-		D92B7DAD2A3DC58D0088E847 /* CKUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIImage.swift; sourceTree = "<group>"; };
 		D92D20D628860E23000B8DA9 /* SpriteAssetEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetEditorView.swift; sourceTree = "<group>"; };
 		D92EE973281DD3F2009B2055 /* CustomSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettings.swift; sourceTree = "<group>"; };
 		D92FD11728AA719A0097945B /* InspectorViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorViewFactory.swift; sourceTree = "<group>"; };
@@ -318,6 +314,7 @@
 		D94302CC290E86D70013B4CA /* SingleTextureMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTextureMaterial.swift; sourceTree = "<group>"; };
 		D94302CF290E89EF0013B4CA /* Default Materials.ckmatdb */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Default Materials.ckmatdb"; sourceTree = "<group>"; };
 		D947DF1C28D0A9B800669AE5 /* SpriteAssetAnimationTrackNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTrackNameView.swift; sourceTree = "<group>"; };
+		D94A83D62A9214B20017311B /* SKColorHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKColorHelpers.swift; sourceTree = "<group>"; };
 		D94C153A29AE73840065DD64 /* EditorMapNodeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapNodeDelegate.swift; sourceTree = "<group>"; };
 		D94C153C29AE748B0065DD64 /* SpriteAssetComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetComponent.swift; sourceTree = "<group>"; };
 		D95302E62894805C006E6285 /* SpriteAssetDatabaseDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDatabaseDataSource.swift; sourceTree = "<group>"; };
@@ -331,7 +328,6 @@
 		D96A3BEA2879D8C7008949A1 /* Tool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
 		D96A3BF0287A1F28008949A1 /* ToolMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolMode.swift; sourceTree = "<group>"; };
 		D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveToolComponent.swift; sourceTree = "<group>"; };
-		D96A552829FF12580030E54F /* XMLElementExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XMLElementExtension.swift; sourceTree = "<group>"; };
 		D96BDEC427EBD2DA0097A0BD /* SelectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionManager.swift; sourceTree = "<group>"; };
 		D96CC97028971AE100187314 /* SpriteAssetDatabaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDatabaseView.swift; sourceTree = "<group>"; };
 		D96D3187291C4C5A00CD498E /* MaterialFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialFactory.swift; sourceTree = "<group>"; };
@@ -740,6 +736,7 @@
 				D9CBDAFD2A78D9A900C51C69 /* RemoteCacheManager.swift */,
 				D9CECB2627E91DB0000E8CC7 /* Screen.swift */,
 				D9878FAB293AB6280016AABE /* SIMDExtensions.swift */,
+				D94A83D62A9214B20017311B /* SKColorHelpers.swift */,
 				D9A95DD22A91203E00578B3F /* SKNodeExtension.swift */,
 				D9FBC5722765EA6A004A30BB /* SpritePool.swift */,
 				D940EB72291338D60036B101 /* StringCodingKey.swift */,
@@ -747,9 +744,7 @@
 				D9C0E23429461DFC002E6147 /* StringKeysProvider.swift */,
 				D9A95DD02A911F7600578B3F /* TrackingAreaManager.swift */,
 				D9A64CFB282C491F00CAF635 /* UIViewExtension.swift */,
-				D96A552829FF12580030E54F /* XMLElementExtension.swift */,
 				D9B6036B2A10AB7300621996 /* XMLLoader.swift */,
-				D92B739929FFFD9D00B53BE0 /* XMLNodeExtension.swift */,
 				D9C132E52827008D00DE8457 /* Atlases */,
 				D91061C02755F24100EA8A03 /* Map */,
 				D9E2C27E28018E9D00B17CD0 /* Materials */,
@@ -925,7 +920,6 @@
 				D918D2D92A63139B00226B0E /* CKUICSSAttributeExpanders.swift */,
 				D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */,
 				D9CF6DBE2A07D16E00DE3876 /* CKUICSSValidationConfiguration.swift */,
-				D92B7DAD2A3DC58D0088E847 /* CKUIImage.swift */,
 				D90440572A8590B8009DBADE /* CKUILabel.swift */,
 				D9257D432A8D53F200D52928 /* CKUILabelControl.swift */,
 				D90ADA772A8DF03300ED5537 /* CKUIPadding.swift */,
@@ -1233,7 +1227,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9418FEC29A127EC0027E52E /* SpriteAssetLocator.swift in Sources */,
-				D92B739A29FFFD9D00B53BE0 /* XMLNodeExtension.swift in Sources */,
 				D9B56ED22A2D1520005688B9 /* CGRectExtension.swift in Sources */,
 				D9A95DD12A911F7600578B3F /* TrackingAreaManager.swift in Sources */,
 				D93C4CB22800CBE8000955E1 /* MapRegion.swift in Sources */,
@@ -1262,7 +1255,6 @@
 				D93C4CAE2800CBE0000955E1 /* Keycode.swift in Sources */,
 				D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */,
 				D93C4CAD2800CBE0000955E1 /* SpritePool.swift in Sources */,
-				D92B7DAE2A3DC58D0088E847 /* CKUIImage.swift in Sources */,
 				D940EB73291338D60036B101 /* StringCodingKey.swift in Sources */,
 				D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */,
 				D90ADA782A8DF03300ED5537 /* CKUIPadding.swift in Sources */,
@@ -1301,6 +1293,7 @@
 				D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */,
 				D90440582A8590B8009DBADE /* CKUILabel.swift in Sources */,
 				D9CBDAFE2A78D9A900C51C69 /* RemoteCacheManager.swift in Sources */,
+				D94A83D72A9214B20017311B /* SKColorHelpers.swift in Sources */,
 				D9418FF429A18A000027E52E /* CGPointExtension.swift in Sources */,
 				D92002D9282FAFCF007D5AC1 /* BaseLight.swift in Sources */,
 				D92B7DAC2A3DBEA00088E847 /* CKUISizeDelta.swift in Sources */,
@@ -1316,7 +1309,6 @@
 				D93C24FE2802E2680023FE7A /* CellRenderers.swift in Sources */,
 				D9DE549A28CDC58600E3761B /* SpriteAssetAnimationState.swift in Sources */,
 				D91BE3C92A76D77E004BC75C /* CKUIContainer.swift in Sources */,
-				D96A552929FF12580030E54F /* XMLElementExtension.swift in Sources */,
 				D938EE6B2A192E2F00D0D3AD /* CKUICanvas.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1574,6 +1566,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1588,10 +1581,13 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUN_DOCUMENTATION_COMPILER = YES;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 13.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1616,6 +1612,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1630,10 +1627,13 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUN_DOCUMENTATION_COMPILER = YES;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 13.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};

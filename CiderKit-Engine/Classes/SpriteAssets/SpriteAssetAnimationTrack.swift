@@ -317,7 +317,7 @@ public class SpriteAssetAnimationTrack: Codable {
                     sequence.append(SKAction.wait(forDuration: adjustedDuration))
                     sequence.append(SKAction.customAction(withDuration: Self.frameTime, actionBlock: { node, _ in
                         if let sprite = node as? SKSpriteNode {
-                            sprite.color = SKColor(cgColor: endColor)!
+                            sprite.color = SKColorFromCGColor(endColor)
                         }
                     }))
                 }
@@ -326,7 +326,7 @@ public class SpriteAssetAnimationTrack: Codable {
                     action = SKAction.customAction(withDuration: duration) { node, elapsedTime in
                         if let sprite = node as? SKSpriteNode {
                             let ratio = Float(elapsedTime / duration)
-                            sprite.color = SKColor(cgColor: CGColor.interpolateRGB(from: startColor, to: endColor, t: ratio)!)!
+                            sprite.color = SKColorFromCGColor(CGColor.interpolateRGB(from: startColor, to: endColor, t: ratio)!)
                         }
                     }
                 }

@@ -12,14 +12,6 @@ public final class CKUILabel : CKUIBaseNode, CKUILabelControl {
         addChild(label)
     }
     
-    override init(xmlElement: XMLElement) {
-        super.init(xmlElement: xmlElement)
-        
-        let text = xmlElement.getDataPropertyValue(forName: "text")?.stringValue ?? ""
-        label = Self.initLabel(text: text)
-        addChild(label)
-    }
-    
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

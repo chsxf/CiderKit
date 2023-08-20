@@ -40,7 +40,7 @@ final class CKUIURLResolver {
         #if os(macOS)
         let image = NSImage(contentsOf: localURL!)!
         #else
-        let data = Data(contentsOf: localURL!)!
+        let data = try! Data(contentsOf: localURL!)
         let image = UIImage(data: data)!
         #endif
         
