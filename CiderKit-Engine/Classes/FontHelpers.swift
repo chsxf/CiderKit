@@ -43,7 +43,21 @@ final class FontHelpers {
     #else
     
     fileprivate class func getFontName(_ fontDescriptor: FontDescriptor) -> String? {
-        
+        var descriptor = UIFontDescriptor().withFamily(fontDescriptor.fontFamily)
+        if fontDescriptor.isBold || fontDescriptor.isItalic {
+            var traits: UIFontDescriptor.SymbolicTraits = []
+            if (fontDescriptor.isItalic) {
+                traits.insert(.traitItalic)
+            }
+            if (fontDescriptor.isBold) {
+                traits.insert(.traitBold)
+            }
+            if let newDescriptor = descriptor.withSymbolicTraits(traits) {
+                descriptor = newDescriptor
+            }
+        }
+        let font = UIFont(descriptor: descriptor, size: 12)
+        return font.fontName
     }
     
     #endif
