@@ -132,7 +132,7 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         return SKColor(red: CGFloat(r), green: CGFloat(g), blue: CGFloat(b), alpha: CGFloat(a))
     }
     
-    final func getStyleLength(key: String, unit: CSSLengthUnit = .px, index: Int = 1, allowZero: Bool = true) -> Float? {
+    final func getStyleLength(key: String, unit: CSSLengthUnit = .px, index: Int = 0, allowZero: Bool = true) -> Float? {
         guard let value = getStyleValue(key: key, index: index) else { return nil }
         
         switch value {
