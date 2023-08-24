@@ -3,13 +3,13 @@ import CiderCSSKit
 
 public final class CKUILabel : CKUIBaseNode, CKUILabelControl {
     
-    internal var label: SKLabelNode!
+    internal var label: SKLabelNode?
     
     public init(text: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
         super.init(type: "label", identifier: identifier, classes: classes, style: style)
         
         label = Self.initLabel(text: text)
-        addChild(label)
+        addChild(label!)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -50,16 +50,16 @@ public final class CKUILabel : CKUIBaseNode, CKUILabelControl {
                 }
             }
         }
-        label.horizontalAlignmentMode = horizontalAlign
+        label!.horizontalAlignmentMode = horizontalAlign
         
-        label.preferredMaxLayoutWidth = frame.width
-        switch label.horizontalAlignmentMode {
+        label!.preferredMaxLayoutWidth = frame.width
+        switch label!.horizontalAlignmentMode {
         case .left:
-            label.position.x = localFrame.minX
+            label!.position.x = localFrame.minX
         case .right:
-            label.position.x = localFrame.maxX
+            label!.position.x = localFrame.maxX
         case .center:
-            label.position.x = localFrame.minX + localFrame.width / 2
+            label!.position.x = localFrame.minX + localFrame.width / 2
         @unknown default:
             break
         }
@@ -79,14 +79,14 @@ public final class CKUILabel : CKUIBaseNode, CKUILabelControl {
                 }
             }
         }
-        label.verticalAlignmentMode = verticalAlign
-        switch label.verticalAlignmentMode {
+        label!.verticalAlignmentMode = verticalAlign
+        switch label!.verticalAlignmentMode {
         case .baseline, .bottom:
-            label.position.y = localFrame.minY
+            label!.position.y = localFrame.minY
         case .top:
-            label.position.y = localFrame.maxY
+            label!.position.y = localFrame.maxY
         case .center:
-            label.position.y = localFrame.minY + localFrame.height / 2
+            label!.position.y = localFrame.minY + localFrame.height / 2
         @unknown default:
             break
         }

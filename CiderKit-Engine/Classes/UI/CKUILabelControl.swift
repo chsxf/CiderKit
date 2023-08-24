@@ -3,22 +3,26 @@ import CiderCSSKit
 
 protocol CKUILabelControl {
     
-    var label: SKLabelNode! { get}
+    var label: SKLabelNode? { get}
     
 }
 
 extension CKUILabelControl where Self: CKUIBaseNode {
     
     func updateFontColor() {
+        guard let label = self.label else { return }
+        
         if let color = self.getStyleColor(key: CSSAttributes.color) {
-            self.label.fontColor = color
+            label.fontColor = color
         }
         else {
-            self.label.fontColor = SKColor.black
+            label.fontColor = SKColor.black
         }
     }
     
     func updateFontName() {
+        guard let label = self.label else { return }
+        
         var fontFamily: String = CKUICSSValidationConfiguration.fontFamilyByKeyword["serif"]!
         if let fontFamilyValue = self.getStyleValue(key: CSSAttributes.fontFamily) {
             if case let CSSValue.string(fontFamilyName) = fontFamilyValue {
@@ -34,12 +38,14 @@ extension CKUILabelControl where Self: CKUIBaseNode {
                 }
             }
         }
-        self.label.fontName = FontHelpers.fontName(with: fontFamily, italic: isItalic, bold: isBold)
+        label.fontName = FontHelpers.fontName(with: fontFamily, italic: isItalic, bold: isBold)
     }
     
     func updateFontSize() {
+        guard let label = self.label else { return }
+        
         let fontSize: Float = self.getStyleLength(key: CSSAttributes.fontSize, unit: .pt) ?? 12
-        self.label.fontSize = CGFloat(fontSize)
+        label.fontSize = CGFloat(fontSize)
     }
     
 }

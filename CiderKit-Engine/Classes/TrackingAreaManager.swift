@@ -5,6 +5,7 @@ public final class TrackingAreaManager {
     
     fileprivate struct TrackingAreaData {
         public var trackingArea: NSTrackingArea
+        public var nodePosition: CGPoint
         public var nodeFrame: CGRect
     }
     
@@ -61,11 +62,12 @@ public final class TrackingAreaManager {
             let nodeIsVisible = !node.isHiddenInHierarchy
             if nodeIsVisible {
                 let nodeFrame = node.frame
-                if trackingAreaData?.nodeFrame != nodeFrame {
+                let nodePosition = node.position
+                if trackingAreaData?.nodeFrame != nodeFrame || trackingAreaData?.nodePosition != node.position {
                     if let trackingArea = trackingAreaData?.trackingArea {
                         view.removeTrackingArea(trackingArea)
                     }
-                    trackingAreas[node] = TrackingAreaData(trackingArea: addTrackingArea(to: view, from: node, with: nodeFrame), nodeFrame: nodeFrame)
+                    trackingAreas[node] = TrackingAreaData(trackingArea: addTrackingArea(to: view, from: node, with: nodeFrame), nodePosition: nodePosition, nodeFrame: nodeFrame)
                 }
             }
             else if let trackingArea = trackingAreaData?.trackingArea {

@@ -48,6 +48,7 @@ open class GameView: SKView, SKSceneDelegate {
         gameScene.camera = cam
         gameScene.addChild(cam)
         
+        uiOverlayCanvas.zPosition = 1000
         cam.addChild(uiOverlayCanvas)
         
         presentScene(gameScene)
@@ -92,10 +93,12 @@ open class GameView: SKView, SKSceneDelegate {
     
     open func prepareSceneForPrepasses() {
         finalGatheringNode.shouldEnableEffects = false
+        uiOverlayCanvas.isHidden = true
     }
     
     open func prepassesDidComplete() {
         finalGatheringNode.shouldEnableEffects = true
+        uiOverlayCanvas.isHidden = false
     }
     
     private func computePositionMatrix() -> matrix_float3x3 {

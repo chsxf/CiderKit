@@ -124,12 +124,13 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     final func getStyleColor(key: String, index: Int = 0) -> SKColor? {
         guard
             let value = getStyleValue(key: key, index: index),
-            case let CSSValue.color(r, g, b, a) = value
+            case let CSSValue.color(colorSpace, components) = value,
+            colorSpace == .sRGB
         else {
             return nil
         }
         
-        return SKColor(red: CGFloat(r), green: CGFloat(g), blue: CGFloat(b), alpha: CGFloat(a))
+        return SKColor(red: CGFloat(components[0]), green: CGFloat(components[1]), blue: CGFloat(components[2]), alpha: CGFloat(components[3]))
     }
     
     final func getStyleLength(key: String, unit: CSSLengthUnit = .px, index: Int = 0, allowZero: Bool = true) -> Float? {

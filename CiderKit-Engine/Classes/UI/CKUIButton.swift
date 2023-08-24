@@ -6,7 +6,8 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
     private static let hoverPseudoClass = "hover"
     private static let activePseudoClass = "active"
     
-    internal var label: SKLabelNode!
+    internal var label: SKLabelNode? = nil
+    internal var sprite: SKSpriteNode? = nil
     
     public let clicked = ParameterlessEventEmitter<CKUIButton>()
     
@@ -14,20 +15,21 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
     
     public override var frame: CGRect {
         var frame = super.frame
-        let labelFrame = label.frame
         let pivot = self.pivot
         let padding = self.padding
         
+        let contentFrame = label?.frame ?? sprite!.frame
+                
         if frame.width == 0 {
             let horizontalPadding = padding.left + padding.right
-            frame.size.width = labelFrame.width + horizontalPadding
+            frame.size.width = contentFrame.width + horizontalPadding
             let leftPart = frame.size.width * pivot.x
             frame.origin.x -= leftPart
         }
         
         if frame.height == 0 {
             let verticalPadding = padding.bottom + padding.top
-            frame.size.height = labelFrame.height + verticalPadding
+            frame.size.height = contentFrame.height + verticalPadding
             let bottomPart = frame.size.height * pivot.y
             frame.origin.y -= bottomPart
         }
@@ -39,11 +41,27 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
         super.init(type: "button", identifier: identifier, classes: classes, style: style)
         
         label = Self.initLabel(text: text)
-        addChild(label)
+        addChild(label!)
         
         #if os(macOS)
         TrackingAreaManager.register(node: self)
         #endif
+    }
+    
+    public init(image: SKTexture, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
+        super.init(type: "button", identifier: identifier, classes: classes, style: style)
+        
+        sprite = SKSpriteNode(texture: image)
+        addChild(sprite!)
+        
+        #if os(macOS)
+        TrackingAreaManager.register(node: self)
+        #endif
+    }
+    
+    public convenience init(imageOf url: URL, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
+        let texture = CKUIURLResolver.resolveTexture(url: url)
+        self.init(image: texture, identifier: identifier, classes: classes, style: style)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -74,7 +92,8 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
         let horizontalPaddingOffset = (padding.left - padding.right) / 2
         let verticalPaddingOffset = (padding.bottom - padding.top) / 2
         
-        label.position = CGPoint(
+        let contentNode = label ?? sprite!
+        contentNode.position = CGPoint(
             x: localFrame.minX + localFrame.width / 2 + horizontalPaddingOffset,
             y: localFrame.minY + localFrame.height / 2 + verticalPaddingOffset
         )
