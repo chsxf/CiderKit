@@ -51,6 +51,8 @@
 		D92FD11A28AA72790097945B /* BaseInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92FD11928AA72790097945B /* BaseInspectorView.swift */; };
 		D933B7442830D35B00B63313 /* PointLightNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D933B7412830D32200B63313 /* PointLightNode.swift */; };
 		D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D936187A27E71D77009A14E2 /* EditorGameView.swift */; };
+		D938044D2A986CE900C03463 /* CKUILoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D938044C2A986CE900C03463 /* CKUILoader.swift */; };
+		D938044F2A988F8700C03463 /* CKUIBaseNode~Traversal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D938044E2A988F8700C03463 /* CKUIBaseNode~Traversal.swift */; };
 		D9387C17289D2B1000558E02 /* SpriteAssetDescriptionScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9387C16289D2B1000558E02 /* SpriteAssetDescriptionScene.swift */; };
 		D9387C19289D3A6800558E02 /* SpriteSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9387C18289D3A6800558E02 /* SpriteSelectorView.swift */; };
 		D938EE6B2A192E2F00D0D3AD /* CKUICanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D938EE6A2A192E2F00D0D3AD /* CKUICanvas.swift */; };
@@ -284,6 +286,8 @@
 		D933B7412830D32200B63313 /* PointLightNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointLightNode.swift; sourceTree = "<group>"; };
 		D936187827E71CE5009A14E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D936187A27E71D77009A14E2 /* EditorGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorGameView.swift; sourceTree = "<group>"; };
+		D938044C2A986CE900C03463 /* CKUILoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUILoader.swift; sourceTree = "<group>"; };
+		D938044E2A988F8700C03463 /* CKUIBaseNode~Traversal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CKUIBaseNode~Traversal.swift"; sourceTree = "<group>"; };
 		D9387C16289D2B1000558E02 /* SpriteAssetDescriptionScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescriptionScene.swift; sourceTree = "<group>"; };
 		D9387C18289D3A6800558E02 /* SpriteSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteSelectorView.swift; sourceTree = "<group>"; };
 		D938EE6A2A192E2F00D0D3AD /* CKUICanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUICanvas.swift; sourceTree = "<group>"; };
@@ -914,6 +918,7 @@
 				D98C061C2A00F5A600750F0A /* CKUIAnchors.swift */,
 				D9E7A3C329BFB77200F09A2E /* CKUIBaseNode.swift */,
 				D90ADA752A8DEFDA00ED5537 /* CKUIBaseNode~Positioning.swift */,
+				D938044E2A988F8700C03463 /* CKUIBaseNode~Traversal.swift */,
 				D9257D412A8D512E00D52928 /* CKUIButton.swift */,
 				D938EE6A2A192E2F00D0D3AD /* CKUICanvas.swift */,
 				D91BE3C82A76D77E004BC75C /* CKUIContainer.swift */,
@@ -922,6 +927,7 @@
 				D9CF6DBE2A07D16E00DE3876 /* CKUICSSValidationConfiguration.swift */,
 				D90440572A8590B8009DBADE /* CKUILabel.swift */,
 				D9257D432A8D53F200D52928 /* CKUILabelControl.swift */,
+				D938044C2A986CE900C03463 /* CKUILoader.swift */,
 				D90ADA772A8DF03300ED5537 /* CKUIPadding.swift */,
 				D97DB8B92A70ECF4001C671D /* CKUIPivot.swift */,
 				D92B7DAB2A3DBEA00088E847 /* CKUISizeDelta.swift */,
@@ -1256,6 +1262,7 @@
 				D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */,
 				D93C4CAD2800CBE0000955E1 /* SpritePool.swift in Sources */,
 				D940EB73291338D60036B101 /* StringCodingKey.swift in Sources */,
+				D938044D2A986CE900C03463 /* CKUILoader.swift in Sources */,
 				D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */,
 				D90ADA782A8DF03300ED5537 /* CKUIPadding.swift in Sources */,
 				D9B6036A2A1026AD00621996 /* CKUIStyle.swift in Sources */,
@@ -1287,6 +1294,7 @@
 				D9CC3529285D16B7003EEB6F /* Pool.swift in Sources */,
 				D95B8C3A288319C50077DCA1 /* SpriteAssetDatabase.swift in Sources */,
 				D93C24FB280227690023FE7A /* Materials.swift in Sources */,
+				D938044F2A988F8700C03463 /* CKUIBaseNode~Traversal.swift in Sources */,
 				D92A1ACD28D7C5DD0096972B /* SpriteAssetAnimationKey.swift in Sources */,
 				D9F1107028CCB5E800203EF1 /* SpriteAssetAnimationTrack.swift in Sources */,
 				D90BB9BB289B242800833C49 /* AtlasLocator.swift in Sources */,

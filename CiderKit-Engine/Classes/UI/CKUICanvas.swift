@@ -16,9 +16,13 @@ public final class CKUICanvas: CKUIBaseNode {
         set { }
     }
     
-    public init(styleSheet: CKUIStyleSheet? = nil) {
-        self.canvasStyleSheet = styleSheet
-        super.init(type: "canvas", style: CKUIStyle(attributes: "anchors: left bottom; transform-origin: center center;"))
+    public convenience init(styleSheet: CKUIStyleSheet? = nil) {
+        self.init(style: CKUIStyle(attributes: "anchors: left bottom; transform-origin: center center;"), customData: ["stylesheet": styleSheet])
+    }
+    
+    required init(type: String = "canvas", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String:Any]? = nil) {
+        canvasStyleSheet = customData!["stylesheet"] as? CKUIStyleSheet
+        super.init(type: type, identifier: identifier, classes: classes, style: style, customData: customData)
     }
     
     required public init?(coder aDecoder: NSCoder) {

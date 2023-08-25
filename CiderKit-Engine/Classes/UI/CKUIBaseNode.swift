@@ -61,7 +61,7 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     
     public var ancestor: CSSConsumer? { parent as? CSSConsumer }
     
-    public init(type: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
+    public required init(type: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String:Any]? = nil) {
         self.type = type
         self.identifier = identifier
         self.classes = classes
@@ -203,6 +203,10 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     
     public final func has(pseudoClass: String) -> Bool {
         pseudoClasses?.contains(pseudoClass) ?? false
+    }
+    
+    public final func load(contentsOf url: URL) throws {
+        try CKUILoader.load(contentsOf: url, into: self)
     }
     
 }

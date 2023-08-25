@@ -5,10 +5,14 @@ public final class CKUILabel : CKUIBaseNode, CKUILabelControl {
     
     internal var label: SKLabelNode?
     
-    public init(text: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
-        super.init(type: "label", identifier: identifier, classes: classes, style: style)
+    public convenience init(text: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
+        self.init(identifier: identifier, classes: classes, style: style, customData: ["text": text])
+    }
+    
+    public required init(type: String = "lebel", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String:Any]? = nil) {
+        super.init(type: type, identifier: identifier, classes: classes, style: style, customData: customData)
         
-        label = Self.initLabel(text: text)
+        label = Self.initLabel(text: customData!["text"] as! String)
         addChild(label!)
     }
     

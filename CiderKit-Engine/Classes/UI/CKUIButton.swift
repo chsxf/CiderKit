@@ -37,31 +37,40 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
         return frame
     }
     
-    public init(text: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
-        super.init(type: "button", identifier: identifier, classes: classes, style: style)
-        
-        label = Self.initLabel(text: text)
-        addChild(label!)
-        
-        #if os(macOS)
-        TrackingAreaManager.register(node: self)
-        #endif
+    public convenience init(text: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
+        self.init(identifier: identifier, classes: classes, style: style, customData: ["text": text])
     }
     
-    public init(image: SKTexture, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
-        super.init(type: "button", identifier: identifier, classes: classes, style: style)
-        
-        sprite = SKSpriteNode(texture: image)
-        addChild(sprite!)
-        
-        #if os(macOS)
-        TrackingAreaManager.register(node: self)
-        #endif
+    public convenience init(image: SKTexture, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
+        self.init(identifier: identifier, classes: classes, style: style, customData: ["image": image])
     }
     
     public convenience init(imageOf url: URL, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
         let texture = CKUIURLResolver.resolveTexture(url: url)
-        self.init(image: texture, identifier: identifier, classes: classes, style: style)
+        self.init(identifier: identifier, classes: classes, style: style, customData: ["image": texture])
+    }
+    
+    public required init(type: String = "button", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String:Any]? = nil) {
+        super.init(type: type, identifier: identifier, classes: classes, style: style, customData: customData)
+        
+        if let text = customData!["text"] as? String {
+            label = Self.initLabel(text: text)
+            addChild(label!)
+        }
+        else if let image = customData!["image"] as? SKTexture {
+            sprite = SKSpriteNode(texture: image)
+            addChild(sprite!)
+        }
+        else if let imageURL = customData!["imageURL"] as? String {
+            let url = URL(string: imageURL)!
+            let image = CKUIURLResolver.resolveTexture(url: url)
+            sprite = SKSpriteNode(texture: image)
+            addChild(sprite!)
+        }
+        
+        #if os(macOS)
+        TrackingAreaManager.register(node: self)
+        #endif
     }
     
     required public init?(coder aDecoder: NSCoder) {
