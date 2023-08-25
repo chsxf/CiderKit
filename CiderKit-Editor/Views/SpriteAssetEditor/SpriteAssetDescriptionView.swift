@@ -325,7 +325,7 @@ final class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFie
             if !selectedItem.isRoot {
                 if selectedItem.data.spriteLocator == nil && spriteLocator != nil {
                     let newNode = SKSpriteNode(texture: Atlases[spriteLocator!]!)
-                    newNode.color = SKColorFromCGColor(selectedItem.data.color)!
+                    newNode.color = SKColorFromCGColor(selectedItem.data.color)
                     newNode.colorBlendFactor = CGFloat(selectedItem.data.colorBlend)
                     scene?.replaceNode(for: selectedItem, with: newNode)
                 }

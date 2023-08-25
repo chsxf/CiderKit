@@ -122,7 +122,7 @@ class SpriteAssetDescriptionScene: SKScene {
             let spriteNode = SKSpriteNode(texture: texture)
             node = spriteNode
             
-            spriteNode.color = SKColorFromCGColor(element.data.color)!
+            spriteNode.color = SKColorFromCGColor(element.data.color)
             spriteNode.colorBlendFactor = CGFloat(element.data.colorBlend)
         }
         else {
@@ -191,7 +191,7 @@ class SpriteAssetDescriptionScene: SKScene {
     
     public func setSpriteColor(from element: SpriteAssetElement, color: CGColor) {
         let node = nodeByElement[element] as! SKSpriteNode
-        node.color = SKColorFromCGColor(color)!
+        node.color = SKColorFromCGColor(color)
     }
     
     public func setSpriteColorBlend(from element: SpriteAssetElement, colorBlend: CGFloat) {
@@ -242,7 +242,7 @@ class SpriteAssetDescriptionScene: SKScene {
                     node = sprite
                 }
                 sprite.texture = Atlases[spriteLocator]!
-                sprite.color = SKColorFromCGColor(ed.color)!
+                sprite.color = SKColorFromCGColor(ed.color)
                 sprite.colorBlendFactor = CGFloat(ed.colorBlend)
             }
         }
@@ -268,7 +268,7 @@ class SpriteAssetDescriptionScene: SKScene {
                     replaceNode(for: element, with: sprite)
                     node = sprite
                 }
-                sprite.color = SKColorFromCGColor(ed.color)!
+                sprite.color = SKColorFromCGColor(ed.color)
             case .colorBlendFactor:
                 var sprite: SKSpriteNode! = node as? SKSpriteNode
                 if sprite == nil {

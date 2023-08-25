@@ -63,7 +63,7 @@ class PointLightNode: SKNode {
     }
     
     func setLightColor(_ color: CGColor) {
-        ringNode.fillColor = SKColorFromCGColor(color)!
+        ringNode.fillColor = SKColorFromCGColor(color)
     }
     
     fileprivate func setupLightBulb(_ lightbulb: SKSpriteNode) {
