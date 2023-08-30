@@ -8,8 +8,6 @@ extension Notification.Name {
 
 class EditorMapNode: MapNode {
 
-    weak var delegate: EditorMapNodeDelegate? = nil
-    
     var dirty: Bool = false {
         didSet {
             if dirty != oldValue {

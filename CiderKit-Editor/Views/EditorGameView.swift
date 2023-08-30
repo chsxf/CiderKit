@@ -3,7 +3,7 @@ import SpriteKit
 import GameplayKit
 import CiderKit_Engine
 
-class EditorGameView: GameView, EditorMapNodeDelegate {
+class EditorGameView: GameView {
     
     private(set) var worldGrid: WorldGrid!
     
@@ -178,7 +178,6 @@ class EditorGameView: GameView, EditorMapNodeDelegate {
     
     override func mapNode(from description: MapDescription) -> MapNode {
         mutableMap = EditorMapNode(description: description)
-        mutableMap.delegate = self
         return mutableMap
     }
     

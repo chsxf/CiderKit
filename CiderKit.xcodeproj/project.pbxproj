@@ -70,7 +70,6 @@
 		D93C4CAB2800CBE0000955E1 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CECB2627E91DB0000E8CC7 /* Screen.swift */; };
 		D93C4CAC2800CBE0000955E1 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9730B1427B795A40007513C /* Math.swift */; };
 		D93C4CAD2800CBE0000955E1 /* SpritePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FBC5722765EA6A004A30BB /* SpritePool.swift */; };
-		D93C4CAE2800CBE0000955E1 /* Keycode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C72755F27600EA8A03 /* Keycode.swift */; };
 		D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C22755F24100EA8A03 /* MapDescription.swift */; };
 		D93C4CB02800CBE8000955E1 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
 		D93C4CB12800CBE8000955E1 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C32755F24100EA8A03 /* MapNode.swift */; };
@@ -99,7 +98,6 @@
 		D94302D0290E89EF0013B4CA /* Default Materials.ckmatdb in Resources */ = {isa = PBXBuildFile; fileRef = D94302CF290E89EF0013B4CA /* Default Materials.ckmatdb */; };
 		D947DF1D28D0A9B800669AE5 /* SpriteAssetAnimationTrackNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D947DF1C28D0A9B800669AE5 /* SpriteAssetAnimationTrackNameView.swift */; };
 		D94A83D72A9214B20017311B /* SKColorHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94A83D62A9214B20017311B /* SKColorHelpers.swift */; };
-		D94C153B29AE73840065DD64 /* EditorMapNodeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94C153A29AE73840065DD64 /* EditorMapNodeDelegate.swift */; };
 		D94C153D29AE748B0065DD64 /* SpriteAssetComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D94C153C29AE748B0065DD64 /* SpriteAssetComponent.swift */; };
 		D95302E72894805C006E6285 /* SpriteAssetDatabaseDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95302E62894805C006E6285 /* SpriteAssetDatabaseDataSource.swift */; };
 		D95B8C38288319B80077DCA1 /* SpriteAssetDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */; };
@@ -252,7 +250,6 @@
 		D91061C12755F24100EA8A03 /* MapRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapRegion.swift; sourceTree = "<group>"; };
 		D91061C22755F24100EA8A03 /* MapDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDescription.swift; sourceTree = "<group>"; };
 		D91061C32755F24100EA8A03 /* MapNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapNode.swift; sourceTree = "<group>"; };
-		D91061C72755F27600EA8A03 /* Keycode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keycode.swift; sourceTree = "<group>"; };
 		D91061C82755F27600EA8A03 /* Atlases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atlases.swift; sourceTree = "<group>"; };
 		D91061C92755F27600EA8A03 /* CharacterComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharacterComponent.swift; sourceTree = "<group>"; };
 		D91061CA2755F27600EA8A03 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
@@ -319,7 +316,6 @@
 		D94302CF290E89EF0013B4CA /* Default Materials.ckmatdb */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Default Materials.ckmatdb"; sourceTree = "<group>"; };
 		D947DF1C28D0A9B800669AE5 /* SpriteAssetAnimationTrackNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTrackNameView.swift; sourceTree = "<group>"; };
 		D94A83D62A9214B20017311B /* SKColorHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKColorHelpers.swift; sourceTree = "<group>"; };
-		D94C153A29AE73840065DD64 /* EditorMapNodeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapNodeDelegate.swift; sourceTree = "<group>"; };
 		D94C153C29AE748B0065DD64 /* SpriteAssetComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetComponent.swift; sourceTree = "<group>"; };
 		D95302E62894805C006E6285 /* SpriteAssetDatabaseDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDatabaseDataSource.swift; sourceTree = "<group>"; };
 		D95B8C37288319B80077DCA1 /* SpriteAssetDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescription.swift; sourceTree = "<group>"; };
@@ -571,7 +567,6 @@
 			isa = PBXGroup;
 			children = (
 				D972C1B72827D9FD00D85376 /* EditorMapNode.swift */,
-				D94C153A29AE73840065DD64 /* EditorMapNodeDelegate.swift */,
 				D9666E8B29B25CE5009616FC /* EditorSpriteAssetNode.swift */,
 				D933B7412830D32200B63313 /* PointLightNode.swift */,
 				D90299782880B975002A7606 /* ToolNode.swift */,
@@ -733,7 +728,6 @@
 				D9FD1A622A8C38D900713A8E /* FontHelpers.swift */,
 				D91061CA2755F27600EA8A03 /* Functions.swift */,
 				D9EA6DB128BAD07A00233F79 /* IntPoint.swift */,
-				D91061C72755F27600EA8A03 /* Keycode.swift */,
 				D9730B1427B795A40007513C /* Math.swift */,
 				D9CC3528285D16B7003EEB6F /* Pool.swift */,
 				D9254461281AB55B002DCA4C /* Project.swift */,
@@ -1214,7 +1208,6 @@
 				D93FE0DF28BA43C800215D83 /* LabelledColorWell.swift in Sources */,
 				D923F9EA29736D74000F040C /* MainActionsManager.swift in Sources */,
 				D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */,
-				D94C153B29AE73840065DD64 /* EditorMapNodeDelegate.swift in Sources */,
 				D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */,
 				D9DE549E28CDD8BF00E3761B /* SpriteAssetAnimationTracksDataSource.swift in Sources */,
 				D909FDB8287747640083EB8C /* MapCellInspector.swift in Sources */,
@@ -1258,7 +1251,6 @@
 				D90BB9BD289B247000833C49 /* SpriteLocator.swift in Sources */,
 				D93C4CA62800CBE0000955E1 /* Atlases.swift in Sources */,
 				D93C4CAC2800CBE0000955E1 /* Math.swift in Sources */,
-				D93C4CAE2800CBE0000955E1 /* Keycode.swift in Sources */,
 				D972C1AE2827B46500D85376 /* CiderKitEngine.swift in Sources */,
 				D93C4CAD2800CBE0000955E1 /* SpritePool.swift in Sources */,
 				D940EB73291338D60036B101 /* StringCodingKey.swift in Sources */,
