@@ -9,7 +9,7 @@ public extension CKUIBaseNode {
         
         for child in self.children {
             if let uiChild = child as? CKUIBaseNode, let foundNode = uiChild.find(by: id, ofType: type) {
-                return foundNode as? T
+                return foundNode
             }
         }
         
