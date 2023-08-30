@@ -9,7 +9,7 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
     
     var lightDescriptionChangeCancellable: AnyCancellable?
     
-    let supportedToolModes: ToolMode = .move
+    let supportedToolModes: ToolMode = [.move, .erase]
     
     var inspectableDescription: String { "Point Light" }
     

@@ -135,6 +135,15 @@ class SelectionManager: NSResponder {
         deselect();
     }
     
+    override func keyUp(with event: NSEvent) {
+        guard let currentSelectable = selectionModel.selectable else { return }
+        
+        if event.specialKey == .delete && currentSelectable.supportedToolModes.contains(.erase) {
+            deselect()
+            currentSelectable.erase()
+        }
+    }
+    
     func deselect() {
         selectionModel.setSelectable(nil)
         disableAllTools()

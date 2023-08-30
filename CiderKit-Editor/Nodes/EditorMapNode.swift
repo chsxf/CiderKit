@@ -91,11 +91,11 @@ class EditorMapNode: MapNode {
             }
         }
         
-        regions.forEach({ $0.removeFromParent() })
+        regions.forEach { $0.removeFromParent() }
         regions.removeAll(where: { regionsToRemove.contains($0) })
         regions.append(contentsOf: newRegions)
         mergeRegions()
-        regions.forEach({ addChild($0) })
+        regions.forEach { addChild($0) }
         
         if needsRebuilding {
             sortRegions()
@@ -133,7 +133,6 @@ class EditorMapNode: MapNode {
     override func buildRegions() {
         hoverableEntities = []
         super.buildRegions()
-        updateAdditionalEntities()
     }
     
     override func mapCellEntity(node: SKNode, for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> GKEntity {
@@ -146,27 +145,44 @@ class EditorMapNode: MapNode {
         return EditorMapCellComponent(region: region, mapX: x, mapY: y, elevation: elevation)
     }
     
-    func addLight(_ light: PointLight) {
+    func add(light: PointLight) {
         lights.append(light)
         dirty = true
     }
 
-    func updateAdditionalEntities() {
-        updateSpriteAssetEntities()
+    func remove(light: PointLight) {
+        lights.removeAll(where: { $0 === light })
+        dirty = true
     }
     
-    private func updateSpriteAssetEntities() {
-        guard let scene else { return }
-        
-        scene.enumerateChildNodes(withName: "//*") { node, _ in
-            if let spriteAssetNode = node as? SpriteAssetNode {
-                self.hoverableEntities.append(SpriteAssetComponent.entity(from: spriteAssetNode.placement, with: spriteAssetNode))
+    @objc
+    private func spriteAssetErased(notification: Notification) {
+        if let spriteAssetComponent = notification.object as? SpriteAssetComponent {
+            NotificationCenter.default.removeObserver(self, name: .selectableErased, object: spriteAssetComponent)
+            
+            hoverableEntities.removeAll(where: { $0 === spriteAssetComponent })
+            
+            let spriteAssetNode = spriteAssetComponent.entity!.component(ofType: GKSKNodeComponent.self)!.node as! SpriteAssetNode
+            
+            for region in regions {
+                if region.regionDescription.spriteAssets?.contains(where: { $0.id == spriteAssetNode.placement.id }) ?? false {
+                    region.regionDescription.spriteAssets!.removeAll(where: { $0.id == spriteAssetNode.placement.id })
+                    spriteAssetNode.removeFromParent()
+                    break
+                }
             }
+            
+            dirty = true
         }
     }
     
     override func instantiateSpriteAssetNode(placement: SpriteAssetPlacement, description: SpriteAssetDescription, at worldPosition: simd_float3) -> SpriteAssetNode {
-        EditorSpriteAssetNode(placement: placement, description: description, at: worldPosition)
+        let node = EditorSpriteAssetNode(placement: placement, description: description, at: worldPosition)
+        let entity = SpriteAssetComponent.entity(from: placement, with: node)
+        hoverableEntities.append(entity)
+        let component = entity.component(ofType: SpriteAssetComponent.self)!
+        NotificationCenter.default.addObserver(self, selector: #selector(spriteAssetErased(notification:)), name: .selectableErased, object: component)
+        return node
     }
     
 }

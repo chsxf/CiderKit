@@ -74,11 +74,16 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
         mapMenu.submenu = NSMenu(title: "Map")
         mapMenu.submenu?.items = [
             NSMenuItem(title: "Increase Elevation for All Regions", target: actionsManager, action: #selector(MainActionsManager.increaseElevationForWholeMap), keyEquivalent: ""),
-            NSMenuItem(title: "Decrease Elevation for All Regions", target: actionsManager, action: #selector(MainActionsManager.decreaseElevationForWholeMap), keyEquivalent: ""),
+            NSMenuItem(title: "Decrease Elevation for All Regions", target: actionsManager, action: #selector(MainActionsManager.decreaseElevationForWholeMap), keyEquivalent: "")
+        ]
+        
+        let selectionMenu = NSMenuItem()
+        selectionMenu.submenu = NSMenu(title: "Selection")
+        selectionMenu.submenu?.items = [
             NSMenuItem(title: "Deselect All", target: actionsManager, action: #selector(MainActionsManager.deselectAll), keyEquivalent: "")
         ]
         
-        mainMenu.items = [menuItemOne, fileMenu, mapMenu]
+        mainMenu.items = [menuItemOne, fileMenu, mapMenu, selectionMenu]
         NSApp.mainMenu = mainMenu
     }
     
@@ -121,7 +126,7 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
     private func onElevationChangeRequested(notification: Notification) {
         if
             let elevationToolContext = notification.object as? ElevationToolContext,
-            let area = gameView.selectionModel.selectedArea
+            let area = gameView.selectionModel.selectedMapArea
         {
             switch elevationToolContext {
             case .up:

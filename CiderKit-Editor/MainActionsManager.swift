@@ -18,7 +18,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
         if item.itemIdentifier == .addAsset {
             guard
-                let selectedArea = gameView?.selectionModel.selectedArea,
+                let selectedArea = gameView?.selectionModel.selectedMapArea,
                 gameView?.map.hasCell(forX: selectedArea.x, y: selectedArea.y) ?? false
             else {
                 return false
@@ -43,7 +43,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
 
         app!.window.beginSheet(window) { responseCode in
             if responseCode == .OK {
-                if let locator = selectorView.getResult(), let selectedArea = self.gameView?.selectionModel.selectedArea {
+                if let locator = selectorView.getResult(), let selectedArea = self.gameView?.selectionModel.selectedMapArea {
                     self.gameView?.addSpriteAsset(locator, atX: selectedArea.x, y: selectedArea.y)
                 }
             }
@@ -52,7 +52,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     
     @objc
     func addLight() {
-        gameView?.addLight(PointLight(name: "New Light", color: CGColor.white, position: vector_float3(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
+        gameView?.add(light: PointLight(name: "New Light", color: CGColor.white, position: vector_float3(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
     }
     
     @objc

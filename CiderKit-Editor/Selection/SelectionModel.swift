@@ -11,14 +11,14 @@ class SelectionModel: ObservableObject {
     @Published private(set) var hoverable: Hoverable?
     @Published private(set) var selectable: Selectable?
     
-    var selectedArea: MapArea? {
+    var selectedMapArea: MapArea? {
         guard let mapCellComponent = selectable?.entity?.component(ofType: EditorMapCellComponent.self) else {
             return nil
         }
         return MapArea(x: mapCellComponent.mapX, y: mapCellComponent.mapY, width: 1, height: 1)
     }
     
-    var hasSelectedArea: Bool { selectedArea != nil }
+    var hasSelectedMapArea: Bool { selectedMapArea != nil }
     
     init(selectable: Selectable? = nil) {
         hoverable = nil

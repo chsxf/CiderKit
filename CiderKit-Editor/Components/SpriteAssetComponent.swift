@@ -9,7 +9,7 @@ class SpriteAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     
     var placementChangeCancellable: AnyCancellable?
     
-    let supportedToolModes: ToolMode = []
+    let supportedToolModes: ToolMode = .erase
     
     var inspectableDescription: String { "Sprite Asset" }
     

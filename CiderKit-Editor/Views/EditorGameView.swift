@@ -138,6 +138,10 @@ class EditorGameView: GameView {
         }
     }
     
+    override func keyUp(with event: NSEvent) {
+        nextResponder?.keyUp(with: event)
+    }
+    
     override func viewDidEndLiveResize() {
         super.viewDidEndLiveResize()
         
@@ -191,7 +195,6 @@ class EditorGameView: GameView {
     
     override func loadMap(file: URL) {
         super.loadMap(file: file)
-        mutableMap.updateAdditionalEntities()
         selectionModel.clear()
         buildLightNodes()
     }
@@ -224,10 +227,14 @@ class EditorGameView: GameView {
         }
         lightEntities.append(lightEntity)
         editableComponents.addComponent(foundIn: lightEntity)
+        
+        if let pointLightComponent = lightEntity.component(ofType: PointLightComponent.self) {
+            NotificationCenter.default.addObserver(self, selector: #selector(pointLightErased(notification:)), name: .selectableErased, object: pointLightComponent)
+        }
     }
     
-    func addLight(_ light: PointLight) {
-        mutableMap.addLight(light)
+    func add(light: PointLight) {
+        mutableMap.add(light: light)
         setupPointLight(light)
     }
     
@@ -236,9 +243,19 @@ class EditorGameView: GameView {
             region.addSpriteAsset(spriteAsset, atX: x, y: y)
         }
     }
-
-    func editorMapNode(_ node: EditorMapNode, addedEditableComponent editableComponent: EditableComponent) {
-        
+    
+    @objc
+    private func pointLightErased(notification: Notification) {
+        if let pointLightComponent = notification.object as? PointLightComponent {
+            NotificationCenter.default.removeObserver(self, name: .selectableErased, object: pointLightComponent)
+            
+            mutableMap.remove(light: pointLightComponent.lightDescription)
+            
+            let lightEntity = pointLightComponent.entity!
+            lightEntity.component(ofType: GKSKNodeComponent.self)!.node.removeFromParent()
+            lightEntities.removeAll(where: { $0 === lightEntity })
+            editableComponents.removeComponent(foundIn: lightEntity)
+        }
     }
     
 }

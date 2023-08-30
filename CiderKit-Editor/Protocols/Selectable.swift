@@ -1,5 +1,9 @@
 import GameplayKit
 
+extension Notification.Name {
+    static let selectableErased = Notification.Name(rawValue: "selectableErased")
+}
+
 protocol Selectable: Hoverable {
     
     var supportedToolModes: ToolMode { get }
@@ -12,16 +16,13 @@ protocol Selectable: Hoverable {
     func demphasize()
     
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) -> Void
-    
-}
-
-extension Selectable {
-    
-    var supportedToolModes: ToolMode { [] }
+    func erase() -> Void
     
 }
 
 extension Selectable where Self: GKComponent {
+    
+    var supportedToolModes: ToolMode { [] }
     
     var scenePosition: CGPoint {
         get {
@@ -33,6 +34,10 @@ extension Selectable where Self: GKComponent {
     }
     
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) { }
+    
+    func erase() {
+        NotificationCenter.default.post(name: .selectableErased, object: self)
+    }
     
 }
 
