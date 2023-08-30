@@ -231,6 +231,7 @@ final class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFie
         let newScene = SpriteAssetDescriptionScene()
         let _ = newScene.createChildElementNode(element: rootElement, parentElement: nil)
         newScene.setBoundingBox(position: assetDescription!.position, size: assetDescription!.size)
+        newScene.setFootprintGrid(assetDescription!.footprint)
         return newScene
     }
     
@@ -296,6 +297,20 @@ final class SpriteAssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFie
         if let assetDescription, let scene {
             assetDescription.size.z = size
             scene.setBoundingBox(position: assetDescription.position, size: assetDescription.size)
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, assetWFootprintChanged footprint: Int) {
+        if let assetDescription, let scene {
+            assetDescription.footprint.x = UInt32(footprint)
+            scene.setFootprintGrid(assetDescription.footprint)
+        }
+    }
+    
+    func elementView(_ view: SpriteAssetElementView, assetHFootprintChanged footprint: Int) {
+        if let assetDescription, let scene {
+            assetDescription.footprint.y = UInt32(footprint)
+            scene.setFootprintGrid(assetDescription.footprint)
         }
     }
     

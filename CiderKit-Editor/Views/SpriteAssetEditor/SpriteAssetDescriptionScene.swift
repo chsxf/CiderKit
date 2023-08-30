@@ -5,8 +5,11 @@ class SpriteAssetDescriptionScene: SKScene {
     
     private static let defaultSize: CGFloat = 320
     
+    private static var gridTexture: SKTexture? = nil
+    
     private let backBoundingBoxShape: SKShapeNode
     private let frontBoundingBoxShape: SKShapeNode
+    private let gridRoot: SKNode
     private let elementsRoot: SKNode
     
     private var nodeByElement: [SpriteAssetElement: SKNode] = [:]
@@ -17,19 +20,21 @@ class SpriteAssetDescriptionScene: SKScene {
         frontBoundingBoxShape = SKShapeNode()
         frontBoundingBoxShape.strokeColor = .purple
         
+        gridRoot = SKNode()
         elementsRoot = SKNode()
-        
+
         super.init(size: CGSize(width: 320, height: 320))
         
         scaleMode = .aspectFill
         
-        let gridTexture = Atlases["grid"]!["grid_tile_Base"]!
+        if Self.gridTexture == nil {
+            Self.gridTexture = Atlases["grid"]!["grid_tile_Base"]!
+        }
         
-        let sprite = SKSpriteNode(texture: gridTexture)
-        sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        addChild(sprite)
+        addChild(gridRoot)
+        setFootprintGrid(vector_uint2(1, 1))
         
-        backBoundingBoxShape.position = CGPoint(x: 0, y: gridTexture.size().height / 2)
+        backBoundingBoxShape.position = CGPoint(x: 0, y: Self.gridTexture!.size().height / 2)
         addChild(backBoundingBoxShape)
         addChild(elementsRoot)
         frontBoundingBoxShape.position = backBoundingBoxShape.position
@@ -103,6 +108,29 @@ class SpriteAssetDescriptionScene: SKScene {
         pathFront.move(to: topFront)
         pathFront.addLine(to: topRight)
         frontBoundingBoxShape.path = pathFront
+    }
+    
+    public func setFootprintGrid(_ footprint: vector_uint2) {
+        print(footprint)
+        
+        guard let gridTexture = Self.gridTexture else { return }
+        
+        let gridRootChildren = gridRoot.children
+        gridRootChildren.forEach { $0.removeFromParent() }
+        
+        
+        
+        for x in -Int(footprint.x - 1)...0 {
+            for y in 0..<Int(footprint.y) {
+                let sprite = SKSpriteNode(texture: gridTexture)
+                sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+                sprite.position = CGPoint(
+                    x: MapNode.halfWidth * (x + y),
+                    y: MapNode.halfHeight * (y - x)
+                )
+                gridRoot.addChild(sprite)
+            }
+        }
     }
     
     public func createChildElementNode(element: SpriteAssetElement, parentElement: SpriteAssetElement?) -> SKNode {

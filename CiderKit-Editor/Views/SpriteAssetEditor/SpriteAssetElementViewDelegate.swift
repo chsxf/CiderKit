@@ -9,6 +9,8 @@ protocol SpriteAssetElementViewDelegate: AnyObject {
     func elementView(_ view: SpriteAssetElementView, assetXSizeChanged size: Float)
     func elementView(_ view: SpriteAssetElementView, assetYSizeChanged size: Float)
     func elementView(_ view: SpriteAssetElementView, assetZSizeChanged size: Float)
+    func elementView(_ view: SpriteAssetElementView, assetWFootprintChanged footprint: Int)
+    func elementView(_ view: SpriteAssetElementView, assetHFootprintChanged footprint: Int)
     
     func elementView(_ view: SpriteAssetElementView, nameChanged newName: String)
     func elementView(_ view: SpriteAssetElementView, visibilityChanged visible: Bool)

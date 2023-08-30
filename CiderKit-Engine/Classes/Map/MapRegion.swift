@@ -239,7 +239,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
     private func instantiateSpriteAssetNode(placement: SpriteAssetPlacement) {
         guard let assetDescription = placement.spriteAssetLocator.assetDescription else { return }
         
-        let absoluteCoords = regionDescription.area.convert(localX: placement.x, y: placement.y)
+        let absoluteCoords = regionDescription.area.convert(fromX: placement.x, y: placement.y)
         var worldPosition = simd_float3(Float(absoluteCoords.x), Float(absoluteCoords.y), Float(elevation)) + placement.worldOffset.toSIMDFloat3()
         worldPosition.z *= 0.25
         
@@ -254,7 +254,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
     public func addSpriteAsset(_ spriteAsset: SpriteAssetLocator, atX x: Int, y: Int) {
         regionDescription.spriteAssets = regionDescription.spriteAssets ?? []
         
-        let coordsInRegion = regionDescription.area.convert(absoluteX: x, y: y)
+        let coordsInRegion = regionDescription.area.convert(toX: x, y: y)
         let placement = SpriteAssetPlacement(spriteAssetLocator: spriteAsset, atX: coordsInRegion.x, y: coordsInRegion.y, worldOffset: CGPoint())
         regionDescription.spriteAssets!.append(placement)
         

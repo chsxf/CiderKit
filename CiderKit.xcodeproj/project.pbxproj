@@ -158,6 +158,7 @@
 		D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BF52CC280A05F20093005B /* EditorMainView.swift */; };
 		D9C0E2332945F2EC002E6147 /* ItemSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C0E2322945F2EC002E6147 /* ItemSelectorView.swift */; };
 		D9C0E23529461DFC002E6147 /* StringKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C0E23429461DFC002E6147 /* StringKeysProvider.swift */; };
+		D9C1FA4B2AA1255B008D78E7 /* MapRegionDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C1FA4A2AA1255B008D78E7 /* MapRegionDescription.swift */; };
 		D9C26B7A28D196960087CD60 /* SpriteAssetAnimationTrackIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C26B7928D196950087CD60 /* SpriteAssetAnimationTrackIdentifier.swift */; };
 		D9C98B522A916D9600EDB4D0 /* EventEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C98B512A916D9600EDB4D0 /* EventEmitter.swift */; };
 		D9CBDAFE2A78D9A900C51C69 /* RemoteCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBDAFD2A78D9A900C51C69 /* RemoteCacheManager.swift */; };
@@ -172,6 +173,7 @@
 		D9DE549A28CDC58600E3761B /* SpriteAssetAnimationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DE549928CDC58600E3761B /* SpriteAssetAnimationState.swift */; };
 		D9DE549C28CDD6B200E3761B /* SpriteAssetAnimationTracksHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DE549B28CDD6B200E3761B /* SpriteAssetAnimationTracksHeaderView.swift */; };
 		D9DE549E28CDD8BF00E3761B /* SpriteAssetAnimationTracksDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DE549D28CDD8BF00E3761B /* SpriteAssetAnimationTracksDataSource.swift */; };
+		D9E5D5352A9AB96E00EEBF48 /* IntField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E5D5342A9AB96E00EEBF48 /* IntField.swift */; };
 		D9E7A3C429BFB77200F09A2E /* CKUIBaseNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E7A3C329BFB77200F09A2E /* CKUIBaseNode.swift */; };
 		D9E7E3AA2924BA15003B61F0 /* SequenceMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E7E3A92924BA15003B61F0 /* SequenceMaterial.swift */; };
 		D9E9C9D1289879CA00067D80 /* SpriteAssetDescriptionOutlineDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9C9D0289879CA00067D80 /* SpriteAssetDescriptionOutlineDataSource.swift */; };
@@ -381,6 +383,7 @@
 		D9BF52CC280A05F20093005B /* EditorMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMainView.swift; sourceTree = "<group>"; };
 		D9C0E2322945F2EC002E6147 /* ItemSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSelectorView.swift; sourceTree = "<group>"; };
 		D9C0E23429461DFC002E6147 /* StringKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringKeysProvider.swift; sourceTree = "<group>"; };
+		D9C1FA4A2AA1255B008D78E7 /* MapRegionDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRegionDescription.swift; sourceTree = "<group>"; };
 		D9C26B7928D196950087CD60 /* SpriteAssetAnimationTrackIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTrackIdentifier.swift; sourceTree = "<group>"; };
 		D9C98B512A916D9600EDB4D0 /* EventEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventEmitter.swift; sourceTree = "<group>"; };
 		D9CBDAFD2A78D9A900C51C69 /* RemoteCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCacheManager.swift; sourceTree = "<group>"; };
@@ -398,6 +401,7 @@
 		D9DE549D28CDD8BF00E3761B /* SpriteAssetAnimationTracksDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetAnimationTracksDataSource.swift; sourceTree = "<group>"; };
 		D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellRenderer.swift; sourceTree = "<group>"; };
 		D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseMaterial.swift; sourceTree = "<group>"; };
+		D9E5D5342A9AB96E00EEBF48 /* IntField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntField.swift; sourceTree = "<group>"; };
 		D9E7A3C329BFB77200F09A2E /* CKUIBaseNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIBaseNode.swift; sourceTree = "<group>"; };
 		D9E7E3A92924BA15003B61F0 /* SequenceMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceMaterial.swift; sourceTree = "<group>"; };
 		D9E9C9D0289879CA00067D80 /* SpriteAssetDescriptionOutlineDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetDescriptionOutlineDataSource.swift; sourceTree = "<group>"; };
@@ -473,6 +477,7 @@
 				D928562528B18BB5000F2D86 /* FloatField.swift */,
 				D93FE0D928BA2B4300215D83 /* FloatSlider.swift */,
 				D909FDBC287779790083EB8C /* InspectorHeader.swift */,
+				D9E5D5342A9AB96E00EEBF48 /* IntField.swift */,
 				D93FE0DE28BA43C800215D83 /* LabelledColorWell.swift */,
 				D9A1430828C4FC0000AFB228 /* NSButtonExtension.swift */,
 				D928562328B18271000F2D86 /* VSpacer.swift */,
@@ -521,6 +526,7 @@
 				D91061C22755F24100EA8A03 /* MapDescription.swift */,
 				D91061C32755F24100EA8A03 /* MapNode.swift */,
 				D91061C12755F24100EA8A03 /* MapRegion.swift */,
+				D9C1FA4A2AA1255B008D78E7 /* MapRegionDescription.swift */,
 				D92002D5282FA50F007D5AC1 /* Lights */,
 			);
 			path = Map;
@@ -1188,6 +1194,7 @@
 				D99ADB6428955E6F00A4980D /* CollectionTextViewItem.swift in Sources */,
 				D947DF1D28D0A9B800669AE5 /* SpriteAssetAnimationTrackNameView.swift in Sources */,
 				D972C1B82827D9FD00D85376 /* EditorMapNode.swift in Sources */,
+				D9E5D5352A9AB96E00EEBF48 /* IntField.swift in Sources */,
 				D9F037C528CC7625003308C1 /* ContextButton.swift in Sources */,
 				D9405F692838E49A00CA953A /* Selectable.swift in Sources */,
 				D909FDBD287779790083EB8C /* InspectorHeader.swift in Sources */,
@@ -1284,6 +1291,7 @@
 				D9878FAE293AB7AD0016AABE /* CGMutablePathExtension.swift in Sources */,
 				D9CF6DBF2A07D16E00DE3876 /* CKUICSSValidationConfiguration.swift in Sources */,
 				D9CC3529285D16B7003EEB6F /* Pool.swift in Sources */,
+				D9C1FA4B2AA1255B008D78E7 /* MapRegionDescription.swift in Sources */,
 				D95B8C3A288319C50077DCA1 /* SpriteAssetDatabase.swift in Sources */,
 				D93C24FB280227690023FE7A /* Materials.swift in Sources */,
 				D938044F2A988F8700C03463 /* CKUIBaseNode~Traversal.swift in Sources */,

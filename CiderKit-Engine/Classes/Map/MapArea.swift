@@ -63,12 +63,12 @@ public struct MapArea: Equatable, CustomStringConvertible {
         return MapArea(x: self.x - area.x, y: self.y - area.y, width: self.width, height: self.height)
     }
     
-    public func convert(absolutePoint point: IntPoint) -> IntPoint { convert(absoluteX: point.x, y: point.y) }
+    public func convert(to point: IntPoint) -> IntPoint { convert(toX: point.x, y: point.y) }
     
-    public func convert(absoluteX x: Int, y: Int) -> IntPoint { IntPoint(x: x - self.x, y: y - self.y) }
+    public func convert(toX x: Int, y: Int) -> IntPoint { IntPoint(x: x - self.x, y: y - self.y) }
     
-    public func convert(localPoint point: IntPoint) -> IntPoint { convert(localX: point.x, y: point.y) }
+    public func convert(from point: IntPoint) -> IntPoint { convert(fromX: point.x, y: point.y) }
     
-    public func convert(localX x: Int, y: Int) -> IntPoint { IntPoint(x: x + self.x, y: y + self.y) }
+    public func convert(fromX x: Int, y: Int) -> IntPoint { IntPoint(x: x + self.x, y: y + self.y) }
     
 }

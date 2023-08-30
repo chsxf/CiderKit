@@ -11,13 +11,14 @@ public struct SpriteAssetElementAnimationData {
 public class SpriteAssetDescription: Identifiable, Codable, ObservableObject {
     
     enum CodingKeys: String, CodingKey {
-        case uuid = "uuid"
-        case name = "name"
-        case type = "type"
+        case uuid
+        case name
+        case type
         case rootElement = "root"
         case animationStates = "states"
         case position = "pos"
-        case size = "size"
+        case size
+        case footprint
     }
     
     struct StateCodingKey: CodingKey {
@@ -44,6 +45,7 @@ public class SpriteAssetDescription: Identifiable, Codable, ObservableObject {
     
     public var position: simd_float3
     public var size: simd_float3
+    public var footprint: simd_uint2
     
     public var animationStates: [String: SpriteAssetAnimationState] = [:]
     
@@ -54,6 +56,7 @@ public class SpriteAssetDescription: Identifiable, Codable, ObservableObject {
         
         position = simd_float3()
         size = simd_float3(1, 1, 1)
+        footprint = simd_uint2(1, 1)
         
         rootElement = SpriteAssetElement(name: "root")
     }
@@ -66,6 +69,7 @@ public class SpriteAssetDescription: Identifiable, Codable, ObservableObject {
         type = (try container.decodeIfPresent(SpriteAssetDescriptionType.self, forKey: .type)) ?? .hierarchical
         position = try container.decode(simd_float3.self, forKey: .position)
         size = try container.decode(simd_float3.self, forKey: .size)
+        footprint = (try container.decodeIfPresent(simd_uint2.self, forKey: .footprint)) ?? simd_uint2(1, 1)
         rootElement = try container.decode(SpriteAssetElement.self, forKey: .rootElement)
         
         if container.contains(.animationStates) {
@@ -85,6 +89,7 @@ public class SpriteAssetDescription: Identifiable, Codable, ObservableObject {
         try container.encode(type, forKey: .type)
         try container.encode(position, forKey: .position)
         try container.encode(size, forKey: .size)
+        try container.encode(footprint, forKey: .footprint)
         try container.encode(rootElement, forKey: .rootElement)
 
         var statesContainer = container.nestedContainer(keyedBy: StateCodingKey.self, forKey: .animationStates)

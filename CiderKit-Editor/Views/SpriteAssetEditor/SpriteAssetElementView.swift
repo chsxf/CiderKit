@@ -1,7 +1,7 @@
 import AppKit
 import CiderKit_Engine
 
-class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelegate, FloatSliderDelegate, LabelledColorWellDelegate {
+class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelegate, IntFieldDelegate, FloatSliderDelegate, LabelledColorWellDelegate {
     
     weak var assetDescription: SpriteAssetDescription? = nil
     
@@ -32,6 +32,8 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
     private let assetXSizeField: FloatField
     private let assetYSizeField: FloatField
     private let assetZSizeField: FloatField
+    private let assetWFootprint: IntField
+    private let assetHFootprint: IntField
     
     private let nameField: NSTextField
     private let visibleCheckbox: NSButton
@@ -61,10 +63,15 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         assetYSizeField = FloatField(title: "Y", step: 0.1)
         assetZSizeField = FloatField(title: "Z", step: 0.2)
         
+        assetWFootprint = IntField(title: "W", minValue: 1)
+        assetHFootprint = IntField(title: "H", minValue: 1)
+        
         spriteAssetViews = [
             InspectorHeader(title: "Asset Position"), assetXPositionField, assetYPositionField, assetZPositionField,
             VSpacer(),
-            InspectorHeader(title: "Asset Size"), assetXSizeField, assetYSizeField, assetZSizeField
+            InspectorHeader(title: "Asset Size"), assetXSizeField, assetYSizeField, assetZSizeField,
+            VSpacer(),
+            InspectorHeader(title: "Footprint"), assetWFootprint, assetHFootprint
         ]
         
         nameField = NSTextField(string: "")
@@ -109,6 +116,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         assetXSizeField.delegate = self
         assetYSizeField.delegate = self
         assetZSizeField.delegate = self
+        
+        assetHFootprint.delegate = self
+        assetWFootprint.delegate = self
         
         nameField.delegate = self
 
@@ -159,6 +169,9 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
                 assetXSizeField.value = assetDescription.size.x
                 assetYSizeField.value = assetDescription.size.y
                 assetZSizeField.value = assetDescription.size.z
+                
+                assetWFootprint.value = Int(assetDescription.footprint[0])
+                assetHFootprint.value = Int(assetDescription.footprint[1])
             }
             else {
                 nameField.stringValue = element.name
@@ -258,6 +271,19 @@ class SpriteAssetElementView: NSStackView, NSTextFieldDelegate, FloatFieldDelega
         case yScaleField:
             elementViewDelegate?.elementView(self, yScaleChanged: yScaleField.value)
 
+        default:
+            break
+        }
+    }
+    
+    func intField(_ field: IntField, valueChanged newValue: Int) {
+        switch field {
+        case assetWFootprint:
+            elementViewDelegate?.elementView(self, assetWFootprintChanged: assetWFootprint.value)
+            
+        case assetHFootprint:
+            elementViewDelegate?.elementView(self, assetHFootprintChanged: assetHFootprint.value)
+            
         default:
             break
         }

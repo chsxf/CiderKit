@@ -1,10 +1,10 @@
 public class SpriteAssetPlacement: Codable, Identifiable, ObservableObject {
     
     enum CodingKeys: String, CodingKey {
-        case id = "id"
+        case id
         case spriteAssetLocator = "sal"
-        case x = "x"
-        case y = "y"
+        case x
+        case y
         case worldOffset = "wo"
     }
     
