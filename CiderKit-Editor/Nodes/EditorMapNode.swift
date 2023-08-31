@@ -160,7 +160,8 @@ class EditorMapNode: MapNode {
         if let spriteAssetComponent = notification.object as? SpriteAssetComponent {
             NotificationCenter.default.removeObserver(self, name: .selectableErased, object: spriteAssetComponent)
             
-            hoverableEntities.removeAll(where: { $0 === spriteAssetComponent })
+            let entity = spriteAssetComponent.entity!
+            hoverableEntities.removeAll(where: { $0 === entity })
             
             let spriteAssetNode = spriteAssetComponent.entity!.component(ofType: GKSKNodeComponent.self)!.node as! SpriteAssetNode
             
