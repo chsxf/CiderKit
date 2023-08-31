@@ -70,6 +70,12 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
             NSMenuItem(title: "Save Map As...", target: actionsManager, action: #selector(MainActionsManager.saveMapAs), keyEquivalent: "")
         ]
         
+        let editMenu = NSMenuItem()
+        editMenu.submenu = NSMenu(title: "Edit")
+        editMenu.submenu?.items = [
+            NSMenuItem(title: "Delete Currently Selected Element", target: actionsManager, action: #selector(MainActionsManager.deleteCurrentSelectable), keyEquivalent: String(Character(UnicodeScalar(NSBackspaceCharacter)!)))
+        ]
+        
         let mapMenu = NSMenuItem()
         mapMenu.submenu = NSMenu(title: "Map")
         mapMenu.submenu?.items = [
@@ -83,7 +89,7 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
             NSMenuItem(title: "Deselect All", target: actionsManager, action: #selector(MainActionsManager.deselectAll), keyEquivalent: "")
         ]
         
-        mainMenu.items = [menuItemOne, fileMenu, mapMenu, selectionMenu]
+        mainMenu.items = [menuItemOne, fileMenu, editMenu, mapMenu, selectionMenu]
         NSApp.mainMenu = mainMenu
     }
     

@@ -135,10 +135,13 @@ class SelectionManager: NSResponder {
         deselect();
     }
     
-    override func keyUp(with event: NSEvent) {
+    func deleteCurrentSelectable() {
         guard let currentSelectable = selectionModel.selectable else { return }
         
-        if event.specialKey == .delete && currentSelectable.supportedToolModes.contains(.erase) {
+        if currentSelectable.supportedToolModes.contains(.erase) {
+            if selectionModel.hoverable === currentSelectable {
+                selectionModel.setHoverable(nil)
+            }
             deselect()
             currentSelectable.erase()
         }

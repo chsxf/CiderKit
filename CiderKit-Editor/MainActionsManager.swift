@@ -177,6 +177,11 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     }
     
     @objc
+    func deleteCurrentSelectable() {
+        gameView?.selectionManager?.deleteCurrentSelectable()
+    }
+    
+    @objc
     func increaseElevationForWholeMap() {
         gameView?.increaseElevation(area: nil)
     }

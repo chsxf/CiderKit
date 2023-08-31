@@ -138,10 +138,6 @@ class EditorGameView: GameView {
         }
     }
     
-    override func keyUp(with event: NSEvent) {
-        nextResponder?.keyUp(with: event)
-    }
-    
     override func viewDidEndLiveResize() {
         super.viewDidEndLiveResize()
         
