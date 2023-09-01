@@ -28,6 +28,6 @@ void main() {
         gl_FragColor = shadeWithPosition(texColor, a_position, a_size, u_position_ranges);
     }
     else {
-        gl_FragColor = texture2D(u_texture, tc);
+        gl_FragColor = texture2D(u_texture, tc) * v_color_mix;
     }
 }

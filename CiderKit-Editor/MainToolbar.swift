@@ -6,17 +6,17 @@ extension NSToolbarItem.Identifier {
     static let addLight = NSToolbarItem.Identifier(rawValue: "addLight")
     static let ambientLightSettings = NSToolbarItem.Identifier(rawValue: "ambientlight_settings")
     static let toggleLighting = NSToolbarItem.Identifier(rawValue: "toogle_lighting")
-    static let spriteAssetEditor = NSToolbarItem.Identifier(rawValue: "sprite_asset_editor")
+    static let assetEditor = NSToolbarItem.Identifier(rawValue: "asset_editor")
 }
 
 final class MainToolbar: NSObject, NSToolbarDelegate {
     
     private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .space, .addLight, .ambientLightSettings, .toggleLighting, .spriteAssetEditor
+        .tool, .space, .addLight, .ambientLightSettings, .toggleLighting, .assetEditor
     ]
     
     private let defaultToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .space, .addAsset, .space, .addLight, .ambientLightSettings, .toggleLighting, .space, .spriteAssetEditor
+        .tool, .space, .addAsset, .space, .addLight, .ambientLightSettings, .toggleLighting, .space, .assetEditor
     ]
     
     private weak var actionsManager: MainActionsManager? = nil
@@ -89,12 +89,12 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
         toggleLightingItem.action = #selector(MainActionsManager.toggleLighting)
         definedToolbarItems[.toggleLighting] = toggleLightingItem
         
-        let spriteAssetEditorItem = NSToolbarItem(itemIdentifier: .spriteAssetEditor)
-        spriteAssetEditorItem.label = "Sprite Asset Editor"
-        spriteAssetEditorItem.image = NSImage(systemSymbolName: "photo.fill", accessibilityDescription: "Sprite Asset Editor")
-        spriteAssetEditorItem.target = actionsManager
-        spriteAssetEditorItem.action = #selector(MainActionsManager.openSpriteAssetEditor)
-        definedToolbarItems[.spriteAssetEditor] = spriteAssetEditorItem
+        let assetEditorItem = NSToolbarItem(itemIdentifier: .assetEditor)
+        assetEditorItem.label = "Asset Editor"
+        assetEditorItem.image = NSImage(systemSymbolName: "photo.fill", accessibilityDescription: "Asset Editor")
+        assetEditorItem.target = actionsManager
+        assetEditorItem.action = #selector(MainActionsManager.openAssetEditor)
+        definedToolbarItems[.assetEditor] = assetEditorItem
     }
     
     @objc

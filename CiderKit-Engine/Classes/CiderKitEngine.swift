@@ -12,6 +12,7 @@ public class CiderKitEngine {
     enum ShaderUniformName: String {
         case shadeMode = "u_shadeMode"
         case textureSize = "u_tex_size"
+        case albedoTexture = "u_albedo_texture"
         case normalsTexture = "u_normals_texture"
         case positionTexture = "u_position_texture"
         case positionRanges = "u_position_ranges"
@@ -55,9 +56,7 @@ public class CiderKitEngine {
     public static var clearTexture: SKTexture {
         if _clearTexture == nil {
             let dimension = 128
-            let bytes = stride(from: 0, to: dimension * dimension, by: 1).flatMap { _ in
-                return [ UInt8(0), UInt8(0), UInt8(0), UInt8(0) ]
-            }
+            let bytes = [UInt8](repeating: UInt8(0), count: dimension * dimension * 4)
             _clearTexture = SKTexture(data: Data(bytes), size: CGSize(width: dimension, height: dimension))
         }
         return _clearTexture!
@@ -68,6 +67,7 @@ public class CiderKitEngine {
         if _lightModelFinalGatheringShader == nil {
             let source = try! String(contentsOf: bundle.url(forResource: "LightModelFinalGathering", withExtension: "fsh")!, encoding: .utf8)
             _lightModelFinalGatheringShader = SKShader(source: source, uniforms: [
+                SKUniform(name: ShaderUniformName.albedoTexture.rawValue, texture: clearTexture),
                 SKUniform(name: ShaderUniformName.normalsTexture.rawValue, texture: clearTexture),
                 SKUniform(name: ShaderUniformName.positionTexture.rawValue, texture: clearTexture),
                 SKUniform(name: ShaderUniformName.frameInViewSpace.rawValue, matrixFloat2x2: matrix_float2x2()),
@@ -140,6 +140,24 @@ public class CiderKitEngine {
                 uniform.matrixFloat3x3Value = positionMatrix
             }
         }
+    }
+    
+    public static func registerBuiltinFeatures() {
+        AssetAnimationTrackType.registerBuiltinTypes()
+        AssetElementTypeRegistry.registerBuiltinTypes()
+        registerDefaultMaterialsAndRenderers()
+    }
+    
+    private static func registerDefaultMaterialsAndRenderers() {
+        let url = CiderKitEngine.bundle.url(forResource: "Default Materials", withExtension: "ckmatdb")
+        let _: Materials = try! Functions.load(url!)
+        
+        let defaultRenderer = CellRenderer(
+            groundMaterialName: "default_ground",
+            leftElevationMaterialName: "default_elevation_left",
+            rightElevationMaterialName: "default_elevation_right"
+        )
+        try! CellRenderers.register(cellRenderer: defaultRenderer, named: "default_cell")
     }
 
 }

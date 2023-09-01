@@ -28,7 +28,7 @@ class AmbientLightInspector: BaseInspectorView, LabelledColorWellDelegate {
     func labelledColorWell(_ colorWell: LabelledColorWell, colorChanged color: CGColor) {
         if let lightDescription = observableObject as? BaseLight {
             isEditing = true
-            lightDescription.color = color
+            lightDescription.color = color.toRGB()!
             isEditing = false
         }
     }

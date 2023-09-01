@@ -12,7 +12,8 @@ public class MapRegion : SKNode, Identifiable, Comparable {
     
     private weak var map: MapNode?
     
-    public var cellEntities: [GKEntity] = []
+    public private(set) var cellEntities: [GKEntity] = []
+    public private(set) var assetInstances: [AssetInstance] = []
     
     var layerCount: Int { 10 }
     public var elevation: Int { regionDescription.elevation }
@@ -144,7 +145,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
             }
         }
         
-        regionDescription.spriteAssets?.forEach { self.instantiateSpriteAssetNode(placement: $0) }
+        regionDescription.assets?.forEach { self.instantiateAsset(placement: $0) }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -236,29 +237,31 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         return (mainSubdivision, otherSubdivisions)
     }
     
-    private func instantiateSpriteAssetNode(placement: SpriteAssetPlacement) {
-        guard let assetDescription = placement.spriteAssetLocator.assetDescription else { return }
-        
+    private func instantiateAsset(placement: AssetPlacement) {
         let absoluteCoords = regionDescription.area.convert(fromX: placement.x, y: placement.y)
-        var worldPosition = simd_float3(Float(absoluteCoords.x), Float(absoluteCoords.y), Float(elevation)) + placement.worldOffset.toSIMDFloat3()
+        var worldPosition = SIMD3<Float>(Float(absoluteCoords.x), Float(absoluteCoords.y), Float(elevation)) + placement.worldOffset.toSIMDFloat3()
         worldPosition.z *= 0.25
         
-        let assetNode = map!.instantiateSpriteAssetNode(placement: placement, description: assetDescription, at: worldPosition)
-        var scenePosition = Math.cellToScene(CGPoint(x: absoluteCoords.x, y: absoluteCoords.y) + CGPoint(x: 0.5, y: 0.5), halfTileSize: CGSize(width: MapNode.halfWidth, height: MapNode.halfHeight)) + placement.worldOffset
-        scenePosition = scenePosition + CGPoint(x: 0, y: elevation * MapNode.elevationHeight)
-        assetNode.position = scenePosition
-        assetNode.zPosition = 1
-        addChild(assetNode)
+        if let instance = AssetInstance(placement: placement, at: worldPosition) {
+            var scenePosition = Math.cellToScene(CGPoint(x: absoluteCoords.x, y: absoluteCoords.y) + CGPoint(x: 0.5, y: 0.5), halfTileSize: CGSize(width: MapNode.halfWidth, height: MapNode.halfHeight)) + placement.worldOffset
+            scenePosition = scenePosition + CGPoint(x: 0, y: elevation * MapNode.elevationHeight)
+            
+            let node = instance.node!
+            node.position = scenePosition
+            addChild(node)
+            
+            assetInstances.append(instance)
+        }
     }
     
-    public func addSpriteAsset(_ spriteAsset: SpriteAssetLocator, atX x: Int, y: Int) {
-        regionDescription.spriteAssets = regionDescription.spriteAssets ?? []
+    public func addAsset(_ asset: AssetLocator, atX x: Int, y: Int) {
+        regionDescription.assets = regionDescription.assets ?? []
         
         let coordsInRegion = regionDescription.area.convert(toX: x, y: y)
-        let placement = SpriteAssetPlacement(spriteAssetLocator: spriteAsset, atX: coordsInRegion.x, y: coordsInRegion.y, worldOffset: CGPoint())
-        regionDescription.spriteAssets!.append(placement)
+        let placement = AssetPlacement(assetLocator: asset, atX: coordsInRegion.x, y: coordsInRegion.y, worldOffset: CGPoint())
+        regionDescription.assets!.append(placement)
         
-        instantiateSpriteAssetNode(placement: placement)
+        instantiateAsset(placement: placement)
     }
     
 }

@@ -30,13 +30,11 @@ vec4 processLight(mat3 light, vec3 pos, vec3 normals) {
 }
 
 void main() {
-    vec4 albedo = SKDefaultShading();
-    
+    vec4 albedo = texture2D(u_albedo_texture, v_tex_coord);
     if (albedo.a > 0) {
-        vec2 lerped_tex_coord = mix(u_frame_in_view[0], u_frame_in_view[1], v_tex_coord);
-        vec3 normals = texture2D(u_normals_texture, lerped_tex_coord).rgb;
+        vec3 normals = texture2D(u_normals_texture, v_tex_coord).rgb;
  
-        vec3 normalizedPos = texture2D(u_position_texture, lerped_tex_coord).rgb;
+        vec3 normalizedPos = texture2D(u_position_texture, v_tex_coord).rgb;
         vec3 pos = mix(u_position_ranges[0], u_position_ranges[1], normalizedPos);
 
         vec4 lights = processLight(u_light0, pos, normals)
@@ -60,7 +58,7 @@ void main() {
         gl_FragColor = vec4(lightColor * albedo.rgb * albedo.a, albedo.a);
     }
     else {
-        gl_FragColor = albedo;
+        gl_FragColor = SKDefaultShading();
     }
     
 }

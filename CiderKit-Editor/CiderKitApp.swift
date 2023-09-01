@@ -155,6 +155,9 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
             "grid": AtlasLocator(url: Bundle.main.url(forResource: "Grid Atlas", withExtension: "ckatlas")!, bundle: Bundle.main)
         ])
 
+        CiderKitEngine.registerBuiltinFeatures()
+        AssetElementViewTypeRegistry.registerBuiltinTypes()
+        
         Self.mainWindow = delegate.setupMainWindow()
         delegate.setupMainMenu()
         delegate.setupToolbar()

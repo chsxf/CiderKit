@@ -38,13 +38,13 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         let windowRect: CGRect = CGRect(x: 0, y: 0, width: 400, height: 600)
 
         let window = NSWindow(contentRect: windowRect, styleMask: [.resizable, .titled], backing: .buffered, defer: false)
-        let selectorView = SpriteAssetSelectorView()
+        let selectorView = AssetSelectorView()
         window.contentView = selectorView
 
         app!.window.beginSheet(window) { responseCode in
             if responseCode == .OK {
                 if let locator = selectorView.getResult(), let selectedArea = self.gameView?.selectionModel.selectedMapArea {
-                    self.gameView?.addSpriteAsset(locator, atX: selectedArea.x, y: selectedArea.y)
+                    self.gameView?.addAsset(locator, atX: selectedArea.x, y: selectedArea.y)
                 }
             }
         }
@@ -70,8 +70,8 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     }
     
     @objc
-    func openSpriteAssetEditor() {
-        SpriteAssetEditor.open()
+    func openAssetEditor() {
+        AssetEditor.open()
     }
     
     func saveCurrentMapIfModified() -> Bool {

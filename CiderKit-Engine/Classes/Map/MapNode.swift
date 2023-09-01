@@ -8,6 +8,10 @@ open class MapNode: SKNode, Collection {
     public static let halfWidth: Int = 24
     public static let halfHeight: Int = 12
     
+    public static let xVector = vector_float2(Float(MapNode.halfWidth), Float(-MapNode.halfHeight))
+    public static let yVector = vector_float2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
+    public static let zVector = vector_float2(0, Float(MapNode.elevationHeight))
+    
     public var regions: [MapRegion] = [MapRegion]()
     
     private let cellRenderers: [String:CellRendererDescription]
@@ -169,16 +173,16 @@ open class MapNode: SKNode, Collection {
         return MapCellComponent(region: region, mapX: x, mapY: y, elevation: elevation)
     }
     
-    public func getSpriteAssetPlacement(by id: UUID) -> SpriteAssetPlacement? {
+    public func getAssetPlacement(by id: UUID) -> AssetPlacement? {
         for region in regions {
-            if let placement = region.regionDescription.spriteAssets?.first(where: { $0.id == id }) {
+            if let placement = region.regionDescription.assets?.first(where: { $0.id == id }) {
                 return placement
             }
         }
         return nil
     }
     
-    open func instantiateSpriteAssetNode(placement: SpriteAssetPlacement, description: SpriteAssetDescription, at worldPosition: simd_float3) -> SpriteAssetNode {
-        SpriteAssetNode(placement: placement, description: description, at: worldPosition)
+    open func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> AssetInstance {
+        AssetInstance(placement: placement, at: worldPosition)!
     }
 }

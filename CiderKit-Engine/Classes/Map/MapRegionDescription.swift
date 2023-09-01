@@ -19,7 +19,7 @@ public struct MapRegionDescription: Codable {
     var elevation: Int
     let renderer: String?
     
-    public var spriteAssets: [SpriteAssetPlacement]? = nil
+    public var assets: [AssetPlacement]? = nil
     
     public var area: MapArea { MapArea(x: x, y: y, width: width, height: height) }
     
@@ -33,7 +33,7 @@ public struct MapRegionDescription: Codable {
         self.renderer = renderer
         materialOverrides = nil
         
-        spriteAssets = []
+        assets = []
     }
     
     public init(area: MapArea, elevation: Int, renderer: String?) {
@@ -43,7 +43,7 @@ public struct MapRegionDescription: Codable {
     init(byExporting area: MapArea, from other: MapRegionDescription) {
         self.init(area: area, elevation: other.elevation, renderer: other.renderer)
         importMaterialOverrides(from: other)
-        importSpriteAssets(from: other)
+        importAssets(from: other)
     }
     
     private func getMaterialOverride(for context: MaterialOverrideContext, at index: Int) -> CustomSettings? {
@@ -100,9 +100,9 @@ public struct MapRegionDescription: Codable {
         }
 
         newDescription?.importMaterialOverrides(from: self)
-        newDescription?.importSpriteAssets(from: self)
+        newDescription?.importAssets(from: self)
         newDescription?.importMaterialOverrides(from: other)
-        newDescription?.importSpriteAssets(from: other)
+        newDescription?.importAssets(from: other)
     
         return newDescription
     }
@@ -150,28 +150,28 @@ public struct MapRegionDescription: Codable {
         }
     }
     
-    private mutating func importSpriteAssets(from other: MapRegionDescription) {
-        guard let otherSpriteAssets = other.spriteAssets else { return }
+    private mutating func importAssets(from other: MapRegionDescription) {
+        guard let otherAssets = other.assets else { return }
         
         let relativeToOtherArea = area.relative(to: other.area)
         let relativeToArea = other.area.relative(to: area)
-        for spriteAsset in otherSpriteAssets {
-            guard relativeToOtherArea.contains(x: spriteAsset.x, y: spriteAsset.y) else { continue }
+        for asset in otherAssets {
+            guard relativeToOtherArea.contains(x: asset.x, y: asset.y) else { continue }
         
-            spriteAsset.x += relativeToArea.x
-            spriteAsset.y += relativeToArea.y
+            asset.x += relativeToArea.x
+            asset.y += relativeToArea.y
             
-            spriteAssets = spriteAssets ?? []
-            spriteAssets!.append(spriteAsset)
+            assets = assets ?? []
+            assets!.append(asset)
         }
     }
     
     public func isFreeOfAsset(area: MapArea) -> Bool {
-        guard let spriteAssets else { return true }
+        guard let assets else { return true }
         
         let relativeArea = area.relative(to: self.area)
-        for placement in spriteAssets {
-            if let description = placement.spriteAssetLocator.assetDescription {
+        for placement in assets {
+            if let description = placement.assetLocator.assetDescription {
                 let footprint = description.footprint
                 let assetArea = MapArea(x: placement.x - Int(footprint.x), y: placement.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
                 if assetArea.intersects(relativeArea) {

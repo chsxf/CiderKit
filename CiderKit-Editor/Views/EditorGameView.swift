@@ -234,9 +234,9 @@ class EditorGameView: GameView {
         setupPointLight(light)
     }
     
-    func addSpriteAsset(_ spriteAsset: SpriteAssetLocator, atX x: Int, y: Int) {
+    func addAsset(_ asset: AssetLocator, atX x: Int, y: Int) {
         if let region = mutableMap.regionAt(x: x, y: y) {
-            let footprint = spriteAsset.assetDescription!.footprint
+            let footprint = asset.assetDescription!.footprint
             
             let localCoords = region.regionDescription.area.convert(toX: x, y: y)
             let minimalFootprint = localCoords &+ IntPoint.one
@@ -244,7 +244,7 @@ class EditorGameView: GameView {
             guard minimalFootprint.x >= footprint.x, minimalFootprint.y >= footprint.y else {
                 let alert = NSAlert()
                 alert.informativeText = "Error"
-                alert.messageText = "Unable to place sprite asset - Too close to the region's borders"
+                alert.messageText = "Unable to place asset - Too close to the region's borders"
                 alert.addButton(withTitle: "OK")
                 let _ = alert.runModal()
                 return
@@ -254,13 +254,13 @@ class EditorGameView: GameView {
             guard region.regionDescription.isFreeOfAsset(area: assetArea) else {
                 let alert = NSAlert()
                 alert.informativeText = "Error"
-                alert.messageText = "Unable to place sprite asset - Another asset already exists in the target area"
+                alert.messageText = "Unable to place asset - Another asset already exists in the target area"
                 alert.addButton(withTitle: "OK")
                 let _ = alert.runModal()
                 return
             }
             
-            region.addSpriteAsset(spriteAsset, atX: x, y: y)
+            region.addAsset(asset, atX: x, y: y)
         }
     }
     

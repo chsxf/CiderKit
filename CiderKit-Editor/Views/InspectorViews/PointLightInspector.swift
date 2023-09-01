@@ -131,7 +131,7 @@ class PointLightInspector: BaseInspectorView, FloatFieldDelegate, NSTextFieldDel
     func labelledColorWell(_ colorWell: LabelledColorWell, colorChanged color: CGColor) {
         if let pointLight = observableObject as? PointLight {
             isEditing = true
-            pointLight.color = colorWell.color
+            pointLight.color = colorWell.color.toRGB()!
             isEditing = false
         }
     }

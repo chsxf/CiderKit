@@ -73,7 +73,7 @@ class ProjectManager: ObservableObject {
             }
         }
         
-        let foldersToCreate = [ "Databases/SpriteAssets", "Settings", "Maps", "Materials", "Music", "Sounds", "Textures" ]
+        let foldersToCreate = [ "Databases/Assets", "Settings", "Maps", "Materials", "Music", "Sounds", "Textures" ]
         do {
             for folder in foldersToCreate {
                 let folderURL = URL(fileURLWithPath: folder, isDirectory: true, relativeTo: url)

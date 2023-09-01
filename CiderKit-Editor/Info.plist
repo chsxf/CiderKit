@@ -101,16 +101,16 @@
 				<string>public.json</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>CiderKit Sprite Asset Database File</string>
+			<string>CiderKit Asset Database File</string>
 			<key>UTTypeIcons</key>
 			<dict/>
 			<key>UTTypeIdentifier</key>
-			<string>dev.chsxf.CiderKit.spriteAssetDatabase</string>
+			<string>dev.chsxf.CiderKit.assetDatabase</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>ckspriteassetdb</string>
+					<string>ckassetdb</string>
 				</array>
 			</dict>
 		</dict>

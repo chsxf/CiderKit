@@ -2,9 +2,9 @@ import Foundation
 
 public enum ProjectErrors: String, Error {
     case notProjectFolder = "Not project folder"
-    case spriteAssetDatabaseError = "Sprite Asset Database Error"
-    case spriteAssetDatabaseAlreadyDefined = "Sprite Asset Database Already Defined"
-    case defaultSpriteAssetDatabaseAlreadyDefined = "Default Sprite Asset Database Already Defined"
+    case assetDatabaseError = "Asset Database Error"
+    case assetDatabaseAlreadyDefined = "Asset Database Already Defined"
+    case defaultAssetDatabaseAlreadyDefined = "Default Asset Database Already Defined"
 }
 
 open class Project {
@@ -14,17 +14,17 @@ open class Project {
     public let projectRoot: URL
     public let settings: ProjectSettings
     
-    public var spriteAssetDatabases: [String: SpriteAssetDatabase] = [:]
+    public var assetDatabases: [String: AssetDatabase] = [:]
     
-    public var defaultSpriteAssetDatabase: SpriteAssetDatabase? {
-        spriteAssetDatabase(forId: SpriteAssetDatabase.defaultDatabaseId)
+    public var defaultAssetDatabase: AssetDatabase? {
+        assetDatabase(forId: AssetDatabase.defaultDatabaseId)
     }
     
     public var atlasesDirectoryURL: URL { URL(fileURLWithPath: "Atlases", isDirectory: true, relativeTo: projectRoot) }
     public var databasesDirectoryURL: URL { URL(fileURLWithPath: "Databases", isDirectory: true, relativeTo: projectRoot) }
     public var mapsDirectoryURL: URL { URL(fileURLWithPath: "Maps", isDirectory: true, relativeTo: projectRoot) }
     public var materialDatabasesDirectoryURL: URL { URL(fileURLWithPath: "Materials", isDirectory: true, relativeTo: databasesDirectoryURL) }
-    public var spriteAssetsDatabasesDirectoryURL: URL { URL(fileURLWithPath: "SpriteAssets", isDirectory: true, relativeTo: databasesDirectoryURL) }
+    public var assetsDatabasesDirectoryURL: URL { URL(fileURLWithPath: "Assets", isDirectory: true, relativeTo: databasesDirectoryURL) }
     public var styleSheetsDirectoryURL: URL { URL(fileURLWithPath: "StyleSheets", isDirectory: true, relativeTo: projectRoot) }
     public var texturesDirectoryURL: URL { URL(fileURLWithPath: "Textures", isDirectory: true, relativeTo: projectRoot) }
     public var userInterfaceDirectoryURL: URL { URL(fileURLWithPath: "UI", isDirectory: true, relativeTo: projectRoot) }
@@ -40,20 +40,20 @@ open class Project {
             throw ProjectErrors.notProjectFolder
         }
         
-        try initSpriteAssetDatabases()
+        try initAssetDatabases()
         try preloadAtlases()
         try preloadMaterialDatabases()
     }
     
-    private func initSpriteAssetDatabases() throws {
+    private func initAssetDatabases() throws {
         let fileManager = FileManager.default
         var isDirectory: ObjCBool = false
-        if fileManager.fileExists(atPath: spriteAssetsDatabasesDirectoryURL.path, isDirectory: &isDirectory) && isDirectory.boolValue {
+        if fileManager.fileExists(atPath: assetsDatabasesDirectoryURL.path, isDirectory: &isDirectory) && isDirectory.boolValue {
             do {
-                let fileNameRE = try NSRegularExpression(pattern: "\\.ckspriteassetdb$")
+                let fileNameRE = try NSRegularExpression(pattern: "\\.ckassetdb$")
                 
-                let urls = try fileManager.contentsOfDirectory(at: spriteAssetsDatabasesDirectoryURL, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants])
-                var defaultSpriteAssetDatabaseFound: Bool = false
+                let urls = try fileManager.contentsOfDirectory(at: assetsDatabasesDirectoryURL, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants])
+                var defaultAssetDatabaseFound: Bool = false
                 for url in urls {
                     let resourceValues = try url.resourceValues(forKeys: [.isDirectoryKey])
                     if resourceValues.isDirectory ?? false {
@@ -65,24 +65,24 @@ open class Project {
                         continue
                     }
                     
-                    let spriteAssetDatabase: SpriteAssetDatabase = try Functions.load(url)
-                    spriteAssetDatabase.sourceURL = url
-                    if spriteAssetDatabases[spriteAssetDatabase.id] != nil {
-                        throw ProjectErrors.spriteAssetDatabaseAlreadyDefined
+                    let assetDatabase: AssetDatabase = try Functions.load(url)
+                    assetDatabase.sourceURL = url
+                    if assetDatabases[assetDatabase.id] != nil {
+                        throw ProjectErrors.assetDatabaseAlreadyDefined
                     }
-                    spriteAssetDatabases[spriteAssetDatabase.id] = spriteAssetDatabase
-                    if spriteAssetDatabase.isDefault {
-                        if defaultSpriteAssetDatabaseFound {
-                            throw ProjectErrors.defaultSpriteAssetDatabaseAlreadyDefined
+                    assetDatabases[assetDatabase.id] = assetDatabase
+                    if assetDatabase.isDefault {
+                        if defaultAssetDatabaseFound {
+                            throw ProjectErrors.defaultAssetDatabaseAlreadyDefined
                         }
-                        defaultSpriteAssetDatabaseFound = true
-                        spriteAssetDatabases[SpriteAssetDatabase.defaultDatabaseId] = spriteAssetDatabase
+                        defaultAssetDatabaseFound = true
+                        assetDatabases[AssetDatabase.defaultDatabaseId] = assetDatabase
                     }
                 }
                 
-                if !defaultSpriteAssetDatabaseFound {
-                    if let first = spriteAssetDatabases.first {
-                        spriteAssetDatabases[SpriteAssetDatabase.defaultDatabaseId] = first.value
+                if !defaultAssetDatabaseFound {
+                    if let first = assetDatabases.first {
+                        assetDatabases[AssetDatabase.defaultDatabaseId] = first.value
                     }
                 }
             }
@@ -91,7 +91,7 @@ open class Project {
             }
             catch {
                 print(error)
-                throw ProjectErrors.spriteAssetDatabaseError
+                throw ProjectErrors.assetDatabaseError
             }
         }
     }
@@ -112,8 +112,8 @@ open class Project {
         }
     }
     
-    public func spriteAssetDatabase(forId id: String) -> SpriteAssetDatabase? {
-        spriteAssetDatabases[id]
+    public func assetDatabase(forId id: String) -> AssetDatabase? {
+        assetDatabases[id]
     }
     
     open class func open(at url: URL) throws {
