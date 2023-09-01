@@ -12,7 +12,7 @@ class ContextButton: NSButton {
     
     override func mouseDown(with event: NSEvent) {
         if let menu = menu(for: event) {
-            NSMenu.popUpContextMenu(menu, with: event, for: self)
+            menu.popUp(positioning: nil, at: frame.origin, in: superview)
         }
     }
     
