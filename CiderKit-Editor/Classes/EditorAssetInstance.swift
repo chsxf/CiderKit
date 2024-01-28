@@ -41,8 +41,4 @@ final class EditorAssetInstance: AssetInstance {
         }
     }
     
-    func removeElement(element: TransformAssetElement) {
-        self[element]?.removeFromParent()
-    }
-    
 }

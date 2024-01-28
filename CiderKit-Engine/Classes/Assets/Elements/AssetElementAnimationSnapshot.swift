@@ -1,6 +1,6 @@
 public struct AssetElementAnimationSnapshot {
     
-    public let frame: Int
+    public let frame: UInt
     public let element: TransformAssetElement
     public let animatedValues: [AssetAnimationTrackType: Any]
     

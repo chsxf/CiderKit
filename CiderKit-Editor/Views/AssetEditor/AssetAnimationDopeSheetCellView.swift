@@ -8,7 +8,7 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
     
     private weak var animationControlDelegate: AssetAnimationControlDelegate? = nil
     
-    private var animationTrack: AssetAnimationTrack { assetDescription.animationStates[animationControlDelegate!.currentAnimationState!]!.animationTracks[trackIdentifier]! }
+    private var animationTrack: AssetAnimationTrack { assetDescription.animationStates[animationControlDelegate!.currentAnimationStateName!]!.animationTracks[trackIdentifier]! }
     
     init(tableView: NSTableView, row: Int, assetDescription: AssetDescription, trackIdentifier: AssetAnimationTrackIdentifier, animationControlDelegate: AssetAnimationControlDelegate) {
         super.init(tableView: tableView, row: row, assetDescription: assetDescription, trackIdentifier: trackIdentifier)
@@ -35,7 +35,7 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
         let tickEverySecondPath = NSBezierPath()
         let keysPath = NSBezierPath()
         let keyBackgroundsPath = NSBezierPath()
-        var frameIndex = Int(Float(dirtyRect.minX / Self.frameWidth).rounded(.down))
+        var frameIndex = UInt(Float(dirtyRect.minX / Self.frameWidth).rounded(.down))
         let loopMin = CGFloat(frameIndex) * Self.frameWidth
         for x in stride(from: loopMin, to: dirtyRect.maxX, by: Self.frameWidth) {
             var path = allTicksPath
@@ -131,7 +131,7 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
         point = convert(point, from: nil)
         
         if frame.contains(point) {
-            let frameFromPoint = Int(point.x / Self.frameWidth)
+            let frameFromPoint = UInt(point.x / Self.frameWidth)
             animationControlDelegate.animationGoToFrame(self, frame: frameFromPoint)
             
             let key = animationTrack.getKey(at: frameFromPoint)

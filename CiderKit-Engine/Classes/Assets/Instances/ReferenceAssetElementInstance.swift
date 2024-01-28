@@ -4,7 +4,17 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
     
     public let referenceElement: ReferenceAssetElement
     
-    private var referencedAssetInstance: AssetInstance? = nil
+    public private(set) var referencedAssetInstance: AssetInstance? = nil
+    
+    private var actualAnimationStateName: String? {
+        guard
+            let referencedAnimationStateName = referenceElement.animationStateName,
+            let referencedAssetInstance,
+            referencedAssetInstance.assetDescription.animationStates[referencedAnimationStateName] != nil
+        else { return nil }
+
+        return referencedAnimationStateName
+    }
     
     public init(element: ReferenceAssetElement) {
         referenceElement = element
@@ -20,7 +30,12 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
         }
     }
     
-    public override func update(animationSnapshot: AssetElementAnimationSnapshot) {
+    public override func applyDefaults() {
+        super.applyDefaults()
+        referencedAssetInstance?.applyAllDefaults()
+    }
+    
+    public override func update(animationSnapshot: AssetElementAnimationSnapshot? = nil) {
         guard let node else { return }
         
         super.update(animationSnapshot: animationSnapshot)
@@ -32,6 +47,8 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
                 instantiateReferencedAsset(in: node, from: assetDescription!)
             }
         }
+        
+        referencedAssetInstance?.currentAnimationStateName = referenceElement.animationStateName
     }
     
     private func instantiateReferencedAsset(in node: SKNode, from assetDescription: AssetDescription) {
@@ -39,6 +56,12 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
         self.referencedAssetInstance = referencedAssetInstance
         addChild(referencedAssetInstance)
         node.addChild(referencedAssetInstance.node!)
+        referencedAssetInstance.currentAnimationStateName = referenceElement.animationStateName
+    }
+    
+    public func getSKActionsByElement(with maxDuration: TimeInterval) -> [TransformAssetElement: SKAction]? {
+        guard let actualAnimationStateName else { return nil }
+        return referencedAssetInstance?.getSKActionsByElement(in: actualAnimationStateName, with: maxDuration)
     }
     
 }

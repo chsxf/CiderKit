@@ -120,7 +120,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
             return
         }
         
-        let animationSnapshot = snapshot ?? assetDescription.getAnimationSnapshot(for: element.uuid, in: animationControlDelegate.currentAnimationState, at: animationControlDelegate.currentAnimationFrame)
+        let animationSnapshot = snapshot ?? assetDescription.getAnimationSnapshot(for: element.uuid, in: animationControlDelegate.currentAnimationStateName, at: animationControlDelegate.currentAnimationFrame)
         
         assetViews.forEach { $0.isHidden = !element.isRoot }
         assetElementViews.forEach { $0.isHidden = element.isRoot }
@@ -153,7 +153,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
             else {
                 element.visible = visible
             }
-            elementViewDelegate.updateElementForCurrentFrame(element: element)
+            elementViewDelegate.updateElement(element: element)
         }
     }
     
@@ -170,19 +170,19 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
         case assetXPositionField:
             if let assetDescription {
                 assetDescription.rootElement.offset.x = assetXPositionField.value
-                elementViewDelegate.updateElementForCurrentFrame(element: assetDescription.rootElement)
+                elementViewDelegate.updateElement(element: assetDescription.rootElement)
             }
             
         case assetYPositionField:
             if let assetDescription {
                 assetDescription.rootElement.offset.y = assetYPositionField.value
-                elementViewDelegate.updateElementForCurrentFrame(element: assetDescription.rootElement)
+                elementViewDelegate.updateElement(element: assetDescription.rootElement)
             }
             
         case assetZPositionField:
             if let assetDescription {
                 assetDescription.rootElement.offset.z = assetZPositionField.value
-                elementViewDelegate.updateElementForCurrentFrame(element: assetDescription.rootElement)
+                elementViewDelegate.updateElement(element: assetDescription.rootElement)
             }
             
         case xOffsetField:
@@ -193,7 +193,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
                 else {
                     element.offset.x = xOffsetField.value
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: element)
+                elementViewDelegate.updateElement(element: element)
             }
 
         case yOffsetField:
@@ -204,7 +204,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
                 else {
                     element.offset.y = yOffsetField.value
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: element)
+                elementViewDelegate.updateElement(element: element)
             }
             
         case zOffsetField:
@@ -215,7 +215,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
                 else {
                     element.offset.z = zOffsetField.value
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: element)
+                elementViewDelegate.updateElement(element: element)
             }
 
         default:
@@ -239,6 +239,12 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
     @objc
     private func currentFrameDidChange(_ notif: Notification) {
         updateForCurrentElement()
+    }
+    
+    public final func updateElement() {
+        if let element {
+            elementViewDelegate?.updateElement(element: element)
+        }
     }
     
 }

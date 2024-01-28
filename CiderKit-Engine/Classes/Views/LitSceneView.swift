@@ -7,7 +7,7 @@ open class LitSceneView: SKView, SKSceneDelegate {
     public let litNodesRoot: SKNode
     public let camera: SKCameraNode
     
-    open var ambientLightColorRGB: vector_float3 { vector_float3(1, 1, 1) }
+    open var ambientLightColorRGB: SIMD3<Float> { SIMD3(1, 1, 1) }
     
     open var preferredSceneWidth: Int { 640 }
     open var preferredSceneHeight: Int { 360 }

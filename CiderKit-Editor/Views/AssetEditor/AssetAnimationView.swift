@@ -11,6 +11,7 @@ extension NSUserInterfaceItemIdentifier {
 final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate, AssetAnimationControlDelegate, AssetAnimationTrackNameViewDelegate {
     
     private let splitView: NSSplitView
+    private let headerView: AssetAnimationTracksHeaderView
     
     private let leftScrollView: NSScrollView
     private let rightScrollView: NSScrollView
@@ -21,14 +22,16 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
     
     private(set) var isPlaying: Bool = false
     
-    private(set) var currentAnimationFrame: Int = 0
+    private(set) var currentAnimationFrame: UInt = 0
     
-    private(set) var currentAnimationState: String? = nil {
+    private(set) var currentAnimationStateName: String? = nil {
         didSet {
-            if currentAnimationState != oldValue {
-                tracksDataSource = AssetAnimationTracksDataSource(asset: assetDescription, animationState: currentAnimationState)
+            if currentAnimationStateName != oldValue {
+                tracksDataSource = AssetAnimationTracksDataSource(asset: assetDescription, animationState: currentAnimationStateName)
                 tracksView.dataSource = tracksDataSource
                 dopeSheetView.dataSource = tracksDataSource
+                
+                NotificationCenter.default.post(Notification(name: .animationCurrentStateDidChange, object: self))
             }
         }
     }
@@ -36,15 +39,15 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
     private(set) var currentAnimationTrackIdentifier: AssetAnimationTrackIdentifier? = nil
     
     var currentAnimationTrack: AssetAnimationTrack? {
-        guard let currentAnimationState, let currentAnimationTrackIdentifier else { return nil }
-        return assetDescription.animationStates[currentAnimationState]?.animationTracks[currentAnimationTrackIdentifier]
+        guard let currentAnimationStateName, let currentAnimationTrackIdentifier else { return nil }
+        return assetDescription.animationStates[currentAnimationStateName]?.animationTracks[currentAnimationTrackIdentifier]
     }
     
-    var currentAnimationStateFrameCount: Int {
-        guard let currentAnimationState else { return 0 }
+    var currentAnimationStateFrameCount: UInt {
+        guard let currentAnimationStateName else { return 0 }
         
-        let state = assetDescription.animationStates[currentAnimationState]!
-        var maxFrame: Int = 0
+        let state = assetDescription.animationStates[currentAnimationStateName]!
+        var maxFrame: UInt = 0
         for (_, track) in state.animationTracks {
             if let lastKey = track.lastKey {
                 maxFrame = max(maxFrame, lastKey.frame + 1)
@@ -56,8 +59,9 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
     var assetDescription: AssetDescription {
         didSet {
             if assetDescription !== oldValue {
-                currentAnimationState = assetDescription.animationStates.keys.sorted().first
-                tracksDataSource = AssetAnimationTracksDataSource(asset: assetDescription, animationState: currentAnimationState)
+                currentAnimationStateName = assetDescription.animationStates.keys.sorted().first
+                tracksDataSource = AssetAnimationTracksDataSource(asset: assetDescription, animationState: currentAnimationStateName)
+                headerView.assetDescription = assetDescription
                 tracksView.dataSource = tracksDataSource
                 dopeSheetView.dataSource = tracksDataSource
             }
@@ -74,6 +78,9 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
         
         tracksView = NSTableView()
         dopeSheetView = NSTableView()
+        
+        currentAnimationStateName = assetDescription.animationStates.keys.sorted().first
+        headerView = AssetAnimationTracksHeaderView(frame: tracksView.headerView!.frame, asset: assetDescription, animationState: currentAnimationStateName)
         
         super.init(frame: NSZeroRect)
 
@@ -99,8 +106,7 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
         
         addSubview(splitView)
         
-        currentAnimationState = assetDescription.animationStates.keys.sorted().first
-        tracksDataSource = AssetAnimationTracksDataSource(asset: assetDescription, animationState: currentAnimationState)
+        tracksDataSource = AssetAnimationTracksDataSource(asset: assetDescription, animationState: currentAnimationStateName)
 
         tracksView.intercellSpacing = NSZeroSize
         tracksView.style = .plain
@@ -115,7 +121,6 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
         tracksView.allowsEmptySelection = true
         tracksView.allowsMultipleSelection = false
         tracksView.usesAlternatingRowBackgroundColors = true
-        let headerView = AssetAnimationTracksHeaderView(frame: tracksView.headerView!.frame, asset: assetDescription, animationState: currentAnimationState)
         headerView.animationControlDelegate = self
         tracksView.headerView = headerView
         tracksView.dataSource = tracksDataSource
@@ -153,7 +158,7 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
         fatalError("init(coder:) has not been implemented")
     }
     
-    func animationGoToFrame(_ sender: Any, frame: Int) {
+    func animationGoToFrame(_ sender: Any, frame: UInt) {
         currentAnimationFrame = frame
         NotificationCenter.default.post(Notification(name: .animationCurrentFrameDidChange, object: self))
     }
@@ -168,7 +173,7 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
             animationTogglePlay(self)
         }
         
-        currentAnimationState = stateName
+        currentAnimationStateName = stateName
         NotificationCenter.default.post(Notification(name: .animationCurrentStateDidChange, object: self))
         
         animationChangeTrack(self, trackIdentifier: nil)
@@ -243,7 +248,7 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
             return
         }
 
-        assetDescription.animationStates[currentAnimationState!]!.animationTracks[track] = nil
+        assetDescription.animationStates[currentAnimationStateName!]!.animationTracks[track] = nil
         reloadCurrentState()
     }
     

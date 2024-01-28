@@ -56,7 +56,7 @@ public final class AssetAnimationTrack: Codable {
         }
     }
     
-    public func getValue(at frame: Int, for element: TransformAssetElement? = nil) -> Any? {
+    public func getValue(at frame: UInt, for element: TransformAssetElement? = nil) -> Any? {
         if !keys.isEmpty {
             if let key = getKey(at: frame) {
                 return AssetAnimationKey.getInterpolatedValue(at: frame, from: key, to: nil)
@@ -85,25 +85,25 @@ public final class AssetAnimationTrack: Codable {
         return element?[type]
     }
     
-    public func hasKey(at frame: Int) -> Bool { getKey(at: frame) != nil }
+    public func hasKey(at frame: UInt) -> Bool { getKey(at: frame) != nil }
     
-    public func getKey(at frame: Int) -> AssetAnimationKey? {
+    public func getKey(at frame: UInt) -> AssetAnimationKey? {
         keys.first(where: { $0.frame == frame })
     }
     
-    public func getNextKey(from frame: Int) -> AssetAnimationKey? {
+    public func getNextKey(from frame: UInt) -> AssetAnimationKey? {
         keys.first(where: { $0.frame > frame })
     }
     
-    public func getPrevKey(from frame: Int) -> AssetAnimationKey? {
+    public func getPrevKey(from frame: UInt) -> AssetAnimationKey? {
         keys.last(where: { $0.frame < frame })
     }
     
-    public func removeKey(at frame: Int) {
+    public func removeKey(at frame: UInt) {
         keys.removeAll(where: { $0.frame == frame })
     }
     
-    public func setValue(_ value: Any, at frame: Int) throws {
+    public func setValue(_ value: Any, at frame: UInt) throws {
         switch value {
         case let b as Bool:
             try setBool(b, at: frame)
@@ -120,11 +120,7 @@ public final class AssetAnimationTrack: Codable {
         }
     }
     
-    public func setBool(_ value: Bool, at frame: Int) throws {
-        if frame < 0 {
-            throw AssetAnimationTrackError.invalidFrame
-        }
-        
+    public func setBool(_ value: Bool, at frame: UInt) throws {
         if let key = getKey(at: frame) {
             key.set(boolValue: value)
         }
@@ -134,11 +130,7 @@ public final class AssetAnimationTrack: Codable {
         }
     }
     
-    public func setFloat(_ value: Float, at frame: Int) throws {
-        if frame < 0 {
-            throw AssetAnimationTrackError.invalidFrame
-        }
-        
+    public func setFloat(_ value: Float, at frame: UInt) throws {
         if let key = getKey(at: frame) {
             key.set(floatValue: value)
         }
@@ -148,11 +140,7 @@ public final class AssetAnimationTrack: Codable {
         }
     }
     
-    public func setColor(_ color: CGColor, at frame: Int) throws {
-        if frame < 0 {
-            throw AssetAnimationTrackError.invalidFrame
-        }
-        
+    public func setColor(_ color: CGColor, at frame: UInt) throws {
         if let key = getKey(at: frame) {
             key.set(colorValue: color)
         }
@@ -162,11 +150,7 @@ public final class AssetAnimationTrack: Codable {
         }
     }
     
-    public func setString(_ value: String, at frame: Int) throws {
-        if frame < 0 {
-            throw AssetAnimationTrackError.invalidFrame
-        }
-        
+    public func setString(_ value: String, at frame: UInt) throws {
         if let key = getKey(at: frame) {
             key.set(stringValue: value)
         }
@@ -187,7 +171,7 @@ public final class AssetAnimationTrack: Codable {
         }
     }
     
-    public func toSKAction(with expectedDuration: TimeInterval, for element: TransformAssetElement) -> SKAction? {
+    public func toSKAction(with expectedDuration: TimeInterval, for elementInstance: TransformAssetElementInstance) -> SKAction? {
         guard
             let firstKey,
             let lastKey,
@@ -196,21 +180,29 @@ public final class AssetAnimationTrack: Codable {
             return nil
         }
         
+        let firstKeyTime = firstKey.time
+        if firstKeyTime >= expectedDuration {
+            return nil
+        }
+        
         var sequence = [SKAction]()
         
         if firstKey.frame > 0 {
-            sequence.append(SKAction.wait(forDuration: Self.frameTime * Double(firstKey.frame)))
+            sequence.append(SKAction.wait(forDuration: firstKeyTime))
         }
         
+        var previousKeyTime = firstKeyTime
         for i in 1..<keys.count {
             let key = keys[i]
+            let keyTime = key.time
             let previousKey = keys[i - 1]
-            let frameDiff = key.frame - previousKey.frame
-            let duration = Self.frameTime * Double(frameDiff)
             
-            if let actions = element.buildSKActions(for: self, from: previousKey, to: key, duration: duration) {
+            let duration = keyTime > expectedDuration ? (expectedDuration - previousKeyTime) : (keyTime - previousKeyTime)
+            if let actions = elementInstance.buildSKActions(for: self, from: previousKey, to: key, duration: duration) {
                 sequence.append(contentsOf: actions)
             }
+            
+            previousKeyTime = keyTime
         }
         
         var durationSum: TimeInterval = 0

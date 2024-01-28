@@ -9,7 +9,7 @@ open class GameView: LitSceneView {
     
     public var lightingEnabled: Bool = true
     
-    open override var ambientLightColorRGB: vector_float3 {
+    open override var ambientLightColorRGB: SIMD3<Float> {
         lightingEnabled ? map.ambientLight.vector : super.ambientLightColorRGB
     }
     
@@ -73,8 +73,8 @@ open class GameView: LitSceneView {
     }
     
     open override func computePositionMatrix() -> matrix_float3x3 {
-        var minVector = vector_float3(Float.infinity, Float.infinity, 0)
-        var maxVector = vector_float3(-Float.infinity, -Float.infinity, 0)
+        var minVector = SIMD3(Float.infinity, Float.infinity, 0)
+        var maxVector = SIMD3(-Float.infinity, -Float.infinity, 0)
         
         for region in map.regions {
             let area = region.regionDescription.area
@@ -87,7 +87,7 @@ open class GameView: LitSceneView {
             maxVector.z = max(maxVector.z, Float(region.regionDescription.elevation + 1) * Float(0.25))
         }
         
-        return matrix_float3x3(minVector, maxVector, vector_float3())
+        return matrix_float3x3(minVector, maxVector, SIMD3())
     }
     
     open func loadMap(file: URL) {

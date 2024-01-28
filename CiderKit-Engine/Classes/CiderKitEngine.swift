@@ -72,7 +72,7 @@ public class CiderKitEngine {
                 SKUniform(name: ShaderUniformName.positionTexture.rawValue, texture: clearTexture),
                 SKUniform(name: ShaderUniformName.frameInViewSpace.rawValue, matrixFloat2x2: matrix_float2x2()),
                 SKUniform(name: ShaderUniformName.positionRanges.rawValue, matrixFloat3x3: matrix_float3x3()),
-                SKUniform(name: ShaderUniformName.ambientLight.rawValue, vectorFloat3: vector_float3(1, 1, 1)),
+                SKUniform(name: ShaderUniformName.ambientLight.rawValue, vectorFloat3: SIMD3(1, 1, 1)),
                 SKUniform(name: ShaderUniformName.light0.rawValue, matrixFloat3x3: matrix_float3x3()),
                 SKUniform(name: ShaderUniformName.light1.rawValue, matrixFloat3x3: matrix_float3x3()),
                 SKUniform(name: ShaderUniformName.light2.rawValue, matrixFloat3x3: matrix_float3x3()),

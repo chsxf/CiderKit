@@ -139,7 +139,7 @@ public class SpriteAssetElement : TransformAssetElement {
             case .zVolumeSize:
                 return volumeSize.z
             case .sprite:
-                return spriteLocator
+                return spriteLocator?.description
             case .xAnchorPoint:
                 return anchorPoint.x
             case .yAnchorPoint:
@@ -213,128 +213,6 @@ public class SpriteAssetElement : TransformAssetElement {
             spriteNode.texture = CiderKitEngine.clearTexture
             spriteNode.shader = nil
         }
-    }
-    
-    public override func buildSKActions(for track: AssetAnimationTrack, from key1: AssetAnimationKey, to key2: AssetAnimationKey, duration: TimeInterval) -> [SKAction]? {
-        let adjustedDuration = key1 === track.firstKey ? duration : (duration - AssetAnimationTrack.frameTime)
-        
-        switch track.type {
-        case .color:
-            let endColor = key2.colorValue!
-            if key1.maintainValue {
-                return [
-                    SKAction.wait(forDuration: adjustedDuration),
-                    SKAction.customAction(withDuration: AssetAnimationTrack.frameTime, actionBlock: { node, _ in
-                        if let sprite = node as? SKSpriteNode {
-                            sprite.color = SKColorFromCGColor(endColor)
-                        }
-                    })
-                ]
-            }
-            else {
-                let startColor = key1.colorValue!
-                let action = SKAction.customAction(withDuration: duration) { node, elapsedTime in
-                    if let sprite = node as? SKSpriteNode {
-                        let ratio = Float(elapsedTime / duration)
-                        sprite.color = SKColorFromCGColor(CGColor.interpolateRGB(from: startColor, to: endColor, t: ratio)!)
-                    }
-                }
-                action.setupTimingFunction(key1.timingInterpolation)
-                return [ action ]
-            }
-
-        case .colorBlendFactor:
-            if key1.maintainValue {
-                return [
-                    SKAction.wait(forDuration: adjustedDuration),
-                    SKAction.customAction(withDuration: AssetAnimationTrack.frameTime, actionBlock: { node, _ in
-                        if let sprite = node as? SKSpriteNode {
-                            sprite.colorBlendFactor = CGFloat(key2.floatValue!)
-                        }
-                    })
-                ]
-            }
-            else {
-                let action = SKAction.colorize(withColorBlendFactor: CGFloat(key2.floatValue!), duration: duration)
-                action.setupTimingFunction(key1.timingInterpolation)
-                return [ action ]
-            }
-
-        case .sprite:
-            var sequence = [SKAction]()
-            sequence.append(SKAction.wait(forDuration: adjustedDuration))
-            if let spriteLocator = SpriteLocator(description: key2.stringValue!) {
-                sequence.append(SKAction.customAction(withDuration: AssetAnimationTrack.frameTime, actionBlock: { node, _ in
-                    if let sprite = node as? SKSpriteNode {
-                        node.alpha = 1
-                        sprite.texture = Atlases[spriteLocator]!
-                    }
-                }))
-            }
-            else {
-                sequence.append(SKAction.customAction(withDuration: AssetAnimationTrack.frameTime, actionBlock: { node, _ in
-                    if let _ = node as? SKSpriteNode {
-                        node.alpha = 0
-                    }
-                }))
-            }
-            return sequence
-            
-        default:
-            return nil
-        }
-    }
-    
-    public override func buildSKActions(with combinedTracks: [AssetAnimationTrackType : AssetAnimationTrack], expectedDuration: TimeInterval) -> [SKAction] {
-        var actions = super.buildSKActions(with: combinedTracks, expectedDuration: expectedDuration)
-        
-        let xAnchorPoint = combinedTracks[.xAnchorPoint]
-        let yAnchorPoint = combinedTracks[.yAnchorPoint]
-        if xAnchorPoint != nil || yAnchorPoint != nil {
-            actions.append(SKAction.customAction(withDuration: expectedDuration) { node, elapsedTime in
-                guard let spriteNode = node as? SKSpriteNode else { return }
-                
-                let frame = Int((elapsedTime / AssetAnimationTrack.frameTime).rounded(.towardZero))
-                
-                let x = (xAnchorPoint?.getValue(at: frame) ?? Float(self.anchorPoint.x)) as! Float
-                let y = (yAnchorPoint?.getValue(at: frame) ?? Float(self.anchorPoint.y)) as! Float
-                
-                spriteNode.anchorPoint = CGPoint(x: CGFloat(x), y: CGFloat(y))
-            })
-        }
-
-        let xVolumeOffset = combinedTracks[.xVolumeOffset]
-        let yVolumeOffset = combinedTracks[.yVolumeOffset]
-        let zVolumeOffset = combinedTracks[.zVolumeOffset]
-        let xVolumeSize = combinedTracks[.xVolumeSize]
-        let yVolumeSize = combinedTracks[.yVolumeSize]
-        let zVolumeSize = combinedTracks[.zVolumeSize]
-        if xVolumeOffset != nil || yVolumeOffset != nil || zVolumeOffset != nil || xVolumeSize != nil || yVolumeSize != nil || zVolumeSize != nil {
-            actions.append(SKAction.customAction(withDuration: expectedDuration) { node, elapsedTime in
-                guard let spriteNode = node as? SKSpriteNode else { return }
-                
-                let frame = Int((elapsedTime / AssetAnimationTrack.frameTime).rounded(.towardZero))
-                
-                let volumeOffset = SIMD3(
-                    (xVolumeOffset?.getValue(at: frame) ?? self.volumeOffset.x) as! Float,
-                    (yVolumeOffset?.getValue(at: frame) ?? self.volumeOffset.y) as! Float,
-                    (zVolumeOffset?.getValue(at: frame) ?? self.volumeOffset.z) as! Float
-                )
-                
-                let volumeSize = SIMD3(
-                    (xVolumeSize?.getValue(at: frame) ?? self.volumeSize.x) as! Float,
-                    (yVolumeSize?.getValue(at: frame) ?? self.volumeSize.y) as! Float,
-                    ((zVolumeSize?.getValue(at: frame) ?? self.volumeSize.z) as! Float) * 0.25
-                )
-                
-                spriteNode.attributeValues = [
-                    CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: self.absoluteOffset + volumeOffset),
-                    CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: volumeSize)
-                ]
-            })
-        }
-        
-        return actions
     }
     
     public override func instantiate() -> TransformAssetElementInstance {

@@ -16,7 +16,11 @@ class AssetAnimationTracksHeaderView: NSTableHeaderView {
     private let removeStateButton: NSButton
     private let stateList: NSPopUpButton
     
-    private let assetDescription: AssetDescription
+    public var assetDescription: AssetDescription {
+        didSet {
+            updateStateList()
+        }
+    }
     
     init(frame: NSRect, asset: AssetDescription, animationState: String?) {
         assetDescription = asset

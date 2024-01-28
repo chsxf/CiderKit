@@ -8,7 +8,7 @@ public class PointLight: BaseLight {
         public var far: Float
         public var exponent: Float
         
-        var vector: vector_float3 { vector_float3(near, far, exponent) }
+        var vector: SIMD3<Float> { SIMD3(near, far, exponent) }
 
         public init(near: Float, far: Float, exponent: Float) {
             self.near = near
@@ -19,7 +19,7 @@ public class PointLight: BaseLight {
 
     @Published public var enabled: Bool
     @Published public var name: String
-    @Published public var position: vector_float3
+    @Published public var position: SIMD3<Float>
     @Published public var falloff: Falloff
  
     var matrix: matrix_float3x3 {
@@ -28,11 +28,11 @@ public class PointLight: BaseLight {
             if !enabled {
                 falloffVector.y = 0
             }
-            return matrix_float3x3([position * vector_float3(1, 1, 0.25), vector, falloffVector])
+            return matrix_float3x3([position * SIMD3(1, 1, 0.25), vector, falloffVector])
         }
     }
     
-    public init(name: String, color: CGColor, position: vector_float3, falloff: Falloff) {
+    public init(name: String, color: CGColor, position: SIMD3<Float>, falloff: Falloff) {
         enabled = true
         self.name = name
         self.position = position
@@ -49,7 +49,7 @@ public class PointLight: BaseLight {
         let x = (try? container.decode(Float.self, forKey: .positionX)) ?? 0
         let y = (try? container.decode(Float.self, forKey: .positionY)) ?? 0
         let z = ((try? container.decode(Float.self, forKey: .elevation)) ?? 0)
-        position = vector_float3(x, y, z)
+        position = SIMD3(x, y, z)
         
         let near = (try? container.decode(Float.self, forKey: .falloffNear)) ?? 0
         let far = (try? container.decode(Float.self, forKey: .falloffFar)) ?? 1

@@ -84,7 +84,7 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
         animationStates[stateName]?.hasAnimationTrack(type, for: elementUUID) ?? false
     }
     
-    public func getAnimationKey(trackType: AssetAnimationTrackType, for elementUUID: UUID, in stateName: String, at frame: Int) -> AssetAnimationKey? {
+    public func getAnimationKey(trackType: AssetAnimationTrackType, for elementUUID: UUID, in stateName: String, at frame: UInt) -> AssetAnimationKey? {
         guard let animationState = animationStates[stateName] else { return nil }
         
         let trackIdentifier = AssetAnimationTrackIdentifier(elementUUID: elementUUID, type: trackType)
@@ -102,12 +102,12 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
         return false
     }
     
-    public func getAnimationSnapshot(for elementUUID: UUID, in stateName: String? = nil, at frame: Int = 0) -> AssetElementAnimationSnapshot {
+    public func getAnimationSnapshot(for elementUUID: UUID, in stateName: String?, at frame: UInt) -> AssetElementAnimationSnapshot {
         let element = getElement(uuid: elementUUID)!
         return getAnimationSnapshot(for: element, in: stateName, at: frame)
     }
     
-    public func getAnimationSnapshot(for element: TransformAssetElement, in stateName: String? = nil, at frame: Int = 0) -> AssetElementAnimationSnapshot {
+    public func getAnimationSnapshot(for element: TransformAssetElement, in stateName: String?, at frame: UInt) -> AssetElementAnimationSnapshot {
         var animatedValues = [AssetAnimationTrackType: Any]()
         
         if let stateName, let animationState = animationStates[stateName] {
@@ -119,55 +119,6 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
         }
         
         return AssetElementAnimationSnapshot(frame: frame, element: element, animatedValues: animatedValues)
-    }
-    
-    public func getSKActionsByElement(in stateName: String) -> [TransformAssetElement:SKAction]? {
-        guard let animationData = animationStates[stateName] else { return nil }
-
-        var maxDuration: TimeInterval = 0
-        var elements = Set<TransformAssetElement>()
-        for (identifier, track) in animationData.animationTracks {
-            if track.hasAnyKey {
-                elements.insert(getElement(uuid: identifier.elementUUID)!)
-                if track.duration > maxDuration {
-                    maxDuration = track.duration
-                }
-            }
-        }
-        
-        var result = [TransformAssetElement:SKAction]()
-        for element in elements {
-            if let elementActions = getSKAction(for: element, in: stateName, with: maxDuration) {
-                result[element] = elementActions
-            }
-        }
-        return result.isEmpty ? nil : result
-    }
-    
-    public func getSKAction(for element: TransformAssetElement, in stateName: String, with expectedDuration: TimeInterval) -> SKAction? {
-        guard let animationState = animationStates[stateName] else { return nil }
-
-        var combinedTracks = [AssetAnimationTrackType: AssetAnimationTrack]()
-                
-        var actions = [SKAction]()
-        for (identifier, track) in animationState.animationTracks {
-            if identifier.elementUUID == element.uuid {
-                if element.combinedTrackTypes.contains(identifier.trackType) {
-                    combinedTracks[identifier.trackType] = track
-                }
-                else {
-                    if let trackAction = track.toSKAction(with: expectedDuration, for: element) {
-                        actions.append(trackAction)
-                    }
-                }
-            }
-        }
-        
-        if !combinedTracks.isEmpty {
-            actions.append(contentsOf: element.buildSKActions(with: combinedTracks, expectedDuration: expectedDuration))
-        }
-        
-        return actions.isEmpty ? nil : SKAction.group(actions)
     }
     
     public final func canAddAsset(_ locator: AssetLocator) -> Bool {

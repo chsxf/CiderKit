@@ -93,7 +93,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
             return
         }
         
-        let animationSnapshot = snapshot ?? assetDescription.getAnimationSnapshot(for: element.uuid, in: animationControlDelegate.currentAnimationState, at: animationControlDelegate.currentAnimationFrame)
+        let animationSnapshot = snapshot ?? assetDescription.getAnimationSnapshot(for: element.uuid, in: animationControlDelegate.currentAnimationStateName, at: animationControlDelegate.currentAnimationFrame)
         super.updateForCurrentElement(snapshot: animationSnapshot)
         
         if !element.isRoot {
@@ -105,7 +105,10 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
             ySizeField.value = animationSnapshot.get(trackType: .yVolumeSize)
             zSizeField.value = animationSnapshot.get(trackType: .zVolumeSize)
             
-            if let spriteLocator: SpriteLocator = animationSnapshot.get(trackType: .sprite) {
+            if
+                let spriteLocatorDescription: String = animationSnapshot.get(trackType: .sprite),
+                let spriteLocator: SpriteLocator = SpriteLocator(description: spriteLocatorDescription)
+            {
                 spriteField.stringValue = spriteLocator.description
                 removeSpriteButton.isEnabled = true;
             }
@@ -142,7 +145,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                     else {
                         spriteElement.spriteLocator = locator
                     }
-                    elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+                    elementViewDelegate.updateElement(element: spriteElement)
                 }
             }
         }
@@ -160,7 +163,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
             else {
                 spriteElement.spriteLocator = nil
             }
-            elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+            elementViewDelegate.updateElement(element: spriteElement)
         }
     }
     
@@ -172,7 +175,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
             else {
                 spriteElement.color = color
             }
-            elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+            elementViewDelegate.updateElement(element: spriteElement)
         }
     }
     
@@ -184,7 +187,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
             else {
                 spriteElement.colorBlend = newValue
             }
-            elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+            elementViewDelegate.updateElement(element: spriteElement)
         }
     }
     
@@ -198,7 +201,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeOffset.x = xOffsetField.value
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+                elementViewDelegate.updateElement(element: spriteElement)
             }
             
         case yOffsetField:
@@ -209,7 +212,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeOffset.y = yOffsetField.value
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+                elementViewDelegate.updateElement(element: spriteElement)
             }
             
         case zOffsetField:
@@ -220,7 +223,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeOffset.z = zOffsetField.value
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+                elementViewDelegate.updateElement(element: spriteElement)
             }
             
         case xSizeField:
@@ -231,7 +234,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeSize.x = xSizeField.value
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+                elementViewDelegate.updateElement(element: spriteElement)
             }
             
         case ySizeField:
@@ -242,7 +245,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeSize.y = ySizeField.value
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+                elementViewDelegate.updateElement(element: spriteElement)
             }
             
         case zSizeField:
@@ -253,7 +256,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeSize.z = zSizeField.value
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+                elementViewDelegate.updateElement(element: spriteElement)
             }
             
         case xAnchorField:
@@ -264,7 +267,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.anchorPoint.x = CGFloat(xAnchorField.value)
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+                elementViewDelegate.updateElement(element: spriteElement)
             }
             
         case yAnchorField:
@@ -275,7 +278,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.anchorPoint.y = CGFloat(yAnchorField.value)
                 }
-                elementViewDelegate.updateElementForCurrentFrame(element: spriteElement)
+                elementViewDelegate.updateElement(element: spriteElement)
             }
             
         default:

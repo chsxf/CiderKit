@@ -21,7 +21,7 @@ public final class AssetAnimationKey: Codable {
         case components = "cmp"
     }
     
-    public var frame: Int
+    public var frame: UInt
     
     public private(set) var boolValue: Bool? = nil
     public private(set) var floatValue: Float? = nil
@@ -31,22 +31,24 @@ public final class AssetAnimationKey: Codable {
     public var maintainValue: Bool = false
     public var timingInterpolation: SKActionTimingMode = .linear
     
-    public init(frame: Int, boolValue: Bool) {
+    public var time: TimeInterval { AssetAnimationTrack.frameTime * Double(frame) }
+    
+    public init(frame: UInt, boolValue: Bool) {
         self.frame = frame
         self.boolValue = boolValue
     }
     
-    public init(frame: Int, floatValue: Float) {
+    public init(frame: UInt, floatValue: Float) {
         self.frame = frame
         self.floatValue = floatValue
     }
     
-    public init(frame: Int, colorValue: CGColor) {
+    public init(frame: UInt, colorValue: CGColor) {
         self.frame = frame
         self.colorValue = colorValue
     }
     
-    public init(frame: Int, stringValue: String) {
+    public init(frame: UInt, stringValue: String) {
         self.frame = frame
         self.stringValue = stringValue
     }
@@ -82,7 +84,7 @@ public final class AssetAnimationKey: Codable {
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        frame = try container.decode(Int.self, forKey: .frame)
+        frame = try container.decode(UInt.self, forKey: .frame)
         maintainValue = try container.decode(Bool.self, forKey: .maintainValue)
         timingInterpolation = SKActionTimingMode(rawValue: try container.decode(Int.self, forKey: .timingInterpolation))!
         
@@ -140,7 +142,7 @@ public final class AssetAnimationKey: Codable {
         }
     }
 
-    class func getInterpolatedValue(at frame: Int, from firstKey: AssetAnimationKey?, to secondKey: AssetAnimationKey?) -> Any? {
+    class func getInterpolatedValue(at frame: UInt, from firstKey: AssetAnimationKey?, to secondKey: AssetAnimationKey?) -> Any? {
         let firstKeyMaintainsValue = firstKey?.maintainValue ?? false
         
         if firstKey == nil {
@@ -150,39 +152,48 @@ public final class AssetAnimationKey: Codable {
             return firstKey?.boolValue ?? firstKey?.colorValue ?? firstKey?.stringValue ?? firstKey?.floatValue
         }
         else {
-            if let firstKey = firstKey, let secondKey = secondKey {
-                if let firstKeyBoolValue = firstKey.boolValue {
-                    return firstKeyBoolValue
-                }
-                
-                if let firstKeyStringValue = firstKey.stringValue {
-                    return firstKeyStringValue
-                }
-                
-                var interpolationRatio = Float(frame - firstKey.frame) / Float(secondKey.frame - firstKey.frame)
-                switch firstKey.timingInterpolation {
-                case .linear:
-                    interpolationRatio = linearInterpolationFunction(time: interpolationRatio)
-                case .easeIn:
-                    interpolationRatio = easeInInterpolationFunction(time: interpolationRatio)
-                case .easeOut:
-                    interpolationRatio = easeOutInterpolationFunction(time: interpolationRatio)
-                case .easeInEaseOut:
-                    interpolationRatio = easeInEaseOutInterpolationFunction(time: interpolationRatio)
-                @unknown default:
-                    break
-                }
-
-                if let firstValue = firstKey.colorValue, let secondValue = secondKey.colorValue {
-                    return CGColor.interpolateRGB(from: firstValue, to: secondValue, t: interpolationRatio)
-                }
-                
-                if let firstValue = firstKey.floatValue, let secondValue = secondKey.floatValue {
-                    return simd_mix(firstValue, secondValue, interpolationRatio)
-                }
+            if let firstKey, let secondKey {
+                let interpolationRatio = Float(frame - firstKey.frame) / Float(secondKey.frame - firstKey.frame)
+                return Self.getInterpolatedValue(ratio: interpolationRatio, from: firstKey, to: secondKey)
             }
             return nil
         }
+    }
+    
+    class func getInterpolatedValue(ratio: Float, from firstKey: AssetAnimationKey, to secondKey: AssetAnimationKey) -> Any? {
+        guard ratio >= 0 && ratio <= 1 else { return nil }
+        
+        if let firstKeyBoolValue = firstKey.boolValue {
+            return firstKeyBoolValue
+        }
+        
+        if let firstKeyStringValue = firstKey.stringValue {
+            return firstKeyStringValue
+        }
+        
+        var interpolationRatio = ratio
+        switch firstKey.timingInterpolation {
+        case .linear:
+            interpolationRatio = linearInterpolationFunction(time: interpolationRatio)
+        case .easeIn:
+            interpolationRatio = easeInInterpolationFunction(time: interpolationRatio)
+        case .easeOut:
+            interpolationRatio = easeOutInterpolationFunction(time: interpolationRatio)
+        case .easeInEaseOut:
+            interpolationRatio = easeInEaseOutInterpolationFunction(time: interpolationRatio)
+        @unknown default:
+            break
+        }
+
+        if let firstValue = firstKey.colorValue, let secondValue = secondKey.colorValue {
+            return CGColor.interpolateRGB(from: firstValue, to: secondValue, t: interpolationRatio)
+        }
+        
+        if let firstValue = firstKey.floatValue, let secondValue = secondKey.floatValue {
+            return simd_mix(firstValue, secondValue, interpolationRatio)
+        }
+        
+        return nil
     }
     
     public class func linearInterpolationFunction(time: Float) -> Float { time }

@@ -3,6 +3,7 @@ import SpriteKit
 extension AssetElementCodingKeys {
     
     static let reference = Self.init(stringValue: "ref")!
+    static let animationStateName = Self.init(stringValue: "asn")!
     
 }
 
@@ -16,10 +17,13 @@ public class ReferenceAssetElement : TransformAssetElement {
     
     public var assetLocator: AssetLocator?
     
+    public var animationStateName: String?
+    
     public required init(name: String) {
         super.init(name: name)
         
         assetLocator = nil
+        animationStateName = nil
     }
     
     public required convenience init(from decoder: Decoder) throws {
@@ -31,6 +35,7 @@ public class ReferenceAssetElement : TransformAssetElement {
         try super.init(from: container)
         
         assetLocator = try container.decodeIfPresent(AssetLocator.self, forKey: .reference)
+        animationStateName = try container.decodeIfPresent(String.self, forKey: .animationStateName)
     }
     
     public override func encode(to container: inout KeyedEncodingContainer<AssetElementCodingKeys>) throws {
@@ -38,6 +43,10 @@ public class ReferenceAssetElement : TransformAssetElement {
         
         if let assetLocator {
             try container.encode(assetLocator, forKey: .reference)
+        }
+        
+        if let animationStateName {
+            try container.encode(animationStateName, forKey: .animationStateName)
         }
     }
     

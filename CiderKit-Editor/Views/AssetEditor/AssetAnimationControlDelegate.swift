@@ -11,14 +11,14 @@ extension Notification.Name {
 
 protocol AssetAnimationControlDelegate: AnyObject {
 
-    var currentAnimationFrame: Int { get }
-    var currentAnimationState: String? { get }
+    var currentAnimationFrame: UInt { get }
+    var currentAnimationStateName: String? { get }
     var currentAnimationTrackIdentifier: AssetAnimationTrackIdentifier? { get }
     var currentAnimationTrack: AssetAnimationTrack? { get }
     var isPlaying: Bool { get }
-    var currentAnimationStateFrameCount: Int { get }
+    var currentAnimationStateFrameCount: UInt { get }
     
-    func animationGoToFrame(_ sender: Any, frame: Int)
+    func animationGoToFrame(_ sender: Any, frame: UInt)
     func animationChangeTrack(_ sender: Any, trackIdentifier: AssetAnimationTrackIdentifier?)
     func animationChangeState(_ sender: Any, stateName: String?)
     

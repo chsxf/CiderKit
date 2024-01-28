@@ -17,7 +17,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
     
     private var nameField: NSTextField? = nil
     
-    private weak var selectedAssetElement: TransformAssetElement? = nil {
+    public private(set) weak var selectedAssetElement: TransformAssetElement? = nil {
         didSet {
             if oldValue?.type != selectedAssetElement?.type {
                 if let existingElementView = elementView {
@@ -285,7 +285,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         let row = outline!.row(forItem: parent)
         outline!.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
         
-        assetInstance!.removeElement(element: item)
+        assetInstance!.remove(element: item)
         
         if let assetDescription {
             for (_, state) in assetDescription.animationStates {
@@ -299,16 +299,16 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         guard
             let animationView,
             let assetDescription,
-            let stateName = animationView.currentAnimationState
+            let stateName = animationView.currentAnimationStateName
         else {
             return nil
         }
         return assetDescription.getAnimationKey(trackType: trackType, for: elementUUID, in: stateName, at: animationView.currentAnimationFrame)
     }
     
-    public func updateElementForCurrentFrame(element: TransformAssetElement) {
+    public func updateElement(element: TransformAssetElement) {
         if let skView {
-            skView.updateElementNodeForCurrentFrame(element, applyDefaults: true)
+            skView.updateElement(element)
             skView.showBoundingBox(for: element)
         }
     }
@@ -369,7 +369,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         if assetDescription.rootElement.children.isEmpty {
             menu.addItem(withTitle: "No animatable element", action: nil, keyEquivalent: "")
         }
-        else if animationView?.currentAnimationState == nil {
+        else if animationView?.currentAnimationStateName == nil {
             menu.addItem(withTitle: "No selected animation state", action: nil, keyEquivalent: "")
         }
         else {
@@ -394,7 +394,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         
         for track in element.eligibleTrackTypes {
             let menuItem = NSMenuItem(title: track.displayName, action: nil, keyEquivalent: "")
-            let animationState = animationView!.currentAnimationState!
+            let animationState = animationView!.currentAnimationStateName!
             if !assetDescription!.hasAnimationTrack(track, for: element.uuid, in: animationState) {
                 menuItem.representedObject = AssetAnimationTrackIdentifier(elementUUID: element.uuid, type: track)
                 menuItem.target = self
@@ -410,7 +410,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
     @objc
     private func addTrack(_ sender: NSMenuItem) {
         if let identifier = sender.representedObject as? AssetAnimationTrackIdentifier {
-            let animationState = animationView!.currentAnimationState!
+            let animationState = animationView!.currentAnimationStateName!
             assetDescription!.animationStates[animationState]!.animationTracks[identifier] = AssetAnimationTrack(type: identifier.trackType)
             animationView!.reloadCurrentState()
         }

@@ -6,6 +6,7 @@ public class ReferenceAssetElementView : TransformAssetElementView {
     private let referenceField: NSTextField
     private let selectReferenceButton: NSButton
     private let removeReferenceButton: NSButton
+    private let animationStateNameCombo: NSPopUpButton
     
     required init(assetDescription: AssetDescription, element: TransformAssetElement) {
         referenceField = NSTextField(string: "None")
@@ -13,11 +14,13 @@ public class ReferenceAssetElementView : TransformAssetElementView {
         referenceField.isBezeled = true
         selectReferenceButton = NSButton(title: "Select asset...", target: nil, action: #selector(Self.selectAsset))
         removeReferenceButton = NSButton(title: "Remove", target: nil, action: #selector(Self.removeAsset))
+        animationStateNameCombo = NSPopUpButton(title: "", target: nil, action: #selector(Self.animationStateNameChanged(_:)))
         
         super.init(assetDescription: assetDescription, element: element)
         
         selectReferenceButton.target = self
         removeReferenceButton.target = self
+        animationStateNameCombo.target = self
     }
     
     required init?(coder: NSCoder) {
@@ -31,7 +34,8 @@ public class ReferenceAssetElementView : TransformAssetElementView {
         buttonRow.orientation = .horizontal
         
         additionalViews.append(contentsOf: [
-            VSpacer(), InspectorHeader(title: "Reference"), referenceField, buttonRow
+            VSpacer(), InspectorHeader(title: "Reference"), referenceField, buttonRow,
+            VSpacer(), InspectorHeader(title: "Animation State"), animationStateNameCombo
         ])
         
         return additionalViews
@@ -43,17 +47,39 @@ public class ReferenceAssetElementView : TransformAssetElementView {
             return
         }
         
-        let animationSnapshot = snapshot ?? assetDescription.getAnimationSnapshot(for: referenceElement.uuid, in: animationControlDelegate.currentAnimationState, at: animationControlDelegate.currentAnimationFrame)
+        let animationSnapshot = snapshot ?? assetDescription.getAnimationSnapshot(for: referenceElement.uuid, in: animationControlDelegate.currentAnimationStateName, at: animationControlDelegate.currentAnimationFrame)
         super.updateForCurrentElement(snapshot: animationSnapshot)
         
         if !referenceElement.isRoot {
+            animationStateNameCombo.removeAllItems()
+
             if let assetLocator = referenceElement.assetLocator {
                 referenceField.stringValue = assetLocator.humanReadableDescription
                 removeReferenceButton.isEnabled = true;
+                
+                if let assetDescription = assetLocator.assetDescription {
+                    var animationStateNames = [String](assetDescription.animationStates.keys)
+                    animationStateNames.sort()
+                    
+                    animationStateNameCombo.addItems(withTitles: animationStateNames)
+                    if animationStateNameCombo.numberOfItems > 0 {
+                        if let referencedAnimationStateName = referenceElement.animationStateName {
+                            animationStateNameCombo.selectItem(withTitle: referencedAnimationStateName)
+                        }
+                        animationStateNameCombo.isEnabled = true
+                    }
+                    else {
+                        animationStateNameCombo.isEnabled = false
+                    }
+                }
+                else {
+                    animationStateNameCombo.isEnabled = false
+                }
             }
             else {
                 referenceField.stringValue = "None"
                 removeReferenceButton.isEnabled = false
+                animationStateNameCombo.isEnabled = false
             }
         }
     }
@@ -84,7 +110,7 @@ public class ReferenceAssetElementView : TransformAssetElementView {
                     self.referenceField.stringValue = locator.humanReadableDescription
                     self.removeReferenceButton.isEnabled = true
                     referenceElement.assetLocator = locator
-                    elementViewDelegate.updateElementForCurrentFrame(element: referenceElement)
+                    elementViewDelegate.updateElement(element: referenceElement)
                 }
             }
         }
@@ -97,8 +123,20 @@ public class ReferenceAssetElementView : TransformAssetElementView {
             removeReferenceButton.isEnabled = false
             
             referenceElement.assetLocator = nil
-            elementViewDelegate.updateElementForCurrentFrame(element: referenceElement)
+            referenceElement.animationStateName = nil
+            elementViewDelegate.updateElement(element: referenceElement)
         }
+    }
+    
+    @objc
+    private func animationStateNameChanged(_ sender: NSPopUpButton) {
+        guard
+            let referenceElement = element as? ReferenceAssetElement,
+            let selectedAnimationStateName = sender.titleOfSelectedItem
+        else { return }
+        
+        referenceElement.animationStateName = selectedAnimationStateName
+        updateElement()
     }
     
 }

@@ -98,7 +98,7 @@ class AssetAnimationDopeSheetHeaderView: NSTableHeaderView {
         point = convert(point, from: nil)
         
         if frame.contains(point) {
-            let frameFromPoint = Int(point.x / Self.frameWidth)
+            let frameFromPoint = UInt(point.x / Self.frameWidth)
             animationControlDelegate.animationGoToFrame(self, frame: frameFromPoint)
         }
     }

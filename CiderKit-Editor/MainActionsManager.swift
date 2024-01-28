@@ -52,7 +52,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     
     @objc
     func addLight() {
-        gameView?.add(light: PointLight(name: "New Light", color: CGColor.white, position: vector_float3(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
+        gameView?.add(light: PointLight(name: "New Light", color: CGColor.white, position: SIMD3(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
     }
     
     @objc

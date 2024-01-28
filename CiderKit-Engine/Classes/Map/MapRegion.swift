@@ -81,8 +81,8 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     
                     let z = zForShader - Float(i + 1) * Float(0.25)
                     sprite.attributeValues = [
-                        CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)),
-                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: vector_float3(1, 1, 0.25))
+                        CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), z)),
+                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 0.25))
                     ]
                     
                     localLeftElevationMaterialOverride = regionDescription.leftElevationMaterialOverride(at: indexInRegion)
@@ -107,8 +107,8 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     
                     let z = zForShader - Float(i + 1) * Float(0.25)
                     sprite.attributeValues = [
-                        CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), z)),
-                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: vector_float3(1, 1, 0.25))
+                        CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), z)),
+                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 0.25))
                     ]
                     
                     localRightElevationMaterialOverride = regionDescription.rightElevationMaterialOverride(at: indexInRegion)
@@ -129,8 +129,8 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 groundMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localGroundMaterialOverride)
                 
                 sprite.attributeValues = [
-                    CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: vector_float3(Float(mapX), Float(mapY), zForShader)),
-                    CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: vector_float3(1, 1, 0))
+                    CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), zForShader)),
+                    CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 0))
                 ]
                 
                 addChild(sprite)

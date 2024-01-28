@@ -3,6 +3,8 @@ import CiderKit_Engine
 
 protocol AssetDescriptionSceneViewDelegate: AnyObject {
     
+    var selectedAssetElement: TransformAssetElement? { get }
+    
     func descriptionSceneView(_ view: AssetDescriptionSceneView, zoomUpdated newZoomFactor: Int)
     
 }
@@ -77,12 +79,13 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
                 NotificationCenter.default.addObserver(self, selector: #selector(Self.playStatusDidChange(_:)), name: .animationPlayingDidChange, object: animationControlDelegate)
 
                 updateCurrentFrameIndicator()
-                updateNodesForCurrentFrame(applyDefaults: true)
+                assetInstance.currentAnimationStateName = animationControlDelegate.currentAnimationStateName
+                assetInstance.currentFrame = animationControlDelegate.currentAnimationFrame
             }
         }
     }
     
-    override var ambientLightColorRGB: vector_float3 { lightingEnabled ? vector_float3() : super.ambientLightColorRGB }
+    override var ambientLightColorRGB: SIMD3<Float> { lightingEnabled ? SIMD3() : super.ambientLightColorRGB }
     
     override var preferredSceneWidth: Int { Self.defaultSize }
     override var preferredSceneHeight: Int { Self.defaultSize }
@@ -281,8 +284,8 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     private func previewWithSKActions() {
         guard
             let animationControlDelegate,
-            let stateName = animationControlDelegate.currentAnimationState,
-            let skactionsByElement = assetDescription.getSKActionsByElement(in: stateName)
+            let stateName = animationControlDelegate.currentAnimationStateName,
+            let skactionsByElement = assetInstance.getSKActionsByElement(in: stateName)
         else { return }
         
         if animationControlDelegate.isPlaying {
@@ -297,9 +300,11 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         playStopButton.isEnabled = true
         isPreviewingSKActions = true
         
+        hideBoundingBox()
+        
         for (element, action) in skactionsByElement {
             let initialUpdateAction = SKAction.run {
-                self.updateElementNode(element, in: stateName, at: 0, applyDefaults: true)
+                self.assetInstance.applyDefaults(for: element)
             }
             let sequence = SKAction.repeatForever(SKAction.sequence([initialUpdateAction, action]))
             assetInstance.playSKAction(sequence, on: element)
@@ -312,7 +317,11 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
             isPreviewingSKActions = false;
             setPlayStopButtonImage(isPlaying: false)
             skactionPreviewButton.isEnabled = true
-            updateNodesForCurrentFrame(applyDefaults: true)
+            assetInstance.currentFrame = 0
+            
+            if let selectedAssetElement = descriptionSceneViewDelegate?.selectedAssetElement {
+                showBoundingBox(for: selectedAssetElement)
+            }
         }
     }
     
@@ -325,7 +334,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         for x in -Int(footprint.x - 1)...0 {
             for y in 0..<Int(footprint.y) {
                 let sprite = SKSpriteNode(texture: gridTexture)
-                sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+                sprite.anchorPoint = CGPoint(x: 0.5, y: 1)
                 sprite.position = CGPoint(
                     x: MapNode.halfWidth * (x + y),
                     y: MapNode.halfHeight * (y - x)
@@ -351,7 +360,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     public func showBoundingBox(position: SIMD3<Float>, size: SIMD3<Float>) {
         let origin = MapNode.xVector * position.x + MapNode.yVector * position.y + MapNode.zVector * position.z
 
-        let bottomBack = origin - (MapNode.xVector + MapNode.yVector) * 0.5
+        let bottomBack = origin
         let bottomLeft = bottomBack + MapNode.yVector * size.y
         let bottomFront = bottomLeft + MapNode.xVector * size.x
         let bottomRight = bottomBack + MapNode.xVector * size.x
@@ -449,7 +458,12 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         stopPreviewingSKActionsIfNeeded()
         updatePreviousAndKeyButtons()
         updateCurrentFrameIndicator()
-        updateNodesForCurrentFrame(applyDefaults: shouldApplyDefaults)
+        if let animationControlDelegate {
+            assetInstance.currentFrame = animationControlDelegate.currentAnimationFrame
+        }
+        if let selectAssetElement = descriptionSceneViewDelegate?.selectedAssetElement {
+            showBoundingBox(for: selectAssetElement)
+        }
     }
     
     @objc
@@ -457,11 +471,11 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         stopPreviewingSKActionsIfNeeded()
         updatePreviousAndKeyButtons()
     }
-        
+    
     @objc
     private func currentStateDidChange(_ notif: Notification) {
         stopPreviewingSKActionsIfNeeded()
-        shouldApplyDefaults = true
+        assetInstance.currentAnimationStateName = animationControlDelegate?.currentAnimationStateName
     }
     
     @objc
@@ -506,23 +520,8 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         currentFrameIndicator.stringValue = "Current Frame: \(animationControlDelegate.currentAnimationFrame)"
     }
     
-    private func updateNodesForCurrentFrame(applyDefaults: Bool) {
-        let rootElement = assetDescription.rootElement
-        for childElement in rootElement.children {
-            updateElementNodeForCurrentFrame(childElement, applyDefaults: applyDefaults)
-        }
-        shouldApplyDefaults = false
-    }
-    
-    func updateElementNodeForCurrentFrame(_ element: TransformAssetElement, applyDefaults: Bool) {
-        if let animationControlDelegate {
-            updateElementNode(element, in: animationControlDelegate.currentAnimationState, at: animationControlDelegate.currentAnimationFrame, applyDefaults: applyDefaults)
-        }
-    }
-    
-    private func updateElementNode(_ element: TransformAssetElement, in stateName: String?, at frame: Int, applyDefaults: Bool) {
-        let animationSnapshot = assetDescription.getAnimationSnapshot(for: element, in: stateName, at: frame)
-        assetInstance.updateElement(element, with: animationSnapshot)
+    func updateElement(_ element: TransformAssetElement) {
+        assetInstance.updateElement(element)
     }
     
     override func update(_ currentTime: TimeInterval, for scene: SKScene) {
@@ -538,9 +537,10 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
             let frameDuration = 1.0 / Double(preferredFramesPerSecond)
             let diff = currentTime - lastUpdateTime
             if diff > frameDuration {
-                let frameCountToAdvance = Int((diff / frameDuration).rounded(.down))
+                let frameCountToAdvance = UInt((diff / frameDuration).rounded(.down))
                 let nextFrameToDisplay = (animationControlDelegate.currentAnimationFrame + frameCountToAdvance) % animationControlDelegate.currentAnimationStateFrameCount
                 animationControlDelegate.animationGoToFrame(self, frame: nextFrameToDisplay)
+                assetInstance.currentFrame = nextFrameToDisplay
             }
         }
         lastUpdateTime = currentTime
@@ -548,9 +548,9 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     
     override func computePositionMatrix() -> matrix_float3x3 {
         let bb = assetInstance.boundingBox
-        let min = bb?.min ?? vector_float3()
-        let max = bb?.max ?? vector_float3()
-        return matrix_float3x3([ min, max, vector_float3() ])
+        let min = bb?.min ?? SIMD3()
+        let max = bb?.max ?? SIMD3()
+        return matrix_float3x3([ min, max, SIMD3() ])
     }
     
     override func getLightMatrix(_ index: Int) -> matrix_float3x3 {

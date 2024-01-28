@@ -185,4 +185,12 @@ open class MapNode: SKNode, Collection {
     open func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> AssetInstance {
         AssetInstance(placement: placement, at: worldPosition)!
     }
+    
+    public static func computeNodePosition(with offset: SIMD3<Float>) -> CGPoint { computeNodePosition(x: offset.x, y: offset.y, z: offset.z) }
+    
+    public static func computeNodePosition(x: Float, y: Float, z: Float) -> CGPoint {
+        let v2 = (Self.xVector * x) + (Self.yVector * y) + (Self.zVector * z)
+        return CGPoint(x: CGFloat(v2.x), y: CGFloat(v2.y))
+    }
+    
 }

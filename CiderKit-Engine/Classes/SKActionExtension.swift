@@ -1,18 +1,27 @@
 import SpriteKit
 
 extension SKAction {
-    
-    public func setupTimingFunction(_ timingMode: SKActionTimingMode) {
+
+    public func setupTimingFunction(_ timingMode: SKActionTimingMode, partialTimeScaling: Float? = nil) {
         self.timingMode = .linear
+    
+        let timingFunction: SKActionTimingFunction
         switch timingMode {
         case .easeIn:
-            self.timingFunction = AssetAnimationKey.easeInInterpolationFunction(time:)
+            timingFunction = AssetAnimationKey.easeInInterpolationFunction(time:)
         case .easeOut:
-            self.timingFunction = AssetAnimationKey.easeOutInterpolationFunction(time:)
+            timingFunction = AssetAnimationKey.easeOutInterpolationFunction(time:)
         case .easeInEaseOut:
-            self.timingFunction = AssetAnimationKey.easeInEaseOutInterpolationFunction(time:)
+            timingFunction = AssetAnimationKey.easeInEaseOutInterpolationFunction(time:)
         default:
-            break
+            timingFunction = AssetAnimationKey.linearInterpolationFunction(time:)
+        }
+        
+        if let partialTimeScaling, partialTimeScaling > 0, partialTimeScaling <= 1 {
+            self.timingFunction = { timingFunction($0 * partialTimeScaling) }
+        }
+        else {
+            self.timingFunction = timingFunction
         }
     }
     

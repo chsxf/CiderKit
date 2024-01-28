@@ -19,7 +19,7 @@ public class BaseLight: Codable, ObservableObject {
 
     @Published public var color: CGColor
 
-    var vector: vector_float3 { vector_float3(Float(color.components![0]), Float(color.components![1]), Float(color.components![2])) }
+    var vector: SIMD3<Float> { SIMD3(Float(color.components![0]), Float(color.components![1]), Float(color.components![2])) }
     
     init(color: CGColor) {
         self.color = color.toRGB()!

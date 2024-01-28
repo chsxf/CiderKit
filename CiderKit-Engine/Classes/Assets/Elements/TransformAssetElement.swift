@@ -215,43 +215,6 @@ public class TransformAssetElement : Hashable, Codable {
         }
     }
     
-    public static func computeNodePosition(with offset: SIMD3<Float>) -> CGPoint { computeNodePosition(x: offset.x, y: offset.y, z: offset.z) }
-    
-    public static func computeNodePosition(x: Float, y: Float, z: Float) -> CGPoint {
-        let v2 = (MapNode.xVector * x) + (MapNode.yVector * y) + (MapNode.zVector * z)
-        return CGPoint(x: CGFloat(v2.x), y: CGFloat(v2.y))
-    }
-    
-    public func buildSKActions(for track: AssetAnimationTrack, from key1: AssetAnimationKey, to key2: AssetAnimationKey, duration: TimeInterval) -> [SKAction]? {
-        guard track.type == .visibility else { return nil }
-        
-        return [
-            SKAction.wait(forDuration: duration),
-            key2.boolValue! ? SKAction.unhide() : SKAction.hide()
-        ]
-    }
-    
-    public func buildSKActions(with combinedTracks: [AssetAnimationTrackType: AssetAnimationTrack], expectedDuration: TimeInterval) -> [SKAction] {
-        var actions = [SKAction]()
-        
-        let xOffsetTrack = combinedTracks[.xOffset]
-        let yOffsetTrack = combinedTracks[.yOffset]
-        let zOffsetTrack = combinedTracks[.zOffset]
-        if xOffsetTrack != nil || yOffsetTrack != nil || zOffsetTrack != nil {
-            actions.append(SKAction.customAction(withDuration: expectedDuration) { node, elapsedTime in
-                let frame = Int((elapsedTime / AssetAnimationTrack.frameTime).rounded(.towardZero))
-                
-                let x = (xOffsetTrack?.getValue(at: frame) ?? self.offset.x) as! Float
-                let y = (yOffsetTrack?.getValue(at: frame) ?? self.offset.y) as! Float
-                let z = (zOffsetTrack?.getValue(at: frame) ?? self.offset.z) as! Float
-                
-                node.position = TransformAssetElement.computeNodePosition(x: x, y: y, z: z)
-            })
-        }
-        
-        return actions
-    }
-    
     public func instantiate() -> TransformAssetElementInstance {
         TransformAssetElementInstance(element: self)
     }

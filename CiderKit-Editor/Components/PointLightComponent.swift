@@ -97,7 +97,7 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
     }
     
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) {
-        lightDescription.position += vector_float3(x: Float(x), y: Float(y), z: Float(z))
+        lightDescription.position += SIMD3(x: Float(x), y: Float(y), z: Float(z))
         entity?.component(ofType: EditableComponent.self)?.invalidate()
     }
     

@@ -4,7 +4,13 @@ public final class AssetAnimationState: Codable {
         case animationTracks = "tracks"
     }
     
-    public var animationTracks: [AssetAnimationTrackIdentifier:AssetAnimationTrack] = [:]
+    public var animationTracks: [AssetAnimationTrackIdentifier: AssetAnimationTrack] = [:] {
+        didSet {
+            refreshReferencedElementUUIDs()
+        }
+    }
+    
+    public private(set) var referenceElementUUIDs = Set<UUID>()
     
     public init() { }
     
@@ -12,10 +18,13 @@ public final class AssetAnimationState: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         let tracksContainer = try container.nestedContainer(keyedBy: AssetAnimationTrackIdentifier.self, forKey: .animationTracks)
+        var tracks = [AssetAnimationTrackIdentifier: AssetAnimationTrack]()
         for key in tracksContainer.allKeys {
             let track = try tracksContainer.decode(AssetAnimationTrack.self, forKey: key)
-            animationTracks[key] = track
+            tracks[key] = track
         }
+        animationTracks = tracks
+        refreshReferencedElementUUIDs()
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -34,6 +43,14 @@ public final class AssetAnimationState: Codable {
     
     public func removeAnimationTracks(for elementUUID: UUID) {
         animationTracks = animationTracks.filter { $0.key.elementUUID != elementUUID }
+        refreshReferencedElementUUIDs()
+    }
+    
+    private func refreshReferencedElementUUIDs() {
+        referenceElementUUIDs.removeAll()
+        for (identifier, _) in animationTracks {
+            referenceElementUUIDs.insert(identifier.elementUUID)
+        }
     }
     
 }
