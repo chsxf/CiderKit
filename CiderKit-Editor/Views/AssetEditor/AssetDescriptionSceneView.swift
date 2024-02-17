@@ -233,7 +233,9 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         }
         gridRoot.setScale(newScale)
         elementsRoot.setScale(newScale)
-
+        backBoundingBoxShape.setScale(newScale)
+        frontBoundingBoxShape.setScale(newScale)
+        
         zoomInButton.isEnabled = zoomFactor < 16
         zoomOutButton.isEnabled = zoomFactor > -1
         switch zoomFactor {
