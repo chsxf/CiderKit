@@ -6,14 +6,14 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
     
     public private(set) var referencedAssetInstance: AssetInstance? = nil
     
-    private var actualAnimationStateName: String? {
+    private var actualAnimationName: String? {
         guard
-            let referencedAnimationStateName = referenceElement.animationStateName,
+            let referencedAnimationName = referenceElement.animationName,
             let referencedAssetInstance,
-            referencedAssetInstance.assetDescription.animationStates[referencedAnimationStateName] != nil
+            referencedAssetInstance.assetDescription.animations[referencedAnimationName] != nil
         else { return nil }
 
-        return referencedAnimationStateName
+        return referencedAnimationName
     }
     
     public init(element: ReferenceAssetElement) {
@@ -48,7 +48,7 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
             }
         }
         
-        referencedAssetInstance?.currentAnimationStateName = referenceElement.animationStateName
+        referencedAssetInstance?.currentAnimationName = referenceElement.animationName
     }
     
     private func instantiateReferencedAsset(in node: SKNode, from assetDescription: AssetDescription) {
@@ -56,12 +56,12 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
         self.referencedAssetInstance = referencedAssetInstance
         addChild(referencedAssetInstance)
         node.addChild(referencedAssetInstance.node!)
-        referencedAssetInstance.currentAnimationStateName = referenceElement.animationStateName
+        referencedAssetInstance.currentAnimationName = referenceElement.animationName
     }
     
     public func getSKActionsByElement(with maxDuration: TimeInterval) -> [TransformAssetElement: SKAction]? {
-        guard let actualAnimationStateName else { return nil }
-        return referencedAssetInstance?.getSKActionsByElement(in: actualAnimationStateName, with: maxDuration)
+        guard let actualAnimationName else { return nil }
+        return referencedAssetInstance?.getSKActionsByElement(in: actualAnimationName, with: maxDuration)
     }
     
 }

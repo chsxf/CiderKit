@@ -12,7 +12,7 @@ open class AssetInstance : TransformAssetElementInstance {
     public let placement: AssetPlacement
     public let assetDescription: AssetDescription
     
-    public var currentAnimationStateName: String? = nil {
+    public var currentAnimationName: String? = nil {
         didSet {
             updateAll(applyDefaults: true)
         }
@@ -132,13 +132,13 @@ open class AssetInstance : TransformAssetElementInstance {
         }
         
         guard
-            let currentAnimationStateName,
-            let currentAnimationState = assetDescription.animationStates[currentAnimationStateName]
+            let currentAnimationName,
+            let currentAnimation = assetDescription.animations[currentAnimationName]
         else { return }
         
-        for elementUUID in currentAnimationState.referenceElementUUIDs {
+        for elementUUID in currentAnimation.referenceElementUUIDs {
             if let instance = elementInstancesByUUID[elementUUID] {
-                let animationSnapshot = assetDescription.getAnimationSnapshot(for: elementUUID, in: currentAnimationStateName, at: currentFrame)
+                let animationSnapshot = assetDescription.getAnimationSnapshot(for: elementUUID, in: currentAnimationName, at: currentFrame)
                 instance.update(animationSnapshot: animationSnapshot)
             }
         }
@@ -151,12 +151,12 @@ open class AssetInstance : TransformAssetElementInstance {
     public func updateElement(_ element: TransformAssetElement) {
         guard let instance = elementInstancesByUUID[element.uuid] else { return }
         
-        let animationSnapshot = assetDescription.getAnimationSnapshot(for: element.uuid, in: currentAnimationStateName, at: currentFrame)
+        let animationSnapshot = assetDescription.getAnimationSnapshot(for: element.uuid, in: currentAnimationName, at: currentFrame)
         instance.update(animationSnapshot: animationSnapshot)
     }
     
-    public func getSKActionsByElement(in stateName: String, with expectedDuration: TimeInterval? = nil) -> [TransformAssetElement:SKAction]? {
-        guard let animationData = assetDescription.animationStates[stateName] else { return nil }
+    public func getSKActionsByElement(in animationName: String, with expectedDuration: TimeInterval? = nil) -> [TransformAssetElement:SKAction]? {
+        guard let animationData = assetDescription.animations[animationName] else { return nil }
 
         var maxTrackDuration: TimeInterval = 0
         var elements = Set<TransformAssetElement>()
@@ -172,7 +172,7 @@ open class AssetInstance : TransformAssetElementInstance {
         let expectedDurationForActions = expectedDuration ?? maxTrackDuration
         var result = [TransformAssetElement:SKAction]()
         for element in elements {
-            if let elementActions = getSKAction(for: element, in: stateName, with: expectedDurationForActions) {
+            if let elementActions = getSKAction(for: element, in: animationName, with: expectedDurationForActions) {
                 result[element] = elementActions
             }
         }
@@ -186,16 +186,16 @@ open class AssetInstance : TransformAssetElementInstance {
         return result.isEmpty ? nil : result
     }
     
-    public func getSKAction(for element: TransformAssetElement, in stateName: String, with expectedDuration: TimeInterval) -> SKAction? {
+    public func getSKAction(for element: TransformAssetElement, in animationName: String, with expectedDuration: TimeInterval) -> SKAction? {
         guard
-            let animationState = assetDescription.animationStates[stateName],
+            let animation = assetDescription.animations[animationName],
             let elementInstance = self[element]
         else { return nil }
 
         var combinedTracks = [AssetAnimationTrackType: AssetAnimationTrack]()
                 
         var actions = [SKAction]()
-        for (identifier, track) in animationState.animationTracks {
+        for (identifier, track) in animation.animationTracks {
             if identifier.elementUUID == element.uuid {
                 if element.combinedTrackTypes.contains(identifier.trackType) {
                     combinedTracks[identifier.trackType] = track

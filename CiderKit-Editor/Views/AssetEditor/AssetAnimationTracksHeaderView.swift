@@ -5,40 +5,40 @@ class AssetAnimationTracksHeaderView: NSTableHeaderView {
     
     weak var animationControlDelegate: AssetAnimationControlDelegate? = nil
     
-    private(set) var currentAnimationState: String? {
+    private(set) var currentAnimationName: String? {
         didSet {
-            if currentAnimationState != oldValue {
-                animationControlDelegate?.animationChangeState(self, stateName: currentAnimationState)
+            if currentAnimationName != oldValue {
+                animationControlDelegate?.animationChangeAnimation(self, animationName: currentAnimationName)
             }
         }
     }
     
-    private let removeStateButton: NSButton
-    private let stateList: NSPopUpButton
+    private let removeAnimationButton: NSButton
+    private let animationList: NSPopUpButton
     
     public var assetDescription: AssetDescription {
         didSet {
-            updateStateList()
+            updateAnimationList()
         }
     }
     
-    init(frame: NSRect, asset: AssetDescription, animationState: String?) {
-        assetDescription = asset
+    init(frame: NSRect, assetDescription: AssetDescription, animationName: String?) {
+        self.assetDescription = assetDescription
         
-        let addStateButton = NSButton(systemSymbolName: "plus.rectangle.fill.on.rectangle.fill", target: nil, action: #selector(Self.addState))
-        removeStateButton = NSButton(systemSymbolName: "minus.rectangle.fill", target: nil, action: #selector(Self.removeState))
-        stateList = NSPopUpButton(frame: NSZeroRect, pullsDown: false)
-        stateList.action = #selector(Self.selectState)
+        let addAnimationButton = NSButton(systemSymbolName: "plus.rectangle.fill.on.rectangle.fill", target: nil, action: #selector(Self.addAnimation))
+        removeAnimationButton = NSButton(systemSymbolName: "minus.rectangle.fill", target: nil, action: #selector(Self.removeAnimation))
+        animationList = NSPopUpButton(frame: NSZeroRect, pullsDown: false)
+        animationList.action = #selector(Self.selectAnimation)
         
         super.init(frame: frame)
         
-        currentAnimationState = animationState
+        currentAnimationName = animationName
         
-        addStateButton.target = self
-        removeStateButton.target = self
-        stateList.target = self
+        addAnimationButton.target = self
+        removeAnimationButton.target = self
+        animationList.target = self
         
-        let stack = NSStackView(views: [stateList, addStateButton, removeStateButton])
+        let stack = NSStackView(views: [animationList, addAnimationButton, removeAnimationButton])
         addSubview(stack)
         
         addConstraints([
@@ -46,51 +46,51 @@ class AssetAnimationTracksHeaderView: NSTableHeaderView {
             NSLayoutConstraint(item: stack, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
         ])
         
-        updateStateList()
+        updateAnimationList()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func updateStateList() {
-        stateList.removeAllItems()
-        if assetDescription.animationStates.isEmpty {
-            stateList.addItem(withTitle: "No Animation State")
-            stateList.isEnabled = false
-            removeStateButton.isEnabled = false
+    private func updateAnimationList() {
+        animationList.removeAllItems()
+        if assetDescription.animations.isEmpty {
+            animationList.addItem(withTitle: "No Animation")
+            animationList.isEnabled = false
+            removeAnimationButton.isEnabled = false
         }
         else {
-            let sortedStateNames = assetDescription.animationStates.keys.sorted()
-            stateList.addItems(withTitles: sortedStateNames)
-            if currentAnimationState == nil || !sortedStateNames.contains(currentAnimationState!) {
-                currentAnimationState = sortedStateNames.first!
+            let sortedAnimationNames = assetDescription.animations.keys.sorted()
+            animationList.addItems(withTitles: sortedAnimationNames)
+            if currentAnimationName == nil || !sortedAnimationNames.contains(currentAnimationName!) {
+                currentAnimationName = sortedAnimationNames.first!
             }
-            stateList.selectItem(withTitle: currentAnimationState!)
-            stateList.isEnabled = true
-            removeStateButton.isEnabled = true
+            animationList.selectItem(withTitle: currentAnimationName!)
+            animationList.isEnabled = true
+            removeAnimationButton.isEnabled = true
         }
     }
     
     @objc
-    private func addState() {
+    private func addAnimation() {
         let alert = NSAlert()
-        alert.addButton(withTitle: "Create State")
+        alert.addButton(withTitle: "Create Animation")
         alert.addButton(withTitle: "Cancel")
-        alert.messageText = "New Animation State"
-        alert.informativeText = "Select the name of your new animation state.\n\nThis name must be unique for this asset."
+        alert.messageText = "New Animation"
+        alert.informativeText = "Select the name of your new animation.\n\nThis name must be unique for this asset."
         alert.alertStyle = .informational
         
-        var animationStateCounter = 0
-        var newAnimationStateName: String
+        var animationNameCounter = 0
+        var newAnimationName: String
         repeat {
-            animationStateCounter += 1
-            newAnimationStateName = "Animation State \(animationStateCounter)"
+            animationNameCounter += 1
+            newAnimationName = "Animation \(animationNameCounter)"
         }
-        while assetDescription.hasAnimationState(named: newAnimationStateName)
+        while assetDescription.hasAnimation(named: newAnimationName)
         
         let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
-        textField.stringValue = newAnimationStateName
+        textField.stringValue = newAnimationName
         
         alert.accessoryView = textField
         
@@ -101,12 +101,12 @@ class AssetAnimationTracksHeaderView: NSTableHeaderView {
                 return
             }
             
-            newAnimationStateName = textField.stringValue
-            if assetDescription.hasAnimationState(named: newAnimationStateName) {
+            newAnimationName = textField.stringValue
+            if assetDescription.hasAnimation(named: newAnimationName) {
                 let errorAlert = NSAlert()
                 errorAlert.addButton(withTitle: "Ok")
                 errorAlert.messageText = "Error"
-                errorAlert.informativeText = "An animation state with the same name already exists fpr this asset."
+                errorAlert.informativeText = "An animation with the same name already exists fpr this asset."
                 errorAlert.alertStyle = .warning
                 errorAlert.runModal()
             }
@@ -116,35 +116,35 @@ class AssetAnimationTracksHeaderView: NSTableHeaderView {
         }
         while true
                 
-        assetDescription.animationStates[newAnimationStateName] = AssetAnimationState()
-        currentAnimationState = newAnimationStateName
+        assetDescription.animations[newAnimationName] = AssetAnimation()
+        currentAnimationName = newAnimationName
                 
-        updateStateList()
+        updateAnimationList()
     }
     
     @objc
-    private func removeState() {
-        if let currentAnimationState = currentAnimationState {
+    private func removeAnimation() {
+        if let currentAnimationName {
             let alert = NSAlert()
-            alert.addButton(withTitle: "Remove State")
+            alert.addButton(withTitle: "Remove Animation")
             alert.addButton(withTitle: "Cancel")
             alert.messageText = "Confirmation"
-            alert.informativeText = "Are you sure your want to remove this animation state?\n\n\(currentAnimationState)\n\nThis operation cannot be undone."
+            alert.informativeText = "Are you sure your want to remove this animation?\n\n\(currentAnimationName)\n\nThis operation cannot be undone."
             alert.alertStyle = .critical
             
             if alert.runModal() != .alertFirstButtonReturn {
                 return
             }
             
-            assetDescription.animationStates[currentAnimationState] = nil
-            self.currentAnimationState = nil
-            updateStateList()
+            assetDescription.animations[currentAnimationName] = nil
+            self.currentAnimationName = nil
+            updateAnimationList()
         }
     }
     
     @objc
-    private func selectState() {
-        currentAnimationState = stateList.titleOfSelectedItem
+    private func selectAnimation() {
+        currentAnimationName = animationList.titleOfSelectedItem
     }
     
 }

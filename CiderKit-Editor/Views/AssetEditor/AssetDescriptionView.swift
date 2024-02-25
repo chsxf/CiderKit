@@ -255,7 +255,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         
         animationView?.assetDescription = assetDescription!
         
-        assetInstance?.currentAnimationStateName = animationView?.currentAnimationStateName
+        assetInstance?.currentAnimationName = animationView?.currentAnimationName
     }
     
     @objc
@@ -290,10 +290,10 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         assetInstance!.remove(element: item)
         
         if let assetDescription {
-            for (_, state) in assetDescription.animationStates {
-                state.removeAnimationTracks(for: item.uuid)
+            for (_, animation) in assetDescription.animations {
+                animation.removeAnimationTracks(for: item.uuid)
             }
-            animationView?.reloadCurrentState()
+            animationView?.reloadCurrentAnimation()
         }
     }
     
@@ -301,11 +301,11 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         guard
             let animationView,
             let assetDescription,
-            let stateName = animationView.currentAnimationStateName
+            let animationName = animationView.currentAnimationName
         else {
             return nil
         }
-        return assetDescription.getAnimationKey(trackType: trackType, for: elementUUID, in: stateName, at: animationView.currentAnimationFrame)
+        return assetDescription.getAnimationKey(trackType: trackType, for: elementUUID, in: animationName, at: animationView.currentAnimationFrame)
     }
     
     public func updateElement(element: TransformAssetElement) {
@@ -371,8 +371,8 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         if assetDescription.rootElement.children.isEmpty {
             menu.addItem(withTitle: "No animatable element", action: nil, keyEquivalent: "")
         }
-        else if animationView?.currentAnimationStateName == nil {
-            menu.addItem(withTitle: "No selected animation state", action: nil, keyEquivalent: "")
+        else if animationView?.currentAnimationName == nil {
+            menu.addItem(withTitle: "No selected animation", action: nil, keyEquivalent: "")
         }
         else {
             for child in assetDescription.rootElement.children {
@@ -396,8 +396,8 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         
         for track in element.eligibleTrackTypes {
             let menuItem = NSMenuItem(title: track.displayName, action: nil, keyEquivalent: "")
-            let animationState = animationView!.currentAnimationStateName!
-            if !assetDescription!.hasAnimationTrack(track, for: element.uuid, in: animationState) {
+            let animationName = animationView!.currentAnimationName!
+            if !assetDescription!.hasAnimationTrack(track, for: element.uuid, in: animationName) {
                 menuItem.representedObject = AssetAnimationTrackIdentifier(elementUUID: element.uuid, type: track)
                 menuItem.target = self
                 menuItem.action = #selector(Self.addTrack(_:))
@@ -412,9 +412,9 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
     @objc
     private func addTrack(_ sender: NSMenuItem) {
         if let identifier = sender.representedObject as? AssetAnimationTrackIdentifier {
-            let animationState = animationView!.currentAnimationStateName!
-            assetDescription!.animationStates[animationState]!.animationTracks[identifier] = AssetAnimationTrack(type: identifier.trackType)
-            animationView!.reloadCurrentState()
+            let animationName = animationView!.currentAnimationName!
+            assetDescription!.animations[animationName]!.animationTracks[identifier] = AssetAnimationTrack(type: identifier.trackType)
+            animationView!.reloadCurrentAnimation()
         }
     }
     

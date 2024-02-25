@@ -24,7 +24,7 @@ class AssetAnimationTrackBaseView: NSView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func refreshSelectedState() {
+    func refreshSelectedAnimation() {
         wasSelected = isSelected
         isSelected = tableView?.isRowSelected(row) ?? false
     }

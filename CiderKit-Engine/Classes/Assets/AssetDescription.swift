@@ -8,7 +8,7 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
         case name
         case type
         case rootElement = "root"
-        case animationStates = "states"
+        case animations
         case position = "pos"
         case footprint
     }
@@ -23,7 +23,7 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
     
     public var footprint: SIMD2<UInt32>
     
-    public var animationStates: [String: AssetAnimationState] = [:]
+    public var animations: [String: AssetAnimation] = [:]
     
     public var position: SIMD3<Float> { rootElement.offset }
     
@@ -47,11 +47,11 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
         footprint = (try container.decodeIfPresent(SIMD2<UInt32>.self, forKey: .footprint)) ?? SIMD2(1, 1)
         rootElement = try container.decode(TransformAssetElement.self, forKey: .rootElement)
         
-        if container.contains(.animationStates) {
-            let statesContainer = try container.nestedContainer(keyedBy: StringCodingKey.self, forKey: .animationStates)
-            for key in statesContainer.allKeys {
-                let state = try statesContainer.decode(AssetAnimationState.self, forKey: key)
-                animationStates[key.stringValue] = state
+        if container.contains(.animations) {
+            let animationsContainer = try container.nestedContainer(keyedBy: StringCodingKey.self, forKey: .animations)
+            for key in animationsContainer.allKeys {
+                let animation = try animationsContainer.decode(AssetAnimation.self, forKey: key)
+                animations[key.stringValue] = animation
             }
         }
     }
@@ -64,9 +64,9 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
         try container.encode(footprint, forKey: .footprint)
         try container.encode(rootElement, forKey: .rootElement)
 
-        var statesContainer = container.nestedContainer(keyedBy: StringCodingKey.self, forKey: .animationStates)
-        for (stateName, state) in animationStates {
-            try statesContainer.encode(state, forKey: StringCodingKey(stringValue: stateName)!)
+        var animationsContainer = container.nestedContainer(keyedBy: StringCodingKey.self, forKey: .animations)
+        for (animationName, animation) in animations {
+            try animationsContainer.encode(animation, forKey: StringCodingKey(stringValue: animationName)!)
         }
     }
     
@@ -78,22 +78,22 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
     
     public func getElementOrder(uuid: UUID) -> Int? { rootElement.getElementRelativeOrder(uuid: uuid) }
     
-    public func hasAnimationState(named stateName: String) -> Bool { animationStates[stateName] != nil }
+    public func hasAnimation(named animationName: String) -> Bool { animations[animationName] != nil }
     
-    public func hasAnimationTrack(_ type: AssetAnimationTrackType, for elementUUID: UUID, in stateName: String) -> Bool {
-        animationStates[stateName]?.hasAnimationTrack(type, for: elementUUID) ?? false
+    public func hasAnimationTrack(_ type: AssetAnimationTrackType, for elementUUID: UUID, in animationName: String) -> Bool {
+        animations[animationName]?.hasAnimationTrack(type, for: elementUUID) ?? false
     }
     
-    public func getAnimationKey(trackType: AssetAnimationTrackType, for elementUUID: UUID, in stateName: String, at frame: UInt) -> AssetAnimationKey? {
-        guard let animationState = animationStates[stateName] else { return nil }
+    public func getAnimationKey(trackType: AssetAnimationTrackType, for elementUUID: UUID, in animationName: String, at frame: UInt) -> AssetAnimationKey? {
+        guard let animation = animations[animationName] else { return nil }
         
         let trackIdentifier = AssetAnimationTrackIdentifier(elementUUID: elementUUID, type: trackType)
-        return animationState.animationTracks[trackIdentifier]?.getKey(at: frame)
+        return animation.animationTracks[trackIdentifier]?.getKey(at: frame)
     }
     
-    public func isElementAnimated(_ elementUUID: UUID, in stateName: String? = nil) -> Bool {
-        if let stateName, let animationState = animationStates[stateName] {
-            for (identifier, track) in animationState.animationTracks {
+    public func isElementAnimated(_ elementUUID: UUID, in animationName: String? = nil) -> Bool {
+        if let animationName, let animation = animations[animationName] {
+            for (identifier, track) in animation.animationTracks {
                 if identifier.elementUUID == elementUUID && track.hasAnyKey {
                     return true
                 }
@@ -102,16 +102,16 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
         return false
     }
     
-    public func getAnimationSnapshot(for elementUUID: UUID, in stateName: String?, at frame: UInt) -> AssetElementAnimationSnapshot {
+    public func getAnimationSnapshot(for elementUUID: UUID, in animationName: String?, at frame: UInt) -> AssetElementAnimationSnapshot {
         let element = getElement(uuid: elementUUID)!
-        return getAnimationSnapshot(for: element, in: stateName, at: frame)
+        return getAnimationSnapshot(for: element, in: animationName, at: frame)
     }
     
-    public func getAnimationSnapshot(for element: TransformAssetElement, in stateName: String?, at frame: UInt) -> AssetElementAnimationSnapshot {
+    public func getAnimationSnapshot(for element: TransformAssetElement, in animationName: String?, at frame: UInt) -> AssetElementAnimationSnapshot {
         var animatedValues = [AssetAnimationTrackType: Any]()
         
-        if let stateName, let animationState = animationStates[stateName] {
-            for (identifier, track) in animationState.animationTracks {
+        if let animationName, let animation = animations[animationName] {
+            for (identifier, track) in animation.animationTracks {
                 if track.hasAnyKey && identifier.elementUUID == element.uuid {
                     animatedValues[identifier.trackType] = track.getValue(at: frame)
                 }

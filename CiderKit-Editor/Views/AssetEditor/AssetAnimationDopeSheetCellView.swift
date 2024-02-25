@@ -8,7 +8,7 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
     
     private weak var animationControlDelegate: AssetAnimationControlDelegate? = nil
     
-    private var animationTrack: AssetAnimationTrack { assetDescription.animationStates[animationControlDelegate!.currentAnimationStateName!]!.animationTracks[trackIdentifier]! }
+    private var animationTrack: AssetAnimationTrack { assetDescription.animations[animationControlDelegate!.currentAnimationName!]!.animationTracks[trackIdentifier]! }
     
     init(tableView: NSTableView, row: Int, assetDescription: AssetDescription, trackIdentifier: AssetAnimationTrackIdentifier, animationControlDelegate: AssetAnimationControlDelegate) {
         super.init(tableView: tableView, row: row, assetDescription: assetDescription, trackIdentifier: trackIdentifier)
@@ -113,7 +113,7 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
     
     @objc
     private func onTableViewSelectionDidChange(_ notif: Notification) {
-        refreshSelectedState()
+        refreshSelectedAnimation()
         if wasSelected != isSelected {
             setNeedsDisplay(visibleRect)
         }

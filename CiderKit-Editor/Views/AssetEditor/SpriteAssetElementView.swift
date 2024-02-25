@@ -93,7 +93,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
             return
         }
         
-        let animationSnapshot = snapshot ?? assetDescription.getAnimationSnapshot(for: element.uuid, in: animationControlDelegate.currentAnimationStateName, at: animationControlDelegate.currentAnimationFrame)
+        let animationSnapshot = snapshot ?? assetDescription.getAnimationSnapshot(for: element.uuid, in: animationControlDelegate.currentAnimationName, at: animationControlDelegate.currentAnimationFrame)
         super.updateForCurrentElement(snapshot: animationSnapshot)
         
         if !element.isRoot {

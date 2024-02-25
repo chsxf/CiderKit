@@ -3,18 +3,18 @@ import CiderKit_Engine
 
 class AssetAnimationTracksDataSource: NSObject, NSTableViewDataSource {
     
-    private let asset: AssetDescription
-    private let animationState: String?
+    private let assetDescription: AssetDescription
+    private let animationName: String?
     
-    init(asset: AssetDescription, animationState: String?) {
-        self.asset = asset
-        self.animationState = animationState
+    init(assetDescription: AssetDescription, animationName: String?) {
+        self.assetDescription = assetDescription
+        self.animationName = animationName
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {
         guard
-            let animationState = animationState,
-            let animationTracks = asset.animationStates[animationState]?.animationTracks
+            let animationName,
+            let animationTracks = assetDescription.animations[animationName]?.animationTracks
         else {
             return 0
         }
@@ -23,15 +23,15 @@ class AssetAnimationTracksDataSource: NSObject, NSTableViewDataSource {
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
         guard
-            let animationState = animationState,
-            let animationTracks = asset.animationStates[animationState]?.animationTracks
+            let animationName,
+            let animationTracks = assetDescription.animations[animationName]?.animationTracks
         else {
             return nil
         }
 
         let sortedAnimationTrackKeys = animationTracks.keys.sorted { lhs, rhs in
             if lhs.elementUUID == rhs.elementUUID {
-                guard let element = asset.getElement(uuid: lhs.elementUUID) else {
+                guard let element = assetDescription.getElement(uuid: lhs.elementUUID) else {
                     return false
                 }
                 
@@ -41,8 +41,8 @@ class AssetAnimationTracksDataSource: NSObject, NSTableViewDataSource {
                 return lIndex < rIndex
             }
             else {
-                let lOrder = asset.getElementOrder(uuid: lhs.elementUUID)!
-                let rOrder = asset.getElementOrder(uuid: rhs.elementUUID)!
+                let lOrder = assetDescription.getElementOrder(uuid: lhs.elementUUID)!
+                let rOrder = assetDescription.getElementOrder(uuid: rhs.elementUUID)!
                 return lOrder < rOrder
             }
         }

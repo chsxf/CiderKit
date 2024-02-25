@@ -70,7 +70,7 @@ open class TransformAssetElementInstance {
     }
     
     public final func getAnimationSnapshot() -> AssetElementAnimationSnapshot? {
-        assetInstance?.assetDescription.getAnimationSnapshot(for: element.uuid, in: assetInstance?.currentAnimationStateName, at: assetInstance?.currentFrame ?? 0)
+        assetInstance?.assetDescription.getAnimationSnapshot(for: element.uuid, in: assetInstance?.currentAnimationName, at: assetInstance?.currentFrame ?? 0)
     }
     
     public func update(animationSnapshot: AssetElementAnimationSnapshot? = nil) {

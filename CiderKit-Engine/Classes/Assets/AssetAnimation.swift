@@ -1,4 +1,4 @@
-public final class AssetAnimationState: Codable {
+public final class AssetAnimation: Codable {
     
     enum CodingKeys: String, CodingKey {
         case animationTracks = "tracks"

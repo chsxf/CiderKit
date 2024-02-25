@@ -6,7 +6,7 @@ public class ReferenceAssetElementView : TransformAssetElementView {
     private let referenceField: NSTextField
     private let selectReferenceButton: NSButton
     private let removeReferenceButton: NSButton
-    private let animationStateNameCombo: NSPopUpButton
+    private let animationNameCombo: NSPopUpButton
     
     required init(assetDescription: AssetDescription, element: TransformAssetElement) {
         referenceField = NSTextField(string: "None")
@@ -14,13 +14,13 @@ public class ReferenceAssetElementView : TransformAssetElementView {
         referenceField.isBezeled = true
         selectReferenceButton = NSButton(title: "Select asset...", target: nil, action: #selector(Self.selectAsset))
         removeReferenceButton = NSButton(title: "Remove", target: nil, action: #selector(Self.removeAsset))
-        animationStateNameCombo = NSPopUpButton(title: "", target: nil, action: #selector(Self.animationStateNameChanged(_:)))
+        animationNameCombo = NSPopUpButton(title: "", target: nil, action: #selector(Self.animationNameChanged(_:)))
         
         super.init(assetDescription: assetDescription, element: element)
         
         selectReferenceButton.target = self
         removeReferenceButton.target = self
-        animationStateNameCombo.target = self
+        animationNameCombo.target = self
     }
     
     required init?(coder: NSCoder) {
@@ -35,7 +35,7 @@ public class ReferenceAssetElementView : TransformAssetElementView {
         
         additionalViews.append(contentsOf: [
             VSpacer(), InspectorHeader(title: "Reference"), referenceField, buttonRow,
-            VSpacer(), InspectorHeader(title: "Animation State"), animationStateNameCombo
+            VSpacer(), InspectorHeader(title: "Animation"), animationNameCombo
         ])
         
         return additionalViews
@@ -47,39 +47,38 @@ public class ReferenceAssetElementView : TransformAssetElementView {
             return
         }
         
-        let animationSnapshot = snapshot ?? assetDescription.getAnimationSnapshot(for: referenceElement.uuid, in: animationControlDelegate.currentAnimationStateName, at: animationControlDelegate.currentAnimationFrame)
+        let animationSnapshot = snapshot ?? assetDescription.getAnimationSnapshot(for: referenceElement.uuid, in: animationControlDelegate.currentAnimationName, at: animationControlDelegate.currentAnimationFrame)
         super.updateForCurrentElement(snapshot: animationSnapshot)
         
         if !referenceElement.isRoot {
-            animationStateNameCombo.removeAllItems()
+            animationNameCombo.removeAllItems()
 
             if let assetLocator = referenceElement.assetLocator {
                 referenceField.stringValue = assetLocator.humanReadableDescription
                 removeReferenceButton.isEnabled = true;
                 
                 if let assetDescription = assetLocator.assetDescription {
-                    var animationStateNames = [String](assetDescription.animationStates.keys)
-                    animationStateNames.sort()
+                    let sortedAnimationNames = [String](assetDescription.animations.keys).sorted()
                     
-                    animationStateNameCombo.addItems(withTitles: animationStateNames)
-                    if animationStateNameCombo.numberOfItems > 0 {
-                        if let referencedAnimationStateName = referenceElement.animationStateName {
-                            animationStateNameCombo.selectItem(withTitle: referencedAnimationStateName)
+                    animationNameCombo.addItems(withTitles: sortedAnimationNames)
+                    if animationNameCombo.numberOfItems > 0 {
+                        if let referencedAnimationName = referenceElement.animationName {
+                            animationNameCombo.selectItem(withTitle: referencedAnimationName)
                         }
-                        animationStateNameCombo.isEnabled = true
+                        animationNameCombo.isEnabled = true
                     }
                     else {
-                        animationStateNameCombo.isEnabled = false
+                        animationNameCombo.isEnabled = false
                     }
                 }
                 else {
-                    animationStateNameCombo.isEnabled = false
+                    animationNameCombo.isEnabled = false
                 }
             }
             else {
                 referenceField.stringValue = "None"
                 removeReferenceButton.isEnabled = false
-                animationStateNameCombo.isEnabled = false
+                animationNameCombo.isEnabled = false
             }
         }
     }
@@ -123,19 +122,19 @@ public class ReferenceAssetElementView : TransformAssetElementView {
             removeReferenceButton.isEnabled = false
             
             referenceElement.assetLocator = nil
-            referenceElement.animationStateName = nil
+            referenceElement.animationName = nil
             elementViewDelegate.updateElement(element: referenceElement)
         }
     }
     
     @objc
-    private func animationStateNameChanged(_ sender: NSPopUpButton) {
+    private func animationNameChanged(_ sender: NSPopUpButton) {
         guard
             let referenceElement = element as? ReferenceAssetElement,
-            let selectedAnimationStateName = sender.titleOfSelectedItem
+            let selectedAnimationName = sender.titleOfSelectedItem
         else { return }
         
-        referenceElement.animationStateName = selectedAnimationStateName
+        referenceElement.animationName = selectedAnimationName
         updateElement()
     }
     

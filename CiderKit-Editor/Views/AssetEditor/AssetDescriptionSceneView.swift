@@ -75,11 +75,11 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
             if let animationControlDelegate {
                 NotificationCenter.default.addObserver(self, selector: #selector(Self.currentFrameDidChange(_:)), name: .animationCurrentFrameDidChange, object: animationControlDelegate)
                 NotificationCenter.default.addObserver(self, selector: #selector(Self.currentTrackDidChange(_:)), name: .animationCurrentTrackDidChange, object: animationControlDelegate)
-                NotificationCenter.default.addObserver(self, selector: #selector(Self.currentStateDidChange(_:)), name: .animationCurrentStateDidChange, object: animationControlDelegate)
+                NotificationCenter.default.addObserver(self, selector: #selector(Self.currentAnimationDidChange(_:)), name: .animationCurrentAnimationDidChange, object: animationControlDelegate)
                 NotificationCenter.default.addObserver(self, selector: #selector(Self.playStatusDidChange(_:)), name: .animationPlayingDidChange, object: animationControlDelegate)
 
                 updateCurrentFrameIndicator()
-                assetInstance.currentAnimationStateName = animationControlDelegate.currentAnimationStateName
+                assetInstance.currentAnimationName = animationControlDelegate.currentAnimationName
                 assetInstance.currentFrame = animationControlDelegate.currentAnimationFrame
             }
         }
@@ -286,8 +286,8 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     private func previewWithSKActions() {
         guard
             let animationControlDelegate,
-            let stateName = animationControlDelegate.currentAnimationStateName,
-            let skactionsByElement = assetInstance.getSKActionsByElement(in: stateName)
+            let animationName = animationControlDelegate.currentAnimationName,
+            let skactionsByElement = assetInstance.getSKActionsByElement(in: animationName)
         else { return }
         
         if animationControlDelegate.isPlaying {
@@ -475,9 +475,9 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     }
     
     @objc
-    private func currentStateDidChange(_ notif: Notification) {
+    private func currentAnimationDidChange(_ notif: Notification) {
         stopPreviewingSKActionsIfNeeded()
-        assetInstance.currentAnimationStateName = animationControlDelegate?.currentAnimationStateName
+        assetInstance.currentAnimationName = animationControlDelegate?.currentAnimationName
     }
     
     @objc
@@ -498,7 +498,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         guard let animationControlDelegate else { return }
         
         returnToStartButton.isEnabled = animationControlDelegate.currentAnimationFrame > 0
-        playStopButton.isEnabled = animationControlDelegate.currentAnimationStateFrameCount > 0
+        playStopButton.isEnabled = animationControlDelegate.currentAnimationFrameCount > 0
 
         if let animationTrack = animationControlDelegate.currentAnimationTrack {
             if animationTrack.hasAnyKey {
@@ -532,7 +532,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         guard
             let animationControlDelegate,
             animationControlDelegate.isPlaying,
-            animationControlDelegate.currentAnimationStateFrameCount > 1
+            animationControlDelegate.currentAnimationFrameCount > 1
         else { return }
         
         if let lastUpdateTime {
@@ -540,7 +540,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
             let diff = currentTime - lastUpdateTime
             if diff > frameDuration {
                 let frameCountToAdvance = UInt((diff / frameDuration).rounded(.down))
-                let nextFrameToDisplay = (animationControlDelegate.currentAnimationFrame + frameCountToAdvance) % animationControlDelegate.currentAnimationStateFrameCount
+                let nextFrameToDisplay = (animationControlDelegate.currentAnimationFrame + frameCountToAdvance) % animationControlDelegate.currentAnimationFrameCount
                 animationControlDelegate.animationGoToFrame(self, frame: nextFrameToDisplay)
                 assetInstance.currentFrame = nextFrameToDisplay
             }
