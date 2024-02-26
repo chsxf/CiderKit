@@ -56,7 +56,7 @@ final class FontHelpers {
                 descriptor = newDescriptor
             }
         }
-        let font = UIFont(descriptor: descriptor, volumeSize: 12)
+        let font = UIFont(descriptor: descriptor, size: 12)
         return font.fontName
     }
     

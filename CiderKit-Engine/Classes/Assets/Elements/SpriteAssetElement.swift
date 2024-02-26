@@ -64,7 +64,7 @@ public class SpriteAssetElement : TransformAssetElement {
         volumeSize = SIMD3(1, 1, 1)
         spriteLocator = nil
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        color = CGColor.white
+        color = SKColor.white.cgColor
         colorBlend = 0
         
         super.init(name: name)
@@ -116,7 +116,7 @@ public class SpriteAssetElement : TransformAssetElement {
             colorBlend = try container.decode(Float.self, forKey: .colorBlend)
         }
         else {
-            color = CGColor.white
+            color = SKColor.white.cgColor
             colorBlend = 0
         }
 
