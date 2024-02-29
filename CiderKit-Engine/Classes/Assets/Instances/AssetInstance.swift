@@ -12,6 +12,8 @@ open class AssetInstance : TransformAssetElementInstance {
     public let placement: AssetPlacement
     public let assetDescription: AssetDescription
     
+    public let worldPosition: SIMD3<Float>
+    
     public var currentAnimationName: String? = nil {
         didSet {
             updateAll(applyDefaults: true)
@@ -24,24 +26,31 @@ open class AssetInstance : TransformAssetElementInstance {
         }
     }
     
+    public override var absoluteOffset: SIMD3<Float> { parent?.absoluteOffset ?? (worldPosition + currentOffset) }
+
     private var elementInstancesByUUID: [UUID: TransformAssetElementInstance] = [:]
     private var referenceElementInstancesByUUID: [UUID: ReferenceAssetElementInstance] = [:]
     
     public subscript(element: TransformAssetElement) -> TransformAssetElementInstance? { elementInstancesByUUID[element.uuid] }
     
-    public convenience init(assetDescription: AssetDescription, at worldPosition: SIMD3<Float> = SIMD3()) {
-        self.init(placement: AssetPlacement(assetLocator: assetDescription.locator), at: worldPosition)!
+    public convenience init(assetDescription: AssetDescription, at worldPosition: SIMD3<Float> = SIMD3(), offsetNodeByWorldPosition: Bool = true) {
+        self.init(placement: AssetPlacement(assetLocator: assetDescription.locator), at: worldPosition, offsetNodeByWorldPosition: offsetNodeByWorldPosition)!
     }
     
-    public init?(placement: AssetPlacement, at worldPosition: SIMD3<Float>) {
+    public init?(placement: AssetPlacement, at worldPosition: SIMD3<Float>, offsetNodeByWorldPosition: Bool = true) {
         guard let assetDescription = placement.assetLocator.assetDescription else { return nil }
         
         self.placement = placement
         self.assetDescription = assetDescription
         
+        self.worldPosition = worldPosition
+        
         super.init(element: assetDescription.rootElement)
         
         createNode(at: worldPosition)
+        if offsetNodeByWorldPosition {
+            node!.position = node!.position + MapNode.computeNodePosition(with: worldPosition)
+        }
         node!.zPosition = 1
         
         elementInstancesByUUID[assetDescription.rootElement.uuid] = self

@@ -182,8 +182,8 @@ open class MapNode: SKNode, Collection {
         return nil
     }
     
-    open func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> AssetInstance {
-        AssetInstance(placement: placement, at: worldPosition)!
+    open func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> AssetInstance? {
+        AssetInstance(placement: placement, at: worldPosition)
     }
     
     public static func computeNodePosition(with offset: SIMD3<Float>) -> CGPoint { computeNodePosition(x: offset.x, y: offset.y, z: offset.z) }

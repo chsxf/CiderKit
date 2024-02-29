@@ -84,7 +84,7 @@ open class GameView: LitSceneView {
             
             maxVector.x = max(maxVector.x, Float(area.maxX))
             maxVector.y = max(maxVector.y, Float(area.maxY))
-            maxVector.z = max(maxVector.z, Float(region.regionDescription.elevation + 1) * Float(0.25))
+            maxVector.z = max(maxVector.z, Float(region.regionDescription.elevation + 1))
         }
         
         return matrix_float3x3(minVector, maxVector, SIMD3())

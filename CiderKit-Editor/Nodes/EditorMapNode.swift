@@ -157,28 +157,29 @@ class EditorMapNode: MapNode {
     
     @objc
     private func assetErased(notification: Notification) {
-//        if let assetComponent = notification.object as? AssetComponent {
-//            NotificationCenter.default.removeObserver(self, name: .selectableErased, object: assetComponent)
-//            
-//            let entity = assetComponent.entity!
-//            hoverableEntities.removeAll(where: { $0 === entity })
-//            
-//            let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)!.node as! AssetNode
-//            
-//            for region in regions {
-//                if region.regionDescription.assets?.contains(where: { $0.id == assetNode.placement.id }) ?? false {
-//                    region.regionDescription.assets!.removeAll(where: { $0.id == assetNode.placement.id })
-//                    assetNode.removeFromParent()
-//                    break
-//                }
-//            }
-//            
-//            dirty = true
-//        }
+        if let assetComponent = notification.object as? AssetComponent {
+            NotificationCenter.default.removeObserver(self, name: .selectableErased, object: assetComponent)
+            
+            let entity = assetComponent.entity!
+            hoverableEntities.removeAll(where: { $0 === entity })
+            
+            let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)?.node
+            
+            for region in regions {
+                if region.regionDescription.assets?.contains(where: { $0.id == assetComponent.placement.id }) ?? false {
+                    region.regionDescription.assets!.removeAll(where: { $0.id == assetComponent.placement.id })
+                    assetNode?.removeFromParent()
+                    break
+                }
+            }
+            
+            dirty = true
+        }
     }
     
-    override func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> AssetInstance {
-        let instance = EditorAssetInstance(placement: placement, at: worldPosition)!
+    override func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> AssetInstance? {
+        guard let instance = EditorAssetInstance(placement: placement, at: worldPosition) else { return nil }
+        
         let entity = AssetComponent.entity(from: placement, with: instance)
         hoverableEntities.append(entity)
         let component = entity.component(ofType: AssetComponent.self)!

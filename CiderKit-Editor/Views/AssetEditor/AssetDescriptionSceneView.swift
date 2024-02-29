@@ -356,7 +356,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
             return
         }
         
-        showBoundingBox(position: boundingBox.min, size: boundingBox.size * SIMD3(1, 1, 4))
+        showBoundingBox(position: boundingBox.min, size: boundingBox.size)
     }
     
     public func showBoundingBox(position: SIMD3<Float>, size: SIMD3<Float>) {

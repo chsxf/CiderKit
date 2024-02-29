@@ -201,6 +201,7 @@ class EditorGameView: GameView {
         worldGrid.isHidden = true
         viewFrustrumShape?.isHidden = true
         lightsRoot.isHidden = true
+        selectionManager?.hideTools()
     }
     
     override func prepassesDidComplete() {
@@ -209,6 +210,7 @@ class EditorGameView: GameView {
         worldGrid.isHidden = false
         viewFrustrumShape?.isHidden = false
         lightsRoot.isHidden = false
+        selectionManager?.showTools()
     }
     
     private func buildLightNodes() {
@@ -261,6 +263,7 @@ class EditorGameView: GameView {
             }
             
             region.addAsset(asset, atX: x, y: y)
+            mutableMap.dirty = true
         }
     }
     

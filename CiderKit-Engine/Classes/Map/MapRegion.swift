@@ -63,7 +63,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 let isoX = MapNode.halfWidth * (mapX - mapY)
                 let isoY = (regionDescription.elevation * MapNode.elevationHeight) - MapNode.halfHeight * (mapY + mapX)
                 
-                let zForShader = Float(regionDescription.elevation) / 4.0
+                let zForShader = Float(regionDescription.elevation)
                 
                 if renderer.leftElevationMaterialResetPolicy == .resetWithEachCell {
                     leftElevationMaterial.reset()
@@ -79,10 +79,10 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -2
                     
-                    let z = zForShader - Float(i + 1) * Float(0.25)
+                    let z = zForShader - Float(i + 1)
                     sprite.attributeValues = [
                         CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), z)),
-                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 0.25))
+                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 1))
                     ]
                     
                     localLeftElevationMaterialOverride = regionDescription.leftElevationMaterialOverride(at: indexInRegion)
@@ -105,10 +105,10 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     sprite.position = CGPoint(x: isoX, y: isoY - MapNode.halfHeight - (i * MapNode.elevationHeight))
                     sprite.zPosition = -1
                     
-                    let z = zForShader - Float(i + 1) * Float(0.25)
+                    let z = zForShader - Float(i + 1)
                     sprite.attributeValues = [
                         CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), z)),
-                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 0.25))
+                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 1))
                     ]
                     
                     localRightElevationMaterialOverride = regionDescription.rightElevationMaterialOverride(at: indexInRegion)
@@ -239,17 +239,10 @@ public class MapRegion : SKNode, Identifiable, Comparable {
     
     private func instantiateAsset(placement: AssetPlacement) {
         let absoluteCoords = regionDescription.area.convert(fromX: placement.x, y: placement.y)
-        var worldPosition = SIMD3<Float>(Float(absoluteCoords.x), Float(absoluteCoords.y), Float(elevation)) + placement.worldOffset.toSIMDFloat3()
-        worldPosition.z *= 0.25
+        let worldPosition = SIMD3<Float>(Float(absoluteCoords.x), Float(absoluteCoords.y), Float(elevation)) + placement.worldOffset.toSIMDFloat3()
         
-        if let instance = AssetInstance(placement: placement, at: worldPosition) {
-            var scenePosition = Math.cellToScene(CGPoint(x: absoluteCoords.x, y: absoluteCoords.y) + CGPoint(x: 0.5, y: 0.5), halfTileSize: CGSize(width: MapNode.halfWidth, height: MapNode.halfHeight)) + placement.worldOffset
-            scenePosition = scenePosition + CGPoint(x: 0, y: elevation * MapNode.elevationHeight)
-            
-            let node = instance.node!
-            node.position = scenePosition
-            addChild(node)
-            
+        if let instance = map?.instantiateAsset(placement: placement, at: worldPosition) {
+            addChild(instance.node!)
             assetInstances.append(instance)
         }
     }

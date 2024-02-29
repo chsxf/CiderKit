@@ -28,7 +28,7 @@ public class PointLight: BaseLight {
             if !enabled {
                 falloffVector.y = 0
             }
-            return matrix_float3x3([position * SIMD3(1, 1, 0.25), vector, falloffVector])
+            return matrix_float3x3([position, vector, falloffVector])
         }
     }
     

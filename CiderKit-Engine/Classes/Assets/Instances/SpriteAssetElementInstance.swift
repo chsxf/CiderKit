@@ -53,7 +53,7 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
         spriteNode.color = SKColorFromCGColor(currentColor)
         spriteNode.colorBlendFactor = CGFloat(currentColorBlendFactor)
         
-        let rtVolumeSize = currentVolumeSize * SIMD3(1, 1, 0.25)
+        let rtVolumeSize = currentVolumeSize
         spriteNode.attributeValues = [
             CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: worldPosition + currentOffset + currentVolumeOffset - rtVolumeSize * SIMD3(0.5, 0.5, 0)),
             CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: rtVolumeSize)
@@ -129,7 +129,7 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     
     public override func updateHierarchyDependentProperties() {
         if let spriteNode {
-            let rtVolumeSize = currentVolumeSize * SIMD3(1, 1, 0.25)
+            let rtVolumeSize = currentVolumeSize
             spriteNode.attributeValues = [
                 CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: absoluteOffset + currentVolumeOffset - rtVolumeSize * SIMD3(0.5, 0.5, 0)),
                 CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: rtVolumeSize)
@@ -263,7 +263,7 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
                 self.currentVolumeSize = SIMD3(
                     (xVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.x) as! Float,
                     (yVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.y) as! Float,
-                    ((zVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.z) as! Float) * 0.25
+                    ((zVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.z) as! Float)
                 )
                 
                 self.updateHierarchyDependentProperties()

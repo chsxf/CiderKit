@@ -47,6 +47,14 @@ class SelectionManager: NSResponder {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func hideTools() {
+        toolsRoot.isHidden = true
+    }
+    
+    func showTools() {
+        toolsRoot.isHidden = false
+    }
+    
     override func mouseDown(with event: NSEvent) {
         if let currentActiveTool = currentActiveTool {
             let sceneCoordinates = event.location(in: editorGameView.scene!)

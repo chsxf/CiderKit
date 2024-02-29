@@ -18,16 +18,19 @@ final class EditorAssetInstance: AssetInstance {
     }
     
     convenience init(assetDescription: AssetDescription) {
-        self.init(placement: AssetPlacement(assetLocator: assetDescription.locator), at: SIMD3())!
+        self.init(placement: AssetPlacement(assetLocator: assetDescription.locator), at: SIMD3(), offsetNodeByWorldPosition: true)!
     }
     
-    override init?(placement: AssetPlacement, at worldPosition: SIMD3<Float>) {
-        super.init(placement: placement, at: SIMD3())!
+    override init?(placement: AssetPlacement, at worldPosition: SIMD3<Float>, offsetNodeByWorldPosition: Bool = true) {
+        super.init(placement: placement, at: worldPosition, offsetNodeByWorldPosition: offsetNodeByWorldPosition)!
         
-        outline = SKShapeNode(rect: node!.calculateAccumulatedFrame())
-        outline.isHidden = true
-        outline.lineWidth = 1
-        node!.addChild(outline)
+        if let node {
+            outline = SKShapeNode(rect: node.calculateAccumulatedFrame())
+            outline.position = CGPoint(x: -node.position.x, y: -node.position.y)
+            outline.isHidden = true
+            outline.lineWidth = 1
+            node.addChild(outline)
+        }
     }
     
     fileprivate func updateOutlineColor() {
