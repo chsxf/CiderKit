@@ -5,10 +5,20 @@ import GameplayKit
 import CiderKit_Engine
 import Combine
 
+fileprivate struct OutlineData {
+    
+    var selected: Bool = false
+    var hovered: Bool = false
+    var frame: CGRect
+    var node: SKShapeNode? = nil
+    
+}
+
 class SelectionManager: NSResponder {
     
     private let editorGameView: EditorGameView
     
+    private let selectionOutlinesRoot: SKNode
     private let toolsRoot: SKNode
     private var toolsByMode: [ToolMode: (GKEntity, Tool)] = [:]
     private var currentActiveTool: Tool? = nil
@@ -28,17 +38,29 @@ class SelectionManager: NSResponder {
         }
     }
     
+    private var outlines = [UUID: OutlineData]()
+    
     init(editorGameView: EditorGameView) {
         self.editorGameView = editorGameView
+        
+        selectionOutlinesRoot = SKNode()
+        selectionOutlinesRoot.zPosition = 11000
+        
         toolsRoot = SKNode()
-        toolsRoot.zPosition = 11000
+        toolsRoot.zPosition = selectionOutlinesRoot.zPosition + 1
         
         super.init()
         
         NotificationCenter.default.addObserver(self, selector: #selector(SelectionManager.onSelectableUpdated(notification:)), name: .selectableUpdated, object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(Self.onSelectableHighlighted(notification:)), name: .selectableHighlighted, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(Self.onSelectableDeemphasized(notification:)), name: .selectableDeemphasized, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(Self.onHoverableHovered(notification:)), name: .hoverableHovered, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(Self.onSelectableDeparted(notification:)), name: .hoverableDeparted, object: nil)
+        
         let scene = editorGameView.scene!
-        EditorMapCellComponent.initSelectionShapes(in: scene)
+        scene.addChild(selectionOutlinesRoot)
+        EditorMapCellComponent.initSelectionShapes(in: selectionOutlinesRoot)
         scene.addChild(toolsRoot)
         initTools()
     }
@@ -191,6 +213,120 @@ class SelectionManager: NSResponder {
         {
             currentActiveTool.moveTo(scenePosition: linkedSelectable.scenePosition)
         }
+    }
+    
+    @objc
+    private func onSelectableHighlighted(notification: Notification) {
+        guard let assetInstance = notification.object as? AssetInstance, let assetNode = assetInstance.node else { return }
+        requestSelectionOutline(for: assetInstance.uuid, with: assetNode.calculateAccumulatedFrame())
+    }
+    
+    func requestSelectionOutline(for uuid: UUID, with frame: CGRect) {
+        var outlineData = outlines[uuid]
+        
+        if outlineData == nil {
+            outlineData = OutlineData(selected: true, frame: frame, node: createOutline(with: frame))
+        }
+        else {
+            outlineData!.selected = true
+            if frame != outlineData!.frame {
+                outlineData!.frame = frame
+                outlineData!.node = createOutline(with: frame)
+            }
+        }
+        
+        outlines[uuid] = outlineData!
+        updateOutlineColor(outlineData: outlineData)
+    }
+    
+    @objc
+    private func onSelectableDeemphasized(notification: Notification) {
+        guard let assetInstance = notification.object as? AssetInstance else { return }
+        dismissSelectionOutline(for: assetInstance.uuid)
+    }
+    
+    func dismissSelectionOutline(for uuid: UUID) {
+        guard var outlineData = outlines[uuid] else { return }
+        
+        outlineData.selected = false
+        if !outlineData.hovered {
+            outlineData.node?.removeFromParent()
+            outlines[uuid] = nil
+        }
+        else {
+            outlines[uuid] = outlineData
+            updateOutlineColor(outlineData: outlineData)
+        }
+    }
+    
+    func dismissAllSelectionOutlines() {
+        for (uuid, _) in outlines {
+            dismissHoverOutline(for: uuid)
+        }
+    }
+    
+    @objc
+    private func onHoverableHovered(notification: Notification) {
+        guard let assetInstance = notification.object as? AssetInstance, let assetNode = assetInstance.node else { return }
+        requestHoverOutline(for: assetInstance.uuid, with: assetNode.calculateAccumulatedFrame())
+    }
+    
+    func requestHoverOutline(for uuid: UUID, with frame: CGRect) {
+        var outlineData = outlines[uuid]
+        
+        if outlineData == nil {
+            outlineData = OutlineData(hovered: true, frame: frame, node: createOutline(with: frame))
+        }
+        else {
+            outlineData!.hovered = true
+            if frame != outlineData!.frame {
+                outlineData!.frame = frame
+                outlineData!.node = createOutline(with: frame)
+            }
+        }
+        
+        outlines[uuid] = outlineData!
+        updateOutlineColor(outlineData: outlineData)
+    }
+    
+    @objc
+    private func onSelectableDeparted(notification: Notification) {
+        guard let assetInstance = notification.object as? AssetInstance else { return }
+        dismissHoverOutline(for: assetInstance.uuid)
+    }
+    
+    func dismissHoverOutline(for uuid: UUID) {
+        guard var outlineData = outlines[uuid] else { return }
+        
+        outlineData.hovered = false
+        if !outlineData.selected {
+            outlineData.node?.removeFromParent()
+            outlines[uuid] = nil
+        }
+        else {
+            outlines[uuid] = outlineData
+            updateOutlineColor(outlineData: outlineData)
+        }
+    }
+    
+    func dismissAllHoverOutlines() {
+        for (uuid, _) in outlines {
+            dismissHoverOutline(for: uuid)
+        }
+    }
+    
+    private func createOutline(with rect: CGRect) -> SKShapeNode {
+        let outline = SKShapeNode(rect: rect)
+        outline.lineWidth = 1
+        selectionOutlinesRoot.addChild(outline)
+        return outline
+    }
+    
+    private func updateOutlineColor(outlineData: OutlineData?) {
+        guard let outlineData, let node = outlineData.node else { return }
+        
+        let color = outlineData.selected ? SKColor.green : SKColor.red
+        node.strokeColor = color
     }
     
 }

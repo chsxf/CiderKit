@@ -37,19 +37,19 @@ class AssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     }
     
     func highlight() {
-        assetInstance?.selected = true
+        NotificationCenter.default.post(name: .selectableHighlighted, object: assetInstance)
     }
     
-    func demphasize() {
-        assetInstance?.selected = false
+    func deemphasize() {
+        NotificationCenter.default.post(name: .selectableDeemphasized, object: assetInstance)
     }
     
     func hovered() {
-        assetInstance?.hovered = true
+        NotificationCenter.default.post(name: .hoverableHovered, object: assetInstance)
     }
     
     func departed() {
-        assetInstance?.hovered = false
+        NotificationCenter.default.post(name: .hoverableDeparted, object: assetInstance)
     }
     
     func validate() -> Bool {

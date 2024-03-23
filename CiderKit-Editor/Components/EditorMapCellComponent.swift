@@ -29,7 +29,7 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
         Self.selectionShape.position = node.position
     }
     
-    func demphasize() {
+    func deemphasize() {
         Self.selectionShape.isHidden = true
     }
     
@@ -46,7 +46,7 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
         Self.hoveringShape.isHidden = true
     }
     
-    public static func initSelectionShapes(in scene: SKScene) {
+    public static func initSelectionShapes(in container: SKNode) {
         var points: [CGPoint] = [
             CGPoint(x: -24, y: -12),
             CGPoint(x: 0, y: 0),
@@ -60,7 +60,7 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
         selectionShape.lineWidth = 1
         selectionShape.zPosition = 5000
         selectionShape.isHidden = true
-        scene.addChild(selectionShape)
+        container.addChild(selectionShape)
         
         hoveringShape = SKShapeNode(points: &points, count: points.count)
         hoveringShape.strokeShader = SKShader(fileNamed: "HoverShader")
@@ -68,7 +68,7 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
         hoveringShape.lineWidth = 1
         hoveringShape.zPosition = 5001
         hoveringShape.isHidden = true
-        scene.addChild(hoveringShape)
+        container.addChild(hoveringShape)
     }
     
 }

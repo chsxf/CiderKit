@@ -3,7 +3,9 @@ import GameplayKit
 import CiderKit_Engine
 
 extension Notification.Name {
+    
     static let selectableUpdated = Notification.Name(rawValue: "selectableUpdated")
+    
 }
 
 class SelectionModel: ObservableObject {
@@ -29,21 +31,25 @@ class SelectionModel: ObservableObject {
     func clear() {
         hoverable?.departed()
         hoverable = nil
-        selectable?.demphasize()
+        selectable?.deemphasize()
         selectable = nil
     }
     
     func setHoverable(_ hoverable: Hoverable?) {
-        self.hoverable?.departed()
-        self.hoverable = hoverable
-        self.hoverable?.hovered()
+        if self.hoverable !== hoverable {
+            self.hoverable?.departed()
+            self.hoverable = hoverable
+            self.hoverable?.hovered()
+        }
     }
     
     func setSelectable(_ selectable: Selectable?) {
-        self.selectable?.demphasize()
-        self.selectable = selectable
-        self.selectable?.highlight()
-        NotificationCenter.default.post(name: .selectableUpdated, object: self.selectable)
+        if self.selectable !== selectable {
+            self.selectable?.deemphasize()
+            self.selectable = selectable
+            self.selectable?.highlight()
+            NotificationCenter.default.post(name: .selectableUpdated, object: self.selectable)
+        }
     }
     
 }

@@ -54,7 +54,7 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
         lightNode?.selected = true
     }
     
-    func demphasize() {
+    func deemphasize() {
         lightNode?.selected = false
     }
     

@@ -676,13 +676,13 @@
 			isa = PBXGroup;
 			children = (
 				D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */,
+				D94C153C29AE748B0065DD64 /* AssetComponent.swift */,
 				D9173DA62878E134002E652C /* EditableComponent.swift */,
 				D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */,
 				D9405F6F2838F1A900CA953A /* EditorMapCellComponent.swift */,
 				D90299742880B857002A7606 /* ElevationToolComponent.swift */,
 				D96A3BF2287A2767008949A1 /* MoveToolComponent.swift */,
 				D9405F6A2838E67E00CA953A /* PointLightComponent.swift */,
-				D94C153C29AE748B0065DD64 /* AssetComponent.swift */,
 				D902997C2880BEE3002A7606 /* ToolComponent.swift */,
 			);
 			path = Components;

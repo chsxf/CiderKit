@@ -1,6 +1,13 @@
 import CoreGraphics
 import GameplayKit
 
+extension Notification.Name {
+    
+    static let hoverableHovered = Self.init(rawValue: "hoverableHovered")
+    static let hoverableDeparted = Self.init(rawValue: "hoverableDeparted")
+    
+}
+
 protocol Hoverable: AnyObject {
     
     var entity: GKEntity? { get }

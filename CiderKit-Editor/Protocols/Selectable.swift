@@ -1,7 +1,11 @@
 import GameplayKit
 
 extension Notification.Name {
-    static let selectableErased = Notification.Name(rawValue: "selectableErased")
+    
+    static let selectableHighlighted = Self.init(rawValue: "selectableHighlighted")
+    static let selectableDeemphasized = Self.init(rawValue: "selectableDeemphasized")
+    static let selectableErased = Self.init(rawValue: "selectableErased")
+    
 }
 
 protocol Selectable: Hoverable {
@@ -13,7 +17,7 @@ protocol Selectable: Hoverable {
     var inspectorView: BaseInspectorView? { get }
     
     func highlight()
-    func demphasize()
+    func deemphasize()
     
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) -> Void
     func erase() -> Void

@@ -2,6 +2,8 @@ import SpriteKit
 
 open class TransformAssetElementInstance {
     
+    public let uuid = UUID()
+    
     public var assetInstance: AssetInstance? { (self as? AssetInstance) ?? parent?.assetInstance }
     
     public let element: TransformAssetElement
