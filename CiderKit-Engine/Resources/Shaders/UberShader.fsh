@@ -27,21 +27,21 @@ vec4 flipRGChannels(vec4 texColor) {
 void main() {
     vec2 tc = nearestNeighbor(v_tex_coord, u_tex_size);
     
-    bool flipped = a_size_flip[3] > 0
+    bool flipped = a_size_flip[3] > 0;
     
     if (u_shadeMode > 1.0) {
         vec4 texColor = texture2D(u_normals_texture, tc);
         if (flipped) {
             texColor = flipRGChannels(texColor);
         }
-        gl_FragColor = texColor
+        gl_FragColor = texColor;
     }
     else if (u_shadeMode > 0.0) {
         vec4 texColor = texture2D(u_position_texture, tc);
         if (flipped) {
             texColor = flipRGChannels(texColor);
         }
-        gl_FragColor = shadeWithPosition(texColor, a_position, a_size_flip.xyz, u_position_ranges);
+        gl_FragColor = shadeWithPosition(texColor, a_position, a_size_flip.rgb, u_position_ranges);
     }
     else {
         gl_FragColor = texture2D(u_texture, tc) * v_color_mix;

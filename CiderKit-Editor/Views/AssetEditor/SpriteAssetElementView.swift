@@ -145,7 +145,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                     else {
                         spriteElement.spriteLocator = locator
                     }
-                    elementViewDelegate.updateElement(element: spriteElement)
+                    elementViewDelegate.update(element: spriteElement)
                 }
             }
         }
@@ -163,7 +163,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
             else {
                 spriteElement.spriteLocator = nil
             }
-            elementViewDelegate.updateElement(element: spriteElement)
+            elementViewDelegate.update(element: spriteElement)
         }
     }
     
@@ -175,7 +175,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
             else {
                 spriteElement.color = color
             }
-            elementViewDelegate.updateElement(element: spriteElement)
+            elementViewDelegate.update(element: spriteElement)
         }
     }
     
@@ -187,7 +187,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
             else {
                 spriteElement.colorBlend = newValue
             }
-            elementViewDelegate.updateElement(element: spriteElement)
+            elementViewDelegate.update(element: spriteElement)
         }
     }
     
@@ -201,7 +201,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeOffset.x = xOffsetField.value
                 }
-                elementViewDelegate.updateElement(element: spriteElement)
+                elementViewDelegate.update(element: spriteElement)
             }
             
         case yOffsetField:
@@ -212,7 +212,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeOffset.y = yOffsetField.value
                 }
-                elementViewDelegate.updateElement(element: spriteElement)
+                elementViewDelegate.update(element: spriteElement)
             }
             
         case zOffsetField:
@@ -223,7 +223,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeOffset.z = zOffsetField.value
                 }
-                elementViewDelegate.updateElement(element: spriteElement)
+                elementViewDelegate.update(element: spriteElement)
             }
             
         case xSizeField:
@@ -234,7 +234,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeSize.x = xSizeField.value
                 }
-                elementViewDelegate.updateElement(element: spriteElement)
+                elementViewDelegate.update(element: spriteElement)
             }
             
         case ySizeField:
@@ -245,7 +245,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeSize.y = ySizeField.value
                 }
-                elementViewDelegate.updateElement(element: spriteElement)
+                elementViewDelegate.update(element: spriteElement)
             }
             
         case zSizeField:
@@ -256,7 +256,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.volumeSize.z = zSizeField.value
                 }
-                elementViewDelegate.updateElement(element: spriteElement)
+                elementViewDelegate.update(element: spriteElement)
             }
             
         case xAnchorField:
@@ -267,7 +267,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.anchorPoint.x = CGFloat(xAnchorField.value)
                 }
-                elementViewDelegate.updateElement(element: spriteElement)
+                elementViewDelegate.update(element: spriteElement)
             }
             
         case yAnchorField:
@@ -278,7 +278,7 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
                 else {
                     spriteElement.anchorPoint.y = CGFloat(yAnchorField.value)
                 }
-                elementViewDelegate.updateElement(element: spriteElement)
+                elementViewDelegate.update(element: spriteElement)
             }
             
         default:

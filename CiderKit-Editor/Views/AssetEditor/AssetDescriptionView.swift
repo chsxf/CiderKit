@@ -308,7 +308,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         return assetDescription.getAnimationKey(trackType: trackType, for: elementUUID, in: animationName, at: animationView.currentAnimationFrame)
     }
     
-    public func updateElement(element: TransformAssetElement) {
+    public func update(element: TransformAssetElement) {
         if let skView {
             skView.updateElement(element)
             skView.showBoundingBox(for: element)

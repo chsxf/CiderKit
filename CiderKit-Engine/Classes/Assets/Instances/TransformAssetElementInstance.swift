@@ -18,6 +18,10 @@ open class TransformAssetElementInstance {
     public private(set) var currentVisibility: Bool
     public private(set) var currentOffset: SIMD3<Float>
     
+    public final var flipCountInAncestors: Int { (parent?.flipCountInAncestors ?? 0) + (element.flipped ? 1 : 0) }
+    
+    public final var isAncestorOrSelfFlipped: Bool { flipCountInAncestors % 2 != 0 }
+    
     public final var boundingBox: AssetBoundingBox? {
         var bb: AssetBoundingBox? = selfBoundingBox
         for child in children {
@@ -53,6 +57,7 @@ open class TransformAssetElementInstance {
         node.name = element.name
         node.isHidden = !currentVisibility
         node.position = MapNode.computeNodePosition(with: currentOffset)
+        node.xScale = element.flipped ? -1 : 1
         
         if let parentNode = parent?.node {
             parentNode.addChild(node)
@@ -67,6 +72,8 @@ open class TransformAssetElementInstance {
         
         currentOffset = element.offset
         node.position = MapNode.computeNodePosition(with: currentOffset)
+        
+        node.xScale = element.flipped ? -1 : 1
         
         updateHierarchyDependentProperties()
     }
@@ -87,10 +94,11 @@ open class TransformAssetElementInstance {
         currentOffset = SIMD3(snapshot.get(trackType: .xOffset), snapshot.get(trackType: .yOffset), snapshot.get(trackType: .zOffset))
         node.position = MapNode.computeNodePosition(with: currentOffset)
         
+        node.xScale = element.flipped ? -1 : 1
+        
         updateHierarchyDependentProperties()
     }
-    
-    
+        
     public func updateHierarchyDependentProperties() {
         for child in children {
             child.updateHierarchyDependentProperties()

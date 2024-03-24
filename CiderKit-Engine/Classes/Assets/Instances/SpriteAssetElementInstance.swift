@@ -55,7 +55,7 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
         
         spriteNode.attributeValues = [
             CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: worldPosition + currentOffset + currentVolumeOffset - currentVolumeSize * SIMD3(0.5, 0.5, 0)),
-            CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(currentVolumeSize, 0))
+            CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(currentVolumeSize, isAncestorOrSelfFlipped ? 1 : 0))
         ]
     }
     
@@ -130,7 +130,7 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
         if let spriteNode {
             spriteNode.attributeValues = [
                 CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: absoluteOffset + currentVolumeOffset - currentVolumeSize * SIMD3(0.5, 0.5, 0)),
-                CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(currentVolumeSize, 0))
+                CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(currentVolumeSize, isAncestorOrSelfFlipped ? 1 : 0))
             ]
         }
         
