@@ -82,7 +82,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     let z = zForShader - Float(i + 1)
                     sprite.attributeValues = [
                         CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), z)),
-                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 1))
+                        CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(1, 1, 1, 0))
                     ]
                     
                     localLeftElevationMaterialOverride = regionDescription.leftElevationMaterialOverride(at: indexInRegion)
@@ -108,7 +108,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     let z = zForShader - Float(i + 1)
                     sprite.attributeValues = [
                         CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), z)),
-                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 1))
+                        CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(1, 1, 1, 0))
                     ]
                     
                     localRightElevationMaterialOverride = regionDescription.rightElevationMaterialOverride(at: indexInRegion)
@@ -130,7 +130,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 
                 sprite.attributeValues = [
                     CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), zForShader)),
-                    CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 0))
+                    CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(1, 1, 0, 0))
                 ]
                 
                 addChild(sprite)

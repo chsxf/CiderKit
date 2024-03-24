@@ -18,12 +18,12 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     open override var selfBoundingBox: AssetBoundingBox? {
         guard
             let position = spriteNode?.attributeValues[CiderKitEngine.ShaderAttributeName.position.rawValue]?.vectorFloat3Value,
-            let size = spriteNode?.attributeValues[CiderKitEngine.ShaderAttributeName.size.rawValue]?.vectorFloat3Value
+            let sizeAndFlip = spriteNode?.attributeValues[CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue]?.vectorFloat4Value
         else {
             return nil
         }
         
-        return AssetBoundingBox(min: position, size: size)
+        return AssetBoundingBox(min: position, size: SIMD3(sizeAndFlip))
     }
     
     public init(element: SpriteAssetElement) {
@@ -53,10 +53,9 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
         spriteNode.color = SKColorFromCGColor(currentColor)
         spriteNode.colorBlendFactor = CGFloat(currentColorBlendFactor)
         
-        let rtVolumeSize = currentVolumeSize
         spriteNode.attributeValues = [
-            CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: worldPosition + currentOffset + currentVolumeOffset - rtVolumeSize * SIMD3(0.5, 0.5, 0)),
-            CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: rtVolumeSize)
+            CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: worldPosition + currentOffset + currentVolumeOffset - currentVolumeSize * SIMD3(0.5, 0.5, 0)),
+            CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(currentVolumeSize, 0))
         ]
     }
     
@@ -129,10 +128,9 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     
     public override func updateHierarchyDependentProperties() {
         if let spriteNode {
-            let rtVolumeSize = currentVolumeSize
             spriteNode.attributeValues = [
-                CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: absoluteOffset + currentVolumeOffset - rtVolumeSize * SIMD3(0.5, 0.5, 0)),
-                CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: rtVolumeSize)
+                CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: absoluteOffset + currentVolumeOffset - currentVolumeSize * SIMD3(0.5, 0.5, 0)),
+                CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(currentVolumeSize, 0))
             ]
         }
         
