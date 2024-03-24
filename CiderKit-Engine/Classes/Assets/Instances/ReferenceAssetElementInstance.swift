@@ -52,7 +52,6 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
     }
     
     private func instantiateReferencedAsset(in node: SKNode, from assetDescription: AssetDescription) {
-        print(absoluteOffset)
         let referencedAssetInstance = AssetInstance(assetDescription: assetDescription, at: absoluteOffset, offsetNodeByWorldPosition: false)
         self.referencedAssetInstance = referencedAssetInstance
         addChild(referencedAssetInstance)
