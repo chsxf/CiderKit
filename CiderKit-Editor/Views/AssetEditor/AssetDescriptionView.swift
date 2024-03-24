@@ -63,7 +63,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
     
     private var lastKnownDescriptionSceneViewZoomFactor: Int = 1
     
-    private var assetInstance: EditorAssetInstance? = nil
+    private var assetInstance: AssetInstance? = nil
     
     var assetDescription: AssetDescription? = nil {
         didSet {
@@ -73,7 +73,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
             }
             else if let assetDescription {
                 selectedAssetElement = assetDescription.rootElement
-                assetInstance = EditorAssetInstance(assetDescription: assetDescription)
+                assetInstance = AssetInstance(assetDescription: assetDescription, horizontallyFlipped: false)
                 
                 if oldValue == nil {
                     buildControls()
@@ -308,7 +308,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         return assetDescription.getAnimationKey(trackType: trackType, for: elementUUID, in: animationName, at: animationView.currentAnimationFrame)
     }
     
-    public func updateElement(element: TransformAssetElement) {
+    public func update(element: TransformAssetElement) {
         if let skView {
             skView.updateElement(element)
             skView.showBoundingBox(for: element)

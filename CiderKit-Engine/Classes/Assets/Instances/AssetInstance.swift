@@ -26,15 +26,17 @@ open class AssetInstance : TransformAssetElementInstance {
         }
     }
     
-    public override var absoluteOffset: SIMD3<Float> { parent?.absoluteOffset ?? (worldPosition + currentOffset) }
+    public override var absoluteOffset: SIMD3<Float> { parent?.absoluteOffset ?? (worldPosition + adjustedCurrentOffset) }
 
+    public override var horizontallyFlippedBySelf: Bool { placement.horizontallyFlipped || super.horizontallyFlippedBySelf }
+    
     private var elementInstancesByUUID: [UUID: TransformAssetElementInstance] = [:]
     private var referenceElementInstancesByUUID: [UUID: ReferenceAssetElementInstance] = [:]
     
     public subscript(element: TransformAssetElement) -> TransformAssetElementInstance? { elementInstancesByUUID[element.uuid] }
     
-    public convenience init(assetDescription: AssetDescription, at worldPosition: SIMD3<Float> = SIMD3(), offsetNodeByWorldPosition: Bool = true) {
-        self.init(placement: AssetPlacement(assetLocator: assetDescription.locator), at: worldPosition, offsetNodeByWorldPosition: offsetNodeByWorldPosition)!
+    public convenience init(assetDescription: AssetDescription, horizontallyFlipped: Bool, at worldPosition: SIMD3<Float> = SIMD3(), offsetNodeByWorldPosition: Bool = true) {
+        self.init(placement: AssetPlacement(assetLocator: assetDescription.locator, horizontallyFlipped: horizontallyFlipped), at: worldPosition, offsetNodeByWorldPosition: offsetNodeByWorldPosition)!
     }
     
     public init?(placement: AssetPlacement, at worldPosition: SIMD3<Float>, offsetNodeByWorldPosition: Bool = true) {

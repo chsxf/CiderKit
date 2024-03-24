@@ -82,7 +82,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     let z = zForShader - Float(i + 1)
                     sprite.attributeValues = [
                         CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), z)),
-                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 1))
+                        CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(1, 1, 1, 0))
                     ]
                     
                     localLeftElevationMaterialOverride = regionDescription.leftElevationMaterialOverride(at: indexInRegion)
@@ -108,7 +108,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                     let z = zForShader - Float(i + 1)
                     sprite.attributeValues = [
                         CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), z)),
-                        CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 1))
+                        CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(1, 1, 1, 0))
                     ]
                     
                     localRightElevationMaterialOverride = regionDescription.rightElevationMaterialOverride(at: indexInRegion)
@@ -130,7 +130,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 
                 sprite.attributeValues = [
                     CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: SIMD3(Float(mapX), Float(mapY), zForShader)),
-                    CiderKitEngine.ShaderAttributeName.size.rawValue: SKAttributeValue(vectorFloat3: SIMD3(1, 1, 0))
+                    CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(1, 1, 0, 0))
                 ]
                 
                 addChild(sprite)
@@ -247,11 +247,11 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         }
     }
     
-    public func addAsset(_ asset: AssetLocator, atX x: Int, y: Int) {
+    public func addAsset(_ asset: AssetLocator, atX x: Int, y: Int, horizontallyFlipped: Bool) {
         regionDescription.assets = regionDescription.assets ?? []
         
         let coordsInRegion = regionDescription.area.convert(toX: x, y: y)
-        let placement = AssetPlacement(assetLocator: asset, atX: coordsInRegion.x, y: coordsInRegion.y, worldOffset: CGPoint())
+        let placement = AssetPlacement(assetLocator: asset, horizontallyFlipped: horizontallyFlipped, atX: coordsInRegion.x, y: coordsInRegion.y, worldOffset: CGPoint())
         regionDescription.assets!.append(placement)
         
         instantiateAsset(placement: placement)

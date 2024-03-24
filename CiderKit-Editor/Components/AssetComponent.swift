@@ -19,7 +19,7 @@ class AssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         return view
     }
     
-    fileprivate var assetInstance: EditorAssetInstance? = nil
+    fileprivate var assetInstance: AssetInstance? = nil
     
     fileprivate init(from placement: AssetPlacement) {
         self.placement = placement
@@ -62,7 +62,7 @@ class AssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         return frame.contains(sceneCoordinates)
     }
     
-    class func entity(from placement: AssetPlacement, with instance: EditorAssetInstance) -> GKEntity {
+    class func entity(from placement: AssetPlacement, with instance: AssetInstance) -> GKEntity {
         let newEntity = GKEntity();
         
         newEntity.addComponent(GKSKNodeComponent(node: instance.node!))

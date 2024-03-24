@@ -8,6 +8,7 @@ extension AssetElementCodingKeys {
     static let visible = Self.init(stringValue: "v")!
     static let offset = Self.init(stringValue: "o")!
     static let children = Self.init(stringValue: "c")!
+    static let horizontallyFlipped = Self.init(stringValue: "f")!
     
 }
 
@@ -30,6 +31,7 @@ public class TransformAssetElement : Hashable, Codable {
     public var name: String
     public var visible: Bool
     public var offset: SIMD3<Float>
+    public var horizontallyFlipped: Bool
     
     public private(set) var children: [TransformAssetElement]
 
@@ -59,6 +61,7 @@ public class TransformAssetElement : Hashable, Codable {
         
         visible = true
         offset = SIMD3()
+        horizontallyFlipped = false
 
         children = []
     }
@@ -74,6 +77,7 @@ public class TransformAssetElement : Hashable, Codable {
         
         visible = (try container.decodeIfPresent(Bool.self, forKey: .visible)) ?? true
         offset = try container.decode(SIMD3<Float>.self, forKey: .offset)
+        horizontallyFlipped = (try container.decodeIfPresent(Bool.self, forKey: .horizontallyFlipped)) ?? false
         
         children = []
         if var childrenSubContainer = try? container.nestedUnkeyedContainer(forKey: .children) {
@@ -102,6 +106,7 @@ public class TransformAssetElement : Hashable, Codable {
         
         try container.encode(visible, forKey: .visible)
         try container.encode(offset, forKey: .offset)
+        try container.encode(horizontallyFlipped, forKey: .horizontallyFlipped)
 
         if !children.isEmpty {
             var subContainer = container.nestedUnkeyedContainer(forKey: .children)

@@ -124,7 +124,6 @@
 		D972C1B42827D1BB00D85376 /* Default Tile Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */; };
 		D972C1B82827D9FD00D85376 /* EditorMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D972C1B72827D9FD00D85376 /* EditorMapNode.swift */; };
 		D9741C5F290D64E10078571B /* FloatExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9741C5E290D64E10078571B /* FloatExtension.swift */; };
-		D976C1BE2B546B1700D1389C /* EditorAssetInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = D976C1BD2B546B1700D1389C /* EditorAssetInstance.swift */; };
 		D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D978AE1B282703C7008F8D0E /* AtlasDescription.swift */; };
 		D978AE2028270EE8008F8D0E /* Grid Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */; };
 		D978C42B28281B6000BDF0BB /* UberShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D978C42A28281B6000BDF0BB /* UberShader.fsh */; };
@@ -356,7 +355,6 @@
 		D972C1B72827D9FD00D85376 /* EditorMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapNode.swift; sourceTree = "<group>"; };
 		D9730B1427B795A40007513C /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		D9741C5E290D64E10078571B /* FloatExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatExtension.swift; sourceTree = "<group>"; };
-		D976C1BD2B546B1700D1389C /* EditorAssetInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorAssetInstance.swift; sourceTree = "<group>"; };
 		D978AE1B282703C7008F8D0E /* AtlasDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtlasDescription.swift; sourceTree = "<group>"; };
 		D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Grid Atlas.ckatlas"; sourceTree = "<group>"; };
 		D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Default Tile Atlas.ckatlas"; sourceTree = "<group>"; };
@@ -621,7 +619,6 @@
 				D923F9EB2973731B000F040C /* NSMenuItemExtension.swift */,
 				D96A3BF0287A1F28008949A1 /* ToolMode.swift */,
 				D91ED91227E7AA520016D818 /* EditorAssets.xcassets */,
-				D976C1BC2B546AF400D1389C /* Classes */,
 				D9405F672838E45B00CA953A /* Components */,
 				D95B8C3B28836B700077DCA1 /* Managers */,
 				D933B7432830D34C00B63313 /* Nodes */,
@@ -832,14 +829,6 @@
 				D9A87A8427DD43770079C831 /* Shaders */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		D976C1BC2B546AF400D1389C /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				D976C1BD2B546B1700D1389C /* EditorAssetInstance.swift */,
-			);
-			path = Classes;
 			sourceTree = "<group>";
 		};
 		D978AE1E28270898008F8D0E /* Atlases */ = {
@@ -1249,7 +1238,6 @@
 				D95302E72894805C006E6285 /* AssetDatabaseDataSource.swift in Sources */,
 				D90299792880B975002A7606 /* ToolNode.swift in Sources */,
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
-				D976C1BE2B546B1700D1389C /* EditorAssetInstance.swift in Sources */,
 				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
 				D933B7442830D35B00B63313 /* PointLightNode.swift in Sources */,
 				D92D20D728860E23000B8DA9 /* AssetEditorView.swift in Sources */,

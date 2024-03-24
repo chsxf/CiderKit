@@ -109,7 +109,7 @@ public class ReferenceAssetElementView : TransformAssetElementView {
                     self.referenceField.stringValue = locator.humanReadableDescription
                     self.removeReferenceButton.isEnabled = true
                     referenceElement.assetLocator = locator
-                    elementViewDelegate.updateElement(element: referenceElement)
+                    elementViewDelegate.update(element: referenceElement)
                 }
             }
         }
@@ -123,7 +123,7 @@ public class ReferenceAssetElementView : TransformAssetElementView {
             
             referenceElement.assetLocator = nil
             referenceElement.animationName = nil
-            elementViewDelegate.updateElement(element: referenceElement)
+            elementViewDelegate.update(element: referenceElement)
         }
     }
     

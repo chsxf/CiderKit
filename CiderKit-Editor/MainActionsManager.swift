@@ -44,7 +44,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         app!.window.beginSheet(window) { responseCode in
             if responseCode == .OK {
                 if let locator = selectorView.getResult(), let selectedArea = self.gameView?.selectionModel.selectedMapArea {
-                    self.gameView?.addAsset(locator, atX: selectedArea.x, y: selectedArea.y)
+                    self.gameView?.addAsset(locator, atX: selectedArea.x, y: selectedArea.y, horizontallyFlipped: false)
                 }
             }
         }

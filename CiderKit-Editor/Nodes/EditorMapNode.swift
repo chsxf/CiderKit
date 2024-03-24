@@ -178,7 +178,7 @@ class EditorMapNode: MapNode {
     }
     
     override func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> AssetInstance? {
-        guard let instance = EditorAssetInstance(placement: placement, at: worldPosition) else { return nil }
+        guard let instance = AssetInstance(placement: placement, at: worldPosition) else { return nil }
         
         let entity = AssetComponent.entity(from: placement, with: instance)
         hoverableEntities.append(entity)

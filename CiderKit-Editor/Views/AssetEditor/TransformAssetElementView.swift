@@ -37,6 +37,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
     private let yOffsetField: FloatField
     private let zOffsetField: FloatField
     private let offsetRow: NSStackView
+    private let horizontallyFlippedCheckbox: NSButton
 
     private let nameField: NSTextField
     private let visibleCheckbox: NSButton
@@ -58,6 +59,8 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
         xOffsetField = FloatField(title: "X", step: 0.1)
         yOffsetField = FloatField(title: "Y", step: 0.1)
         zOffsetField = FloatField(title: "Z", step: 0.1)
+        
+        horizontallyFlippedCheckbox = NSButton(checkboxWithTitle: "Horizontally Flipped", target: nil, action: #selector(Self.horizontallyFlippedCheckboxClicked))
 
         assetViews = [
             InspectorHeader(title: "Asset Position"), assetXPositionField, assetYPositionField, assetZPositionField,
@@ -73,7 +76,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
         assetElementViews = [
             InspectorHeader(title: "Element Name"), nameField,
             VSpacer(), visibleCheckbox,
-            VSpacer(), InspectorHeader(title: "Offset"), offsetRow
+            VSpacer(), InspectorHeader(title: "Offset"), offsetRow, horizontallyFlippedCheckbox
         ]
         
         super.init(frame: NSZeroRect)
@@ -90,6 +93,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
         xOffsetField.delegate = self
         yOffsetField.delegate = self
         zOffsetField.delegate = self
+        horizontallyFlippedCheckbox.target = self
         
         nameField.delegate = self
 
@@ -140,6 +144,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
             xOffsetField.value = animationSnapshot.get(trackType: .xOffset)
             yOffsetField.value = animationSnapshot.get(trackType: .yOffset)
             zOffsetField.value = animationSnapshot.get(trackType: .zOffset)
+            horizontallyFlippedCheckbox.state = element.horizontallyFlipped ? .on : .off
         }
     }
     
@@ -153,7 +158,15 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
             else {
                 element.visible = visible
             }
-            elementViewDelegate.updateElement(element: element)
+            elementViewDelegate.update(element: element)
+        }
+    }
+    
+    @objc
+    private func horizontallyFlippedCheckboxClicked() {
+        if let elementViewDelegate, let element {
+            element.horizontallyFlipped = horizontallyFlippedCheckbox.state == .on
+            elementViewDelegate.update(element: element)
         }
     }
     
@@ -170,19 +183,19 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
         case assetXPositionField:
             if let assetDescription {
                 assetDescription.rootElement.offset.x = assetXPositionField.value
-                elementViewDelegate.updateElement(element: assetDescription.rootElement)
+                elementViewDelegate.update(element: assetDescription.rootElement)
             }
             
         case assetYPositionField:
             if let assetDescription {
                 assetDescription.rootElement.offset.y = assetYPositionField.value
-                elementViewDelegate.updateElement(element: assetDescription.rootElement)
+                elementViewDelegate.update(element: assetDescription.rootElement)
             }
             
         case assetZPositionField:
             if let assetDescription {
                 assetDescription.rootElement.offset.z = assetZPositionField.value
-                elementViewDelegate.updateElement(element: assetDescription.rootElement)
+                elementViewDelegate.update(element: assetDescription.rootElement)
             }
             
         case xOffsetField:
@@ -193,7 +206,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
                 else {
                     element.offset.x = xOffsetField.value
                 }
-                elementViewDelegate.updateElement(element: element)
+                elementViewDelegate.update(element: element)
             }
 
         case yOffsetField:
@@ -204,7 +217,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
                 else {
                     element.offset.y = yOffsetField.value
                 }
-                elementViewDelegate.updateElement(element: element)
+                elementViewDelegate.update(element: element)
             }
             
         case zOffsetField:
@@ -215,7 +228,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
                 else {
                     element.offset.z = zOffsetField.value
                 }
-                elementViewDelegate.updateElement(element: element)
+                elementViewDelegate.update(element: element)
             }
 
         default:
@@ -243,7 +256,7 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
     
     public final func updateElement() {
         if let element {
-            elementViewDelegate?.updateElement(element: element)
+            elementViewDelegate?.update(element: element)
         }
     }
     

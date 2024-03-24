@@ -6,19 +6,25 @@ class AssetInspector: BaseInspectorView {
     private let databaseField: NSTextField
     private let assetNameField: NSTextField
     private let assetUUIDField: NSTextField
+    private let horizontallyFlippedCheckbox: NSButton
     
     init() {
         databaseField = NSTextField(labelWithString: "Database Name")
         assetNameField = NSTextField(labelWithString: "Asset Name")
         assetUUIDField = NSTextField(labelWithString: "Asset UUID")
+        horizontallyFlippedCheckbox = NSButton(checkboxWithTitle: "Horizontally Flipped", target: nil, action: #selector(Self.onHorizontallyFlippedToggled))
         
         super.init(stackedViews: [
             InspectorHeader(title: "Asset Database"),
             databaseField,
             InspectorHeader(title: "Asset Name / UUID"),
             assetNameField,
-            assetUUIDField
+            assetUUIDField,
+            VSpacer(),
+            horizontallyFlippedCheckbox
         ])
+        
+        horizontallyFlippedCheckbox.target = self
     }
     
     required init?(coder: NSCoder) {
@@ -43,6 +49,17 @@ class AssetInspector: BaseInspectorView {
             else {
                 assetNameField.stringValue = "(Asset not available)"
             }
+            
+            horizontallyFlippedCheckbox.state = placement.horizontallyFlipped ? .on : .off
+        }
+    }
+    
+    @objc
+    private func onHorizontallyFlippedToggled() {
+        if let placement = observableObject as? AssetPlacement {
+            isEditing = true
+            placement.horizontallyFlipped = horizontallyFlippedCheckbox.state == .on
+            isEditing = false
         }
     }
     

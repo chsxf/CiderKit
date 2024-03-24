@@ -47,7 +47,7 @@ public class CiderKitEngine {
 
     enum ShaderAttributeName: String {
         case position = "a_position"
-        case size = "a_size"
+        case sizeAndFlip = "a_size_flip"
     }
     
     public static var bundle: Bundle { Bundle(for: Self.self) }
@@ -115,7 +115,7 @@ public class CiderKitEngine {
         ])
         uberShader.attributes = [
             SKAttribute(name: ShaderAttributeName.position.rawValue, type: .vectorFloat3),
-            SKAttribute(name: ShaderAttributeName.size.rawValue, type: .vectorFloat3)
+            SKAttribute(name: ShaderAttributeName.sizeAndFlip.rawValue, type: .vectorFloat4)
         ]
         
         uberShaderInstances[atlas.name] = uberShader

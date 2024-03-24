@@ -71,7 +71,7 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
     }
     
     public func instantiate() -> AssetInstance {
-        AssetInstance(assetDescription: self)
+        AssetInstance(assetDescription: self, horizontallyFlipped: false)
     }
     
     public func getElement(uuid: UUID) -> TransformAssetElement? { rootElement.getElement(uuid: uuid) }

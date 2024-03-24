@@ -53,7 +53,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     
     private var lightingEnabled = true
     
-    public var assetInstance: EditorAssetInstance {
+    public var assetInstance: AssetInstance {
         didSet {
             if assetInstance !== oldValue {
                 oldValue.node!.removeFromParent()
@@ -90,7 +90,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     override var preferredSceneWidth: Int { Self.defaultSize }
     override var preferredSceneHeight: Int { Self.defaultSize }
     
-    init(assetInstance: EditorAssetInstance) {
+    init(assetInstance: AssetInstance) {
         self.assetInstance = assetInstance
         
         resetCameraButton = NSButton(title: "Reset Camera", systemSymbolName: "camera.metering.center.weighted", action: #selector(Self.resetCamera))

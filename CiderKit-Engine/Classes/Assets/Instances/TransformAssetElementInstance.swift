@@ -13,10 +13,17 @@ open class TransformAssetElementInstance {
     
     public private(set) var node: SKNode? = nil
     
-    public var absoluteOffset: SIMD3<Float> { (parent?.absoluteOffset ?? SIMD3()) + currentOffset }
+    public var absoluteOffset: SIMD3<Float> { (parent?.absoluteOffset ?? SIMD3()) + adjustedCurrentOffset }
     
     public private(set) var currentVisibility: Bool
     public private(set) var currentOffset: SIMD3<Float>
+    
+    public var adjustedCurrentOffset: SIMD3<Float> { horizontallyFlippedByAncestorOrSelf ? Self.horizontallyFlipOffset(currentOffset) : currentOffset }
+    
+    public final var horizontalFlipCountInAncestors: Int { (parent?.horizontalFlipCountInAncestors ?? 0) + (horizontallyFlippedBySelf ? 1 : 0) }
+    
+    public var horizontallyFlippedBySelf: Bool { element.horizontallyFlipped }
+    public final var horizontallyFlippedByAncestorOrSelf: Bool { horizontalFlipCountInAncestors % 2 != 0 }
     
     public final var boundingBox: AssetBoundingBox? {
         var bb: AssetBoundingBox? = selfBoundingBox
@@ -53,6 +60,7 @@ open class TransformAssetElementInstance {
         node.name = element.name
         node.isHidden = !currentVisibility
         node.position = MapNode.computeNodePosition(with: currentOffset)
+        node.xScale = horizontallyFlippedBySelf ? -1 : 1
         
         if let parentNode = parent?.node {
             parentNode.addChild(node)
@@ -67,6 +75,8 @@ open class TransformAssetElementInstance {
         
         currentOffset = element.offset
         node.position = MapNode.computeNodePosition(with: currentOffset)
+        
+        node.xScale = horizontallyFlippedBySelf ? -1 : 1
         
         updateHierarchyDependentProperties()
     }
@@ -87,10 +97,11 @@ open class TransformAssetElementInstance {
         currentOffset = SIMD3(snapshot.get(trackType: .xOffset), snapshot.get(trackType: .yOffset), snapshot.get(trackType: .zOffset))
         node.position = MapNode.computeNodePosition(with: currentOffset)
         
+        node.xScale = horizontallyFlippedBySelf ? -1 : 1
+        
         updateHierarchyDependentProperties()
     }
-    
-    
+        
     public func updateHierarchyDependentProperties() {
         for child in children {
             child.updateHierarchyDependentProperties()
@@ -135,6 +146,10 @@ open class TransformAssetElementInstance {
         }
         
         return actions
+    }
+    
+    class func horizontallyFlipOffset(_ offset: SIMD3<Float>) -> SIMD3<Float> {
+        SIMD3(offset.y, offset.x, offset.z)
     }
     
 }

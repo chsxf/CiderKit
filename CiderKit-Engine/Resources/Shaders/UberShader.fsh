@@ -17,15 +17,31 @@ vec4 shadeWithPosition(vec4 posTexColor, vec3 pos, vec3 size, mat3 posRanges) {
     return vec4(adjustedPos * posTexColor.a, posTexColor.a);
 }
 
+vec4 horizontallyFlipRGChannels(vec4 texColor) {
+    float buf = texColor.r;
+    texColor.r = texColor.g;
+    texColor.g = buf;
+    return texColor;
+}
+
 void main() {
     vec2 tc = nearestNeighbor(v_tex_coord, u_tex_size);
     
+    bool horizontallyFlipped = a_size_flip[3] > 0;
+    
     if (u_shadeMode > 1.0) {
-        gl_FragColor = texture2D(u_normals_texture, tc);
+        vec4 texColor = texture2D(u_normals_texture, tc);
+        if (horizontallyFlipped) {
+            texColor = horizontallyFlipRGChannels(texColor);
+        }
+        gl_FragColor = texColor;
     }
     else if (u_shadeMode > 0.0) {
         vec4 texColor = texture2D(u_position_texture, tc);
-        gl_FragColor = shadeWithPosition(texColor, a_position, a_size, u_position_ranges);
+        if (horizontallyFlipped) {
+            texColor = horizontallyFlipRGChannels(texColor);
+        }
+        gl_FragColor = shadeWithPosition(texColor, a_position, a_size_flip.rgb, u_position_ranges);
     }
     else {
         gl_FragColor = texture2D(u_texture, tc) * v_color_mix;
