@@ -145,4 +145,8 @@ open class TransformAssetElementInstance {
         return actions
     }
     
+    class func flipOffset(_ offset: SIMD3<Float>) -> SIMD3<Float> {
+        SIMD3(offset.y, offset.x, offset.z)
+    }
+    
 }

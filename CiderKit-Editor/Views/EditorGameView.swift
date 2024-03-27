@@ -236,7 +236,7 @@ class EditorGameView: GameView {
         setupPointLight(light)
     }
     
-    func addAsset(_ asset: AssetLocator, atX x: Int, y: Int) {
+    func addAsset(_ asset: AssetLocator, atX x: Int, y: Int, horizontallyFlipped: Bool) {
         if let region = mutableMap.regionAt(x: x, y: y) {
             let footprint = asset.assetDescription!.footprint
             
@@ -262,7 +262,7 @@ class EditorGameView: GameView {
                 return
             }
             
-            region.addAsset(asset, atX: x, y: y)
+            region.addAsset(asset, atX: x, y: y, horizontallyFlipped: horizontallyFlipped)
             mutableMap.dirty = true
         }
     }

@@ -4,7 +4,7 @@ import SpriteKit
 final class EditorAssetInstance: AssetInstance {
     
     convenience init(assetDescription: AssetDescription) {
-        self.init(placement: AssetPlacement(assetLocator: assetDescription.locator), at: SIMD3(), offsetNodeByWorldPosition: true)!
+        self.init(placement: AssetPlacement(assetLocator: assetDescription.locator, horizontallyFlipped: false), at: SIMD3(), offsetNodeByWorldPosition: true)!
     }
     
     override init?(placement: AssetPlacement, at worldPosition: SIMD3<Float>, offsetNodeByWorldPosition: Bool = true) {

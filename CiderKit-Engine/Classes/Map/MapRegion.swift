@@ -247,11 +247,11 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         }
     }
     
-    public func addAsset(_ asset: AssetLocator, atX x: Int, y: Int) {
+    public func addAsset(_ asset: AssetLocator, atX x: Int, y: Int, horizontallyFlipped: Bool) {
         regionDescription.assets = regionDescription.assets ?? []
         
         let coordsInRegion = regionDescription.area.convert(toX: x, y: y)
-        let placement = AssetPlacement(assetLocator: asset, atX: coordsInRegion.x, y: coordsInRegion.y, worldOffset: CGPoint())
+        let placement = AssetPlacement(assetLocator: asset, horizontallyFlipped: horizontallyFlipped, atX: coordsInRegion.x, y: coordsInRegion.y, worldOffset: CGPoint())
         regionDescription.assets!.append(placement)
         
         instantiateAsset(placement: placement)
