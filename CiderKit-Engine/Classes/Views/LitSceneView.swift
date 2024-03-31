@@ -12,7 +12,6 @@ open class LitSceneView: SKView, SKSceneDelegate {
     open var preferredSceneWidth: Int { 640 }
     open var preferredSceneHeight: Int { 360 }
     
-    private let finalGatheringNode: SKEffectNode
     private let finalGatheringSprite: SKSpriteNode
     
     private var albedoTexture: SKTexture?
@@ -31,13 +30,10 @@ open class LitSceneView: SKView, SKSceneDelegate {
         gameScene.camera = camera
         gameScene.addChild(camera)
         
-        finalGatheringNode = SKEffectNode()
-        finalGatheringNode.shader = CiderKitEngine.lightModelFinalGatheringShader
-        finalGatheringNode.isHidden = true
-        gameScene.addChild(finalGatheringNode)
-        
         finalGatheringSprite = SKSpriteNode(texture: CiderKitEngine.clearTexture)
-        finalGatheringNode.addChild(finalGatheringSprite)
+        finalGatheringSprite.shader = CiderKitEngine.lightModelFinalGatheringShader
+        finalGatheringSprite.isHidden = true
+        gameScene.addChild(finalGatheringSprite)
         
         super.init(frame: frameRect)
 
@@ -57,12 +53,12 @@ open class LitSceneView: SKView, SKSceneDelegate {
     }
     
     open func prepareSceneForPrepasses() {
-        finalGatheringNode.isHidden = true
+        finalGatheringSprite.isHidden = true
         litNodesRoot.isHidden = false
     }
     
     open func prepassesDidComplete() {
-        finalGatheringNode.isHidden = false
+        finalGatheringSprite.isHidden = false
         litNodesRoot.isHidden = true
     }
     
@@ -78,14 +74,14 @@ open class LitSceneView: SKView, SKSceneDelegate {
         
         let previousBackgroundColor = scene.backgroundColor
         prepareSceneForPrepasses()
-        //#if os(macOS)
+        scene.backgroundColor = SKColor.clear
+
         let viewBottomLeftInScene = convert(CGPoint(), to: scene)
         let viewTopRightInScene = convert(CGPoint(x: frame.maxX, y: frame.maxY), to: scene)
         let viewWidthInScene = viewTopRightInScene.x - viewBottomLeftInScene.x
         let viewHeightInScene = viewTopRightInScene.y - viewBottomLeftInScene.y
         let viewRectInScene = CGRect(origin: viewBottomLeftInScene, size: CGSize(width: viewWidthInScene, height: viewHeightInScene))
 
-        scene.backgroundColor = SKColor.clear
         CiderKitEngine.setUberShaderShadeMode(.default)
         albedoTexture = texture(from: scene, crop: viewRectInScene)
         albedoTexture?.filteringMode = .nearest
@@ -95,21 +91,11 @@ open class LitSceneView: SKView, SKSceneDelegate {
         CiderKitEngine.setUberShaderShadeMode(.position)
         positionTexture = texture(from: scene, crop: viewRectInScene)
         positionTexture?.filteringMode = .nearest
-//        #else
-//        CiderKitEngine.setUberShaderShadeMode(.default)
-//        albedoTexture = texture(from: scene)
-//        albedoTexture?.filteringMode = .nearest
-//        CiderKitEngine.setUberShaderShadeMode(.normals)
-//        normalsTexture = texture(from: scene)
-//        normalsTexture?.filteringMode = .nearest
-//        CiderKitEngine.setUberShaderShadeMode(.position)
-//        positionTexture = texture(from: scene)
-//        positionTexture?.filteringMode = .nearest
-//        #endif
+        
         prepassesDidComplete()
         scene.backgroundColor = previousBackgroundColor
 
-        finalGatheringNode.position = camera.position
+        finalGatheringSprite.position = camera.position
         finalGatheringSprite.size = gameScene.size
         
         if let uniform = CiderKitEngine.lightModelFinalGatheringShader.uniformNamed(CiderKitEngine.ShaderUniformName.albedoTexture.rawValue) {
