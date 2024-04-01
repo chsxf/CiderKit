@@ -157,7 +157,7 @@ class EditorMapNode: MapNode {
     
     @objc
     private func assetErased(notification: Notification) {
-        if let assetComponent = notification.object as? AssetComponent {
+        if let assetComponent = notification.object as? EditorAssetComponent {
             NotificationCenter.default.removeObserver(self, name: .selectableErased, object: assetComponent)
             
             let entity = assetComponent.entity!
@@ -166,8 +166,8 @@ class EditorMapNode: MapNode {
             let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)?.node
             
             for region in regions {
-                if region.regionDescription.assets?.contains(where: { $0.id == assetComponent.placement.id }) ?? false {
-                    region.regionDescription.assets!.removeAll(where: { $0.id == assetComponent.placement.id })
+                if region.regionDescription.assetPlacements?.contains(where: { $0.id == assetComponent.placement?.id }) ?? false {
+                    region.regionDescription.assetPlacements!.removeAll(where: { $0.id == assetComponent.placement?.id })
                     assetNode?.removeFromParent()
                     break
                 }
@@ -177,14 +177,14 @@ class EditorMapNode: MapNode {
         }
     }
     
-    override func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> AssetInstance? {
-        guard let instance = AssetInstance(placement: placement, at: worldPosition) else { return nil }
+    override func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> (AssetInstance, GKEntity)? {
+        guard let (instance, assetComponentEntity) = super.instantiateAsset(placement: placement, at: worldPosition) else { return nil }
         
-        let entity = AssetComponent.entity(from: placement, with: instance)
+        let entity = EditorAssetComponent.entity(from: assetComponentEntity)
         hoverableEntities.append(entity)
-        let component = entity.component(ofType: AssetComponent.self)!
+        let component = entity.component(ofType: EditorAssetComponent.self)!
         NotificationCenter.default.addObserver(self, selector: #selector(assetErased(notification:)), name: .selectableErased, object: component)
-        return instance
+        return (instance, entity)
     }
     
 }

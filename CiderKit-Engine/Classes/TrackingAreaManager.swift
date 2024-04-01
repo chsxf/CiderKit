@@ -87,7 +87,7 @@ public final class TrackingAreaManager {
         let width = abs(topRightInView.x - bottomLeftInView.x)
         let height = abs(topRightInView.y - bottomLeftInView.y)
         let viewRect = NSRect(x: bottomLeftInView.x, y: bottomLeftInView.y, width: width, height: height)
-        let trackingArea = NSTrackingArea(rect: viewRect, options: [ .mouseEnteredAndExited, .activeInKeyWindow ], owner: node)
+        let trackingArea = NSTrackingArea(rect: viewRect, options: [ .mouseEnteredAndExited, .activeInKeyWindow, .mouseMoved ], owner: node)
         view.addTrackingArea(trackingArea)
         return trackingArea
     }

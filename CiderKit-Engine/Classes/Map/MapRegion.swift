@@ -145,7 +145,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
             }
         }
         
-        regionDescription.assets?.forEach { self.instantiateAsset(placement: $0) }
+        regionDescription.assetPlacements?.forEach { self.instantiateAsset(placement: $0) }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -241,18 +241,18 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         let absoluteCoords = regionDescription.area.convert(fromX: placement.x, y: placement.y)
         let worldPosition = SIMD3<Float>(Float(absoluteCoords.x), Float(absoluteCoords.y), Float(elevation)) + placement.worldOffset.toSIMDFloat3()
         
-        if let instance = map?.instantiateAsset(placement: placement, at: worldPosition) {
+        if let (instance, _) = map?.instantiateAsset(placement: placement, at: worldPosition) {
             addChild(instance.node!)
             assetInstances.append(instance)
         }
     }
     
     public func addAsset(_ asset: AssetLocator, atX x: Int, y: Int, horizontallyFlipped: Bool) {
-        regionDescription.assets = regionDescription.assets ?? []
+        regionDescription.assetPlacements = regionDescription.assetPlacements ?? []
         
         let coordsInRegion = regionDescription.area.convert(toX: x, y: y)
         let placement = AssetPlacement(assetLocator: asset, horizontallyFlipped: horizontallyFlipped, atX: coordsInRegion.x, y: coordsInRegion.y, worldOffset: CGPoint())
-        regionDescription.assets!.append(placement)
+        regionDescription.assetPlacements!.append(placement)
         
         instantiateAsset(placement: placement)
     }

@@ -3,9 +3,11 @@ import GameplayKit
 import CiderKit_Engine
 import Combine
 
-class AssetComponent: GKComponent, Selectable, EditableComponentDelegate {
+class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     
-    let placement: AssetPlacement
+    public var placement: AssetPlacement? { entity?.component(ofType: AssetComponent.self)?.placement }
+    
+    fileprivate var assetInstance: AssetInstance? { entity?.component(ofType: AssetComponent.self)?.assetInstance }
     
     var placementChangeCancellable: AnyCancellable?
     
@@ -19,15 +21,14 @@ class AssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         return view
     }
     
-    fileprivate var assetInstance: AssetInstance? = nil
-    
-    fileprivate init(from placement: AssetPlacement) {
-        self.placement = placement
+    override init() {
         super.init()
         
-        placementChangeCancellable = self.placement.objectWillChange.sink {
-            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
-                editableComponent.invalidate()
+        if let placement {
+            placementChangeCancellable = placement.objectWillChange.sink {
+                if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
+                    editableComponent.invalidate()
+                }
             }
         }
     }
@@ -62,18 +63,13 @@ class AssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         return frame.contains(sceneCoordinates)
     }
     
-    class func entity(from placement: AssetPlacement, with instance: AssetInstance) -> GKEntity {
-        let newEntity = GKEntity();
+    class func entity(from assetComponentEntity: GKEntity) -> GKEntity {
+        let editorAssetComponent = EditorAssetComponent()
+        assetComponentEntity.addComponent(editorAssetComponent)
         
-        newEntity.addComponent(GKSKNodeComponent(node: instance.node!))
+        assetComponentEntity.addComponent(EditableComponent(delegate: editorAssetComponent))
         
-        let assetComponent = AssetComponent(from: placement)
-        assetComponent.assetInstance = instance
-        newEntity.addComponent(assetComponent)
-        
-        newEntity.addComponent(EditableComponent(delegate: assetComponent))
-        
-        return newEntity
+        return assetComponentEntity
     }
     
 }

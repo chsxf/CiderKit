@@ -7,6 +7,7 @@ public class AssetPlacement: Codable, Identifiable, ObservableObject {
         case y
         case worldOffset = "wo"
         case horizontallyFlipped = "f"
+        case interactive = "i"
     }
     
     public let id: UUID
@@ -15,6 +16,7 @@ public class AssetPlacement: Codable, Identifiable, ObservableObject {
     public var y: Int
     @Published public var worldOffset: CGPoint
     public var horizontallyFlipped: Bool
+    public var interactive: Bool
     
     public init(assetLocator: AssetLocator, horizontallyFlipped: Bool, atX x: Int = 0, y: Int = 0, worldOffset: CGPoint = CGPoint()) {
         id = UUID()
@@ -23,6 +25,7 @@ public class AssetPlacement: Codable, Identifiable, ObservableObject {
         self.y = y
         self.worldOffset = worldOffset
         self.horizontallyFlipped = horizontallyFlipped
+        interactive = false
     }
     
     public required init(from decoder: Decoder) throws {
@@ -34,6 +37,7 @@ public class AssetPlacement: Codable, Identifiable, ObservableObject {
         y = try container.decode(Int.self, forKey: .y)
         worldOffset = try container.decode(CGPoint.self, forKey: .worldOffset)
         horizontallyFlipped = try container.decodeIfPresent(Bool.self, forKey: .horizontallyFlipped) ?? false
+        interactive = try container.decodeIfPresent(Bool.self, forKey: .interactive) ?? false
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -45,6 +49,7 @@ public class AssetPlacement: Codable, Identifiable, ObservableObject {
         try container.encode(y, forKey: .y)
         try container.encode(worldOffset, forKey: .worldOffset)
         try container.encode(horizontallyFlipped, forKey: .horizontallyFlipped)
+        try container.encode(interactive, forKey: .interactive)
     }
     
 }

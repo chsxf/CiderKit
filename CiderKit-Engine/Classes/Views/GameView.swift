@@ -5,6 +5,7 @@ open class GameView: LitSceneView {
 
     public private(set) var map: MapNode!
 
+    private let eventBackdropNode = EventBackdropNode()
     public let uiOverlayCanvas: CKUICanvas
     
     public var lightingEnabled: Bool = true
@@ -16,6 +17,10 @@ open class GameView: LitSceneView {
     open override var preferredSceneWidth: Int { Project.current?.settings.targetResolutionWidth ?? super.preferredSceneWidth }
     open override var preferredSceneHeight: Int { Project.current?.settings.targetResolutionHeight ?? super .preferredSceneHeight }
     
+    public let pointerDown = EventEmitter<PointerEventData, GameView>()
+    public let pointerUp = EventEmitter<PointerEventData, GameView>()
+    public let pointerMoved = EventEmitter<PointerEventData, GameView>()
+
     public override init(frame frameRect: CGRect) {
         let defaultStyleSheetURL = CiderKitEngine.bundle.url(forResource: "Default Style Sheet", withExtension: "ckcss")!
         let styleSheet = try! CKUIStyleSheet(contentsOf: defaultStyleSheetURL)
@@ -36,6 +41,9 @@ open class GameView: LitSceneView {
         allowsTransparency = true
         
         uiOverlayCanvas.zPosition = 1000
+        eventBackdropNode.zPosition = uiOverlayCanvas.zPosition - 1
+
+        camera.addChild(eventBackdropNode)
         camera.addChild(uiOverlayCanvas)
         
         unloadMap(removePreviousMap: false)
@@ -43,6 +51,10 @@ open class GameView: LitSceneView {
         #if os(macOS)
         TrackingAreaManager.scene = gameScene
         #endif
+
+        eventBackdropNode.pointerDown.on { eventData, _ in self.pointerDown.notify(eventData, from: self) }
+        eventBackdropNode.pointerUp.on { eventData, _ in self.pointerUp.notify(eventData, from: self) }
+        eventBackdropNode.pointerMoved.on { eventData, _ in self.pointerMoved.notify(eventData, from: self) }
     }
     
     required public init?(coder: NSCoder) {
@@ -59,6 +71,8 @@ open class GameView: LitSceneView {
         #if os(macOS)
         TrackingAreaManager.update()
         #endif
+
+        eventBackdropNode.size = scene.size
         uiOverlayCanvas.update()
     }
     
@@ -131,5 +145,15 @@ open class GameView: LitSceneView {
         }
         return map.lights[index].matrix
     }
-    
+
+    #if os(macOS)
+    open override func otherMouseDown(with event: NSEvent) {
+        firstInteractiveNode(from: event)?.otherMouseDown(with: event)
+    }
+
+    open override func otherMouseUp(with event: NSEvent) {
+        firstInteractiveNode(from: event)?.otherMouseUp(with: event)
+    }
+    #endif
+
 }

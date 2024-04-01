@@ -7,12 +7,14 @@ class AssetInspector: BaseInspectorView {
     private let assetNameField: NSTextField
     private let assetUUIDField: NSTextField
     private let horizontallyFlippedCheckbox: NSButton
+    private let interactiveCheckbox: NSButton
     
     init() {
         databaseField = NSTextField(labelWithString: "Database Name")
         assetNameField = NSTextField(labelWithString: "Asset Name")
         assetUUIDField = NSTextField(labelWithString: "Asset UUID")
         horizontallyFlippedCheckbox = NSButton(checkboxWithTitle: "Horizontally Flipped", target: nil, action: #selector(Self.onHorizontallyFlippedToggled))
+        interactiveCheckbox = NSButton(checkboxWithTitle: "Interactive", target: nil, action: #selector(Self.onInteractiveToggled))
         
         super.init(stackedViews: [
             InspectorHeader(title: "Asset Database"),
@@ -21,10 +23,12 @@ class AssetInspector: BaseInspectorView {
             assetNameField,
             assetUUIDField,
             VSpacer(),
-            horizontallyFlippedCheckbox
+            horizontallyFlippedCheckbox,
+            interactiveCheckbox
         ])
         
         horizontallyFlippedCheckbox.target = self
+        interactiveCheckbox.target = self
     }
     
     required init?(coder: NSCoder) {
@@ -51,6 +55,7 @@ class AssetInspector: BaseInspectorView {
             }
             
             horizontallyFlippedCheckbox.state = placement.horizontallyFlipped ? .on : .off
+            interactiveCheckbox.state = placement.interactive ? .on : .off
         }
     }
     
@@ -59,6 +64,15 @@ class AssetInspector: BaseInspectorView {
         if let placement = observableObject as? AssetPlacement {
             isEditing = true
             placement.horizontallyFlipped = horizontallyFlippedCheckbox.state == .on
+            isEditing = false
+        }
+    }
+    
+    @objc
+    private func onInteractiveToggled() {
+        if let placement = observableObject as? AssetPlacement {
+            isEditing = true
+            placement.interactive = interactiveCheckbox.state == .on
             isEditing = false
         }
     }

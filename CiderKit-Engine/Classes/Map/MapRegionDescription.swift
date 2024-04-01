@@ -19,7 +19,7 @@ public struct MapRegionDescription: Codable {
     var elevation: Int
     let renderer: String?
     
-    public var assets: [AssetPlacement]? = nil
+    public var assetPlacements: [AssetPlacement]? = nil
     
     public var area: MapArea { MapArea(x: x, y: y, width: width, height: height) }
     
@@ -33,7 +33,7 @@ public struct MapRegionDescription: Codable {
         self.renderer = renderer
         materialOverrides = nil
         
-        assets = []
+        assetPlacements = []
     }
     
     public init(area: MapArea, elevation: Int, renderer: String?) {
@@ -151,7 +151,7 @@ public struct MapRegionDescription: Codable {
     }
     
     private mutating func importAssets(from other: MapRegionDescription) {
-        guard let otherAssets = other.assets else { return }
+        guard let otherAssets = other.assetPlacements else { return }
         
         let relativeToOtherArea = area.relative(to: other.area)
         let relativeToArea = other.area.relative(to: area)
@@ -161,16 +161,16 @@ public struct MapRegionDescription: Codable {
             asset.x += relativeToArea.x
             asset.y += relativeToArea.y
             
-            assets = assets ?? []
-            assets!.append(asset)
+            assetPlacements = assetPlacements ?? []
+            assetPlacements!.append(asset)
         }
     }
     
     public func isFreeOfAsset(area: MapArea) -> Bool {
-        guard let assets else { return true }
+        guard let assetPlacements else { return true }
         
         let relativeArea = area.relative(to: self.area)
-        for placement in assets {
+        for placement in assetPlacements {
             if let description = placement.assetLocator.assetDescription {
                 let footprint = description.footprint
                 let assetArea = MapArea(x: placement.x - Int(footprint.x), y: placement.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))

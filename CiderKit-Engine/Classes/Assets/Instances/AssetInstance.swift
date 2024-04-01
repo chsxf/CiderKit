@@ -14,6 +14,17 @@ open class AssetInstance : TransformAssetElementInstance {
     
     public let worldPosition: SIMD3<Float>
     
+    private var interactiveFlag = false
+    public var interactive: Bool {
+        get { parent?.assetInstance?.interactive ?? interactiveFlag }
+        
+        set {
+            if parent == nil {
+                interactiveFlag = newValue
+            }
+        }
+    }
+    
     public var currentAnimationName: String? = nil {
         didSet {
             updateAll(applyDefaults: true)
@@ -47,6 +58,8 @@ open class AssetInstance : TransformAssetElementInstance {
         
         self.worldPosition = worldPosition
         
+        interactiveFlag = placement.interactive
+
         super.init(element: assetDescription.rootElement)
         
         createNode(at: worldPosition)

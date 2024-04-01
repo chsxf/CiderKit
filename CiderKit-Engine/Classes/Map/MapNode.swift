@@ -22,6 +22,9 @@ open class MapNode: SKNode, Collection {
     public var startIndex: Int { regions.startIndex }
     public var endIndex: Int { regions.endIndex }
     
+    public private(set) var assetEntities: [GKEntity] = []
+    public let assetComponentSystem: GKComponentSystem<AssetComponent>
+    
     public subscript(position: Int) -> MapRegion {
         return regions[position]
     }
@@ -31,6 +34,8 @@ open class MapNode: SKNode, Collection {
         
         ambientLight = mapDescription.lighting.ambientLight
         lights = mapDescription.lighting.lights
+        
+        assetComponentSystem = GKComponentSystem(componentClass: AssetComponent.self)
         
         super.init()
         
@@ -161,6 +166,25 @@ open class MapNode: SKNode, Collection {
         return nil
     }
     
+    public func raycastMapCell(at sceneCoordinates: CGPoint) -> MapCellComponent? {
+        for region in regions {
+            for cell in region.cellEntities {
+                if let cellComponent = cell.component(ofType: MapCellComponent.self), cellComponent.contains(sceneCoordinates: sceneCoordinates){
+                    return cellComponent
+                }
+            }
+        }
+        return nil
+    }
+
+    public func raycastAsset(at sceneCoordinates: CGPoint) -> AssetComponent? {
+        assetComponentSystem.components.first(where: { $0.contains(sceneCoordinates: sceneCoordinates) && ($0.assetInstance?.interactive ?? false) })
+    }
+
+    public func raycastAny(at sceneCoordinates: CGPoint) -> GKComponent? {
+        raycastAsset(at: sceneCoordinates) ?? raycastMapCell(at: sceneCoordinates)
+    }
+
     open func mapCellEntity(node: SKNode, for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> GKEntity {
         let entity = GKEntity()
         entity.addComponent(GKSKNodeComponent(node: node))
@@ -175,15 +199,21 @@ open class MapNode: SKNode, Collection {
     
     public func getAssetPlacement(by id: UUID) -> AssetPlacement? {
         for region in regions {
-            if let placement = region.regionDescription.assets?.first(where: { $0.id == id }) {
+            if let placement = region.regionDescription.assetPlacements?.first(where: { $0.id == id }) {
                 return placement
             }
         }
         return nil
     }
     
-    open func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> AssetInstance? {
-        AssetInstance(placement: placement, at: worldPosition)
+    open func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> (AssetInstance, GKEntity)? {
+        guard let instance = AssetInstance(placement: placement, at: worldPosition) else { return nil }
+        
+        let entity = AssetComponent.entity(from: placement, with: instance)
+        assetComponentSystem.addComponent(foundIn: entity)
+        assetEntities.append(entity)
+
+        return (instance, entity)
     }
     
     public static func computeNodePosition(with offset: SIMD3<Float>) -> CGPoint { computeNodePosition(x: offset.x, y: offset.y, z: offset.z) }

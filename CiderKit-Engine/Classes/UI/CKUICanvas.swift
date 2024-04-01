@@ -1,6 +1,10 @@
 import CoreGraphics
 import CiderCSSKit
 
+#if os(macOS)
+import AppKit
+#endif
+
 public final class CKUICanvas: CKUIBaseNode {
     
     private let canvasStyleSheet: CKUIStyleSheet?
@@ -37,5 +41,5 @@ public final class CKUICanvas: CKUIBaseNode {
     internal override func updatePosition() { }
     
     public override func updateLayout() { }
-    
+
 }
