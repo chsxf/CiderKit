@@ -1,8 +1,8 @@
 import CiderKit_Engine
 import AppKit
 
-class MapCellInspector: BaseInspectorView {
-    
+class MapCellInspector: BaseTypedInspectorView<EditorMapCellComponent> {
+
     private let regionField: NSTextField
     private let mapXField: NSTextField
     private let mapYField: NSTextField
@@ -47,13 +47,13 @@ class MapCellInspector: BaseInspectorView {
     override func updateContent() {
         super.updateContent()
         
-        if let mapCell = observableObject as? MapCellComponent {
-            regionField.stringValue = mapCell.region?.id.description ?? "N/A"
-            
-            mapXField.stringValue = mapCell.mapX.description
-            mapYField.stringValue = mapCell.mapY.description
-            
-            elevationField.stringValue = mapCell.elevation?.description ?? "N/A"
+        if let inspectedObject {
+            regionField.stringValue = inspectedObject.region?.id.description ?? "N/A"
+
+            mapXField.stringValue = inspectedObject.mapX.description
+            mapYField.stringValue = inspectedObject.mapY.description
+
+            elevationField.stringValue = inspectedObject.elevation?.description ?? "N/A"
         }
     }
     

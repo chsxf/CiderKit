@@ -1,8 +1,8 @@
 import CiderKit_Engine
 import AppKit
 
-class AssetInspector: BaseInspectorView {
-    
+class AssetInspector: BaseNamedInspectorView<AssetPlacement> {
+
     private let databaseField: NSTextField
     private let assetNameField: NSTextField
     private let assetUUIDField: NSTextField
@@ -38,9 +38,9 @@ class AssetInspector: BaseInspectorView {
     override func updateContent() {
         super.updateContent()
         
-        if let placement = observableObject as? AssetPlacement {
-            let locator = placement.assetLocator
-            
+        if let inspectedObject {
+            let locator = inspectedObject.assetLocator
+
             databaseField.stringValue = locator.databaseKey
             
             let uuidDescription = locator.assetUUID.description
@@ -54,25 +54,25 @@ class AssetInspector: BaseInspectorView {
                 assetNameField.stringValue = "(Asset not available)"
             }
             
-            horizontallyFlippedCheckbox.state = placement.horizontallyFlipped ? .on : .off
-            interactiveCheckbox.state = placement.interactive ? .on : .off
+            horizontallyFlippedCheckbox.state = inspectedObject.horizontallyFlipped ? .on : .off
+            interactiveCheckbox.state = inspectedObject.interactive ? .on : .off
         }
     }
     
     @objc
     private func onHorizontallyFlippedToggled() {
-        if let placement = observableObject as? AssetPlacement {
+        if let inspectedObject {
             isEditing = true
-            placement.horizontallyFlipped = horizontallyFlippedCheckbox.state == .on
+            inspectedObject.horizontallyFlipped = horizontallyFlippedCheckbox.state == .on
             isEditing = false
         }
     }
     
     @objc
     private func onInteractiveToggled() {
-        if let placement = observableObject as? AssetPlacement {
+        if let inspectedObject {
             isEditing = true
-            placement.interactive = interactiveCheckbox.state == .on
+            inspectedObject.interactive = interactiveCheckbox.state == .on
             isEditing = false
         }
     }

@@ -1,8 +1,8 @@
 import Foundation
 import SpriteKit
 
-public class PointLight: BaseLight {
-    
+public class PointLight: BaseLight, NamedObject {
+
     public struct Falloff {
         public var near: Float
         public var far: Float

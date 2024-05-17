@@ -37,6 +37,11 @@ open class AssetInstance : TransformAssetElementInstance {
         }
     }
     
+    public var name: String {
+        get { placement.name }
+        set { placement.name = newValue }
+    }
+
     public override var absoluteOffset: SIMD3<Float> { parent?.absoluteOffset ?? (worldPosition + adjustedCurrentOffset) }
 
     public override var horizontallyFlippedBySelf: Bool { placement.horizontallyFlipped || super.horizontallyFlippedBySelf }

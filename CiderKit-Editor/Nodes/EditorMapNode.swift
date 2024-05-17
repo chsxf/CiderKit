@@ -166,8 +166,8 @@ class EditorMapNode: MapNode {
             let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)?.node
             
             for region in regions {
-                if region.regionDescription.assetPlacements?.contains(where: { $0.id == assetComponent.placement?.id }) ?? false {
-                    region.regionDescription.assetPlacements!.removeAll(where: { $0.id == assetComponent.placement?.id })
+                if region.regionDescription.assetPlacements?.contains(where: { $0.id == assetComponent.placement.id }) ?? false {
+                    region.regionDescription.assetPlacements!.removeAll(where: { $0.id == assetComponent.placement.id })
                     assetNode?.removeFromParent()
                     break
                 }

@@ -1,8 +1,8 @@
 import AppKit
 import CiderKit_Engine
 
-class AmbientLightInspector: BaseInspectorView, LabelledColorWellDelegate {
-    
+class AmbientLightInspector: BaseTypedInspectorView<BaseLight>, LabelledColorWellDelegate {
+
     private let colorWell: LabelledColorWell
     
     init() {
@@ -20,15 +20,15 @@ class AmbientLightInspector: BaseInspectorView, LabelledColorWellDelegate {
     override func updateContent() {
         super.updateContent()
         
-        if let lightDescription = observableObject as? BaseLight {
-            colorWell.color = lightDescription.color
+        if let inspectedObject {
+            colorWell.color = inspectedObject.color
         }
     }
     
     func labelledColorWell(_ colorWell: LabelledColorWell, colorChanged color: CGColor) {
-        if let lightDescription = observableObject as? BaseLight {
+        if let inspectedObject {
             isEditing = true
-            lightDescription.color = color.toRGB()!
+            inspectedObject.color = color.toRGB()!
             isEditing = false
         }
     }

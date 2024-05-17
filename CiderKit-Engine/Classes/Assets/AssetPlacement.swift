@@ -1,7 +1,8 @@
-public class AssetPlacement: Codable, Identifiable, ObservableObject {
-    
+public class AssetPlacement: Codable, Identifiable, ObservableObject, NamedObject {
+
     enum CodingKeys: String, CodingKey {
         case id
+        case name = "n"
         case assetLocator = "al"
         case x
         case y
@@ -11,15 +12,17 @@ public class AssetPlacement: Codable, Identifiable, ObservableObject {
     }
     
     public let id: UUID
+    @Published public var name: String
     @Published public var assetLocator: AssetLocator
     public var x: Int
     public var y: Int
     @Published public var worldOffset: CGPoint
-    public var horizontallyFlipped: Bool
-    public var interactive: Bool
+    @Published public var horizontallyFlipped: Bool
+    @Published public var interactive: Bool
     
     public init(assetLocator: AssetLocator, horizontallyFlipped: Bool, atX x: Int = 0, y: Int = 0, worldOffset: CGPoint = CGPoint()) {
         id = UUID()
+        name = ""
         self.assetLocator = assetLocator
         self.x = x
         self.y = y
@@ -32,6 +35,7 @@ public class AssetPlacement: Codable, Identifiable, ObservableObject {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
         assetLocator = try container.decode(AssetLocator.self, forKey: .assetLocator)
         x = try container.decode(Int.self, forKey: .x)
         y = try container.decode(Int.self, forKey: .y)
@@ -44,6 +48,7 @@ public class AssetPlacement: Codable, Identifiable, ObservableObject {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
         try container.encode(assetLocator, forKey: .assetLocator)
         try container.encode(x, forKey: .x)
         try container.encode(y, forKey: .y)

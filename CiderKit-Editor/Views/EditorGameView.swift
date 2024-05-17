@@ -182,8 +182,8 @@ class EditorGameView: GameView {
     }
     
     override func unloadMap(removePreviousMap: Bool = true) {
-        super.unloadMap(removePreviousMap: removePreviousMap)
         selectionModel.clear()
+        super.unloadMap(removePreviousMap: removePreviousMap)
         lightsRoot.removeAllChildren()
         lightEntities.removeAll()
         buildLightNodes()

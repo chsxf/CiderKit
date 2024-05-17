@@ -176,6 +176,9 @@
 		D9CF6DC42A07DB4400DE3876 /* CKUICSSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CF6DC32A07DB4400DE3876 /* CKUICSSTests.swift */; };
 		D9CF6DC62A07F2FF00DE3876 /* EquatableExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CF6DC52A07F2FF00DE3876 /* EquatableExtension.swift */; };
 		D9CFEF842A2D3BF400991D7B /* CGFloatExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CFEF832A2D3BF400991D7B /* CGFloatExtension.swift */; };
+		D9D9AD092BF7CB5A00CC2ED7 /* BaseTypedInsepctorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D9AD082BF7CB5A00CC2ED7 /* BaseTypedInsepctorView.swift */; };
+		D9D9AD0B2BF7CB8F00CC2ED7 /* BaseNamedInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D9AD0A2BF7CB8F00CC2ED7 /* BaseNamedInspectorView.swift */; };
+		D9D9AD0D2BF7D0E900CC2ED7 /* NamedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D9AD0C2BF7D0E900CC2ED7 /* NamedObject.swift */; };
 		D9DB98562BC1700900ACABB1 /* EventBackdropNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DB98552BC1700900ACABB1 /* EventBackdropNode.swift */; };
 		D9DB98582BC178CF00ACABB1 /* SKViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DB98572BC178CF00ACABB1 /* SKViewExtension.swift */; };
 		D9DE549A28CDC58600E3761B /* AssetAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DE549928CDC58600E3761B /* AssetAnimation.swift */; };
@@ -418,6 +421,9 @@
 		D9CF6DC32A07DB4400DE3876 /* CKUICSSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUICSSTests.swift; sourceTree = "<group>"; };
 		D9CF6DC52A07F2FF00DE3876 /* EquatableExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquatableExtension.swift; sourceTree = "<group>"; };
 		D9CFEF832A2D3BF400991D7B /* CGFloatExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGFloatExtension.swift; sourceTree = "<group>"; };
+		D9D9AD082BF7CB5A00CC2ED7 /* BaseTypedInsepctorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTypedInsepctorView.swift; sourceTree = "<group>"; };
+		D9D9AD0A2BF7CB8F00CC2ED7 /* BaseNamedInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNamedInspectorView.swift; sourceTree = "<group>"; };
+		D9D9AD0C2BF7D0E900CC2ED7 /* NamedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedObject.swift; sourceTree = "<group>"; };
 		D9DB98552BC1700900ACABB1 /* EventBackdropNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBackdropNode.swift; sourceTree = "<group>"; };
 		D9DB98572BC178CF00ACABB1 /* SKViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKViewExtension.swift; sourceTree = "<group>"; };
 		D9DE549928CDC58600E3761B /* AssetAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAnimation.swift; sourceTree = "<group>"; };
@@ -494,6 +500,8 @@
 				D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */,
 				D9B7F1E229BC8781007E0FD1 /* AssetInspector.swift */,
 				D92FD11928AA72790097945B /* BaseInspectorView.swift */,
+				D9D9AD0A2BF7CB8F00CC2ED7 /* BaseNamedInspectorView.swift */,
+				D9D9AD082BF7CB5A00CC2ED7 /* BaseTypedInsepctorView.swift */,
 				D92FD11728AA719A0097945B /* InspectorViewFactory.swift */,
 				D909FDB7287747640083EB8C /* MapCellInspector.swift */,
 				D909FDB9287748DD0083EB8C /* PointLightInspector.swift */,
@@ -793,6 +801,7 @@
 				D91061CA2755F27600EA8A03 /* Functions.swift */,
 				D9EA6DB128BAD07A00233F79 /* IntPoint.swift */,
 				D9730B1427B795A40007513C /* Math.swift */,
+				D9D9AD0C2BF7D0E900CC2ED7 /* NamedObject.swift */,
 				D9CC3528285D16B7003EEB6F /* Pool.swift */,
 				D9254461281AB55B002DCA4C /* Project.swift */,
 				D9CBDAFD2A78D9A900C51C69 /* RemoteCacheManager.swift */,
@@ -1266,6 +1275,7 @@
 				D9BF52CD280A05F20093005B /* EditorMainView.swift in Sources */,
 				D99ADB6428955E6F00A4980D /* CollectionTextViewItem.swift in Sources */,
 				D947DF1D28D0A9B800669AE5 /* AssetAnimationTrackNameView.swift in Sources */,
+				D9D9AD092BF7CB5A00CC2ED7 /* BaseTypedInsepctorView.swift in Sources */,
 				D972C1B82827D9FD00D85376 /* EditorMapNode.swift in Sources */,
 				D9E5D5352A9AB96E00EEBF48 /* IntField.swift in Sources */,
 				D9F037C528CC7625003308C1 /* ContextButton.swift in Sources */,
@@ -1277,6 +1287,7 @@
 				D9418FEA29A127980027E52E /* AssetSelectorView.swift in Sources */,
 				D9B7F1E329BC8781007E0FD1 /* AssetInspector.swift in Sources */,
 				D9AF1F60280BE99400BF34B3 /* ProjectManager.swift in Sources */,
+				D9D9AD0B2BF7CB8F00CC2ED7 /* BaseNamedInspectorView.swift in Sources */,
 				D9513DDE2AF7B3AE0087EA6E /* ReferenceAssetElementView.swift in Sources */,
 				D9513DDC2AF7B34F0087EA6E /* AssetElementViewTypeRegistry.swift in Sources */,
 				D92FD11A28AA72790097945B /* BaseInspectorView.swift in Sources */,
@@ -1330,6 +1341,7 @@
 				D9EDB95D2B408F25001C0104 /* LitSceneView.swift in Sources */,
 				D9C26B7A28D196960087CD60 /* AssetAnimationTrackIdentifier.swift in Sources */,
 				D9171D2D2B1A96BE0099D0D6 /* TransformAssetElement.swift in Sources */,
+				D9D9AD0D2BF7D0E900CC2ED7 /* NamedObject.swift in Sources */,
 				D9257D422A8D512E00D52928 /* CKUIButton.swift in Sources */,
 				D9DE90B22BBB40EA002D0FF3 /* AssetComponent.swift in Sources */,
 				D93C24F82801EBC90023FE7A /* CellRenderer.swift in Sources */,

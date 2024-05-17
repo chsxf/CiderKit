@@ -5,8 +5,8 @@ import Combine
 
 class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     
-    public var placement: AssetPlacement? { entity?.component(ofType: AssetComponent.self)?.placement }
-    
+    public let placement: AssetPlacement
+
     fileprivate var assetInstance: AssetInstance? { entity?.component(ofType: AssetComponent.self)?.assetInstance }
     
     var placementChangeCancellable: AnyCancellable?
@@ -21,14 +21,14 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         return view
     }
     
-    override init() {
+    init(placement: AssetPlacement) {
+        self.placement = placement
+
         super.init()
         
-        if let placement {
-            placementChangeCancellable = placement.objectWillChange.sink {
-                if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
-                    editableComponent.invalidate()
-                }
+        placementChangeCancellable = placement.objectWillChange.sink {
+            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
+                editableComponent.invalidate()
             }
         }
     }
@@ -64,7 +64,9 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     }
     
     class func entity(from assetComponentEntity: GKEntity) -> GKEntity {
-        let editorAssetComponent = EditorAssetComponent()
+        let placement = assetComponentEntity.component(ofType: AssetComponent.self)!.placement
+
+        let editorAssetComponent = EditorAssetComponent(placement: placement)
         assetComponentEntity.addComponent(editorAssetComponent)
         
         assetComponentEntity.addComponent(EditableComponent(delegate: editorAssetComponent))
