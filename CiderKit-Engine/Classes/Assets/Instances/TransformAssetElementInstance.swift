@@ -54,12 +54,16 @@ open class TransformAssetElementInstance {
         node?.removeFromParent()
     }
     
+    public func applyPosition(_ node: SKNode) {
+        node.position = MapNode.computeNodePosition(with: currentOffset)
+    }
+
     open func createNode(baseNode: SKNode? = nil, at worldPosition: SIMD3<Float>) {
         let node = baseNode ?? SKNode()
         self.node = node
         node.name = element.name
         node.isHidden = !currentVisibility
-        node.position = MapNode.computeNodePosition(with: currentOffset)
+        applyPosition(node)
         node.xScale = horizontallyFlippedBySelf ? -1 : 1
         
         if let parentNode = parent?.node {
@@ -74,8 +78,8 @@ open class TransformAssetElementInstance {
         node.isHidden = !currentVisibility
         
         currentOffset = element.offset
-        node.position = MapNode.computeNodePosition(with: currentOffset)
-        
+        applyPosition(node)
+
         node.xScale = horizontallyFlippedBySelf ? -1 : 1
         
         updateHierarchyDependentProperties()
@@ -95,13 +99,13 @@ open class TransformAssetElementInstance {
         node.isHidden = !currentVisibility
 
         currentOffset = SIMD3(snapshot.get(trackType: .xOffset), snapshot.get(trackType: .yOffset), snapshot.get(trackType: .zOffset))
-        node.position = MapNode.computeNodePosition(with: currentOffset)
-        
+        applyPosition(node)
+
         node.xScale = horizontallyFlippedBySelf ? -1 : 1
         
         updateHierarchyDependentProperties()
     }
-        
+    
     public func updateHierarchyDependentProperties() {
         for child in children {
             child.updateHierarchyDependentProperties()
@@ -141,7 +145,7 @@ open class TransformAssetElementInstance {
                 
                 self.updateHierarchyDependentProperties()
                 
-                node.position = MapNode.computeNodePosition(with: self.currentOffset)
+                self.applyPosition(node)
             })
         }
         

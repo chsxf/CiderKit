@@ -43,6 +43,7 @@ open class AssetInstance : TransformAssetElementInstance {
     }
 
     public override var absoluteOffset: SIMD3<Float> { parent?.absoluteOffset ?? (worldPosition + adjustedCurrentOffset) }
+    public let offsetByWorldPosition: Bool
 
     public override var horizontallyFlippedBySelf: Bool { placement.horizontallyFlipped || super.horizontallyFlippedBySelf }
     
@@ -58,6 +59,8 @@ open class AssetInstance : TransformAssetElementInstance {
     public init?(placement: AssetPlacement, at worldPosition: SIMD3<Float>, offsetNodeByWorldPosition: Bool = true) {
         guard let assetDescription = placement.assetLocator.assetDescription else { return nil }
         
+        offsetByWorldPosition = offsetNodeByWorldPosition
+
         self.placement = placement
         self.assetDescription = assetDescription
         
@@ -68,9 +71,6 @@ open class AssetInstance : TransformAssetElementInstance {
         super.init(element: assetDescription.rootElement)
         
         createNode(at: worldPosition)
-        if offsetNodeByWorldPosition {
-            node!.position = node!.position + MapNode.computeNodePosition(with: worldPosition)
-        }
         node!.zPosition = 1
         
         elementInstancesByUUID[assetDescription.rootElement.uuid] = self
@@ -145,6 +145,15 @@ open class AssetInstance : TransformAssetElementInstance {
         }
     }
     
+    public override func applyPosition(_ node: SKNode) {
+        if offsetByWorldPosition {
+            node.position = MapNode.computeNodePosition(with: currentOffset + worldPosition)
+        }
+        else {
+            super.applyPosition(node)
+        }
+    }
+
     public final func applyAllDefaults() {
         for (_, instance) in elementInstancesByUUID {
             instance.applyDefaults()

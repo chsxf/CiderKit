@@ -29,6 +29,9 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         placementChangeCancellable = placement.objectWillChange.sink {
             if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
                 editableComponent.invalidate()
+                DispatchQueue.main.async {
+                    self.assetInstance?.updateAll(applyDefaults: true)
+                }
             }
         }
     }
