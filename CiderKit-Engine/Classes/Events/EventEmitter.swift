@@ -58,7 +58,7 @@ public final class EventEmitter<T, E> {
     
     public func disconnect(_ eventEntry: EventEmitterEntry) {
         dispatchQueue.sync {
-            listeners.removeAll(where: { $0.uuid == eventEntry.uuid })
+            listeners.removeAll { $0.uuid == eventEntry.uuid }
         }
     }
 
@@ -74,7 +74,7 @@ public final class EventEmitter<T, E> {
         }
 
         dispatchQueue.sync {
-            listeners.removeAll(where: { !$0.isUsable })
+            listeners.removeAll { !$0.isUsable }
         }
     }
     
@@ -136,7 +136,7 @@ public final class ParameterlessEventEmitter<E> {
     
     public func disconnect(_ eventEntry: EventEmitterEntry) {
         dispatchQueue.sync {
-            listeners.removeAll(where: { $0.uuid == eventEntry.uuid })
+            listeners.removeAll { $0.uuid == eventEntry.uuid }
         }
     }
 
@@ -152,7 +152,7 @@ public final class ParameterlessEventEmitter<E> {
         }
 
         dispatchQueue.sync {
-            listeners.removeAll(where: { !$0.isUsable })
+            listeners.removeAll { !$0.isUsable }
         }
     }
 

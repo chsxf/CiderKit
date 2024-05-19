@@ -66,7 +66,7 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         return frame.contains(sceneCoordinates)
     }
     
-    class func entity(from assetComponentEntity: GKEntity) -> GKEntity {
+    class func prepareEntity(_ assetComponentEntity: GKEntity) -> GKEntity {
         let placement = assetComponentEntity.component(ofType: AssetComponent.self)!.placement
 
         let editorAssetComponent = EditorAssetComponent(placement: placement)

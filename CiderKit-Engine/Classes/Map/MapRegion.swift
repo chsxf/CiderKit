@@ -1,6 +1,11 @@
 import SpriteKit
 import GameplayKit
 
+public enum MapRegionErrors : Error {
+    case assetTooCloseToRegionBorder
+    case otherAssetInTheWay
+}
+
 public class MapRegion : SKNode, Identifiable, Comparable {
     
     private static var nextRegionId: Int = 1
@@ -31,6 +36,8 @@ public class MapRegion : SKNode, Identifiable, Comparable {
     
     func build() {
         cellEntities.removeAll()
+        assetInstances.forEach { map?.remove(assetInstance: $0) }
+        assetInstances.removeAll()
         removeAllChildren()
         
         let rendererName = regionDescription.renderer ?? "default_cell"
@@ -247,11 +254,24 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         }
     }
     
-    public func addAsset(_ asset: AssetLocator, atX x: Int, y: Int, horizontallyFlipped: Bool) {
+    public func addAsset(_ asset: AssetLocator, named name: String, atWorldX x: Int, y: Int, horizontallyFlipped: Bool) throws {
+        let footprint = asset.assetDescription!.footprint
+
+        let localCoords = regionDescription.area.convert(toX: x, y: y)
+        let minimalFootprint = localCoords &+ IntPoint.one
+
+        guard minimalFootprint.x >= footprint.x, minimalFootprint.y >= footprint.y else {
+            throw MapRegionErrors.assetTooCloseToRegionBorder
+        }
+
+        let assetArea = MapArea(x: x - Int(footprint.x), y: y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
+        guard regionDescription.isFreeOfAsset(area: assetArea) else {
+            throw MapRegionErrors.otherAssetInTheWay
+        }
+
         regionDescription.assetPlacements = regionDescription.assetPlacements ?? []
         
-        let coordsInRegion = regionDescription.area.convert(toX: x, y: y)
-        let placement = AssetPlacement(assetLocator: asset, horizontallyFlipped: horizontallyFlipped, atX: coordsInRegion.x, y: coordsInRegion.y, worldOffset: CGPoint())
+        let placement = AssetPlacement(assetLocator: asset, horizontallyFlipped: horizontallyFlipped, atX: localCoords.x, y: localCoords.y, worldOffset: CGPoint(), name: name)
         regionDescription.assetPlacements!.append(placement)
         
         instantiateAsset(placement: placement)

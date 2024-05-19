@@ -237,33 +237,30 @@ class EditorGameView: GameView {
     }
     
     func addAsset(_ asset: AssetLocator, atX x: Int, y: Int, horizontallyFlipped: Bool) {
-        if let region = mutableMap.regionAt(x: x, y: y) {
-            let footprint = asset.assetDescription!.footprint
-            
-            let localCoords = region.regionDescription.area.convert(toX: x, y: y)
-            let minimalFootprint = localCoords &+ IntPoint.one
-            
-            guard minimalFootprint.x >= footprint.x, minimalFootprint.y >= footprint.y else {
-                let alert = NSAlert()
-                alert.informativeText = "Error"
-                alert.messageText = "Unable to place asset - Too close to the region's borders"
-                alert.addButton(withTitle: "OK")
-                let _ = alert.runModal()
-                return
-            }
-            
-            let assetArea = MapArea(x: x - Int(footprint.x), y: y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
-            guard region.regionDescription.isFreeOfAsset(area: assetArea) else {
-                let alert = NSAlert()
-                alert.informativeText = "Error"
-                alert.messageText = "Unable to place asset - Another asset already exists in the target area"
-                alert.addButton(withTitle: "OK")
-                let _ = alert.runModal()
-                return
-            }
-            
-            region.addAsset(asset, atX: x, y: y, horizontallyFlipped: horizontallyFlipped)
+        do {
+            try mutableMap.addAsset(asset, named: "", atX: x, y: y, horizontallyFlipped: horizontallyFlipped)
             mutableMap.dirty = true
+        }
+        catch MapRegionErrors.assetTooCloseToRegionBorder {
+            let alert = NSAlert()
+            alert.informativeText = "Error"
+            alert.messageText = "Unable to place asset - Too close to the region's borders"
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+        }
+        catch MapRegionErrors.otherAssetInTheWay {
+            let alert = NSAlert()
+            alert.informativeText = "Error"
+            alert.messageText = "Unable to place asset - Another asset already exists in the target area"
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+        }
+        catch {
+            let alert = NSAlert()
+            alert.informativeText = "Error"
+            alert.messageText = "Unexpected error: \(error)"
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
         }
     }
     
@@ -276,7 +273,7 @@ class EditorGameView: GameView {
             
             let lightEntity = pointLightComponent.entity!
             lightEntity.component(ofType: GKSKNodeComponent.self)!.node.removeFromParent()
-            lightEntities.removeAll(where: { $0 === lightEntity })
+            lightEntities.removeAll { $0 === lightEntity }
             editableComponents.removeComponent(foundIn: lightEntity)
         }
     }

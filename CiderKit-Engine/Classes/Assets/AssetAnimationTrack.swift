@@ -100,7 +100,7 @@ public final class AssetAnimationTrack: Codable {
     }
     
     public func removeKey(at frame: UInt) {
-        keys.removeAll(where: { $0.frame == frame })
+        keys.removeAll { $0.frame == frame }
     }
     
     public func setValue(_ value: Any, at frame: UInt) throws {

@@ -50,7 +50,7 @@ open class TransformAssetElementInstance {
     
     public final func removeFromParent() {
         assetInstance?.remove(elementInstance: self)
-        parent?.children.removeAll(where: { $0 === self })
+        parent?.children.removeAll { $0 === self }
         node?.removeFromParent()
     }
     

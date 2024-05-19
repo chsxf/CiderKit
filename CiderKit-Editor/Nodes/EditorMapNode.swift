@@ -53,12 +53,12 @@ class EditorMapNode: MapNode {
             needsRebuilding = true
         }
         
-        regions.forEach({ $0.removeFromParent() })
-        regions.removeAll(where: { regionsToRemove.contains($0) })
+        regions.forEach { $0.removeFromParent() }
+        regions.removeAll { regionsToRemove.contains($0) }
         regions.append(contentsOf: newRegions)
         mergeRegions()
-        regions.forEach({ addChild($0) })
-        
+        regions.forEach { addChild($0) }
+
         if needsRebuilding {
             sortRegions()
             buildRegions()
@@ -92,7 +92,7 @@ class EditorMapNode: MapNode {
         }
         
         regions.forEach { $0.removeFromParent() }
-        regions.removeAll(where: { regionsToRemove.contains($0) })
+        regions.removeAll { regionsToRemove.contains($0) }
         regions.append(contentsOf: newRegions)
         mergeRegions()
         regions.forEach { addChild($0) }
@@ -151,7 +151,7 @@ class EditorMapNode: MapNode {
     }
 
     func remove(light: PointLight) {
-        lights.removeAll(where: { $0 === light })
+        lights.removeAll { $0 === light }
         dirty = true
     }
     
@@ -161,13 +161,13 @@ class EditorMapNode: MapNode {
             NotificationCenter.default.removeObserver(self, name: .selectableErased, object: assetComponent)
             
             let entity = assetComponent.entity!
-            hoverableEntities.removeAll(where: { $0 === entity })
+            hoverableEntities.removeAll { $0 === entity }
             
             let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)?.node
             
             for region in regions {
                 if region.regionDescription.assetPlacements?.contains(where: { $0.id == assetComponent.placement.id }) ?? false {
-                    region.regionDescription.assetPlacements!.removeAll(where: { $0.id == assetComponent.placement.id })
+                    region.regionDescription.assetPlacements!.removeAll { $0.id == assetComponent.placement.id }
                     assetNode?.removeFromParent()
                     break
                 }
@@ -180,11 +180,15 @@ class EditorMapNode: MapNode {
     override func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> (AssetInstance, GKEntity)? {
         guard let (instance, assetComponentEntity) = super.instantiateAsset(placement: placement, at: worldPosition) else { return nil }
         
-        let entity = EditorAssetComponent.entity(from: assetComponentEntity)
+        let entity = EditorAssetComponent.prepareEntity(assetComponentEntity)
         hoverableEntities.append(entity)
         let component = entity.component(ofType: EditorAssetComponent.self)!
         NotificationCenter.default.addObserver(self, selector: #selector(assetErased(notification:)), name: .selectableErased, object: component)
         return (instance, entity)
     }
     
+    override func remove(assetInstance: AssetInstance) {
+        hoverableEntities.removeAll { $0.component(ofType: AssetComponent.self)?.assetInstance === assetInstance }
+    }
+
 }

@@ -20,9 +20,9 @@ public class AssetPlacement: Codable, Identifiable, ObservableObject, NamedObjec
     @Published public var horizontallyFlipped: Bool
     @Published public var interactive: Bool
     
-    public init(assetLocator: AssetLocator, horizontallyFlipped: Bool, atX x: Int = 0, y: Int = 0, worldOffset: CGPoint = CGPoint()) {
+    public init(assetLocator: AssetLocator, horizontallyFlipped: Bool, atX x: Int = 0, y: Int = 0, worldOffset: CGPoint = CGPoint(), name: String = "") {
         id = UUID()
-        name = ""
+        self.name = name
         self.assetLocator = assetLocator
         self.x = x
         self.y = y
