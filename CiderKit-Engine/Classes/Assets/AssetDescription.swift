@@ -16,7 +16,7 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
     public var id: String { uuid.description }
     
     public var databaseKey: String = ""
-    public let uuid: UUID
+    public private(set) var uuid: UUID
     @Published public var name: String
     
     public var rootElement: TransformAssetElement
@@ -38,7 +38,31 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
         
         rootElement = TransformAssetElement(name: "root")
     }
-    
+
+    public init(other assetDescription: AssetDescription) {
+        uuid = UUID()
+
+        name = assetDescription.name
+        databaseKey = assetDescription.databaseKey
+
+        footprint = assetDescription.footprint
+
+        let encoder = JSONEncoder()
+        let encodedValue = try! encoder.encode(assetDescription)
+
+        let decoder = JSONDecoder()
+        let clonedAssetDescription = try! decoder.decode(AssetDescription.self, from: encodedValue)
+
+        animations = clonedAssetDescription.animations
+        rootElement = clonedAssetDescription.rootElement
+
+        var map = [UUID: UUID]()
+        remapElementUUIDs(for: rootElement, map: &map)
+        for (_, animation) in animations {
+            animation.remapElementUUIDs(map: map)
+        }
+    }
+
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
@@ -64,12 +88,22 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
         try container.encode(footprint, forKey: .footprint)
         try container.encode(rootElement, forKey: .rootElement)
 
-        var animationsContainer = container.nestedContainer(keyedBy: StringCodingKey.self, forKey: .animations)
-        for (animationName, animation) in animations {
-            try animationsContainer.encode(animation, forKey: StringCodingKey(stringValue: animationName)!)
+        if !animations.isEmpty {
+            var animationsContainer = container.nestedContainer(keyedBy: StringCodingKey.self, forKey: .animations)
+            for (animationName, animation) in animations {
+                try animationsContainer.encode(animation, forKey: StringCodingKey(stringValue: animationName)!)
+            }
         }
     }
     
+    private func remapElementUUIDs(for element: TransformAssetElement, map: inout [UUID: UUID]) {
+        map[element.uuid] = element.renewUUID()
+
+        for childElement in element.children {
+            remapElementUUIDs(for: childElement, map: &map)
+        }
+    }
+
     public func instantiate() -> AssetInstance {
         AssetInstance(assetDescription: self, horizontallyFlipped: false)
     }

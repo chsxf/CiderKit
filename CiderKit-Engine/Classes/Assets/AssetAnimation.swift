@@ -52,5 +52,18 @@ public final class AssetAnimation: Codable {
             referenceElementUUIDs.insert(identifier.elementUUID)
         }
     }
-    
+
+    public func remapElementUUIDs(map: [UUID: UUID]) {
+        let oldTrackIdentifiers = animationTracks.keys
+        for oldIdentifier in oldTrackIdentifiers {
+            let oldUUID = oldIdentifier.elementUUID
+            let newUUID = map[oldUUID]!
+            let newIdentifier = AssetAnimationTrackIdentifier(elementUUID: newUUID, type: oldIdentifier.trackType)
+            animationTracks[newIdentifier] = animationTracks[oldIdentifier]
+            animationTracks[oldIdentifier] = nil
+        }
+
+        refreshReferencedElementUUIDs()
+    }
+
 }

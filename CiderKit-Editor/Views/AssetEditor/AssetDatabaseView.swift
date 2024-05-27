@@ -19,6 +19,7 @@ class AssetDatabaseView: NSStackView, NSCollectionViewDelegate, NSCollectionView
     
     private let assetDescriptionView: AssetDescriptionView
     
+    private var duplicateButton: NSButton!
     private var removeButton: NSButton!
     
     init(database: AssetDatabase) {
@@ -73,8 +74,9 @@ class AssetDatabaseView: NSStackView, NSCollectionViewDelegate, NSCollectionView
         scroll.borderType = .bezelBorder
         
         let addButton = NSButton(systemSymbolName: "plus", target: self, action: #selector(Self.addAsset))
+        duplicateButton = NSButton(systemSymbolName: "doc.on.doc", target: self, action: #selector(Self.duplicateAsset))
         removeButton = NSButton(systemSymbolName: "minus", target: self, action: #selector(Self.removeAsset))
-        let buttonRow = NSStackView(views: [addButton, removeButton])
+        let buttonRow = NSStackView(views: [addButton, duplicateButton, removeButton])
         buttonRow.orientation = .horizontal
         
         let stack = NSStackView(views: [label, scroll, buttonRow])
@@ -110,6 +112,37 @@ class AssetDatabaseView: NSStackView, NSCollectionViewDelegate, NSCollectionView
     }
     
     @objc
+    private func duplicateAsset() {
+        if let selectedItem = assetCollection.selectionIndexPaths.first {
+            let selectedAsset = database.assets[selectedItem.item]
+
+            assetCollection.deselectItems(at: assetCollection.selectionIndexPaths)
+            let newIndex = database.assets.count
+            var nameIndex = 1
+            var name: String? = nil
+            repeat {
+                let potentialName = "\(selectedAsset.name) \(nameIndex)"
+                if !database.assets.contains(where: { $0.name == potentialName }) {
+                    name = potentialName
+                }
+                else {
+                    nameIndex += 1
+                }
+            }
+            while name == nil
+
+            let clonedAsset = AssetDescription(other: selectedAsset)
+            clonedAsset.name = name!
+            database.assets.append(clonedAsset)
+
+            let indexPathSet: Set = [IndexPath(item: newIndex, section: 0)]
+            assetCollection.insertItems(at: indexPathSet)
+            assetCollection.selectItems(at: indexPathSet, scrollPosition: .nearestHorizontalEdge)
+            updateSelection()
+        }
+    }
+
+    @objc
     private func removeAsset() {
         let selectedItems = assetCollection.selectionIndexPaths
         assetCollection.deselectItems(at: selectedItems)
@@ -141,11 +174,13 @@ class AssetDatabaseView: NSStackView, NSCollectionViewDelegate, NSCollectionView
     
     private func updateSelection() {
         if let selectedItem = assetCollection.selectionIndexPaths.first {
+            duplicateButton.isEnabled = true
             removeButton.isEnabled = true
             let asset = database.assets[selectedItem.item]
             assetDescriptionView.assetDescription = asset
         }
         else {
+            duplicateButton.isEnabled = false
             removeButton.isEnabled = false
             assetDescriptionView.assetDescription = nil
         }

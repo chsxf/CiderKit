@@ -53,7 +53,8 @@ open class AssetInstance : TransformAssetElementInstance {
     public subscript(element: TransformAssetElement) -> TransformAssetElementInstance? { elementInstancesByUUID[element.uuid] }
     
     public convenience init(assetDescription: AssetDescription, horizontallyFlipped: Bool, at worldPosition: SIMD3<Float> = SIMD3(), offsetNodeByWorldPosition: Bool = true) {
-        self.init(placement: AssetPlacement(assetLocator: assetDescription.locator, horizontallyFlipped: horizontallyFlipped), at: worldPosition, offsetNodeByWorldPosition: offsetNodeByWorldPosition)!
+        let placement = AssetPlacement(assetLocator: assetDescription.locator, horizontallyFlipped: horizontallyFlipped)
+        self.init(placement: placement, at: worldPosition, offsetNodeByWorldPosition: offsetNodeByWorldPosition)!
     }
     
     public init?(placement: AssetPlacement, at worldPosition: SIMD3<Float>, offsetNodeByWorldPosition: Bool = true) {

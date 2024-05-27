@@ -26,8 +26,8 @@ public class TransformAssetElement : Hashable, Codable {
     
     public var isRoot: Bool { parent == nil }
     
-    public let uuid: UUID
-    
+    public private(set) var uuid: UUID
+
     public var name: String
     public var visible: Bool
     public var offset: SIMD3<Float>
@@ -116,6 +116,11 @@ public class TransformAssetElement : Hashable, Codable {
         }
     }
     
+    public func renewUUID() -> UUID {
+        uuid = UUID()
+        return uuid
+    }
+
     private func setParentForChildren() {
         for child in children {
             child.parent = self
