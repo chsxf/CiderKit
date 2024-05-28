@@ -58,7 +58,7 @@ final class AssetEditor {
                 
                 do {
                     let filenameWithoutExtension = targetURL.deletingPathExtension().lastPathComponent
-                    let id = AssetDatabase.idFromFilename(filenameWithoutExtension)
+                    let id = AssetDatabase.sanitizeId(filenameWithoutExtension)
                     if id.isEmpty {
                         let invalidFilenameAlert = NSAlert()
                         invalidFilenameAlert.informativeText = "The selected file name cannot be converted to a suitable Id for the asset database. Unable to create the database"

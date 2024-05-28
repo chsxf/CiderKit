@@ -41,6 +41,19 @@ public final class AssetDatabase: Identifiable, Codable, CustomStringConvertible
         }
     }
     
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(id, forKey: .id)
+        try container.encode(isDefault, forKey: .isDefault)
+        try container.encode(version, forKey: .version)
+
+        var assetsContainer = container.nestedUnkeyedContainer(forKey: .assets)
+        for asset in assets {
+            try assetsContainer.encode(asset)
+        }
+    }
+
     public subscript(uuid: UUID) -> AssetDescription? {
         for asset in assets {
             if asset.uuid == uuid {
@@ -57,8 +70,8 @@ public final class AssetDatabase: Identifiable, Codable, CustomStringConvertible
         return nil
     }
     
-    public class func idFromFilename(_ filename: String) -> String {
-        let lowerCaseTrimmed = filename.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+    public class func sanitizeId(_ prospectiveId: String) -> String {
+        let lowerCaseTrimmed = prospectiveId.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
         let invalidCharactersRE = try! NSRegularExpression(pattern: "[^a-z0-9-]")
         let onlyValidCharacters = invalidCharactersRE.stringByReplacingMatches(in: lowerCaseTrimmed, range: NSMakeRange(0, lowerCaseTrimmed.count), withTemplate: "-")
@@ -68,19 +81,6 @@ public final class AssetDatabase: Identifiable, Codable, CustomStringConvertible
         
         let sanitiezd = successiveCaretsRE.stringByReplacingMatches(in: trimmed, range: NSMakeRange(0, trimmed.count), withTemplate: "-")
         return sanitiezd
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        
-        try container.encode(id, forKey: .id)
-        try container.encode(isDefault, forKey: .isDefault)
-        try container.encode(version, forKey: .version)
-        
-        var assetsContainer = container.nestedUnkeyedContainer(forKey: .assets)
-        for asset in assets {
-            try assetsContainer.encode(asset)
-        }
     }
     
 }
