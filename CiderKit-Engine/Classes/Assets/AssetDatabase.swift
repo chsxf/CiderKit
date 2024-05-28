@@ -70,6 +70,10 @@ public final class AssetDatabase: Identifiable, Codable, CustomStringConvertible
         return nil
     }
     
+    public func findAsset(by name: String) -> AssetDescription? {
+        assets.first { $0.name == name }
+    }
+
     public class func sanitizeId(_ prospectiveId: String) -> String {
         let lowerCaseTrimmed = prospectiveId.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
