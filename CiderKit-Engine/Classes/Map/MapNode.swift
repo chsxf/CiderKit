@@ -8,10 +8,10 @@ open class MapNode: SKNode, Collection {
     public static let halfWidth: Int = 24
     public static let halfHeight: Int = 12
     
-    public static let xVector = vector_float2(Float(MapNode.halfWidth), Float(-MapNode.halfHeight))
-    public static let yVector = vector_float2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
-    public static let zVector = vector_float2(0, Float(MapNode.elevationHeight))
-    
+    public static let xVector = SIMD2(Float(MapNode.halfWidth), Float(-MapNode.halfHeight))
+    public static let yVector = SIMD2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
+    public static let zVector = SIMD2(0, Float(MapNode.elevationHeight))
+
     public var regions: [MapRegion] = [MapRegion]()
     
     private let cellRenderers: [String:CellRendererDescription]

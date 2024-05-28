@@ -14,9 +14,9 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     private static let defaultSize: Int = 320
     
     private static let lights = [
-        matrix_float3x3([vector_float3(0, 0, 5), vector_float3(1, 1, 1), vector_float3(0, 20, 0.5)]),
-        matrix_float3x3([vector_float3(5, 1, 1), vector_float3(0.5, 0.4, 0.4), vector_float3(0, 20, 0.5)]),
-        matrix_float3x3([vector_float3(1, 5, 1), vector_float3(0.4, 0.4, 0.5), vector_float3(0, 20, 0.5)]),
+        matrix_float3x3([SIMD3(0, 0, 5), SIMD3(1, 1, 1), SIMD3(0, 20, 0.5)]),
+        matrix_float3x3([SIMD3(5, 1, 1), SIMD3(0.5, 0.4, 0.4), SIMD3(0, 20, 0.5)]),
+        matrix_float3x3([SIMD3(1, 5, 1), SIMD3(0.4, 0.4, 0.5), SIMD3(0, 20, 0.5)]),
     ]
     
     private static var gridTexture: SKTexture? = nil
@@ -186,8 +186,8 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         let litNodesRootIndex = litNodesRoot.parent!.children.firstIndex(of: litNodesRoot)!
         litNodesRoot.parent!.insertChild(backBoundingBoxShape, at: litNodesRootIndex)
         litNodesRoot.parent!.insertChild(gridRoot, at: litNodesRootIndex)
-        setFootprintGrid(vector_uint2(1, 1))
-        
+        setFootprintGrid(assetDescription.footprint)
+
         litNodesRoot.parent!.addChild(frontBoundingBoxShape)
 
         litNodesRoot.addChild(elementsRoot)

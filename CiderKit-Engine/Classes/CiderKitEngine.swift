@@ -104,8 +104,8 @@ public class CiderKitEngine {
         let source = try! String(contentsOf: bundle.url(forResource: "UberShader", withExtension: "fsh")!, encoding: .utf8)
         
         let textureSize = atlas.atlasTexture.size()
-        let uTexSize = vector_float2(Float(textureSize.width), Float(textureSize.height))
-        
+        let uTexSize = SIMD2(Float(textureSize.width), Float(textureSize.height))
+
         let uberShader = SKShader(source: source, uniforms: [
             SKUniform(name: ShaderUniformName.shadeMode.rawValue, float: 0),
             SKUniform(name: ShaderUniformName.textureSize.rawValue, vectorFloat2: uTexSize),
