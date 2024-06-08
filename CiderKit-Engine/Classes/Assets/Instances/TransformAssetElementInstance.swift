@@ -151,7 +151,33 @@ open class TransformAssetElementInstance {
         
         return actions
     }
-    
+
+    public func getElementInstances<T>(directChildrenOnly: Bool = true, includeNestedReferences: Bool = false) -> [T] where T : TransformAssetElementInstance {
+        var elementInstances = [T]()
+
+        if let selfAsT = self as? T {
+            elementInstances.append(selfAsT)
+        }
+
+        for child in children {
+            if let childAsT = child as? T {
+                elementInstances.append(childAsT)
+            }
+
+            if !directChildrenOnly {
+                let childElementInstances: [T] = child.getElementInstances(directChildrenOnly: false, includeNestedReferences: includeNestedReferences)
+                elementInstances.append(contentsOf: childElementInstances)
+
+                if includeNestedReferences, let referencedInstance = (child as? ReferenceAssetElementInstance)?.referencedAssetInstance {
+                    let referencedElementInstances: [T] = referencedInstance.getElementInstances(directChildrenOnly: false, includeNestedReferences: true)
+                    elementInstances.append(contentsOf: referencedElementInstances)
+                }
+            }
+        }
+
+        return elementInstances
+    }
+
     class func horizontallyFlipOffset(_ offset: SIMD3<Float>) -> SIMD3<Float> {
         SIMD3(offset.y, offset.x, offset.z)
     }

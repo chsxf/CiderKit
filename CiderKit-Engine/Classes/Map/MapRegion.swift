@@ -152,7 +152,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
             }
         }
         
-        regionDescription.assetPlacements?.forEach { self.instantiateAsset(placement: $0) }
+        regionDescription.assetPlacements?.forEach { _ = self.instantiateAsset(placement: $0) }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -244,17 +244,21 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         return (mainSubdivision, otherSubdivisions)
     }
     
-    private func instantiateAsset(placement: AssetPlacement) {
+    private func instantiateAsset(placement: AssetPlacement) -> AssetInstance? {
         let absoluteCoords = regionDescription.area.convert(fromX: placement.x, y: placement.y)
         let worldPosition = SIMD3<Float>(Float(absoluteCoords.x), Float(absoluteCoords.y), Float(elevation)) + placement.worldOffset.toSIMDFloat3()
         
         if let (instance, _) = map?.instantiateAsset(placement: placement, at: worldPosition) {
             addChild(instance.node!)
             assetInstances.append(instance)
+            return instance
         }
+
+        return nil
     }
     
-    public func addAsset(_ asset: AssetLocator, named name: String, atWorldX x: Int, y: Int, horizontallyFlipped: Bool) throws {
+    @discardableResult
+    public func addAsset(_ asset: AssetLocator, named name: String, atWorldX x: Int, y: Int, horizontallyFlipped: Bool) throws -> AssetInstance? {
         let footprint = asset.assetDescription!.footprint
 
         let localCoords = regionDescription.area.convert(toX: x, y: y)
@@ -274,7 +278,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         let placement = AssetPlacement(assetLocator: asset, horizontallyFlipped: horizontallyFlipped, atX: localCoords.x, y: localCoords.y, worldOffset: CGPoint(), name: name)
         regionDescription.assetPlacements!.append(placement)
         
-        instantiateAsset(placement: placement)
+        return instantiateAsset(placement: placement)
     }
     
 }

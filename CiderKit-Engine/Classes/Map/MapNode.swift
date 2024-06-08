@@ -232,10 +232,12 @@ open class MapNode: SKNode, Collection {
         }
     }
 
-    public final func addAsset(_ asset: AssetLocator, named: String, atX x: Int, y: Int, horizontallyFlipped: Bool) throws {
+    @discardableResult
+    public final func addAsset(_ asset: AssetLocator, named: String, atX x: Int, y: Int, horizontallyFlipped: Bool) throws -> AssetInstance? {
         if let region = regionAt(x: x, y: y) {
-            try region.addAsset(asset, named: "", atWorldX: x, y: y, horizontallyFlipped: horizontallyFlipped)
+            return try region.addAsset(asset, named: "", atWorldX: x, y: y, horizontallyFlipped: horizontallyFlipped)
         }
+        return nil
     }
 
     public static func computeNodePosition(with offset: SIMD3<Float>) -> CGPoint { computeNodePosition(x: offset.x, y: offset.y, z: offset.z) }
