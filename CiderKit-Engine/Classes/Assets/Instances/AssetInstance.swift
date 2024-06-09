@@ -25,13 +25,13 @@ open class AssetInstance : TransformAssetElementInstance {
         }
     }
     
-    public var currentAnimationName: String? = nil {
+    public var currentAnimationName: OverridableValue<String?> {
         didSet {
             updateAll(applyDefaults: true)
         }
     }
     
-    public var currentFrame: UInt = 0 {
+    public var currentFrame: OverridableValue<UInt> {
         didSet {
             updateAll(applyDefaults: false)
         }
@@ -68,6 +68,9 @@ open class AssetInstance : TransformAssetElementInstance {
         self.worldPosition = worldPosition
         
         interactiveFlag = placement.interactive
+
+        currentAnimationName = OverridableValue(nil)
+        currentFrame = OverridableValue(0)
 
         super.init(element: assetDescription.rootElement)
         
@@ -148,7 +151,7 @@ open class AssetInstance : TransformAssetElementInstance {
     
     public override func applyPosition(_ node: SKNode) {
         if offsetByWorldPosition {
-            node.position = MapNode.computeNodePosition(with: currentOffset + worldPosition)
+            node.position = MapNode.computeNodePosition(with: currentOffset.currentValue + worldPosition)
         }
         else {
             super.applyPosition(node)
@@ -171,26 +174,26 @@ open class AssetInstance : TransformAssetElementInstance {
         }
         
         guard
-            let currentAnimationName,
+            let currentAnimationName = currentAnimationName.currentValue,
             let currentAnimation = assetDescription.animations[currentAnimationName]
         else { return }
         
         for elementUUID in currentAnimation.referenceElementUUIDs {
             if let instance = elementInstancesByUUID[elementUUID] {
-                let animationSnapshot = assetDescription.getAnimationSnapshot(for: elementUUID, in: currentAnimationName, at: currentFrame)
+                let animationSnapshot = assetDescription.getAnimationSnapshot(for: elementUUID, in: currentAnimationName, at: currentFrame.currentValue)
                 instance.update(animationSnapshot: animationSnapshot)
             }
         }
         
         for (_, elementInstance) in referenceElementInstancesByUUID {
-            elementInstance.referencedAssetInstance?.currentFrame = currentFrame
+            elementInstance.referencedAssetInstance?.currentFrame.overriddenValue = currentFrame.currentValue
         }
     }
     
     public func updateElement(_ element: TransformAssetElement) {
         guard let instance = elementInstancesByUUID[element.uuid] else { return }
         
-        let animationSnapshot = assetDescription.getAnimationSnapshot(for: element.uuid, in: currentAnimationName, at: currentFrame)
+        let animationSnapshot = assetDescription.getAnimationSnapshot(for: element.uuid, in: currentAnimationName.currentValue, at: currentFrame.currentValue)
         instance.update(animationSnapshot: animationSnapshot)
     }
     
@@ -253,5 +256,14 @@ open class AssetInstance : TransformAssetElementInstance {
         
         return actions.isEmpty ? nil : SKAction.group(actions)
     }
-    
+
+    public override func resetAllOverriddenValues(options: ResetOverriddenValuesOptions = [.applyToChildren, .updateImmediately]) {
+        var modifiedOptions = options
+        modifiedOptions.remove(.updateImmediately)
+        super.resetAllOverriddenValues(options: modifiedOptions)
+
+        currentAnimationName.overriddenValue = nil
+        currentFrame.overriddenValue = nil
+    }
+
 }

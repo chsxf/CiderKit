@@ -6,15 +6,15 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     
     private var spriteNode: SKSpriteNode? = nil
     
-    public private(set) var currentVolumeOffset: SIMD3<Float>
-    public private(set) var currentVolumeSize: SIMD3<Float>
-    
-    public private(set) var currentSpriteLocator: SpriteLocator?
-    public private(set) var currentAnchorPoint: CGPoint
-    
-    public private(set) var currentColor: CGColor
-    public private(set) var currentColorBlendFactor: Float
-    
+    public var currentVolumeOffset: OverridableValue<SIMD3<Float>>
+    public var currentVolumeSize: OverridableValue<SIMD3<Float>>
+
+    public var currentSpriteLocator: OverridableValue<SpriteLocator?>
+    public var currentAnchorPoint: OverridableValue<CGPoint>
+
+    public var currentColor: OverridableValue<CGColor>
+    public var currentColorBlendFactor: OverridableValue<Float>
+
     open override var selfBoundingBox: AssetBoundingBox? {
         guard
             let position = spriteNode?.attributeValues[CiderKitEngine.ShaderAttributeName.position.rawValue]?.vectorFloat3Value,
@@ -29,15 +29,15 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     public init(element: SpriteAssetElement) {
         spriteElement = element
         
-        currentVolumeOffset = element.volumeOffset
-        currentVolumeSize = element.volumeSize
-        
-        currentSpriteLocator = element.spriteLocator
-        currentAnchorPoint = element.anchorPoint
-        
-        currentColor = element.color
-        currentColorBlendFactor = element.colorBlend
-        
+        currentVolumeOffset = OverridableValue(element.volumeOffset)
+        currentVolumeSize = OverridableValue(element.volumeSize)
+
+        currentSpriteLocator = OverridableValue(element.spriteLocator)
+        currentAnchorPoint = OverridableValue(element.anchorPoint)
+
+        currentColor = OverridableValue(element.color)
+        currentColorBlendFactor = OverridableValue(element.colorBlend)
+
         super.init(element: element)
     }
     
@@ -47,14 +47,14 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
         
         super.createNode(baseNode: spriteNode, at: worldPosition)
         
-        updateSprite(spriteNode, spriteLocator: currentSpriteLocator)
-        spriteNode.anchorPoint = currentAnchorPoint
-        
-        spriteNode.color = SKColorFromCGColor(currentColor)
-        spriteNode.colorBlendFactor = CGFloat(currentColorBlendFactor)
-        
-        var additionalOffset = currentVolumeOffset - currentVolumeSize * SIMD3(0.5, 0.5, 0)
-        var adjustedVolumeSize = currentVolumeSize
+        updateSprite(spriteNode, spriteLocator: currentSpriteLocator.currentValue)
+        spriteNode.anchorPoint = currentAnchorPoint.currentValue
+
+        spriteNode.color = SKColorFromCGColor(currentColor.currentValue)
+        spriteNode.colorBlendFactor = CGFloat(currentColorBlendFactor.currentValue)
+
+        var additionalOffset = currentVolumeOffset.currentValue - currentVolumeSize.currentValue * SIMD3(0.5, 0.5, 0)
+        var adjustedVolumeSize = currentVolumeSize.currentValue
         var horizontallyFlippedFlag: Float = 0
         if horizontallyFlippedByAncestorOrSelf {
             additionalOffset = Self.horizontallyFlipOffset(additionalOffset)
@@ -71,21 +71,21 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     public override func applyDefaults() {
         guard let spriteNode else { return }
         
-        currentVolumeOffset = spriteElement.volumeOffset
-        currentVolumeSize = spriteElement.volumeSize
-        
-        currentSpriteLocator = spriteElement.spriteLocator
-        updateSprite(spriteNode, spriteLocator: currentSpriteLocator)
-        
-        currentAnchorPoint = spriteElement.anchorPoint
-        spriteNode.anchorPoint = currentAnchorPoint
-        
-        currentColor = spriteElement.color
-        spriteNode.color = SKColorFromCGColor(currentColor)
-        
-        currentColorBlendFactor = spriteElement.colorBlend
-        spriteNode.colorBlendFactor = CGFloat(currentColorBlendFactor)
-        
+        currentVolumeOffset.baseValue = spriteElement.volumeOffset
+        currentVolumeSize.baseValue = spriteElement.volumeSize
+
+        currentSpriteLocator.baseValue = spriteElement.spriteLocator
+        updateSprite(spriteNode, spriteLocator: currentSpriteLocator.currentValue)
+
+        currentAnchorPoint.baseValue = spriteElement.anchorPoint
+        spriteNode.anchorPoint = currentAnchorPoint.currentValue
+
+        currentColor.baseValue = spriteElement.color
+        spriteNode.color = SKColorFromCGColor(currentColor.currentValue)
+
+        currentColorBlendFactor.baseValue = spriteElement.colorBlend
+        spriteNode.colorBlendFactor = CGFloat(currentColorBlendFactor.currentValue)
+
         super.applyDefaults()
     }
     
@@ -94,29 +94,29 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
             let spriteNode,
             let snapshot = animationSnapshot ?? getAnimationSnapshot()
         else { return }
-        
+
         if let spriteLocatorDescription: String = snapshot.get(trackType: .sprite) {
-            currentSpriteLocator = SpriteLocator(description: spriteLocatorDescription)
+            currentSpriteLocator.baseValue = SpriteLocator(description: spriteLocatorDescription)
         }
         else {
-            currentSpriteLocator = nil
+            currentSpriteLocator.baseValue = nil
         }
-        updateSprite(spriteNode, spriteLocator: currentSpriteLocator)
-        
+        updateSprite(spriteNode, spriteLocator: currentSpriteLocator.currentValue)
+
         let xAnchorPoint: Float = snapshot.get(trackType: .xAnchorPoint)
         let yAnchorPoint: Float = snapshot.get(trackType: .yAnchorPoint)
-        currentAnchorPoint = CGPoint(x: CGFloat(xAnchorPoint), y: CGFloat(yAnchorPoint))
-        spriteNode.anchorPoint = currentAnchorPoint
-        
-        currentColor = snapshot.get(trackType: .color)
-        spriteNode.color = SKColorFromCGColor(currentColor)
-        
-        currentColorBlendFactor = snapshot.get(trackType: .colorBlendFactor)
-        spriteNode.colorBlendFactor = CGFloat(currentColorBlendFactor)
-        
-        currentVolumeOffset = SIMD3<Float>(snapshot.get(trackType: .xVolumeOffset), snapshot.get(trackType: .yVolumeOffset), snapshot.get(trackType: .zVolumeOffset))
-        currentVolumeSize = SIMD3<Float>(snapshot.get(trackType: .xVolumeSize), snapshot.get(trackType: .yVolumeSize), snapshot.get(trackType: .zVolumeSize))
-        
+        currentAnchorPoint.baseValue = CGPoint(x: CGFloat(xAnchorPoint), y: CGFloat(yAnchorPoint))
+        spriteNode.anchorPoint = currentAnchorPoint.currentValue
+
+        currentColor.baseValue = snapshot.get(trackType: .color)
+        spriteNode.color = SKColorFromCGColor(currentColor.currentValue)
+
+        currentColorBlendFactor.baseValue = snapshot.get(trackType: .colorBlendFactor)
+        spriteNode.colorBlendFactor = CGFloat(currentColorBlendFactor.currentValue)
+
+        currentVolumeOffset.baseValue = SIMD3<Float>(snapshot.get(trackType: .xVolumeOffset), snapshot.get(trackType: .yVolumeOffset), snapshot.get(trackType: .zVolumeOffset))
+        currentVolumeSize.baseValue = SIMD3<Float>(snapshot.get(trackType: .xVolumeSize), snapshot.get(trackType: .yVolumeSize), snapshot.get(trackType: .zVolumeSize))
+
         super.update(animationSnapshot: snapshot)
     }
     
@@ -136,8 +136,8 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     }
     
     public override func updateHierarchyDependentProperties() {
-        var additionalOffset = currentVolumeOffset - currentVolumeSize * SIMD3(0.5, 0.5, 0)
-        var adjustedVolumeSize = currentVolumeSize
+        var additionalOffset = currentVolumeOffset.currentValue - currentVolumeSize.currentValue * SIMD3(0.5, 0.5, 0)
+        var adjustedVolumeSize = currentVolumeSize.currentValue
         var horizontallyFlippedFlag: Float = 0
         if horizontallyFlippedByAncestorOrSelf {
             additionalOffset = Self.horizontallyFlipOffset(additionalOffset)
@@ -168,9 +168,9 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
                 return [
                     SKAction.wait(forDuration: adjustedDuration),
                     SKAction.customAction(withDuration: AssetAnimationTrack.frameTime) { _, _ in
-                        self.currentColor = endColor
+                        self.currentColor.baseValue = endColor
                         if let spriteNode = self.spriteNode {
-                            spriteNode.color = SKColorFromCGColor(self.currentColor)
+                            spriteNode.color = SKColorFromCGColor(self.currentColor.currentValue)
                         }
                     }
                 ]
@@ -179,10 +179,10 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
                 let startColor = key1.colorValue!
                 let action = SKAction.customAction(withDuration: duration) { _, elapsedTime in
                     let ratio = Float(elapsedTime / timeBetweenKeys)
-                    self.currentColor = CGColor.interpolateRGB(from: startColor, to: endColor, t: ratio)!
-                    
+                    self.currentColor.baseValue = CGColor.interpolateRGB(from: startColor, to: endColor, t: ratio)!
+
                     if let spriteNode = self.spriteNode {
-                        spriteNode.color = SKColorFromCGColor(self.currentColor)
+                        spriteNode.color = SKColorFromCGColor(self.currentColor.currentValue)
                     }
                 }
                 action.setupTimingFunction(key1.timingInterpolation, partialTimeScaling: partialTimeScaling)
@@ -195,9 +195,9 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
                 return [
                     SKAction.wait(forDuration: adjustedDuration),
                     SKAction.customAction(withDuration: AssetAnimationTrack.frameTime) { _, _ in
-                        self.currentColorBlendFactor = key2.floatValue!
+                        self.currentColorBlendFactor.baseValue = key2.floatValue!
                         if let spriteNode = self.spriteNode {
-                            spriteNode.colorBlendFactor = CGFloat(self.currentColorBlendFactor)
+                            spriteNode.colorBlendFactor = CGFloat(self.currentColorBlendFactor.currentValue)
                         }
                     }
                 ]
@@ -205,9 +205,9 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
             else {
                 let action = SKAction.customAction(withDuration: duration) { _, elapsedTime in
                     let ratio = Float(elapsedTime / timeBetweenKeys)
-                    self.currentColorBlendFactor = AssetAnimationKey.getInterpolatedValue(ratio: ratio, from: key1, to: key2) as! Float
+                    self.currentColorBlendFactor.baseValue = AssetAnimationKey.getInterpolatedValue(ratio: ratio, from: key1, to: key2) as! Float
                     if let spriteNode = self.spriteNode {
-                        spriteNode.colorBlendFactor = CGFloat(self.currentColorBlendFactor)
+                        spriteNode.colorBlendFactor = CGFloat(self.currentColorBlendFactor.currentValue)
                     }
                 }
                 action.setupTimingFunction(key1.timingInterpolation, partialTimeScaling: partialTimeScaling)
@@ -253,10 +253,12 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
                 
                 let frame = UInt((elapsedTime / AssetAnimationTrack.frameTime).rounded(.towardZero))
                 
-                self.currentAnchorPoint.x = (xAnchorPoint?.getValue(at: frame) ?? self.currentAnchorPoint.x) as! CGFloat
-                self.currentAnchorPoint.y = (yAnchorPoint?.getValue(at: frame) ?? self.currentAnchorPoint.y) as! CGFloat
-                
-                spriteNode.anchorPoint = self.currentAnchorPoint
+                self.currentAnchorPoint.baseValue = CGPoint(
+                    x: (xAnchorPoint?.getValue(at: frame) ?? self.currentAnchorPoint.currentValue.x) as! CGFloat,
+                    y: (yAnchorPoint?.getValue(at: frame) ?? self.currentAnchorPoint.currentValue.y) as! CGFloat
+                )
+
+                spriteNode.anchorPoint = self.currentAnchorPoint.currentValue
             })
         }
 
@@ -270,16 +272,16 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
             actions.append(SKAction.customAction(withDuration: expectedDuration) { _, elapsedTime in
                 let frame = UInt((elapsedTime / AssetAnimationTrack.frameTime).rounded(.towardZero))
                 
-                self.currentVolumeOffset = SIMD3(
-                    (xVolumeOffset?.getValue(at: frame) ?? self.currentVolumeOffset.x) as! Float,
-                    (yVolumeOffset?.getValue(at: frame) ?? self.currentVolumeOffset.y) as! Float,
-                    (zVolumeOffset?.getValue(at: frame) ?? self.currentVolumeOffset.z) as! Float
+                self.currentVolumeOffset.baseValue = SIMD3(
+                    (xVolumeOffset?.getValue(at: frame) ?? self.currentVolumeOffset.currentValue.x) as! Float,
+                    (yVolumeOffset?.getValue(at: frame) ?? self.currentVolumeOffset.currentValue.y) as! Float,
+                    (zVolumeOffset?.getValue(at: frame) ?? self.currentVolumeOffset.currentValue.z) as! Float
                 )
                 
-                self.currentVolumeSize = SIMD3(
-                    (xVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.x) as! Float,
-                    (yVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.y) as! Float,
-                    ((zVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.z) as! Float)
+                self.currentVolumeSize.baseValue = SIMD3(
+                    (xVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.currentValue.x) as! Float,
+                    (yVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.currentValue.y) as! Float,
+                    ((zVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.currentValue.z) as! Float)
                 )
                 
                 self.updateHierarchyDependentProperties()
@@ -288,5 +290,16 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
         
         return actions
     }
-    
+
+    public override func resetAllOverriddenValues(options: ResetOverriddenValuesOptions = [.applyToChildren, .updateImmediately]) {
+        currentVolumeOffset.overriddenValue = nil
+        currentVolumeSize.overriddenValue = nil
+        currentSpriteLocator.overriddenValue = nil
+        currentAnchorPoint.overriddenValue = nil
+        currentColor.overriddenValue = nil
+        currentColorBlendFactor.overriddenValue = nil
+
+        super.resetAllOverriddenValues(options: options)
+    }
+
 }

@@ -48,7 +48,7 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
             }
         }
         
-        referencedAssetInstance?.currentAnimationName = referenceElement.animationName
+        referencedAssetInstance?.currentAnimationName.overriddenValue = referenceElement.animationName
     }
     
     private func instantiateReferencedAsset(in node: SKNode, from assetDescription: AssetDescription) {
@@ -56,12 +56,20 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
         self.referencedAssetInstance = referencedAssetInstance
         addChild(referencedAssetInstance)
         node.addChild(referencedAssetInstance.node!)
-        referencedAssetInstance.currentAnimationName = referenceElement.animationName
+        referencedAssetInstance.currentAnimationName.overriddenValue = referenceElement.animationName
     }
     
     public func getSKActionsByElement(with maxDuration: TimeInterval) -> [TransformAssetElement: SKAction]? {
         guard let actualAnimationName else { return nil }
         return referencedAssetInstance?.getSKActionsByElement(in: actualAnimationName, with: maxDuration)
     }
-    
+
+    public override func resetAllOverriddenValues(options: ResetOverriddenValuesOptions = [.applyToChildren, .updateImmediately]) {
+        super.resetAllOverriddenValues(options: options)
+
+        if options.contains(.applyToNestedReferences) {
+            referencedAssetInstance?.resetAllOverriddenValues(options: options)
+        }
+    }
+
 }

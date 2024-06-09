@@ -1,4 +1,5 @@
 struct ToolMode: OptionSet, Hashable {
+
     let rawValue: Int
     
     static let select = ToolMode(rawValue: 1)

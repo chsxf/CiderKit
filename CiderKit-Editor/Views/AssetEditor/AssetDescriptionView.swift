@@ -255,7 +255,7 @@ final class AssetDescriptionView: NSView, NSOutlineViewDelegate, NSTextFieldDele
         
         animationView?.assetDescription = assetDescription!
         
-        assetInstance?.currentAnimationName = animationView?.currentAnimationName
+        assetInstance?.currentAnimationName.overriddenValue = animationView?.currentAnimationName
     }
     
     @objc

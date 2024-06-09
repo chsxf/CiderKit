@@ -85,6 +85,8 @@
 		D93C4CBC2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */; };
 		D93C4CC92800CC25000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
 		D93C4CCA2800CC25000955E1 /* CiderKit_Engine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D93E9EE62C1A568A00A738BE /* GetElementInstancesOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93E9EE52C1A568A00A738BE /* GetElementInstancesOptions.swift */; };
+		D93E9EE82C1A582000A738BE /* ResetOverriddenValuesOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93E9EE72C1A582000A738BE /* ResetOverriddenValuesOptions.swift */; };
 		D93F23A328D59180002276EE /* AssetAnimationDopeSheetHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93F23A228D59180002276EE /* AssetAnimationDopeSheetHeaderView.swift */; };
 		D93F23A528D5966B002276EE /* AssetAnimationDopeSheetCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93F23A428D5966B002276EE /* AssetAnimationDopeSheetCellView.swift */; };
 		D93FE0DA28BA2B4300215D83 /* FloatSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93FE0D928BA2B4300215D83 /* FloatSlider.swift */; };
@@ -111,6 +113,7 @@
 		D95B8C38288319B80077DCA1 /* AssetDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C37288319B80077DCA1 /* AssetDescription.swift */; };
 		D95B8C3A288319C50077DCA1 /* AssetDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C39288319C50077DCA1 /* AssetDatabase.swift */; };
 		D95B8C3D28836B8D0077DCA1 /* AssetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95B8C3C28836B8D0077DCA1 /* AssetEditor.swift */; };
+		D96003622C15A30B0071F7B1 /* OverridableValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96003612C15A30B0071F7B1 /* OverridableValue.swift */; };
 		D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */; };
 		D96A3BE92879909C008949A1 /* AmbientLightInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */; };
 		D96A3BEB2879D8C7008949A1 /* Tool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A3BEA2879D8C7008949A1 /* Tool.swift */; };
@@ -324,6 +327,8 @@
 		D93C4CB92800CC18000955E1 /* CiderKit-PlayerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CiderKit-PlayerSample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKit_PlayerSampleApp.swift; sourceTree = "<group>"; };
 		D93C4CC42800CC1B000955E1 /* CiderKit_PlayerSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit_PlayerSample.entitlements; sourceTree = "<group>"; };
+		D93E9EE52C1A568A00A738BE /* GetElementInstancesOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetElementInstancesOptions.swift; sourceTree = "<group>"; };
+		D93E9EE72C1A582000A738BE /* ResetOverriddenValuesOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetOverriddenValuesOptions.swift; sourceTree = "<group>"; };
 		D93F23A228D59180002276EE /* AssetAnimationDopeSheetHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAnimationDopeSheetHeaderView.swift; sourceTree = "<group>"; };
 		D93F23A428D5966B002276EE /* AssetAnimationDopeSheetCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAnimationDopeSheetCellView.swift; sourceTree = "<group>"; };
 		D93FE0D928BA2B4300215D83 /* FloatSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatSlider.swift; sourceTree = "<group>"; };
@@ -350,6 +355,7 @@
 		D95B8C37288319B80077DCA1 /* AssetDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDescription.swift; sourceTree = "<group>"; };
 		D95B8C39288319C50077DCA1 /* AssetDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDatabase.swift; sourceTree = "<group>"; };
 		D95B8C3C28836B8D0077DCA1 /* AssetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetEditor.swift; sourceTree = "<group>"; };
+		D96003612C15A30B0071F7B1 /* OverridableValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverridableValue.swift; sourceTree = "<group>"; };
 		D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightComponent.swift; sourceTree = "<group>"; };
 		D96A3BE82879909C008949A1 /* AmbientLightInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientLightInspector.swift; sourceTree = "<group>"; };
 		D96A3BEA2879D8C7008949A1 /* Tool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tool.swift; sourceTree = "<group>"; };
@@ -737,7 +743,9 @@
 			isa = PBXGroup;
 			children = (
 				D91BC4BB2B4609270043787E /* AssetInstance.swift */,
+				D93E9EE52C1A568A00A738BE /* GetElementInstancesOptions.swift */,
 				D91BC4C12B460CC00043787E /* ReferenceAssetElementInstance.swift */,
+				D93E9EE72C1A582000A738BE /* ResetOverriddenValuesOptions.swift */,
 				D91BC4BF2B460CB40043787E /* SpriteAssetElementInstance.swift */,
 				D91BC4BD2B460CA70043787E /* TransformAssetElementInstance.swift */,
 			);
@@ -802,6 +810,7 @@
 				D9EA6DB128BAD07A00233F79 /* IntPoint.swift */,
 				D9730B1427B795A40007513C /* Math.swift */,
 				D9D9AD0C2BF7D0E900CC2ED7 /* NamedObject.swift */,
+				D96003612C15A30B0071F7B1 /* OverridableValue.swift */,
 				D9CC3528285D16B7003EEB6F /* Pool.swift */,
 				D9254461281AB55B002DCA4C /* Project.swift */,
 				D9CBDAFD2A78D9A900C51C69 /* RemoteCacheManager.swift */,
@@ -1336,6 +1345,7 @@
 				D91FA64C2B57AE8C001346C5 /* AssetBoundingBox.swift in Sources */,
 				D93C4CB42800CBED000955E1 /* GameView.swift in Sources */,
 				D9DB98582BC178CF00ACABB1 /* SKViewExtension.swift in Sources */,
+				D96003622C15A30B0071F7B1 /* OverridableValue.swift in Sources */,
 				D98C061B2A00F44A00750F0A /* CKUIAnchoredPosition.swift in Sources */,
 				D93C4C932800CBD6000955E1 /* CiderKit_Engine.docc in Sources */,
 				D9EDB95D2B408F25001C0104 /* LitSceneView.swift in Sources */,
@@ -1392,6 +1402,7 @@
 				D95B8C3A288319C50077DCA1 /* AssetDatabase.swift in Sources */,
 				D93C24FB280227690023FE7A /* Materials.swift in Sources */,
 				D938044F2A988F8700C03463 /* CKUIBaseNode~Traversal.swift in Sources */,
+				D93E9EE62C1A568A00A738BE /* GetElementInstancesOptions.swift in Sources */,
 				D92A1ACD28D7C5DD0096972B /* AssetAnimationKey.swift in Sources */,
 				D91BC4C02B460CB40043787E /* SpriteAssetElementInstance.swift in Sources */,
 				D9F1107028CCB5E800203EF1 /* AssetAnimationTrack.swift in Sources */,
@@ -1417,6 +1428,7 @@
 				D93C24FE2802E2680023FE7A /* CellRenderers.swift in Sources */,
 				D9DE549A28CDC58600E3761B /* AssetAnimation.swift in Sources */,
 				D91BE3C92A76D77E004BC75C /* CKUIContainer.swift in Sources */,
+				D93E9EE82C1A582000A738BE /* ResetOverriddenValuesOptions.swift in Sources */,
 				D938EE6B2A192E2F00D0D3AD /* CKUICanvas.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

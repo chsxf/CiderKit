@@ -79,8 +79,8 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
                 NotificationCenter.default.addObserver(self, selector: #selector(Self.playStatusDidChange(_:)), name: .animationPlayingDidChange, object: animationControlDelegate)
 
                 updateCurrentFrameIndicator()
-                assetInstance.currentAnimationName = animationControlDelegate.currentAnimationName
-                assetInstance.currentFrame = animationControlDelegate.currentAnimationFrame
+                assetInstance.currentAnimationName.overriddenValue = animationControlDelegate.currentAnimationName
+                assetInstance.currentFrame.overriddenValue = animationControlDelegate.currentAnimationFrame
             }
         }
     }
@@ -319,8 +319,8 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
             isPreviewingSKActions = false;
             setPlayStopButtonImage(isPlaying: false)
             skactionPreviewButton.isEnabled = true
-            assetInstance.currentFrame = 0
-            
+            assetInstance.currentFrame.overriddenValue = nil
+
             if let selectedAssetElement = descriptionSceneViewDelegate?.selectedAssetElement {
                 showBoundingBox(for: selectedAssetElement)
             }
@@ -461,7 +461,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         updatePreviousAndKeyButtons()
         updateCurrentFrameIndicator()
         if let animationControlDelegate {
-            assetInstance.currentFrame = animationControlDelegate.currentAnimationFrame
+            assetInstance.currentFrame.overriddenValue = animationControlDelegate.currentAnimationFrame
         }
         if let selectAssetElement = descriptionSceneViewDelegate?.selectedAssetElement {
             showBoundingBox(for: selectAssetElement)
@@ -477,7 +477,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     @objc
     private func currentAnimationDidChange(_ notif: Notification) {
         stopPreviewingSKActionsIfNeeded()
-        assetInstance.currentAnimationName = animationControlDelegate?.currentAnimationName
+        assetInstance.currentAnimationName.overriddenValue = animationControlDelegate?.currentAnimationName
     }
     
     @objc
@@ -542,7 +542,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
                 let frameCountToAdvance = UInt((diff / frameDuration).rounded(.down))
                 let nextFrameToDisplay = (animationControlDelegate.currentAnimationFrame + frameCountToAdvance) % animationControlDelegate.currentAnimationFrameCount
                 animationControlDelegate.animationGoToFrame(self, frame: nextFrameToDisplay)
-                assetInstance.currentFrame = nextFrameToDisplay
+                assetInstance.currentFrame.overriddenValue = nextFrameToDisplay
             }
         }
         lastUpdateTime = currentTime

@@ -32,5 +32,9 @@ extension CGColor {
         let interpolatedComponents = [CGFloat(interpolatedVector[0]), CGFloat(interpolatedVector[1]), CGFloat(interpolatedVector[2]), CGFloat(interpolatedVector[3])]
         return CGColor(colorSpace: sRGBColorSpace, components: interpolatedComponents)
     }
-    
+
+    public class func randomRGB(a: CGFloat = 1) -> CGColor {
+        return CGColor(red: CGFloat.random(in: 0...1), green: CGFloat.random(in: 0...1), blue: CGFloat.random(in: 0...1), alpha: a)
+    }
+
 }

@@ -15,10 +15,10 @@ open class TransformAssetElementInstance {
     
     public var absoluteOffset: SIMD3<Float> { (parent?.absoluteOffset ?? SIMD3()) + adjustedCurrentOffset }
     
-    public private(set) var currentVisibility: Bool
-    public private(set) var currentOffset: SIMD3<Float>
-    
-    public var adjustedCurrentOffset: SIMD3<Float> { horizontallyFlippedByAncestorOrSelf ? Self.horizontallyFlipOffset(currentOffset) : currentOffset }
+    public var currentVisibility: OverridableValue<Bool>
+    public var currentOffset: OverridableValue<SIMD3<Float>>
+
+    public var adjustedCurrentOffset: SIMD3<Float> { horizontallyFlippedByAncestorOrSelf ? Self.horizontallyFlipOffset(currentOffset.currentValue) : currentOffset.currentValue }
     
     public final var horizontalFlipCountInAncestors: Int { (parent?.horizontalFlipCountInAncestors ?? 0) + (horizontallyFlippedBySelf ? 1 : 0) }
     
@@ -39,8 +39,8 @@ open class TransformAssetElementInstance {
     
     public init(element: TransformAssetElement) {
         self.element = element
-        currentVisibility = element.visible
-        currentOffset = element.offset
+        currentVisibility = OverridableValue(element.visible)
+        currentOffset = OverridableValue(element.offset)
     }
     
     public final func addChild(_ child: TransformAssetElementInstance) {
@@ -55,14 +55,14 @@ open class TransformAssetElementInstance {
     }
     
     public func applyPosition(_ node: SKNode) {
-        node.position = MapNode.computeNodePosition(with: currentOffset)
+        node.position = MapNode.computeNodePosition(with: currentOffset.currentValue)
     }
 
     open func createNode(baseNode: SKNode? = nil, at worldPosition: SIMD3<Float>) {
         let node = baseNode ?? SKNode()
         self.node = node
         node.name = element.name
-        node.isHidden = !currentVisibility
+        node.isHidden = !currentVisibility.currentValue
         applyPosition(node)
         node.xScale = horizontallyFlippedBySelf ? -1 : 1
         
@@ -74,10 +74,10 @@ open class TransformAssetElementInstance {
     public func applyDefaults() {
         guard let node else { return }
         
-        currentVisibility = element.visible
-        node.isHidden = !currentVisibility
-        
-        currentOffset = element.offset
+        currentVisibility.baseValue = element.visible
+        node.isHidden = !currentVisibility.currentValue
+
+        currentOffset.baseValue = element.offset
         applyPosition(node)
 
         node.xScale = horizontallyFlippedBySelf ? -1 : 1
@@ -86,7 +86,7 @@ open class TransformAssetElementInstance {
     }
     
     public final func getAnimationSnapshot() -> AssetElementAnimationSnapshot? {
-        assetInstance?.assetDescription.getAnimationSnapshot(for: element.uuid, in: assetInstance?.currentAnimationName, at: assetInstance?.currentFrame ?? 0)
+        assetInstance?.assetDescription.getAnimationSnapshot(for: element.uuid, in: assetInstance?.currentAnimationName.currentValue, at: assetInstance?.currentFrame.currentValue ?? 0)
     }
     
     public func update(animationSnapshot: AssetElementAnimationSnapshot? = nil) {
@@ -95,10 +95,10 @@ open class TransformAssetElementInstance {
             let snapshot = animationSnapshot ?? getAnimationSnapshot()
         else { return }
         
-        currentVisibility = snapshot.get(trackType: .visibility)
-        node.isHidden = !currentVisibility
+        currentVisibility.baseValue = snapshot.get(trackType: .visibility)
+        node.isHidden = !currentVisibility.currentValue
 
-        currentOffset = SIMD3(snapshot.get(trackType: .xOffset), snapshot.get(trackType: .yOffset), snapshot.get(trackType: .zOffset))
+        currentOffset.baseValue = SIMD3(snapshot.get(trackType: .xOffset), snapshot.get(trackType: .yOffset), snapshot.get(trackType: .zOffset))
         applyPosition(node)
 
         node.xScale = horizontallyFlippedBySelf ? -1 : 1
@@ -121,8 +121,8 @@ open class TransformAssetElementInstance {
         return [
             SKAction.wait(forDuration: duration),
             SKAction.run({
-                self.currentVisibility = key2.boolValue!
-                self.node?.isHidden = !self.currentVisibility
+                self.currentVisibility.baseValue = key2.boolValue!
+                self.node?.isHidden = !self.currentVisibility.baseValue
             })
         ]
     }
@@ -137,10 +137,10 @@ open class TransformAssetElementInstance {
             actions.append(SKAction.customAction(withDuration: expectedDuration) { node, elapsedTime in
                 let frame = UInt((elapsedTime / AssetAnimationTrack.frameTime).rounded(.towardZero))
                 
-                self.currentOffset = SIMD3(
-                    (xOffsetTrack?.getValue(at: frame) ?? self.currentOffset.x) as! Float,
-                    (yOffsetTrack?.getValue(at: frame) ?? self.currentOffset.y) as! Float,
-                    (zOffsetTrack?.getValue(at: frame) ?? self.currentOffset.z) as! Float
+                self.currentOffset.baseValue = SIMD3(
+                    (xOffsetTrack?.getValue(at: frame) ?? self.currentOffset.currentValue.x) as! Float,
+                    (yOffsetTrack?.getValue(at: frame) ?? self.currentOffset.currentValue.y) as! Float,
+                    (zOffsetTrack?.getValue(at: frame) ?? self.currentOffset.currentValue.z) as! Float
                 )
                 
                 self.updateHierarchyDependentProperties()
@@ -152,7 +152,7 @@ open class TransformAssetElementInstance {
         return actions
     }
 
-    public func getElementInstances<T>(directChildrenOnly: Bool = true, includeNestedReferences: Bool = false) -> [T] where T : TransformAssetElementInstance {
+    public func getElementInstances<T>(options: GetElementInstancesOptions = .directChildrenOnly) -> [T] where T : TransformAssetElementInstance {
         var elementInstances = [T]()
 
         if let selfAsT = self as? T {
@@ -164,12 +164,12 @@ open class TransformAssetElementInstance {
                 elementInstances.append(childAsT)
             }
 
-            if !directChildrenOnly {
-                let childElementInstances: [T] = child.getElementInstances(directChildrenOnly: false, includeNestedReferences: includeNestedReferences)
+            if !options.contains(.directChildrenOnly) {
+                let childElementInstances: [T] = child.getElementInstances(options: options)
                 elementInstances.append(contentsOf: childElementInstances)
 
-                if includeNestedReferences, let referencedInstance = (child as? ReferenceAssetElementInstance)?.referencedAssetInstance {
-                    let referencedElementInstances: [T] = referencedInstance.getElementInstances(directChildrenOnly: false, includeNestedReferences: true)
+                if options.contains(.includeNestedReferences), let referencedInstance = (child as? ReferenceAssetElementInstance)?.referencedAssetInstance {
+                    let referencedElementInstances: [T] = referencedInstance.getElementInstances(options: options)
                     elementInstances.append(contentsOf: referencedElementInstances)
                 }
             }
@@ -178,8 +178,23 @@ open class TransformAssetElementInstance {
         return elementInstances
     }
 
+    public func resetAllOverriddenValues(options: ResetOverriddenValuesOptions = [.applyToChildren, .updateImmediately]) {
+        currentVisibility.overriddenValue = nil
+        currentOffset.overriddenValue = nil
+
+        if options.contains(.updateImmediately) {
+            update()
+        }
+
+        if options.contains(.applyToChildren) {
+            for child in children {
+                child.resetAllOverriddenValues(options: options)
+            }
+        }
+    }
+
     class func horizontallyFlipOffset(_ offset: SIMD3<Float>) -> SIMD3<Float> {
         SIMD3(offset.y, offset.x, offset.z)
     }
-    
+
 }
