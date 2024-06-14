@@ -156,4 +156,50 @@ open class GameView: LitSceneView {
     }
     #endif
 
+    public func pickMapCell() async -> MapCellComponent? {
+        var pointerUpEventData: PointerEventData? = nil
+
+        pointerUp.once { eventData, _ in
+            if eventData.mouseButtonIndex == 0 {
+                pointerUpEventData = eventData
+            }
+        }
+
+        let task = Task {
+            while true {
+                await Task.yield()
+                if pointerUpEventData != nil {
+                    break
+                }
+            }
+
+            let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
+            return map.raycastMapCell(at: locationInScene)
+        }
+        return await task.value
+    }
+
+    public func pickAsset() async -> AssetComponent? {
+        var pointerUpEventData: PointerEventData? = nil
+
+        pointerUp.once { eventData, _ in
+            if eventData.mouseButtonIndex == 0 {
+                pointerUpEventData = eventData
+            }
+        }
+
+        let task = Task {
+            while true {
+                await Task.yield()
+                if pointerUpEventData != nil {
+                    break
+                }
+            }
+
+            let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
+            return map.raycastAsset(at: locationInScene)
+        }
+        return await task.value
+    }
+
 }
