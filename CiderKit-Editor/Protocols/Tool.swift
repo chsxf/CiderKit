@@ -1,4 +1,5 @@
 import GameplayKit
+import CiderKit_Engine
 
 protocol Tool: Hoverable {
     
@@ -7,15 +8,15 @@ protocol Tool: Hoverable {
     var enabled: Bool { get set }
     var interactedWith: Bool { get }
     
-    func moveTo(scenePosition: CGPoint) -> Void
-    
-    func dragInScene(byX x: CGFloat, y: CGFloat) -> Void
-    func mouseUp(atX x: CGFloat, y: CGFloat) -> Void
+    func moveTo(scenePosition: ScenePosition) -> Void
+
+    func dragInScene(bySceneX x: CGFloat, y: CGFloat) -> Void
+    func mouseUp(atSceneX x: CGFloat, y: CGFloat) -> Void
 }
 
 extension Tool where Self: GKComponent {
     
-    func moveTo(scenePosition: CGPoint) -> Void {
+    func moveTo(scenePosition: ScenePosition) -> Void {
         if let node = entity?.component(ofType: GKSKNodeComponent.self)?.node {
             node.position = scenePosition
         }

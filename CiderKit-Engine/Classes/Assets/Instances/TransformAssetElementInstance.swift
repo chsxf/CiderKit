@@ -13,13 +13,13 @@ open class TransformAssetElementInstance {
     
     public private(set) var node: SKNode? = nil
     
-    public var absoluteOffset: SIMD3<Float> { (parent?.absoluteOffset ?? SIMD3()) + adjustedCurrentOffset }
-    
-    public var currentVisibility: OverridableValue<Bool>
-    public var currentOffset: OverridableValue<SIMD3<Float>>
+    public var absoluteWorldOffset: WorldPosition { (parent?.absoluteWorldOffset ?? WorldPosition()) + adjustedCurrentWorldOffset }
 
-    public var adjustedCurrentOffset: SIMD3<Float> { horizontallyFlippedByAncestorOrSelf ? Self.horizontallyFlipOffset(currentOffset.currentValue) : currentOffset.currentValue }
-    
+    public var currentVisibility: OverridableValue<Bool>
+    public var currentWorldOffset: OverridableValue<WorldPosition>
+
+    public var adjustedCurrentWorldOffset: WorldPosition { horizontallyFlippedByAncestorOrSelf ? Self.horizontallyFlipOffset(currentWorldOffset.currentValue) : currentWorldOffset.currentValue }
+
     public final var horizontalFlipCountInAncestors: Int { (parent?.horizontalFlipCountInAncestors ?? 0) + (horizontallyFlippedBySelf ? 1 : 0) }
     
     public var horizontallyFlippedBySelf: Bool { element.horizontallyFlipped }
@@ -40,7 +40,7 @@ open class TransformAssetElementInstance {
     public init(element: TransformAssetElement) {
         self.element = element
         currentVisibility = OverridableValue(element.visible)
-        currentOffset = OverridableValue(element.offset)
+        currentWorldOffset = OverridableValue(element.worldOffset)
     }
     
     public final func addChild(_ child: TransformAssetElementInstance) {
@@ -55,10 +55,10 @@ open class TransformAssetElementInstance {
     }
     
     public func applyPosition(_ node: SKNode) {
-        node.position = MapNode.computeNodePosition(with: currentOffset.currentValue)
+        node.position = MapNode.worldToScene(currentWorldOffset.currentValue)
     }
 
-    open func createNode(baseNode: SKNode? = nil, at worldPosition: SIMD3<Float>) {
+    open func createNode(baseNode: SKNode? = nil, atWorldPosition worldPosition: WorldPosition) {
         let node = baseNode ?? SKNode()
         self.node = node
         node.name = element.name
@@ -77,7 +77,7 @@ open class TransformAssetElementInstance {
         currentVisibility.baseValue = element.visible
         node.isHidden = !currentVisibility.currentValue
 
-        currentOffset.baseValue = element.offset
+        currentWorldOffset.baseValue = element.worldOffset
         applyPosition(node)
 
         node.xScale = horizontallyFlippedBySelf ? -1 : 1
@@ -98,7 +98,7 @@ open class TransformAssetElementInstance {
         currentVisibility.baseValue = snapshot.get(trackType: .visibility)
         node.isHidden = !currentVisibility.currentValue
 
-        currentOffset.baseValue = SIMD3(snapshot.get(trackType: .xOffset), snapshot.get(trackType: .yOffset), snapshot.get(trackType: .zOffset))
+        currentWorldOffset.baseValue = WorldPosition(snapshot.get(trackType: .xWorldOffset), snapshot.get(trackType: .yWorldOffset), snapshot.get(trackType: .zWorldOffset))
         applyPosition(node)
 
         node.xScale = horizontallyFlippedBySelf ? -1 : 1
@@ -130,17 +130,17 @@ open class TransformAssetElementInstance {
     public func buildSKActions(with combinedTracks: [AssetAnimationTrackType: AssetAnimationTrack], expectedDuration: TimeInterval) -> [SKAction] {
         var actions = [SKAction]()
         
-        let xOffsetTrack = combinedTracks[.xOffset]
-        let yOffsetTrack = combinedTracks[.yOffset]
-        let zOffsetTrack = combinedTracks[.zOffset]
-        if xOffsetTrack != nil || yOffsetTrack != nil || zOffsetTrack != nil {
+        let xWorldOffsetTrack = combinedTracks[.xWorldOffset]
+        let yWorldOffsetTrack = combinedTracks[.yWorldOffset]
+        let zWorldOffsetTrack = combinedTracks[.zWorldOffset]
+        if xWorldOffsetTrack != nil || yWorldOffsetTrack != nil || zWorldOffsetTrack != nil {
             actions.append(SKAction.customAction(withDuration: expectedDuration) { node, elapsedTime in
                 let frame = UInt((elapsedTime / AssetAnimationTrack.frameTime).rounded(.towardZero))
                 
-                self.currentOffset.baseValue = SIMD3(
-                    (xOffsetTrack?.getValue(at: frame) ?? self.currentOffset.currentValue.x) as! Float,
-                    (yOffsetTrack?.getValue(at: frame) ?? self.currentOffset.currentValue.y) as! Float,
-                    (zOffsetTrack?.getValue(at: frame) ?? self.currentOffset.currentValue.z) as! Float
+                self.currentWorldOffset.baseValue = WorldPosition(
+                    (xWorldOffsetTrack?.getValue(at: frame) ?? self.currentWorldOffset.currentValue.x) as! Float,
+                    (yWorldOffsetTrack?.getValue(at: frame) ?? self.currentWorldOffset.currentValue.y) as! Float,
+                    (zWorldOffsetTrack?.getValue(at: frame) ?? self.currentWorldOffset.currentValue.z) as! Float
                 )
                 
                 self.updateHierarchyDependentProperties()
@@ -180,7 +180,7 @@ open class TransformAssetElementInstance {
 
     public func resetAllOverriddenValues(options: ResetOverriddenValuesOptions = [.applyToChildren, .updateImmediately]) {
         currentVisibility.overriddenValue = nil
-        currentOffset.overriddenValue = nil
+        currentWorldOffset.overriddenValue = nil
 
         if options.contains(.updateImmediately) {
             update()
@@ -193,8 +193,8 @@ open class TransformAssetElementInstance {
         }
     }
 
-    class func horizontallyFlipOffset(_ offset: SIMD3<Float>) -> SIMD3<Float> {
-        SIMD3(offset.y, offset.x, offset.z)
+    class func horizontallyFlipOffset(_ worldOffset: WorldPosition) -> WorldPosition {
+        WorldPosition(worldOffset.y, worldOffset.x, worldOffset.z)
     }
 
 }

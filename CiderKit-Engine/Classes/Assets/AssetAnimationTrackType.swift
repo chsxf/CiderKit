@@ -38,9 +38,9 @@ public struct AssetAnimationTrackType: Hashable {
         try! register(color)
         try! register(colorBlendFactor)
         try! register(sprite)
-        try! register(xOffset)
-        try! register(yOffset)
-        try! register(zOffset)
+        try! register(xWorldOffset)
+        try! register(yWorldOffset)
+        try! register(zWorldOffset)
         try! register(visibility)
     }
 

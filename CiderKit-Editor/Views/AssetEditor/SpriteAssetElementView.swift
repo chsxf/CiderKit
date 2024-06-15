@@ -4,13 +4,13 @@ import CoreGraphics
 
 public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWellDelegate, FloatSliderDelegate {
     
-    private let xOffsetField: FloatField
-    private let yOffsetField: FloatField
-    private let zOffsetField: FloatField
+    private let xWorldOffsetField: FloatField
+    private let yWorldOffsetField: FloatField
+    private let zWorldOffsetField: FloatField
 
-    private let xSizeField: FloatField
-    private let ySizeField: FloatField
-    private let zSizeField: FloatField
+    private let xWorldSizeField: FloatField
+    private let yWorldSizeField: FloatField
+    private let zWorldSizeField: FloatField
 
     private let spriteField: NSTextField
     private let selectSpriteButton: NSButton
@@ -23,13 +23,13 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
     private let colorBlendField: FloatSlider
     
     required init(assetDescription: AssetDescription, element: TransformAssetElement) {
-        xOffsetField = FloatField(title: "X", step: 0.1)
-        yOffsetField = FloatField(title: "Y", step: 0.1)
-        zOffsetField = FloatField(title: "Z", step: 0.1)
+        xWorldOffsetField = FloatField(title: "X", step: 0.1)
+        yWorldOffsetField = FloatField(title: "Y", step: 0.1)
+        zWorldOffsetField = FloatField(title: "Z", step: 0.1)
         
-        xSizeField = FloatField(title: "X", minValue: 0, step: 0.1)
-        ySizeField = FloatField(title: "Y", minValue: 0, step: 0.1)
-        zSizeField = FloatField(title: "Z", minValue: 0, step: 0.1)
+        xWorldSizeField = FloatField(title: "X", minValue: 0, step: 0.1)
+        yWorldSizeField = FloatField(title: "Y", minValue: 0, step: 0.1)
+        zWorldSizeField = FloatField(title: "Z", minValue: 0, step: 0.1)
         
         spriteField = NSTextField(string: "None")
         spriteField.isEditable = false
@@ -45,13 +45,13 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
 
         super.init(assetDescription: assetDescription, element: element)
         
-        xOffsetField.delegate = self
-        yOffsetField.delegate = self
-        zOffsetField.delegate = self
+        xWorldOffsetField.delegate = self
+        yWorldOffsetField.delegate = self
+        zWorldOffsetField.delegate = self
         
-        xSizeField.delegate = self
-        ySizeField.delegate = self
-        zSizeField.delegate = self
+        xWorldSizeField.delegate = self
+        yWorldSizeField.delegate = self
+        zWorldSizeField.delegate = self
         
         selectSpriteButton.target = self
         removeSpriteButton.target = self
@@ -70,15 +70,15 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
     override func getAdditionalElementViews() -> [NSView] {
         var additionalViews = super.getAdditionalElementViews()
         
-        let offsetRow = NSStackView(orientation: .horizontal, views: [xOffsetField, yOffsetField, zOffsetField])
-        let sizeRow = NSStackView(orientation: .horizontal, views: [xSizeField, ySizeField, zSizeField])
+        let worldOffsetRow = NSStackView(orientation: .horizontal, views: [xWorldOffsetField, yWorldOffsetField, zWorldOffsetField])
+        let worldSizeRow = NSStackView(orientation: .horizontal, views: [xWorldSizeField, yWorldSizeField, zWorldSizeField])
         let anchorRow = NSStackView(orientation: .horizontal, views: [xAnchorField, yAnchorField])
         
         let buttonRow = NSStackView(orientation: .horizontal, views: [selectSpriteButton, removeSpriteButton])
         
         additionalViews.append(contentsOf: [
-            VSpacer(), InspectorHeader(title: "Volume Offset"), offsetRow,
-            VSpacer(), InspectorHeader(title: "Volume Size"), sizeRow,
+            VSpacer(), InspectorHeader(title: "Volume World Offset"), worldOffsetRow,
+            VSpacer(), InspectorHeader(title: "Volume World Size"), worldSizeRow,
             VSpacer(), InspectorHeader(title: "Sprite"), spriteField, buttonRow,
             VSpacer(), InspectorHeader(title: "Anchor Point"), anchorRow,
             VSpacer(), colorWell, colorBlendField
@@ -97,13 +97,13 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
         super.updateForCurrentElement(snapshot: animationSnapshot)
         
         if !element.isRoot {
-            xOffsetField.value = animationSnapshot.get(trackType: .xVolumeOffset)
-            yOffsetField.value = animationSnapshot.get(trackType: .yVolumeOffset)
-            zOffsetField.value = animationSnapshot.get(trackType: .zVolumeOffset)
+            xWorldOffsetField.value = animationSnapshot.get(trackType: .xVolumeWorldOffset)
+            yWorldOffsetField.value = animationSnapshot.get(trackType: .yVolumeWorldOffset)
+            zWorldOffsetField.value = animationSnapshot.get(trackType: .zVolumeWorldOffset)
             
-            xSizeField.value = animationSnapshot.get(trackType: .xVolumeSize)
-            ySizeField.value = animationSnapshot.get(trackType: .yVolumeSize)
-            zSizeField.value = animationSnapshot.get(trackType: .zVolumeSize)
+            xWorldSizeField.value = animationSnapshot.get(trackType: .xVolumeWorldSize)
+            yWorldSizeField.value = animationSnapshot.get(trackType: .yVolumeWorldSize)
+            zWorldSizeField.value = animationSnapshot.get(trackType: .zVolumeWorldSize)
             
             if
                 let spriteLocatorDescription: String = animationSnapshot.get(trackType: .sprite),
@@ -193,68 +193,68 @@ public class SpriteAssetElementView : TransformAssetElementView, LabelledColorWe
     
     override func floatField(_ field: FloatField, valueChanged newValue: Float) {
         switch field {
-        case xOffsetField:
+        case xWorldOffsetField:
             if let elementViewDelegate, let spriteElement = element as? SpriteAssetElement {
-                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .xVolumeOffset, for: spriteElement.uuid) {
-                    key.set(floatValue: xOffsetField.value)
+                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .xVolumeWorldOffset, for: spriteElement.uuid) {
+                    key.set(floatValue: xWorldOffsetField.value)
                 }
                 else {
-                    spriteElement.volumeOffset.x = xOffsetField.value
+                    spriteElement.volumeWorldOffset.x = xWorldOffsetField.value
                 }
                 elementViewDelegate.update(element: spriteElement)
             }
             
-        case yOffsetField:
+        case yWorldOffsetField:
             if let elementViewDelegate, let spriteElement = element as? SpriteAssetElement {
-                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .yVolumeOffset, for: spriteElement.uuid) {
-                    key.set(floatValue: yOffsetField.value)
+                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .yVolumeWorldOffset, for: spriteElement.uuid) {
+                    key.set(floatValue: yWorldOffsetField.value)
                 }
                 else {
-                    spriteElement.volumeOffset.y = yOffsetField.value
+                    spriteElement.volumeWorldOffset.y = yWorldOffsetField.value
                 }
                 elementViewDelegate.update(element: spriteElement)
             }
             
-        case zOffsetField:
+        case zWorldOffsetField:
             if let elementViewDelegate, let spriteElement = element as? SpriteAssetElement {
-                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .zVolumeOffset, for: spriteElement.uuid) {
-                    key.set(floatValue: zOffsetField.value)
+                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .zVolumeWorldOffset, for: spriteElement.uuid) {
+                    key.set(floatValue: zWorldOffsetField.value)
                 }
                 else {
-                    spriteElement.volumeOffset.z = zOffsetField.value
+                    spriteElement.volumeWorldOffset.z = zWorldOffsetField.value
                 }
                 elementViewDelegate.update(element: spriteElement)
             }
             
-        case xSizeField:
+        case xWorldSizeField:
             if let elementViewDelegate, let spriteElement = element as? SpriteAssetElement {
-                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .xVolumeSize, for: spriteElement.uuid) {
-                    key.set(floatValue: xSizeField.value)
+                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .xVolumeWorldSize, for: spriteElement.uuid) {
+                    key.set(floatValue: xWorldSizeField.value)
                 }
                 else {
-                    spriteElement.volumeSize.x = xSizeField.value
+                    spriteElement.volumeWorldSize.x = xWorldSizeField.value
                 }
                 elementViewDelegate.update(element: spriteElement)
             }
             
-        case ySizeField:
+        case yWorldSizeField:
             if let elementViewDelegate, let spriteElement = element as? SpriteAssetElement {
-                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .yVolumeSize, for: spriteElement.uuid) {
-                    key.set(floatValue: ySizeField.value)
+                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .yVolumeWorldSize, for: spriteElement.uuid) {
+                    key.set(floatValue: yWorldSizeField.value)
                 }
                 else {
-                    spriteElement.volumeSize.y = ySizeField.value
+                    spriteElement.volumeWorldSize.y = yWorldSizeField.value
                 }
                 elementViewDelegate.update(element: spriteElement)
             }
             
-        case zSizeField:
+        case zWorldSizeField:
             if let elementViewDelegate, let spriteElement = element as? SpriteAssetElement {
-                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .zVolumeSize, for: spriteElement.uuid) {
-                    key.set(floatValue: zSizeField.value)
+                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .zVolumeWorldSize, for: spriteElement.uuid) {
+                    key.set(floatValue: zWorldSizeField.value)
                 }
                 else {
-                    spriteElement.volumeSize.z = zSizeField.value
+                    spriteElement.volumeWorldSize.z = zWorldSizeField.value
                 }
                 elementViewDelegate.update(element: spriteElement)
             }

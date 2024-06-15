@@ -2,6 +2,10 @@ import CoreGraphics
 
 public extension CGPoint {
     
+    init(x: Float, y: Float) {
+        self.init(x: CGFloat(x), y: CGFloat(y))
+    }
+
     static func + (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
         CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
     }

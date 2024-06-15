@@ -22,8 +22,8 @@ class SelectionManager: NSResponder {
     private let toolsRoot: SKNode
     private var toolsByMode: [ToolMode: (GKEntity, Tool)] = [:]
     private var currentActiveTool: Tool? = nil
-    private var previousDownSceneCoordinates: CGPoint = CGPoint.zero
-    
+    private var previousDownSceneCoordinates: ScenePosition = ScenePosition.zero
+
     private var selectionModel: SelectionModel { editorGameView.selectionModel }
     
     private var editableSubscription: AnyCancellable? = nil
@@ -90,7 +90,7 @@ class SelectionManager: NSResponder {
         if let currentActiveTool = currentActiveTool {
             let sceneCoordinates = event.location(in: editorGameView.scene!)
             if currentActiveTool.contains(sceneCoordinates: sceneCoordinates) {
-                currentActiveTool.mouseUp(atX: sceneCoordinates.x, y: sceneCoordinates.y)
+                currentActiveTool.mouseUp(atSceneX: sceneCoordinates.x, y: sceneCoordinates.y)
                 return
             }
         }
@@ -156,7 +156,7 @@ class SelectionManager: NSResponder {
                 let diffX = sceneCoordinates.x - previousDownSceneCoordinates.x
                 let diffY = sceneCoordinates.y - previousDownSceneCoordinates.y
                 previousDownSceneCoordinates = sceneCoordinates
-                currentActiveTool.dragInScene(byX: diffX, y: diffY)
+                currentActiveTool.dragInScene(bySceneX: diffX, y: diffY)
             }
         }
     }

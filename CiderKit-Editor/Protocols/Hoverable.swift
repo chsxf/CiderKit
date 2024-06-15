@@ -1,4 +1,5 @@
 import CoreGraphics
+import CiderKit_Engine
 import GameplayKit
 
 extension Notification.Name {
@@ -12,7 +13,7 @@ protocol Hoverable: AnyObject {
     
     var entity: GKEntity? { get }
     
-    func contains(sceneCoordinates: CGPoint) -> Bool
+    func contains(sceneCoordinates: ScenePosition) -> Bool
     func hovered()
     func departed()
     

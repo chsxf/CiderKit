@@ -2,21 +2,21 @@ import simd
 
 public struct AssetBoundingBox {
     
-    public var min: SIMD3<Float>
-    public var max: SIMD3<Float>
-    
-    public var size: SIMD3<Float> { max - min }
-    
-    init(center: SIMD3<Float>, extent: SIMD3<Float>) {
+    public var min: WorldPosition
+    public var max: WorldPosition
+
+    public var size: WorldPosition { max - min }
+
+    init(center: WorldPosition, extent: WorldPosition) {
         self.init(min: center - extent, max: center + extent)
     }
         
-    init(min: SIMD3<Float>, max: SIMD3<Float>) {
+    init(min: WorldPosition, max: WorldPosition) {
         self.min = min
         self.max = max
     }
     
-    init(min: SIMD3<Float>, size: SIMD3<Float>) {
+    init(min: WorldPosition, size: WorldPosition) {
         self.min = min
         max = self.min + size
     }

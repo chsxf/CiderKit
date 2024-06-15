@@ -5,7 +5,7 @@ public final class TrackingAreaManager {
     
     fileprivate struct TrackingAreaData {
         public var trackingArea: NSTrackingArea
-        public var nodePosition: CGPoint
+        public var nodePosition: ScenePosition
         public var nodeFrame: CGRect
     }
     

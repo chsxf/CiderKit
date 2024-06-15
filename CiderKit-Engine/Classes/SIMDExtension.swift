@@ -7,18 +7,26 @@ extension SIMD2<Float> {
     
 }
 
-extension SIMD4<Float> {
+extension SIMD3 {
     
-    public init(_ vector: SIMD3<Float>, _ scalar: Float) {
-        self.init(vector.x, vector.y, vector.z, scalar)
+    public init(_ vector: SIMD4<Scalar>) {
+        self.init(vector.x, vector.y, vector.z)
     }
     
 }
 
 extension SIMD3<Float> {
-    
-    public init(_ vector: SIMD4<Float>) {
-        self.init(vector.x, vector.y, vector.z)
+
+    public init(_ vector: SIMD2<Float>) {
+        self.init(vector.x, vector.y, 0)
     }
-    
+
+}
+
+extension SIMD4 {
+
+    public init(_ vector: SIMD3<Scalar>, _ scalar: Scalar) {
+        self.init(vector.x, vector.y, vector.z, scalar)
+    }
+
 }

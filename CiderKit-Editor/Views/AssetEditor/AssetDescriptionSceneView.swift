@@ -58,6 +58,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
             if assetInstance !== oldValue {
                 oldValue.node!.removeFromParent()
                 elementsRoot.addChild(assetInstance.node!)
+                setFootprintGrid(assetInstance.assetDescription.footprint)
             }
         }
     }
@@ -86,7 +87,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     }
     
     override var ambientLightColorRGB: SIMD3<Float> { lightingEnabled ? SIMD3() : super.ambientLightColorRGB }
-    
+
     override var preferredSceneWidth: Int { Self.defaultSize }
     override var preferredSceneHeight: Int { Self.defaultSize }
     
@@ -253,7 +254,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     @objc
     private func resetCamera() {
         if let scene = scene, let camera = scene.camera {
-            camera.position = CGPoint()
+            camera.position = ScenePosition()
         }
     }
     
@@ -334,13 +335,10 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         gridRootChildren.forEach { $0.removeFromParent() }
         
         for x in -Int(footprint.x - 1)...0 {
-            for y in 0..<Int(footprint.y) {
+            for y in -Int(footprint.y - 1)...0 {
                 let sprite = SKSpriteNode(texture: gridTexture)
                 sprite.anchorPoint = CGPoint(x: 0.5, y: 1)
-                sprite.position = CGPoint(
-                    x: MapNode.halfWidth * (x + y),
-                    y: MapNode.halfHeight * (y - x)
-                )
+                sprite.position = MapNode.worldToScene(WorldPosition(Float(x), Float(y), 0))
                 gridRoot.addChild(sprite)
             }
         }
@@ -359,7 +357,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         showBoundingBox(position: boundingBox.min, size: boundingBox.size)
     }
     
-    public func showBoundingBox(position: SIMD3<Float>, size: SIMD3<Float>) {
+    public func showBoundingBox(position: WorldPosition, size: WorldPosition) {
         let origin = MapNode.xVector * position.x + MapNode.yVector * position.y + MapNode.zVector * position.z
 
         let bottomBack = origin
@@ -550,8 +548,8 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     
     override func computePositionMatrix() -> matrix_float3x3 {
         let bb = assetInstance.boundingBox
-        let min = bb?.min ?? SIMD3()
-        let max = bb?.max ?? SIMD3()
+        let min = bb?.min ?? WorldPosition()
+        let max = bb?.max ?? WorldPosition()
         return matrix_float3x3([ min, max, SIMD3() ])
     }
     

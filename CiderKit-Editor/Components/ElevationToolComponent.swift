@@ -42,7 +42,7 @@ class ElevationToolComponent: ToolComponent<ElevationToolContext> {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func mouseUp(atX x: CGFloat, y: CGFloat) {
+    override func mouseUp(atSceneX x: CGFloat, y: CGFloat) {
         if let hoveredContext = hoveredContext {
             NotificationCenter.default.post(Notification(name: .elevationChangeRequested, object: hoveredContext))
         }

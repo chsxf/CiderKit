@@ -19,7 +19,7 @@ public class PointLight: BaseLight, NamedObject {
 
     @Published public var enabled: Bool
     @Published public var name: String
-    @Published public var position: SIMD3<Float>
+    @Published public var position: WorldPosition
     @Published public var falloff: Falloff
  
     var matrix: matrix_float3x3 {
@@ -32,7 +32,7 @@ public class PointLight: BaseLight, NamedObject {
         }
     }
     
-    public init(name: String, color: CGColor, position: SIMD3<Float>, falloff: Falloff) {
+    public init(name: String, color: CGColor, position: WorldPosition, falloff: Falloff) {
         enabled = true
         self.name = name
         self.position = position
@@ -49,7 +49,7 @@ public class PointLight: BaseLight, NamedObject {
         let x = (try? container.decode(Float.self, forKey: .positionX)) ?? 0
         let y = (try? container.decode(Float.self, forKey: .positionY)) ?? 0
         let z = ((try? container.decode(Float.self, forKey: .elevation)) ?? 0)
-        position = SIMD3(x, y, z)
+        position = WorldPosition(x, y, z)
         
         let near = (try? container.decode(Float.self, forKey: .falloffNear)) ?? 0
         let far = (try? container.decode(Float.self, forKey: .falloffFar)) ?? 1

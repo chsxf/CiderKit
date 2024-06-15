@@ -3,8 +3,8 @@ import SpriteKit
 
 extension AssetElementCodingKeys {
     
-    static let volumeOffset = Self.init(stringValue: "vo")!
-    static let volumeSize = Self.init(stringValue: "vs")!
+    static let volumeWorldOffset = Self.init(stringValue: "vo")!
+    static let volumeWorldSize = Self.init(stringValue: "vs")!
     static let sprite = Self.init(stringValue: "s")!
     static let anchorPoint = Self.init(stringValue: "ap")!
     static let color = Self.init(stringValue: "cl")!
@@ -14,14 +14,14 @@ extension AssetElementCodingKeys {
 
 extension AssetAnimationTrackType {
     
-    public static let xVolumeOffset = Self.init(name: "xVolumeOffset", displayName: "Volume Offset (X)", systemSymbolName: "arrow.up.left.and.arrow.down.right.square.fill")
-    public static let yVolumeOffset = Self.init(name: "yVolumeOffset", displayName: "Volume Offset (Y)", systemSymbolName: "arrow.down.left.and.arrow.up.right.square.fill")
-    public static let zVolumeOffset = Self.init(name: "zVolumeOffset", displayName: "Volume Offset (Z)", systemSymbolName: "arrow.up.and.down.square.fill")
-    
-    public static let xVolumeSize = Self.init(name: "xVolumeSize", displayName: "Volume Size (X)", systemSymbolName: "arrow.up.left.and.arrow.down.right.square")
-    public static let yVolumeSize = Self.init(name: "yVolumeSize", displayName: "Volume Size (Y)", systemSymbolName: "arrow.down.left.and.arrow.up.right.square")
-    public static let zVolumeSize = Self.init(name: "zVolumeSize", displayName: "Volume Size (Z)", systemSymbolName: "arrow.up.and.down.square")
-    
+    public static let xVolumeWorldOffset = Self.init(name: "xVolumeWorldOffset", displayName: "Volume World Offset (X)", systemSymbolName: "arrow.up.left.and.arrow.down.right.square.fill")
+    public static let yVolumeWorldOffset = Self.init(name: "yVolumeWorldOffset", displayName: "Volume World Offset (Y)", systemSymbolName: "arrow.down.left.and.arrow.up.right.square.fill")
+    public static let zVolumeWorldOffset = Self.init(name: "zVolumeWorldOffset", displayName: "Volume World Offset (Z)", systemSymbolName: "arrow.up.and.down.square.fill")
+
+    public static let xVolumeWorldSize = Self.init(name: "xVolumeWorldSize", displayName: "Volume World Size (X)", systemSymbolName: "arrow.up.left.and.arrow.down.right.square")
+    public static let yVolumeWorldSize = Self.init(name: "yVolumeWorldSize", displayName: "Volume World Size (Y)", systemSymbolName: "arrow.down.left.and.arrow.up.right.square")
+    public static let zVolumeWorldSize = Self.init(name: "zVolumeWorldSize", displayName: "Volume World Size (Z)", systemSymbolName: "arrow.up.and.down.square")
+
     public static let xAnchorPoint = Self.init(name: "xAnchorPoint", displayName: "Anchor Point (X)", systemSymbolName: "scope")
     public static let yAnchorPoint = Self.init(name: "yAnchorPoint", displayName: "Anchor Point (Y)", systemSymbolName: "scope")
     
@@ -34,9 +34,9 @@ public class SpriteAssetElement : TransformAssetElement {
         case components = "cmp"
     }
     
-    public var volumeOffset: SIMD3<Float>
-    public var volumeSize: SIMD3<Float>
-    
+    public var volumeWorldOffset: WorldPosition
+    public var volumeWorldSize: WorldPosition
+
     public var spriteLocator: SpriteLocator?
     public var anchorPoint: CGPoint
     
@@ -49,19 +49,19 @@ public class SpriteAssetElement : TransformAssetElement {
     
     public override var eligibleTrackTypes: [AssetAnimationTrackType] {
         var trackTypes = super.eligibleTrackTypes
-        trackTypes.append(contentsOf: [.xVolumeOffset, .yVolumeOffset, .zVolumeOffset, .xVolumeSize, .yVolumeSize, .zVolumeSize, .sprite, .xAnchorPoint, .yAnchorPoint, .color, .colorBlendFactor])
+        trackTypes.append(contentsOf: [.xVolumeWorldOffset, .yVolumeWorldOffset, .zVolumeWorldOffset, .xVolumeWorldSize, .yVolumeWorldSize, .zVolumeWorldSize, .sprite, .xAnchorPoint, .yAnchorPoint, .color, .colorBlendFactor])
         return trackTypes
     }
     
     public override var combinedTrackTypes: [AssetAnimationTrackType] {
         var combinedTrackTypes = super.combinedTrackTypes
-        combinedTrackTypes.append(contentsOf: [.xVolumeOffset, .yVolumeOffset, .zVolumeOffset, .xVolumeSize, .yVolumeSize, .zVolumeSize, .xAnchorPoint, .yAnchorPoint ])
+        combinedTrackTypes.append(contentsOf: [.xVolumeWorldOffset, .yVolumeWorldOffset, .zVolumeWorldOffset, .xVolumeWorldSize, .yVolumeWorldSize, .zVolumeWorldSize, .xAnchorPoint, .yAnchorPoint ])
         return combinedTrackTypes
     }
     
     public required init(name: String) {
-        volumeOffset = SIMD3()
-        volumeSize = SIMD3(1, 1, 1)
+        volumeWorldOffset = WorldPosition()
+        volumeWorldSize = WorldPosition(1, 1, 1)
         spriteLocator = nil
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         color = SKColor.white.cgColor
@@ -73,8 +73,8 @@ public class SpriteAssetElement : TransformAssetElement {
     public override func encode(to container: inout KeyedEncodingContainer<AssetElementCodingKeys>) throws {
         try super.encode(to: &container)
         
-        try container.encode(volumeOffset, forKey: .volumeOffset)
-        try container.encode(volumeSize, forKey: .volumeSize)
+        try container.encode(volumeWorldOffset, forKey: .volumeWorldOffset)
+        try container.encode(volumeWorldSize, forKey: .volumeWorldSize)
         
         if let spriteLocator {
             try container.encode(spriteLocator, forKey: .sprite)
@@ -98,9 +98,9 @@ public class SpriteAssetElement : TransformAssetElement {
     }
     
     public required init(from container: KeyedDecodingContainer<AssetElementCodingKeys>) throws {
-        volumeOffset = try container.decode(SIMD3<Float>.self, forKey: .volumeOffset)
-        volumeSize = try container.decode(SIMD3<Float>.self, forKey: .volumeSize)
-        
+        volumeWorldOffset = try container.decode(WorldPosition.self, forKey: .volumeWorldOffset)
+        volumeWorldSize = try container.decode(WorldPosition.self, forKey: .volumeWorldSize)
+
         spriteLocator = try container.decodeIfPresent(SpriteLocator.self, forKey: .sprite)
         anchorPoint = try container.decode(CGPoint.self, forKey: .anchorPoint)
         
@@ -126,18 +126,18 @@ public class SpriteAssetElement : TransformAssetElement {
     public override subscript(trackType: AssetAnimationTrackType) -> Any? {
         get {
             switch trackType {
-            case .xVolumeOffset:
-                return volumeOffset.x
-            case .yVolumeOffset:
-                return volumeOffset.y
-            case .zVolumeOffset:
-                return volumeOffset.z
-            case .xVolumeSize:
-                return volumeSize.x
-            case .yVolumeSize:
-                return volumeSize.y
-            case .zVolumeSize:
-                return volumeSize.z
+            case .xVolumeWorldOffset:
+                return volumeWorldOffset.x
+            case .yVolumeWorldOffset:
+                return volumeWorldOffset.y
+            case .zVolumeWorldOffset:
+                return volumeWorldOffset.z
+            case .xVolumeWorldSize:
+                return volumeWorldSize.x
+            case .yVolumeWorldSize:
+                return volumeWorldSize.y
+            case .zVolumeWorldSize:
+                return volumeWorldSize.z
             case .sprite:
                 return spriteLocator?.description
             case .xAnchorPoint:
@@ -156,18 +156,18 @@ public class SpriteAssetElement : TransformAssetElement {
         set(value) {
             if let value {
                 switch trackType {
-                case .xVolumeOffset:
-                    volumeOffset.x = value as! Float
-                case .yVolumeOffset:
-                    volumeOffset.y = value as! Float
-                case .zVolumeOffset:
-                    volumeOffset.z = value as! Float
-                case .xVolumeSize:
-                    volumeSize.x = value as! Float
-                case .yVolumeSize:
-                    volumeSize.y = value as! Float
-                case .zVolumeSize:
-                    volumeSize.z = value as! Float
+                case .xVolumeWorldOffset:
+                    volumeWorldOffset.x = value as! Float
+                case .yVolumeWorldOffset:
+                    volumeWorldOffset.y = value as! Float
+                case .zVolumeWorldOffset:
+                    volumeWorldOffset.z = value as! Float
+                case .xVolumeWorldSize:
+                    volumeWorldSize.x = value as! Float
+                case .yVolumeWorldSize:
+                    volumeWorldSize.y = value as! Float
+                case .zVolumeWorldSize:
+                    volumeWorldSize.z = value as! Float
                 case .sprite:
                     if value is SpriteLocator {
                         spriteLocator = value as? SpriteLocator

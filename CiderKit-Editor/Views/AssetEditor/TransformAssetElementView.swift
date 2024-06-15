@@ -33,10 +33,10 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
     private let assetWFootprint: IntField
     private let assetHFootprint: IntField
     
-    private let xOffsetField: FloatField
-    private let yOffsetField: FloatField
-    private let zOffsetField: FloatField
-    private let offsetRow: NSStackView
+    private let xWorldOffsetField: FloatField
+    private let yWorldOffsetField: FloatField
+    private let zWorldOffsetField: FloatField
+    private let worldOffsetRow: NSStackView
     private let horizontallyFlippedCheckbox: NSButton
 
     private let nameField: NSTextField
@@ -56,9 +56,9 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
         assetWFootprint = IntField(title: "W", minValue: 1)
         assetHFootprint = IntField(title: "H", minValue: 1)
         
-        xOffsetField = FloatField(title: "X", step: 0.1)
-        yOffsetField = FloatField(title: "Y", step: 0.1)
-        zOffsetField = FloatField(title: "Z", step: 0.1)
+        xWorldOffsetField = FloatField(title: "X", step: 0.1)
+        yWorldOffsetField = FloatField(title: "Y", step: 0.1)
+        zWorldOffsetField = FloatField(title: "Z", step: 0.1)
         
         horizontallyFlippedCheckbox = NSButton(checkboxWithTitle: "Horizontally Flipped", target: nil, action: #selector(Self.horizontallyFlippedCheckboxClicked))
 
@@ -72,11 +72,11 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
 
         visibleCheckbox = NSButton(checkboxWithTitle: "Visible", target: nil, action: #selector(Self.visibleCheckboxClicked))
 
-        offsetRow = NSStackView(orientation: .horizontal, views: [xOffsetField, yOffsetField, zOffsetField])
+        worldOffsetRow = NSStackView(orientation: .horizontal, views: [xWorldOffsetField, yWorldOffsetField, zWorldOffsetField])
         assetElementViews = [
             InspectorHeader(title: "Element Name"), nameField,
             VSpacer(), visibleCheckbox,
-            VSpacer(), InspectorHeader(title: "Offset"), offsetRow, horizontallyFlippedCheckbox
+            VSpacer(), InspectorHeader(title: "World Offset"), worldOffsetRow, horizontallyFlippedCheckbox
         ]
         
         super.init(frame: NSZeroRect)
@@ -90,9 +90,9 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
         assetHFootprint.delegate = self
         assetWFootprint.delegate = self
         
-        xOffsetField.delegate = self
-        yOffsetField.delegate = self
-        zOffsetField.delegate = self
+        xWorldOffsetField.delegate = self
+        yWorldOffsetField.delegate = self
+        zWorldOffsetField.delegate = self
         horizontallyFlippedCheckbox.target = self
         
         nameField.delegate = self
@@ -141,9 +141,9 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
             nameField.stringValue = element.name
             visibleCheckbox.state = animationSnapshot.get(trackType: .visibility) ? .on : .off
             
-            xOffsetField.value = animationSnapshot.get(trackType: .xOffset)
-            yOffsetField.value = animationSnapshot.get(trackType: .yOffset)
-            zOffsetField.value = animationSnapshot.get(trackType: .zOffset)
+            xWorldOffsetField.value = animationSnapshot.get(trackType: .xWorldOffset)
+            yWorldOffsetField.value = animationSnapshot.get(trackType: .yWorldOffset)
+            zWorldOffsetField.value = animationSnapshot.get(trackType: .zWorldOffset)
             horizontallyFlippedCheckbox.state = element.horizontallyFlipped ? .on : .off
         }
     }
@@ -182,51 +182,51 @@ public class TransformAssetElementView : NSStackView, NSTextFieldDelegate, Float
         switch field {
         case assetXPositionField:
             if let assetDescription {
-                assetDescription.rootElement.offset.x = assetXPositionField.value
+                assetDescription.rootElement.worldOffset.x = assetXPositionField.value
                 elementViewDelegate.update(element: assetDescription.rootElement)
             }
             
         case assetYPositionField:
             if let assetDescription {
-                assetDescription.rootElement.offset.y = assetYPositionField.value
+                assetDescription.rootElement.worldOffset.y = assetYPositionField.value
                 elementViewDelegate.update(element: assetDescription.rootElement)
             }
             
         case assetZPositionField:
             if let assetDescription {
-                assetDescription.rootElement.offset.z = assetZPositionField.value
+                assetDescription.rootElement.worldOffset.z = assetZPositionField.value
                 elementViewDelegate.update(element: assetDescription.rootElement)
             }
             
-        case xOffsetField:
+        case xWorldOffsetField:
             if let element {
-                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .xOffset, for: element.uuid) {
-                    key.set(floatValue: xOffsetField.value)
+                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .xWorldOffset, for: element.uuid) {
+                    key.set(floatValue: xWorldOffsetField.value)
                 }
                 else {
-                    element.offset.x = xOffsetField.value
+                    element.worldOffset.x = xWorldOffsetField.value
                 }
                 elementViewDelegate.update(element: element)
             }
 
-        case yOffsetField:
+        case yWorldOffsetField:
             if let element {
-                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .yOffset, for: element.uuid) {
-                    key.set(floatValue: yOffsetField.value)
+                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .yWorldOffset, for: element.uuid) {
+                    key.set(floatValue: yWorldOffsetField.value)
                 }
                 else {
-                    element.offset.y = yOffsetField.value
+                    element.worldOffset.y = yWorldOffsetField.value
                 }
                 elementViewDelegate.update(element: element)
             }
             
-        case zOffsetField:
+        case zWorldOffsetField:
             if let element {
-                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .zOffset, for: element.uuid) {
-                    key.set(floatValue: zOffsetField.value)
+                if let key = elementViewDelegate.getCurrentAnimationKey(trackType: .zWorldOffset, for: element.uuid) {
+                    key.set(floatValue: zWorldOffsetField.value)
                 }
                 else {
-                    element.offset.z = zOffsetField.value
+                    element.worldOffset.z = zWorldOffsetField.value
                 }
                 elementViewDelegate.update(element: element)
             }

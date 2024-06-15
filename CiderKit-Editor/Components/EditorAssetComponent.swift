@@ -60,7 +60,7 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         true
     }
     
-    func contains(sceneCoordinates: CGPoint) -> Bool {
+    func contains(sceneCoordinates: ScenePosition) -> Bool {
         guard let node = entity?.component(ofType: GKSKNodeComponent.self)?.node else { return false }
         let frame = node.calculateAccumulatedFrame()
         return frame.contains(sceneCoordinates)

@@ -43,7 +43,7 @@ class MoveToolComponent: ToolComponent<MoveToolContext> {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func dragInScene(byX x: CGFloat, y: CGFloat) {
+    override func dragInScene(bySceneX x: CGFloat, y: CGFloat) {
         if let hoveredContext = hoveredContext {
             switch hoveredContext {
             case .x:

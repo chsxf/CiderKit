@@ -26,7 +26,7 @@ class EditorMapNode: MapNode {
         var newRegions = [MapRegion]()
         
         for region in regions {
-            if area == nil || area!.contains(region.regionDescription.area) {
+            if area == nil || area!.contains(absolute: region.regionDescription.area) {
                 appliedOnRegion = true
                 if region.increaseElevation() {
                     needsRebuilding = true
@@ -73,7 +73,7 @@ class EditorMapNode: MapNode {
         var newRegions = [MapRegion]()
         
         for region in regions {
-            if area == nil || area!.contains(region.regionDescription.area) {
+            if area == nil || area!.contains(absolute: region.regionDescription.area) {
                 if region.decreaseElevation() {
                     needsRebuilding = true
                 }
@@ -135,14 +135,14 @@ class EditorMapNode: MapNode {
         super.buildRegions()
     }
     
-    override func mapCellEntity(node: SKNode, for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> GKEntity {
-        let entity = super.mapCellEntity(node: node, for: region, atX: x, y: y, elevation: elevation)
+    override func mapCellEntity(node: SKNode, for region: MapRegion, atMapPosition position: MapPosition) -> GKEntity {
+        let entity = super.mapCellEntity(node: node, for: region, atMapPosition: position)
         hoverableEntities.append(entity)
         return entity
     }
     
-    override func mapCellComponent(for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> MapCellComponent {
-        return EditorMapCellComponent(region: region, mapX: x, mapY: y, elevation: elevation)
+    override func mapCellComponent(for region: MapRegion, atMapPosition position: MapPosition) -> MapCellComponent {
+        return EditorMapCellComponent(region: region, position: position)
     }
     
     func add(light: PointLight) {
@@ -177,8 +177,8 @@ class EditorMapNode: MapNode {
         }
     }
     
-    override func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> (AssetInstance, GKEntity)? {
-        guard let (instance, assetComponentEntity) = super.instantiateAsset(placement: placement, at: worldPosition) else { return nil }
+    override func instantiateAsset(placement: AssetPlacement, atWorldPosition worldPosition: WorldPosition) -> (AssetInstance, GKEntity)? {
+        guard let (instance, assetComponentEntity) = super.instantiateAsset(placement: placement, atWorldPosition: worldPosition) else { return nil }
         
         let entity = EditorAssetComponent.prepareEntity(assetComponentEntity)
         hoverableEntities.append(entity)

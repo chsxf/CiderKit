@@ -1,4 +1,5 @@
 import GameplayKit
+import CiderKit_Engine
 
 extension Notification.Name {
     
@@ -11,8 +12,8 @@ extension Notification.Name {
 protocol Selectable: Hoverable {
     
     var supportedToolModes: ToolMode { get }
-    var scenePosition: CGPoint { get }
-    
+    var scenePosition: ScenePosition { get }
+
     var inspectableDescription: String { get }
     var inspectorView: BaseInspectorView? { get }
     
@@ -28,12 +29,12 @@ extension Selectable where Self: GKComponent {
     
     var supportedToolModes: ToolMode { [] }
     
-    var scenePosition: CGPoint {
+    var scenePosition: ScenePosition {
         get {
             if let node = entity?.component(ofType: GKSKNodeComponent.self)?.node {
                 return node.position
             }
-            return CGPoint.zero
+            return ScenePosition.zero
         }
     }
     

@@ -12,8 +12,8 @@ open class AssetInstance : TransformAssetElementInstance {
     public let placement: AssetPlacement
     public let assetDescription: AssetDescription
     
-    public let worldPosition: SIMD3<Float>
-    
+    public let worldPosition: WorldPosition
+
     private var interactiveFlag = false
     public var interactive: Bool {
         get { parent?.assetInstance?.interactive ?? interactiveFlag }
@@ -42,7 +42,7 @@ open class AssetInstance : TransformAssetElementInstance {
         set { placement.name = newValue }
     }
 
-    public override var absoluteOffset: SIMD3<Float> { parent?.absoluteOffset ?? (worldPosition + adjustedCurrentOffset) }
+    public override var absoluteWorldOffset: WorldPosition { parent?.absoluteWorldOffset ?? (worldPosition + adjustedCurrentWorldOffset) }
     public let offsetByWorldPosition: Bool
 
     public override var horizontallyFlippedBySelf: Bool { placement.horizontallyFlipped || super.horizontallyFlippedBySelf }
@@ -52,12 +52,12 @@ open class AssetInstance : TransformAssetElementInstance {
     
     public subscript(element: TransformAssetElement) -> TransformAssetElementInstance? { elementInstancesByUUID[element.uuid] }
     
-    public convenience init(assetDescription: AssetDescription, horizontallyFlipped: Bool, at worldPosition: SIMD3<Float> = SIMD3(), offsetNodeByWorldPosition: Bool = true) {
+    public convenience init(assetDescription: AssetDescription, horizontallyFlipped: Bool, atWorldPosition worldPosition: WorldPosition = WorldPosition(), offsetNodeByWorldPosition: Bool = true) {
         let placement = AssetPlacement(assetLocator: assetDescription.locator, horizontallyFlipped: horizontallyFlipped)
-        self.init(placement: placement, at: worldPosition, offsetNodeByWorldPosition: offsetNodeByWorldPosition)!
+        self.init(placement: placement, atWorldPosition: worldPosition, offsetNodeByWorldPosition: offsetNodeByWorldPosition)!
     }
     
-    public init?(placement: AssetPlacement, at worldPosition: SIMD3<Float>, offsetNodeByWorldPosition: Bool = true) {
+    public init?(placement: AssetPlacement, atWorldPosition worldPosition: WorldPosition, offsetNodeByWorldPosition: Bool = true) {
         guard let assetDescription = placement.assetLocator.assetDescription else { return nil }
         
         offsetByWorldPosition = offsetNodeByWorldPosition
@@ -74,18 +74,18 @@ open class AssetInstance : TransformAssetElementInstance {
 
         super.init(element: assetDescription.rootElement)
         
-        createNode(at: worldPosition)
+        createNode(atWorldPosition: worldPosition)
         node!.zPosition = 1
         
         elementInstancesByUUID[assetDescription.rootElement.uuid] = self
         
-        let newWorldPosition = worldPosition + assetDescription.rootElement.offset
+        let newWorldPosition = worldPosition + assetDescription.rootElement.worldOffset
         for child in assetDescription.rootElement.children {
-            try! instantiateElement(element: child, parent: self, at: newWorldPosition)
+            try! instantiateElement(element: child, parent: self, atWorldPosition: newWorldPosition)
         }
     }
     
-    private func instantiateElement(element: TransformAssetElement, parent: TransformAssetElementInstance, at worldPosition: SIMD3<Float>) throws {
+    private func instantiateElement(element: TransformAssetElement, parent: TransformAssetElementInstance, atWorldPosition worldPosition: WorldPosition) throws {
         guard elementInstancesByUUID[element.uuid] == nil else { throw AssetInstanceErrors.duplicateUUID }
         
         let elementInstance = element.instantiate()
@@ -95,11 +95,11 @@ open class AssetInstance : TransformAssetElementInstance {
         }
         parent.addChild(elementInstance)
         
-        elementInstance.createNode(at: worldPosition)
+        elementInstance.createNode(atWorldPosition: worldPosition)
         
-        let newWorldPosition = worldPosition + element.offset
+        let newWorldPosition = worldPosition + element.worldOffset
         for child in element.children {
-            try instantiateElement(element: child, parent: elementInstance, at: newWorldPosition)
+            try instantiateElement(element: child, parent: elementInstance, atWorldPosition: newWorldPosition)
         }
     }
     
@@ -111,7 +111,7 @@ open class AssetInstance : TransformAssetElementInstance {
             throw AssetInstanceErrors.unknownUUID
         }
         
-        try instantiateElement(element: element, parent: parentElementInstance, at: parentElementInstance.absoluteOffset)
+        try instantiateElement(element: element, parent: parentElementInstance, atWorldPosition: parentElementInstance.absoluteWorldOffset)
     }
     
     public func remove(element: TransformAssetElement) {
@@ -151,7 +151,7 @@ open class AssetInstance : TransformAssetElementInstance {
     
     public override func applyPosition(_ node: SKNode) {
         if offsetByWorldPosition {
-            node.position = MapNode.computeNodePosition(with: currentOffset.currentValue + worldPosition)
+            node.position = MapNode.worldToScene(currentWorldOffset.currentValue + worldPosition)
         }
         else {
             super.applyPosition(node)

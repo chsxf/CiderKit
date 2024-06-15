@@ -122,7 +122,7 @@ public struct MapRegionDescription: Codable {
         
         for x in 0..<area.width {
             for y in 0..<area.height {
-                guard relativeArea.contains(x: x, y: y) else {
+                guard relativeArea.contains(mapX: x, y: y) else {
                     continue
                 }
                 
@@ -151,29 +151,28 @@ public struct MapRegionDescription: Codable {
     }
     
     private mutating func importAssets(from other: MapRegionDescription) {
-        guard let otherAssets = other.assetPlacements else { return }
+        guard let otherAssetPlacements = other.assetPlacements else { return }
         
         let relativeToOtherArea = area.relative(to: other.area)
         let relativeToArea = other.area.relative(to: area)
-        for asset in otherAssets {
-            guard relativeToOtherArea.contains(x: asset.x, y: asset.y) else { continue }
-        
-            asset.x += relativeToArea.x
-            asset.y += relativeToArea.y
-            
+        for assetPlacement in otherAssetPlacements {
+            guard relativeToOtherArea.contains(mapPosition: assetPlacement.position) else { continue }
+
+            assetPlacement.position = assetPlacement.position.moved(byX: relativeToArea.x, y: relativeToArea.y)
+
             assetPlacements = assetPlacements ?? []
-            assetPlacements!.append(asset)
+            assetPlacements!.append(assetPlacement)
         }
     }
     
-    public func isFreeOfAsset(area: MapArea) -> Bool {
+    public func isFreeOfAsset(absoluteArea: MapArea) -> Bool {
         guard let assetPlacements else { return true }
         
-        let relativeArea = area.relative(to: self.area)
+        let relativeArea = absoluteArea.relative(to: self.area)
         for placement in assetPlacements {
             if let description = placement.assetLocator.assetDescription {
                 let footprint = description.footprint
-                let assetArea = MapArea(x: placement.x - Int(footprint.x), y: placement.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
+                let assetArea = MapArea(x: placement.position.x - Int(footprint.x), y: placement.position.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
                 if assetArea.intersects(relativeArea) {
                     return false
                 }

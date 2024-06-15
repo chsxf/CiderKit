@@ -25,7 +25,7 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
     
     public var animations: [String: AssetAnimation] = [:]
     
-    public var position: SIMD3<Float> { rootElement.offset }
+    public var position: WorldPosition { rootElement.worldOffset }
     
     public var locator: AssetLocator { AssetLocator(databaseKey: databaseKey, assetUUID: uuid) }
     

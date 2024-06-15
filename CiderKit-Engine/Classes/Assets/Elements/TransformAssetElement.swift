@@ -6,7 +6,7 @@ extension AssetElementCodingKeys {
     static let name = Self.init(stringValue: "n")!
     static let type = Self.init(stringValue: "t")!
     static let visible = Self.init(stringValue: "v")!
-    static let offset = Self.init(stringValue: "o")!
+    static let worldOffset = Self.init(stringValue: "o")!
     static let children = Self.init(stringValue: "c")!
     static let horizontallyFlipped = Self.init(stringValue: "f")!
     
@@ -14,10 +14,10 @@ extension AssetElementCodingKeys {
 
 extension AssetAnimationTrackType {
     
-    public static let xOffset = Self.init(name: "xOffset", displayName: "X Offset", systemSymbolName: "arrow.up.left.and.arrow.down.right")
-    public static let yOffset = Self.init(name: "yOffset", displayName: "Y Offset", systemSymbolName: "arrow.down.left.and.arrow.up.right")
-    public static let zOffset = Self.init(name: "zOffset", displayName: "Z Offset", systemSymbolName: "arrow.up.and.down")
-    
+    public static let xWorldOffset = Self.init(name: "xWorldOffset", displayName: "X World Offset", systemSymbolName: "arrow.up.left.and.arrow.down.right")
+    public static let yWorldOffset = Self.init(name: "yWorldOffset", displayName: "Y World Offset", systemSymbolName: "arrow.down.left.and.arrow.up.right")
+    public static let zWorldOffset = Self.init(name: "zWorldOffset", displayName: "Z World Offset", systemSymbolName: "arrow.up.and.down")
+
 }
 
 public class TransformAssetElement : Hashable, Codable {
@@ -30,17 +30,17 @@ public class TransformAssetElement : Hashable, Codable {
 
     public var name: String
     public var visible: Bool
-    public var offset: SIMD3<Float>
+    public var worldOffset: WorldPosition
     public var horizontallyFlipped: Bool
     
     public private(set) var children: [TransformAssetElement]
 
     public var type: String { "transform" }
     
-    public var absoluteOffset: SIMD3<Float> {
-        var result = offset
+    public var absoluteWorldOffset: WorldPosition {
+        var result = worldOffset
         if let parent {
-            result += parent.absoluteOffset
+            result += parent.absoluteWorldOffset
         }
         return result
     }
@@ -48,11 +48,11 @@ public class TransformAssetElement : Hashable, Codable {
     public class var typeLabel: String { "Transform Element" }
     
     public var eligibleTrackTypes: [AssetAnimationTrackType] {
-        [ .xOffset, .yOffset, .zOffset, .visibility ]
+        [ .xWorldOffset, .yWorldOffset, .zWorldOffset, .visibility ]
     }
     
     public var combinedTrackTypes: [AssetAnimationTrackType] {
-        [ .xOffset, .yOffset, .zOffset ]
+        [ .xWorldOffset, .yWorldOffset, .zWorldOffset ]
     }
     
     public required init(name: String) {
@@ -60,7 +60,7 @@ public class TransformAssetElement : Hashable, Codable {
         self.name = name
         
         visible = true
-        offset = SIMD3()
+        worldOffset = WorldPosition()
         horizontallyFlipped = false
 
         children = []
@@ -76,7 +76,7 @@ public class TransformAssetElement : Hashable, Codable {
         name = try container.decode(String.self, forKey: .name)
         
         visible = (try container.decodeIfPresent(Bool.self, forKey: .visible)) ?? true
-        offset = try container.decode(SIMD3<Float>.self, forKey: .offset)
+        worldOffset = try container.decode(WorldPosition.self, forKey: .worldOffset)
         horizontallyFlipped = (try container.decodeIfPresent(Bool.self, forKey: .horizontallyFlipped)) ?? false
         
         children = []
@@ -105,7 +105,7 @@ public class TransformAssetElement : Hashable, Codable {
         try container.encode(type, forKey: .type)
         
         try container.encode(visible, forKey: .visible)
-        try container.encode(offset, forKey: .offset)
+        try container.encode(worldOffset, forKey: .worldOffset)
         try container.encode(horizontallyFlipped, forKey: .horizontallyFlipped)
 
         if !children.isEmpty {
@@ -181,12 +181,12 @@ public class TransformAssetElement : Hashable, Codable {
             switch trackType {
             case .visibility:
                 return visible
-            case .xOffset:
-                return offset.x
-            case .yOffset:
-                return offset.y
-            case .zOffset:
-                return offset.z
+            case .xWorldOffset:
+                return worldOffset.x
+            case .yWorldOffset:
+                return worldOffset.y
+            case .zWorldOffset:
+                return worldOffset.z
             default:
                 return nil
             }
@@ -197,26 +197,26 @@ public class TransformAssetElement : Hashable, Codable {
                 switch trackType {
                 case .visibility:
                     visible = value as! Bool
-                case .xOffset:
+                case .xWorldOffset:
                     if value is CGFloat {
-                        offset.x = Float(value as! CGFloat)
+                        worldOffset.x = Float(value as! CGFloat)
                     }
                     else if value is Float {
-                        offset.x = value as! Float
+                        worldOffset.x = value as! Float
                     }
-                case .yOffset:
+                case .yWorldOffset:
                     if value is CGFloat {
-                        offset.y = Float(value as! CGFloat)
+                        worldOffset.y = Float(value as! CGFloat)
                     }
                     else if value is Float {
-                        offset.y = value as! Float
+                        worldOffset.y = value as! Float
                     }
-                case .zOffset:
+                case .zWorldOffset:
                     if value is CGFloat {
-                        offset.z = Float(value as! CGFloat)
+                        worldOffset.z = Float(value as! CGFloat)
                     }
                     else if value is Float {
-                        offset.z = value as! Float
+                        worldOffset.z = value as! Float
                     }
                 default:
                     break

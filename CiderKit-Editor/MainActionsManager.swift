@@ -19,7 +19,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         if item.itemIdentifier == .addAsset {
             guard
                 let selectedArea = gameView?.selectionModel.selectedMapArea,
-                gameView?.map.hasCell(forX: selectedArea.x, y: selectedArea.y) ?? false
+                gameView?.map.hasCell(forMapX: selectedArea.x, y: selectedArea.y) ?? false
             else {
                 return false
             }
@@ -44,7 +44,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         app!.window.beginSheet(window) { responseCode in
             if responseCode == .OK {
                 if let locator = selectorView.getResult(), let selectedArea = self.gameView?.selectionModel.selectedMapArea {
-                    self.gameView?.addAsset(locator, atX: selectedArea.x, y: selectedArea.y, horizontallyFlipped: false)
+                    self.gameView?.addAsset(locator, atMapPosition: MapPosition(x: selectedArea.x, y: selectedArea.y), horizontallyFlipped: false)
                 }
             }
         }
@@ -52,7 +52,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     
     @objc
     func addLight() {
-        gameView?.add(light: PointLight(name: "New Light", color: CGColor.white, position: SIMD3(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
+        gameView?.add(light: PointLight(name: "New Light", color: CGColor.white, position: WorldPosition(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
     }
     
     @objc

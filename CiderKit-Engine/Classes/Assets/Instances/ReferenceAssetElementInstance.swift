@@ -22,8 +22,8 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
         super.init(element: element)
     }
     
-    public override func createNode(baseNode: SKNode? = nil, at worldPosition: SIMD3<Float>) {
-        super.createNode(at: worldPosition)
+    public override func createNode(baseNode: SKNode? = nil, atWorldPosition worldPosition: WorldPosition) {
+        super.createNode(atWorldPosition: worldPosition)
         
         if let assetDescription = referenceElement.assetLocator?.assetDescription {
             instantiateReferencedAsset(in: node!, from: assetDescription)
@@ -52,7 +52,7 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
     }
     
     private func instantiateReferencedAsset(in node: SKNode, from assetDescription: AssetDescription) {
-        let referencedAssetInstance = AssetInstance(assetDescription: assetDescription, horizontallyFlipped: false, at: absoluteOffset, offsetNodeByWorldPosition: false)
+        let referencedAssetInstance = AssetInstance(assetDescription: assetDescription, horizontallyFlipped: false, atWorldPosition: absoluteWorldOffset, offsetNodeByWorldPosition: false)
         self.referencedAssetInstance = referencedAssetInstance
         addChild(referencedAssetInstance)
         node.addChild(referencedAssetInstance.node!)

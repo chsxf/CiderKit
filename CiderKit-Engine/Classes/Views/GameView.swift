@@ -87,8 +87,8 @@ open class GameView: LitSceneView {
     }
     
     open override func computePositionMatrix() -> matrix_float3x3 {
-        var minVector = SIMD3(Float.infinity, Float.infinity, 0)
-        var maxVector = SIMD3(-Float.infinity, -Float.infinity, 0)
+        var minVector = WorldPosition(Float.infinity, Float.infinity, 0)
+        var maxVector = WorldPosition(-Float.infinity, -Float.infinity, 0)
         
         for region in map.regions {
             let area = region.regionDescription.area

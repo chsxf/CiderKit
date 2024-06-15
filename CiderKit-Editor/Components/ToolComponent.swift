@@ -1,4 +1,5 @@
 import GameplayKit
+import CiderKit_Engine
 
 class ToolComponent<ContextType>: GKComponent, Tool where ContextType: ToolContext {
     
@@ -41,7 +42,7 @@ class ToolComponent<ContextType>: GKComponent, Tool where ContextType: ToolConte
         return entity
     }
     
-    func contains(sceneCoordinates: CGPoint) -> Bool {
+    func contains(sceneCoordinates: ScenePosition) -> Bool {
         if let node = entity?.component(ofType: GKSKNodeComponent.self)?.node {
             let nodeFrame = node.calculateAccumulatedFrame()
             if nodeFrame.contains(sceneCoordinates) {
@@ -75,8 +76,8 @@ class ToolComponent<ContextType>: GKComponent, Tool where ContextType: ToolConte
         }
     }
     
-    func dragInScene(byX x: CGFloat, y: CGFloat) { }
+    func dragInScene(bySceneX x: CGFloat, y: CGFloat) { }
     
-    func mouseUp(atX x: CGFloat, y: CGFloat) { }
+    func mouseUp(atSceneX x: CGFloat, y: CGFloat) { }
     
 }

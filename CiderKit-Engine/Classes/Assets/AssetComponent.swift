@@ -27,7 +27,7 @@ public class AssetComponent: GKComponent {
         return newEntity
     }
 
-    public func contains(sceneCoordinates: CGPoint) -> Bool {
+    public func contains(sceneCoordinates: ScenePosition) -> Bool {
         guard let node = entity?.component(ofType: GKSKNodeComponent.self)?.node else {
             return false
         }

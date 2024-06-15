@@ -6,8 +6,8 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     
     private var spriteNode: SKSpriteNode? = nil
     
-    public var currentVolumeOffset: OverridableValue<SIMD3<Float>>
-    public var currentVolumeSize: OverridableValue<SIMD3<Float>>
+    public var currentVolumeWorldOffset: OverridableValue<WorldPosition>
+    public var currentVolumeWorldSize: OverridableValue<WorldPosition>
 
     public var currentSpriteLocator: OverridableValue<SpriteLocator?>
     public var currentAnchorPoint: OverridableValue<CGPoint>
@@ -23,14 +23,14 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
             return nil
         }
         
-        return AssetBoundingBox(min: position, size: SIMD3(sizeAndFlip))
+        return AssetBoundingBox(min: position, size: WorldPosition(sizeAndFlip))
     }
     
     public init(element: SpriteAssetElement) {
         spriteElement = element
         
-        currentVolumeOffset = OverridableValue(element.volumeOffset)
-        currentVolumeSize = OverridableValue(element.volumeSize)
+        currentVolumeWorldOffset = OverridableValue(element.volumeWorldOffset)
+        currentVolumeWorldSize = OverridableValue(element.volumeWorldSize)
 
         currentSpriteLocator = OverridableValue(element.spriteLocator)
         currentAnchorPoint = OverridableValue(element.anchorPoint)
@@ -41,11 +41,11 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
         super.init(element: element)
     }
     
-    public override func createNode(baseNode: SKNode? = nil, at worldPosition: SIMD3<Float>) {
+    public override func createNode(baseNode: SKNode? = nil, atWorldPosition worldPosition: WorldPosition) {
         let spriteNode = SKSpriteNode(texture: nil)
         self.spriteNode = spriteNode
         
-        super.createNode(baseNode: spriteNode, at: worldPosition)
+        super.createNode(baseNode: spriteNode, atWorldPosition: worldPosition)
         
         updateSprite(spriteNode, spriteLocator: currentSpriteLocator.currentValue)
         spriteNode.anchorPoint = currentAnchorPoint.currentValue
@@ -53,26 +53,26 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
         spriteNode.color = SKColorFromCGColor(currentColor.currentValue)
         spriteNode.colorBlendFactor = CGFloat(currentColorBlendFactor.currentValue)
 
-        var additionalOffset = currentVolumeOffset.currentValue - currentVolumeSize.currentValue * SIMD3(0.5, 0.5, 0)
-        var adjustedVolumeSize = currentVolumeSize.currentValue
+        var additionalWorldOffset = currentVolumeWorldOffset.currentValue - currentVolumeWorldSize.currentValue * WorldPosition(0.5, 0.5, 0)
+        var adjustedVolumeWorldSize = currentVolumeWorldSize.currentValue
         var horizontallyFlippedFlag: Float = 0
         if horizontallyFlippedByAncestorOrSelf {
-            additionalOffset = Self.horizontallyFlipOffset(additionalOffset)
-            adjustedVolumeSize = Self.horizontallyFlipOffset(adjustedVolumeSize)
+            additionalWorldOffset = Self.horizontallyFlipOffset(additionalWorldOffset)
+            adjustedVolumeWorldSize = Self.horizontallyFlipOffset(adjustedVolumeWorldSize)
             horizontallyFlippedFlag = 1
         }
         
         spriteNode.attributeValues = [
-            CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: worldPosition + adjustedCurrentOffset + additionalOffset),
-            CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(adjustedVolumeSize, horizontallyFlippedFlag))
+            CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: worldPosition + adjustedCurrentWorldOffset + additionalWorldOffset),
+            CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(adjustedVolumeWorldSize, horizontallyFlippedFlag))
         ]
     }
     
     public override func applyDefaults() {
         guard let spriteNode else { return }
         
-        currentVolumeOffset.baseValue = spriteElement.volumeOffset
-        currentVolumeSize.baseValue = spriteElement.volumeSize
+        currentVolumeWorldOffset.baseValue = spriteElement.volumeWorldOffset
+        currentVolumeWorldSize.baseValue = spriteElement.volumeWorldSize
 
         currentSpriteLocator.baseValue = spriteElement.spriteLocator
         updateSprite(spriteNode, spriteLocator: currentSpriteLocator.currentValue)
@@ -114,8 +114,8 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
         currentColorBlendFactor.baseValue = snapshot.get(trackType: .colorBlendFactor)
         spriteNode.colorBlendFactor = CGFloat(currentColorBlendFactor.currentValue)
 
-        currentVolumeOffset.baseValue = SIMD3<Float>(snapshot.get(trackType: .xVolumeOffset), snapshot.get(trackType: .yVolumeOffset), snapshot.get(trackType: .zVolumeOffset))
-        currentVolumeSize.baseValue = SIMD3<Float>(snapshot.get(trackType: .xVolumeSize), snapshot.get(trackType: .yVolumeSize), snapshot.get(trackType: .zVolumeSize))
+        currentVolumeWorldOffset.baseValue = WorldPosition(snapshot.get(trackType: .xVolumeWorldOffset), snapshot.get(trackType: .yVolumeWorldOffset), snapshot.get(trackType: .zVolumeWorldOffset))
+        currentVolumeWorldSize.baseValue = WorldPosition(snapshot.get(trackType: .xVolumeWorldSize), snapshot.get(trackType: .yVolumeWorldSize), snapshot.get(trackType: .zVolumeWorldSize))
 
         super.update(animationSnapshot: snapshot)
     }
@@ -136,18 +136,18 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     }
     
     public override func updateHierarchyDependentProperties() {
-        var additionalOffset = currentVolumeOffset.currentValue - currentVolumeSize.currentValue * SIMD3(0.5, 0.5, 0)
-        var adjustedVolumeSize = currentVolumeSize.currentValue
+        var additionalWorldOffset = currentVolumeWorldOffset.currentValue - currentVolumeWorldSize.currentValue * WorldPosition(0.5, 0.5, 0)
+        var adjustedVolumeSize = currentVolumeWorldSize.currentValue
         var horizontallyFlippedFlag: Float = 0
         if horizontallyFlippedByAncestorOrSelf {
-            additionalOffset = Self.horizontallyFlipOffset(additionalOffset)
+            additionalWorldOffset = Self.horizontallyFlipOffset(additionalWorldOffset)
             adjustedVolumeSize = Self.horizontallyFlipOffset(adjustedVolumeSize)
             horizontallyFlippedFlag = 1
         }
         
         if let spriteNode {
             spriteNode.attributeValues = [
-                CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: absoluteOffset + additionalOffset),
+                CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: absoluteWorldOffset + additionalWorldOffset),
                 CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(adjustedVolumeSize, horizontallyFlippedFlag))
             ]
         }
@@ -262,26 +262,26 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
             })
         }
 
-        let xVolumeOffset = combinedTracks[.xVolumeOffset]
-        let yVolumeOffset = combinedTracks[.yVolumeOffset]
-        let zVolumeOffset = combinedTracks[.zVolumeOffset]
-        let xVolumeSize = combinedTracks[.xVolumeSize]
-        let yVolumeSize = combinedTracks[.yVolumeSize]
-        let zVolumeSize = combinedTracks[.zVolumeSize]
-        if xVolumeOffset != nil || yVolumeOffset != nil || zVolumeOffset != nil || xVolumeSize != nil || yVolumeSize != nil || zVolumeSize != nil {
+        let xVolumeWorldOffset = combinedTracks[.xVolumeWorldOffset]
+        let yVolumeWorldOffset = combinedTracks[.yVolumeWorldOffset]
+        let zVolumeWorldOffset = combinedTracks[.zVolumeWorldOffset]
+        let xVolumeWorldSize = combinedTracks[.xVolumeWorldSize]
+        let yVolumeWorldSize = combinedTracks[.yVolumeWorldSize]
+        let zVolumeWorldSize = combinedTracks[.zVolumeWorldSize]
+        if xVolumeWorldOffset != nil || yVolumeWorldOffset != nil || zVolumeWorldOffset != nil || xVolumeWorldSize != nil || yVolumeWorldSize != nil || zVolumeWorldSize != nil {
             actions.append(SKAction.customAction(withDuration: expectedDuration) { _, elapsedTime in
                 let frame = UInt((elapsedTime / AssetAnimationTrack.frameTime).rounded(.towardZero))
                 
-                self.currentVolumeOffset.baseValue = SIMD3(
-                    (xVolumeOffset?.getValue(at: frame) ?? self.currentVolumeOffset.currentValue.x) as! Float,
-                    (yVolumeOffset?.getValue(at: frame) ?? self.currentVolumeOffset.currentValue.y) as! Float,
-                    (zVolumeOffset?.getValue(at: frame) ?? self.currentVolumeOffset.currentValue.z) as! Float
+                self.currentVolumeWorldOffset.baseValue = WorldPosition(
+                    (xVolumeWorldOffset?.getValue(at: frame) ?? self.currentVolumeWorldOffset.currentValue.x) as! Float,
+                    (yVolumeWorldOffset?.getValue(at: frame) ?? self.currentVolumeWorldOffset.currentValue.y) as! Float,
+                    (zVolumeWorldOffset?.getValue(at: frame) ?? self.currentVolumeWorldOffset.currentValue.z) as! Float
                 )
                 
-                self.currentVolumeSize.baseValue = SIMD3(
-                    (xVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.currentValue.x) as! Float,
-                    (yVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.currentValue.y) as! Float,
-                    ((zVolumeSize?.getValue(at: frame) ?? self.currentVolumeSize.currentValue.z) as! Float)
+                self.currentVolumeWorldSize.baseValue = WorldPosition(
+                    (xVolumeWorldSize?.getValue(at: frame) ?? self.currentVolumeWorldSize.currentValue.x) as! Float,
+                    (yVolumeWorldSize?.getValue(at: frame) ?? self.currentVolumeWorldSize.currentValue.y) as! Float,
+                    ((zVolumeWorldSize?.getValue(at: frame) ?? self.currentVolumeWorldSize.currentValue.z) as! Float)
                 )
                 
                 self.updateHierarchyDependentProperties()
@@ -292,8 +292,8 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     }
 
     public override func resetAllOverriddenValues(options: ResetOverriddenValuesOptions = [.applyToChildren, .updateImmediately]) {
-        currentVolumeOffset.overriddenValue = nil
-        currentVolumeSize.overriddenValue = nil
+        currentVolumeWorldOffset.overriddenValue = nil
+        currentVolumeWorldSize.overriddenValue = nil
         currentSpriteLocator.overriddenValue = nil
         currentAnchorPoint.overriddenValue = nil
         currentColor.overriddenValue = nil

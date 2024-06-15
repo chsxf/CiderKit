@@ -36,7 +36,7 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func contains(sceneCoordinates: CGPoint) -> Bool {
+    func contains(sceneCoordinates: ScenePosition) -> Bool {
         guard let lightNode = lightNode else { return false }
         let frame = lightNode.calculateAccumulatedFrame()
         return frame.contains(sceneCoordinates)
@@ -58,18 +58,11 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
         lightNode?.selected = false
     }
     
-    private class func computeScenePosition(from lightDescription: PointLight) -> CGPoint {
-        let xyPosition = CGPoint(x: CGFloat(lightDescription.position.x), y: CGFloat(lightDescription.position.y))
-        var scenePosition = Math.worldToScene(xyPosition, halfTileSize: CGSize(width: MapNode.halfWidth, height: MapNode.halfHeight))
-        scenePosition.y += CGFloat(lightDescription.position.z) * CGFloat(MapNode.elevationHeight)
-        return scenePosition
-    }
-    
     class func entity(from lightDescription: PointLight) -> GKEntity {
         let newEntity = GKEntity();
         
-        let scenePosition = Self.computeScenePosition(from: lightDescription)
-        
+        let scenePosition = MapNode.worldToScene(lightDescription.position)
+
         let pointLight = PointLightNode()
         pointLight.position = scenePosition
         pointLight.enabled = lightDescription.enabled
@@ -89,7 +82,7 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
             return false
         }
         
-        pointLight.position = Self.computeScenePosition(from: lightDescription)
+        pointLight.position = MapNode.worldToScene(lightDescription.position)
         pointLight.enabled = lightDescription.enabled
         pointLight.setLightColor(lightDescription.color)
         
@@ -97,7 +90,7 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
     }
     
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) {
-        lightDescription.position += SIMD3(x: Float(x), y: Float(y), z: Float(z))
+        lightDescription.position += WorldPosition(x: Float(x), y: Float(y), z: Float(z))
         entity?.component(ofType: EditableComponent.self)?.invalidate()
     }
     

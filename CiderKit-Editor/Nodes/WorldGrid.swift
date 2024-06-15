@@ -20,8 +20,6 @@ class WorldGrid: SKNode {
     
     private var gridTileTextures = [GridElement:SKTexture]()
     
-    let gridTileSize: CGSize
-    let halfGridTileSize: CGSize
     let gridBlockSize: CGSize
     
     private var spritePools = [GridElement:SpritePool]()
@@ -36,7 +34,7 @@ class WorldGrid: SKNode {
         let atlas = Atlases["grid"]!
         
         triaxis = SKSpriteNode(texture: atlas["triaxis"])
-        triaxis.anchorPoint = CGPoint(x: 0.5, y: 0.32)
+        triaxis.anchorPoint = ScenePosition(x: 0.5, y: 0.32)
         triaxis.zPosition = 10000
 
         for element in GridElement.allCases {
@@ -44,12 +42,8 @@ class WorldGrid: SKNode {
             spritePools[element] = SpritePool()
         }
         
-        let tileSize = gridTileTextures[.Base]!.size()
-        gridTileSize = CGSize(width: tileSize.width, height: tileSize.height - 1)
-        halfGridTileSize = gridTileSize.applying(CGAffineTransform(scaleX: 0.5, y: 0.5))
-        
-        gridBlockSize = CGSize(width: gridTileSize.width * 10, height: gridTileSize.height * 10)
-        
+        gridBlockSize = CGSize(width: MapNode.tileSize.width * 10, height: MapNode.tileSize.height * 10)
+
         super.init()
         
         addChild(triaxis)
@@ -59,8 +53,9 @@ class WorldGrid: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func worldCoordinatesToGridBlock(_ point: CGPoint) -> CGPoint {
-        return CGPoint(x: (point.x / 10).rounded(.awayFromZero) * 10, y: (point.y / 10).rounded(.awayFromZero) * 10)
+    private func worldCoordinatesToGridBlock(_ point: WorldPosition) -> IntPoint {
+        let tenPoint = (point / 10.0).rounded(.awayFromZero) * 10
+        return IntPoint(x: Int(tenPoint.x), y: Int(tenPoint.y))
     }
     
     func update(withViewport viewport: CGRect) {
@@ -69,27 +64,27 @@ class WorldGrid: SKNode {
         }
         currentViewport = viewport
         
-        let viewportTopLeft = CGPoint(x: viewport.origin.x, y: viewport.origin.y + viewport.size.height)
-        let transformedViewportTopLeft = Math.sceneToWorld(viewportTopLeft, halfTileSize: halfGridTileSize)
+        let viewportTopLeft = ScenePosition(x: viewport.origin.x, y: viewport.origin.y + viewport.size.height)
+        let transformedViewportTopLeft = MapNode.sceneToWorld(viewportTopLeft)
         let roundedViewportTopLeft = worldCoordinatesToGridBlock(transformedViewportTopLeft)
         
         let viewportBottomLeft = viewport.origin
-        let transformedViewportBottomLeft = Math.sceneToWorld(viewportBottomLeft, halfTileSize: halfGridTileSize)
+        let transformedViewportBottomLeft = MapNode.sceneToWorld(viewportBottomLeft)
         let roundedViewportBottomLeft = worldCoordinatesToGridBlock(transformedViewportBottomLeft)
         
-        let viewportTopRight = CGPoint(x: viewport.origin.x + viewport.size.width, y: viewport.origin.y + viewport.size.height)
-        let transformedViewportTopRight = Math.sceneToWorld(viewportTopRight, halfTileSize: halfGridTileSize)
+        let viewportTopRight = ScenePosition(x: viewport.origin.x + viewport.size.width, y: viewport.origin.y + viewport.size.height)
+        let transformedViewportTopRight = MapNode.sceneToWorld(viewportTopRight)
         let roundedViewportTopRight = worldCoordinatesToGridBlock(transformedViewportTopRight)
         
-        let viewportBottomRight = CGPoint(x: viewport.origin.x + viewport.size.width, y: viewport.origin.y)
-        let transformedViewportBottomRight = Math.sceneToWorld(viewportBottomRight, halfTileSize: halfGridTileSize)
+        let viewportBottomRight = ScenePosition(x: viewport.origin.x + viewport.size.width, y: viewport.origin.y)
+        let transformedViewportBottomRight = MapNode.sceneToWorld(viewportBottomRight)
         let roundedViewportBottomRight = worldCoordinatesToGridBlock(transformedViewportBottomRight)
         
         spritePools.forEach { $1.returnAll() }
         
-        for x in stride(from: Int(roundedViewportTopLeft.x), to: Int(roundedViewportBottomRight.x), by: 10) {
-            for y in stride(from: Int(roundedViewportTopRight.y), to: Int(roundedViewportBottomLeft.y), by: 10) {
-                buildGridBlock(atX: x, y: y, withViewport: viewport)
+        for x in stride(from: roundedViewportTopLeft.x, to: roundedViewportBottomRight.x, by: 10) {
+            for y in stride(from: roundedViewportTopRight.y, to: roundedViewportBottomLeft.y, by: 10) {
+                buildGridBlock(atMapPosition: MapPosition(x: x, y: y), withViewport: viewport)
             }
         }
     }
@@ -119,14 +114,14 @@ class WorldGrid: SKNode {
         spritePool.returnElement(sprite)
     }
     
-    private func spriteIsVisible(atCoordinates coordinates: CGPoint, inRect rect: CGRect) -> Bool {
-        let spriteRect = CGRect(x: coordinates.x - halfGridTileSize.width, y: coordinates.y - gridTileSize.height, width: gridTileSize.width, height: gridTileSize.height)
+    private func spriteIsVisible(atCoordinates coordinates: ScenePosition, inRect rect: CGRect) -> Bool {
+        let spriteRect = CGRect(x: coordinates.x - MapNode.halfTileSize.width, y: coordinates.y - MapNode.tileSize.height, width: MapNode.tileSize.width, height: MapNode.tileSize.height)
         return rect.intersects(spriteRect)
     }
     
-    private func buildGridBlock(atX mapX: Int, y mapY: Int, withViewport viewport: CGRect) {
-        let sceneCoordinates = Math.worldToScene(CGPoint(x: mapX, y: mapY), halfTileSize: halfGridTileSize)
-        
+    private func buildGridBlock(atMapPosition position: MapPosition, withViewport viewport: CGRect) {
+        let sceneCoordinates = MapNode.mapToScene(position)
+
         for x in 0..<10 {
             for y in 0..<10 {
                 var element: GridElement = .Base
@@ -160,8 +155,8 @@ class WorldGrid: SKNode {
                 }
                 
                 let scenePosition = sceneCoordinates.applying(CGAffineTransform.init(
-                    translationX: halfGridTileSize.width * CGFloat(x - y),
-                    y: -halfGridTileSize.height * CGFloat(x + y))
+                    translationX: MapNode.halfTileSize.width * CGFloat(x - y),
+                    y: -MapNode.halfTileSize.height * CGFloat(x + y))
                 )
                 if spriteIsVisible(atCoordinates: scenePosition, inRect: viewport) {
                     let sprite = getSprite(withElement: element)!
@@ -169,7 +164,7 @@ class WorldGrid: SKNode {
                     sprite.zPosition = -10
                     addChild(sprite)
                     
-                    let position = IntPoint(x: mapX + x, y: mapY + y)
+                    let position = IntPoint(x: position.x + x, y: position.y + y)
                     if let entity = hoverableEntitiesByPosition[position] {
                         let nodeComponent = entity.component(ofType: GKSKNodeComponent.self)!
                         nodeComponent.node = sprite
@@ -177,7 +172,7 @@ class WorldGrid: SKNode {
                     else {
                         let newEntity = GKEntity()
                         newEntity.addComponent(GKSKNodeComponent(node: sprite))
-                        newEntity.addComponent(EditorMapCellComponent(mapX: mapX + x, mapY: mapY + y))
+                        newEntity.addComponent(EditorMapCellComponent(x: position.x, y: position.y))
                         hoverableEntitiesByPosition[position] = newEntity
                     }
                 }
@@ -185,7 +180,7 @@ class WorldGrid: SKNode {
         }
     }
     
-    private func gridBlockIsVisible(atCoordinates coordinates: CGPoint, inRect rect: CGRect) -> Bool {
+    private func gridBlockIsVisible(atCoordinates coordinates: ScenePosition, inRect rect: CGRect) -> Bool {
         let gridBlockRect = CGRect(x: coordinates.x - (gridBlockSize.width / 2), y: coordinates.y - gridBlockSize.height, width: gridBlockSize.width, height: gridBlockSize.height)
         return rect.intersects(gridBlockRect)
     }

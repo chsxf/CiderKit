@@ -5,9 +5,14 @@ open class MapNode: SKNode, Collection {
     
     public static let elevationHeight: Int = 10
     
-    public static let halfWidth: Int = 24
-    public static let halfHeight: Int = 12
-    
+    public static let tileWidth: Int = 48
+    public static let tileHeight: Int = 24
+    public static let tileSize = CGSize(width: CGFloat(MapNode.tileWidth), height: CGFloat(MapNode.tileHeight))
+
+    public static let halfWidth: Int = MapNode.tileWidth / 2
+    public static let halfHeight: Int = MapNode.tileHeight / 2
+    public static let halfTileSize = CGSize(width: CGFloat(MapNode.halfWidth), height: CGFloat(MapNode.halfHeight))
+
     public static let xVector = SIMD2(Float(MapNode.halfWidth), Float(-MapNode.halfHeight))
     public static let yVector = SIMD2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
     public static let zVector = SIMD2(0, Float(MapNode.elevationHeight))
@@ -59,12 +64,12 @@ open class MapNode: SKNode, Collection {
     
     public func index(after i: Int) -> Int { regions.index(after: i) }
     
-    public func regionAt(x: Int, y: Int) -> MapRegion? {
-        regions.first(where: { $0.containsMapCoordinates(x: x, y: y) })
-    }
-    
-    public func hasCell(forX x: Int, y: Int) -> Bool { regionAt(x: x, y: y) != nil }
-    
+    public func regionAt(mapX x: Int, y: Int) -> MapRegion? { regions.first(where: { $0.containsMapCoordinates(mapX: x, y: y) }) }
+
+    public func regionAt(mapPosition position: MapPosition) -> MapRegion? { regionAt(mapX: position.x, y: position.y) }
+
+    public func hasCell(forMapX x: Int, y: Int) -> Bool { regionAt(mapX: x, y: y) != nil }
+
     public func toMapDescription() -> MapDescription {
         var newMapDescription = MapDescription()
         for region in regions {
@@ -132,30 +137,19 @@ open class MapNode: SKNode, Collection {
     
     func getCellElevation(forX x: Int, y: Int) -> Int? {
         for region in regions {
-            if region.containsMapCoordinates(x: x, y: y) {
+            if region.containsMapCoordinates(mapX: x, y: y) {
                 return region.regionDescription.elevation
             }
         }
         return nil
     }
     
-    func getWorldPosition(atCellX x: Int, y: Int) -> CGPoint? {
-        guard let elevation = getCellElevation(forX: x, y: y) else {
-            return nil
-        }
-        
-        let isoX = MapNode.halfWidth * (x + y + 1)
-        let isoY = MapNode.halfHeight * (y - x + 1) + (elevation * MapNode.elevationHeight)
-        
-        return CGPoint(x: isoX, y: isoY)
-    }
-    
-    public func lookForMapCellEntity(atX x: Int, y: Int) -> GKEntity? {
+    public func lookForMapCellEntity(atMapPosition position: MapPosition) -> GKEntity? {
         for region in regions {
             for cell in region.cellEntities {
                 for component in cell.components {
                     if let cellComponent = component as? MapCellComponent {
-                        if cellComponent.mapX == x && cellComponent.mapY == y {
+                        if cellComponent.position.x == position.x && cellComponent.position.y == position.y {
                             return cell
                         }
                         break
@@ -166,7 +160,7 @@ open class MapNode: SKNode, Collection {
         return nil
     }
     
-    public func raycastMapCell(at sceneCoordinates: CGPoint) -> MapCellComponent? {
+    public func raycastMapCell(at sceneCoordinates: ScenePosition) -> MapCellComponent? {
         for region in regions {
             for cell in region.cellEntities {
                 if let cellComponent = cell.component(ofType: MapCellComponent.self), cellComponent.contains(sceneCoordinates: sceneCoordinates){
@@ -177,24 +171,24 @@ open class MapNode: SKNode, Collection {
         return nil
     }
 
-    public func raycastAsset(at sceneCoordinates: CGPoint) -> AssetComponent? {
+    public func raycastAsset(at sceneCoordinates: ScenePosition) -> AssetComponent? {
         assetComponentSystem.components.first(where: { $0.contains(sceneCoordinates: sceneCoordinates) && ($0.assetInstance?.interactive ?? false) })
     }
 
-    public func raycastAny(at sceneCoordinates: CGPoint) -> GKComponent? {
+    public func raycastAny(at sceneCoordinates: ScenePosition) -> GKComponent? {
         raycastAsset(at: sceneCoordinates) ?? raycastMapCell(at: sceneCoordinates)
     }
 
-    open func mapCellEntity(node: SKNode, for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> GKEntity {
+    open func mapCellEntity(node: SKNode, for region: MapRegion, atMapPosition position: MapPosition) -> GKEntity {
         let entity = GKEntity()
         entity.addComponent(GKSKNodeComponent(node: node))
-        let cell = mapCellComponent(for: region, atX: x, y: y, elevation: elevation)
+        let cell = mapCellComponent(for: region, atMapPosition: position)
         entity.addComponent(cell)
         return entity
     }
     
-    open func mapCellComponent(for region: MapRegion, atX x: Int, y: Int, elevation: Int) -> MapCellComponent {
-        return MapCellComponent(region: region, mapX: x, mapY: y, elevation: elevation)
+    open func mapCellComponent(for region: MapRegion, atMapPosition position: MapPosition) -> MapCellComponent {
+        return MapCellComponent(region: region, position: position)
     }
     
     public func getAssetPlacement(by id: UUID) -> AssetPlacement? {
@@ -206,8 +200,8 @@ open class MapNode: SKNode, Collection {
         return nil
     }
     
-    open func instantiateAsset(placement: AssetPlacement, at worldPosition: SIMD3<Float>) -> (AssetInstance, GKEntity)? {
-        guard let instance = AssetInstance(placement: placement, at: worldPosition) else { return nil }
+    open func instantiateAsset(placement: AssetPlacement, atWorldPosition worldPosition: WorldPosition) -> (AssetInstance, GKEntity)? {
+        guard let instance = AssetInstance(placement: placement, atWorldPosition: worldPosition) else { return nil }
         
         let entity = AssetComponent.entity(from: placement, with: instance)
         assetComponentSystem.addComponent(foundIn: entity)
@@ -233,18 +227,33 @@ open class MapNode: SKNode, Collection {
     }
 
     @discardableResult
-    public final func addAsset(_ asset: AssetLocator, named: String, atX x: Int, y: Int, horizontallyFlipped: Bool) throws -> AssetInstance? {
-        if let region = regionAt(x: x, y: y) {
-            return try region.addAsset(asset, named: "", atWorldX: x, y: y, horizontallyFlipped: horizontallyFlipped)
+    public final func addAsset(_ asset: AssetLocator, named: String, atMapPosition: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
+        if let region = regionAt(mapPosition: atMapPosition) {
+            print(region.regionDescription.area)
+            return try region.addAsset(asset, named: "", atMapPosition: atMapPosition, horizontallyFlipped: horizontallyFlipped)
         }
         return nil
     }
 
-    public static func computeNodePosition(with offset: SIMD3<Float>) -> CGPoint { computeNodePosition(x: offset.x, y: offset.y, z: offset.z) }
-    
-    public static func computeNodePosition(x: Float, y: Float, z: Float) -> CGPoint {
-        let v2 = (Self.xVector * x) + (Self.yVector * y) + (Self.zVector * z)
-        return CGPoint(x: CGFloat(v2.x), y: CGFloat(v2.y))
+    public static func sceneToWorld(_ position: ScenePosition) -> WorldPosition {
+        let xWorld = ((position.x / MapNode.halfTileSize.width) - (position.y / MapNode.halfTileSize.height)) / 2
+        let yWorld = -(position.y / MapNode.halfTileSize.height) - xWorld
+        return WorldPosition(Float(xWorld), Float(yWorld), 0)
     }
-    
+
+    public static func worldToScene(_ position: WorldPosition) -> ScenePosition {
+        let xScene = MapNode.halfTileSize.width * (position.x - position.y)
+        let yScene = -MapNode.halfTileSize.height * (position.x + position.y) + position.z * Float(MapNode.elevationHeight)
+        return ScenePosition(x: xScene, y: yScene)
+    }
+
+    public static func sceneToMap(_ position: ScenePosition) -> MapPosition {
+        let world = sceneToWorld(position)
+        return world.mapPosition
+    }
+
+    public static func mapToScene(_ position: MapPosition) -> ScenePosition {
+        return worldToScene(position.worldPosition)
+    }
+
 }

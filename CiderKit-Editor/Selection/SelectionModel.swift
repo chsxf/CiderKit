@@ -17,7 +17,7 @@ class SelectionModel: ObservableObject {
         guard let mapCellComponent = selectable?.entity?.component(ofType: EditorMapCellComponent.self) else {
             return nil
         }
-        return MapArea(x: mapCellComponent.mapX, y: mapCellComponent.mapY, width: 1, height: 1)
+        return MapArea(x: mapCellComponent.position.x, y: mapCellComponent.position.y, width: 1, height: 1)
     }
     
     var hasSelectedMapArea: Bool { selectedMapArea != nil }

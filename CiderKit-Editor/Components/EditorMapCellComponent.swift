@@ -9,7 +9,7 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
     private static var hoveringShape: SKShapeNode!
     
     var inspectableDescription: String {
-        elevation != nil ? "Map Cell" : "Map Cell (Empty)"
+        position.elevation != nil ? "Map Cell" : "Map Cell (Empty)"
     }
     
     let supportedToolModes: ToolMode = .elevation

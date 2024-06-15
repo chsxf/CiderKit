@@ -35,7 +35,7 @@ class AmbientLightComponent: GKComponent, Selectable, EditableComponentDelegate 
     
     func deemphasize() { }
     
-    func contains(sceneCoordinates: CGPoint) -> Bool { false }
+    func contains(sceneCoordinates: ScenePosition) -> Bool { false }
     
     func hovered() { }
     

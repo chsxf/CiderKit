@@ -162,7 +162,7 @@ class EditorGameView: GameView {
         mutableMap.increaseElevation(area: area)
         
         if let area = area {
-            let selectable = map.lookForMapCellEntity(atX: area.x, y: area.y)?.findSelectableComponent()
+            let selectable = map.lookForMapCellEntity(atMapPosition: MapPosition(x: area.x, y: area.y))?.findSelectableComponent()
             selectionModel.setSelectable(selectable)
         }
     }
@@ -170,8 +170,8 @@ class EditorGameView: GameView {
     func decreaseElevation(area: MapArea?) {
         mutableMap.decreaseElevation(area: area)
         
-        if area != nil {
-            let selectable = map.lookForMapCellEntity(atX: area!.x, y: area!.y)?.findSelectableComponent()
+        if let area {
+            let selectable = map.lookForMapCellEntity(atMapPosition: MapPosition(x: area.x, y: area.y))?.findSelectableComponent()
             selectionModel.setSelectable(selectable)
         }
     }
@@ -236,9 +236,9 @@ class EditorGameView: GameView {
         setupPointLight(light)
     }
     
-    func addAsset(_ asset: AssetLocator, atX x: Int, y: Int, horizontallyFlipped: Bool) {
+    func addAsset(_ asset: AssetLocator, atMapPosition position: MapPosition, horizontallyFlipped: Bool) {
         do {
-            try mutableMap.addAsset(asset, named: "", atX: x, y: y, horizontallyFlipped: horizontallyFlipped)
+            try mutableMap.addAsset(asset, named: "", atMapPosition: position, horizontallyFlipped: horizontallyFlipped)
             mutableMap.dirty = true
         }
         catch MapRegionErrors.assetTooCloseToRegionBorder {
