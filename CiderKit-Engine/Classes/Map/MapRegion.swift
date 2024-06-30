@@ -140,7 +140,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 
                 addChild(sprite)
                 
-                let entity = map!.mapCellEntity(node: sprite, for: self, atMapPosition: MapPosition(x: mapX, y: mapY))
+                let entity = map!.mapCellEntity(node: sprite, for: self, atMapPosition: MapPosition(x: mapX, y: mapY, elevation: elevation))
                 if let cellComponent = entity.component(ofType: MapCellComponent.self) {
                     cellComponent.groundMaterialOverrides = localGroundMaterialOverride
                     cellComponent.leftElevationMaterialOverrides = localLeftElevationMaterialOverride
@@ -151,7 +151,9 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         }
         
         regionDescription.assetPlacements?.forEach {
-            $0.mapPosition = $0.mapPosition.withElevation(regionDescription.elevation)
+            if $0.mapPosition.elevation == nil {
+                $0.mapPosition = $0.mapPosition.withElevation(regionDescription.elevation)
+            }
             self.instantiateAsset(placement: $0)
         }
     }
