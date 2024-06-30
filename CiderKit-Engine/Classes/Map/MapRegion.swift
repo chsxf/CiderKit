@@ -266,7 +266,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         }
 
         let assetArea = MapArea(x: mapPosition.x - Int(footprint.x), y: mapPosition.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
-        guard regionDescription.isFreeOfAsset(absoluteArea: assetArea) else {
+        guard regionDescription.isFreeOfAsset(mapArea: assetArea) else {
             throw MapRegionErrors.otherAssetInTheWay
         }
 

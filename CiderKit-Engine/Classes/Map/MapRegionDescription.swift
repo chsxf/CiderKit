@@ -160,14 +160,14 @@ public struct MapRegionDescription: Codable {
         }
     }
     
-    public func isFreeOfAsset(absoluteArea: MapArea) -> Bool {
+    public func isFreeOfAsset(mapArea: MapArea) -> Bool {
         guard let assetPlacements else { return true }
         
         for placement in assetPlacements {
             if let description = placement.assetLocator.assetDescription {
                 let footprint = description.footprint
                 let assetArea = MapArea(x: placement.mapPosition.x - Int(footprint.x), y: placement.mapPosition.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
-                if assetArea.intersects(area) {
+                if assetArea.intersects(mapArea) {
                     return false
                 }
             }
