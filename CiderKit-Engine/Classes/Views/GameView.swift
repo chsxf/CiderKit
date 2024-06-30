@@ -4,6 +4,7 @@ import GameplayKit
 open class GameView: LitSceneView {
 
     public private(set) var map: MapNode!
+    public let mapOverlay: SKNode
 
     private let eventBackdropNode = EventBackdropNode()
     public let uiOverlayCanvas: CKUICanvas
@@ -31,7 +32,9 @@ open class GameView: LitSceneView {
             }
         }
         uiOverlayCanvas = CKUICanvas(styleSheet: styleSheet)
-        
+
+        mapOverlay = SKNode()
+
         super.init(frame: frameRect)
 
         showsFPS = true
@@ -47,7 +50,8 @@ open class GameView: LitSceneView {
         camera.addChild(uiOverlayCanvas)
         
         unloadMap(removePreviousMap: false)
-        
+        litNodesRoot.addChild(mapOverlay)
+
         #if os(macOS)
         TrackingAreaManager.scene = gameScene
         #endif
@@ -109,7 +113,7 @@ open class GameView: LitSceneView {
             let mapDescription: MapDescription = try Functions.load(file)
             unloadMap()
             map = mapNode(from: mapDescription)
-            litNodesRoot.addChild(map!)
+            litNodesRoot.insertChild(map, at: 0)
         }
         catch {
             let title = "Error"
@@ -136,7 +140,7 @@ open class GameView: LitSceneView {
         
         let mapDescription = MapDescription()
         map = mapNode(from: mapDescription)
-        litNodesRoot.addChild(map)
+        litNodesRoot.insertChild(map, at: 0)
     }
     
     open override func getLightMatrix(_ index: Int) -> matrix_float3x3 {
