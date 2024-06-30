@@ -15,12 +15,12 @@ public class AssetComponent: GKComponent {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public class func entity(from placement: AssetPlacement, with instance: AssetInstance) -> GKEntity {
+    public class func entity(with instance: AssetInstance) -> GKEntity {
         let newEntity = GKEntity()
         
         newEntity.addComponent(GKSKNodeComponent(node: instance.node!))
         
-        let assetComponent = AssetComponent(from: placement)
+        let assetComponent = AssetComponent(from: instance.placement)
         assetComponent.assetInstance = instance
         newEntity.addComponent(assetComponent)
         

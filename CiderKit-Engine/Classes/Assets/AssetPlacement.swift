@@ -21,7 +21,7 @@ public final class AssetPlacement: Codable, Identifiable, ObservableObject, Name
     public let id: UUID
     @Published public var name: String
     @Published public var assetLocator: AssetLocator
-    @Published public var position: MapPosition
+    @Published public var mapPosition: MapPosition
     @Published public var horizontallyFlipped: Bool
     @Published public var interactive: Bool
     
@@ -30,7 +30,7 @@ public final class AssetPlacement: Codable, Identifiable, ObservableObject, Name
         self.version = Self.VERSION
         self.name = name
         self.assetLocator = assetLocator
-        self.position = position
+        self.mapPosition = position
         self.horizontallyFlipped = horizontallyFlipped
         interactive = false
     }
@@ -47,10 +47,10 @@ public final class AssetPlacement: Codable, Identifiable, ObservableObject, Name
             let y = try container.decode(Int.self, forKey: .y)
             let worldOffset = try container.decode(CGPoint.self, forKey: .worldOffset)
             let simdWorldOffset = WorldPosition(Float(worldOffset.x), Float(worldOffset.y), 0)
-            position = MapPosition(x: x, y: y, worldOffset: simdWorldOffset)
+            mapPosition = MapPosition(x: x, y: y, worldOffset: simdWorldOffset)
         }
         else {
-            position = try container.decode(MapPosition.self, forKey: .position)
+            mapPosition = try container.decode(MapPosition.self, forKey: .position)
         }
         horizontallyFlipped = try container.decodeIfPresent(Bool.self, forKey: .horizontallyFlipped) ?? false
         interactive = try container.decodeIfPresent(Bool.self, forKey: .interactive) ?? false
@@ -62,7 +62,7 @@ public final class AssetPlacement: Codable, Identifiable, ObservableObject, Name
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
         try container.encode(assetLocator, forKey: .assetLocator)
-        try container.encode(position, forKey: .position)
+        try container.encode(mapPosition, forKey: .position)
         try container.encode(horizontallyFlipped, forKey: .horizontallyFlipped)
         try container.encode(interactive, forKey: .interactive)
     }
