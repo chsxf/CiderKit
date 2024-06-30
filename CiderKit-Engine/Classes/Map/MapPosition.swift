@@ -31,4 +31,8 @@ public struct MapPosition: Codable {
         return MapPosition(x: x + x, y: y + y, elevation: newElevation, worldOffset: self.worldOffset + worldOffset)
     }
 
+    public func withElevation(_ newElevation: Int? = nil) -> MapPosition {
+        MapPosition(x: x, y: y, elevation: newElevation, worldOffset: worldOffset)
+    }
+
 }

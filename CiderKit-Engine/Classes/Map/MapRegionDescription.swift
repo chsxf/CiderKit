@@ -153,27 +153,21 @@ public struct MapRegionDescription: Codable {
     private mutating func importAssets(from other: MapRegionDescription) {
         guard let otherAssetPlacements = other.assetPlacements else { return }
         
-        let relativeToOtherArea = area.relative(to: other.area)
-        let relativeToArea = other.area.relative(to: area)
         for assetPlacement in otherAssetPlacements {
-            guard relativeToOtherArea.contains(mapPosition: assetPlacement.position) else { continue }
-
-            assetPlacement.position = assetPlacement.position.moved(byX: relativeToArea.x, y: relativeToArea.y)
-
+            guard area.contains(mapPosition: assetPlacement.mapPosition) else { continue }
             assetPlacements = assetPlacements ?? []
             assetPlacements!.append(assetPlacement)
         }
     }
     
-    public func isFreeOfAsset(absoluteArea: MapArea) -> Bool {
+    public func isFreeOfAsset(mapArea: MapArea) -> Bool {
         guard let assetPlacements else { return true }
         
-        let relativeArea = absoluteArea.relative(to: self.area)
         for placement in assetPlacements {
             if let description = placement.assetLocator.assetDescription {
                 let footprint = description.footprint
-                let assetArea = MapArea(x: placement.position.x - Int(footprint.x), y: placement.position.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
-                if assetArea.intersects(relativeArea) {
+                let assetArea = MapArea(x: placement.mapPosition.x - Int(footprint.x), y: placement.mapPosition.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
+                if assetArea.intersects(mapArea) {
                     return false
                 }
             }

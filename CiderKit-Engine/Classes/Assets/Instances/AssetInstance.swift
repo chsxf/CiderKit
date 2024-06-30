@@ -12,7 +12,16 @@ open class AssetInstance : TransformAssetElementInstance {
     public let placement: AssetPlacement
     public let assetDescription: AssetDescription
     
-    public let worldPosition: WorldPosition
+    private var currentWorldPosition: WorldPosition
+    public var worldPosition: WorldPosition {
+        get { currentWorldPosition }
+        set {
+            if currentWorldPosition != newValue {
+                currentWorldPosition = newValue
+                placement.mapPosition = currentWorldPosition.mapPosition
+            }
+        }
+    }
 
     private var interactiveFlag = false
     public var interactive: Bool {
@@ -53,11 +62,11 @@ open class AssetInstance : TransformAssetElementInstance {
     public subscript(element: TransformAssetElement) -> TransformAssetElementInstance? { elementInstancesByUUID[element.uuid] }
     
     public convenience init(assetDescription: AssetDescription, horizontallyFlipped: Bool, atWorldPosition worldPosition: WorldPosition = WorldPosition(), offsetNodeByWorldPosition: Bool = true) {
-        let placement = AssetPlacement(assetLocator: assetDescription.locator, horizontallyFlipped: horizontallyFlipped)
-        self.init(placement: placement, atWorldPosition: worldPosition, offsetNodeByWorldPosition: offsetNodeByWorldPosition)!
+        let placement = AssetPlacement(assetLocator: assetDescription.locator, horizontallyFlipped: horizontallyFlipped, position: worldPosition.mapPosition)
+        self.init(placement: placement, offsetNodeByWorldPosition: offsetNodeByWorldPosition)!
     }
     
-    public init?(placement: AssetPlacement, atWorldPosition worldPosition: WorldPosition, offsetNodeByWorldPosition: Bool = true) {
+    public init?(placement: AssetPlacement, offsetNodeByWorldPosition: Bool = true) {
         guard let assetDescription = placement.assetLocator.assetDescription else { return nil }
         
         offsetByWorldPosition = offsetNodeByWorldPosition
@@ -65,8 +74,9 @@ open class AssetInstance : TransformAssetElementInstance {
         self.placement = placement
         self.assetDescription = assetDescription
         
-        self.worldPosition = worldPosition
-        
+        let worldPosition = placement.mapPosition.worldPosition
+        currentWorldPosition = worldPosition
+
         interactiveFlag = placement.interactive
 
         currentAnimationName = OverridableValue(nil)

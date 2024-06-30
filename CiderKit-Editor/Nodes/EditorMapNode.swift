@@ -177,17 +177,17 @@ class EditorMapNode: MapNode {
         }
     }
     
-    override func instantiateAsset(placement: AssetPlacement, atWorldPosition worldPosition: WorldPosition) -> (AssetInstance, GKEntity)? {
-        guard let (instance, assetComponentEntity) = super.instantiateAsset(placement: placement, atWorldPosition: worldPosition) else { return nil }
-        
+    override func createAssetEntity(assetInstance: AssetInstance) -> GKEntity {
+        let assetComponentEntity = super.createAssetEntity(assetInstance: assetInstance)
         let entity = EditorAssetComponent.prepareEntity(assetComponentEntity)
         hoverableEntities.append(entity)
         let component = entity.component(ofType: EditorAssetComponent.self)!
         NotificationCenter.default.addObserver(self, selector: #selector(assetErased(notification:)), name: .selectableErased, object: component)
-        return (instance, entity)
+        return entity
     }
-    
+
     override func remove(assetInstance: AssetInstance) {
+        super.remove(assetInstance: assetInstance)
         hoverableEntities.removeAll { $0.component(ofType: AssetComponent.self)?.assetInstance === assetInstance }
     }
 

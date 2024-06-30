@@ -140,7 +140,7 @@ public class MapRegion : SKNode, Identifiable, Comparable {
                 
                 addChild(sprite)
                 
-                let entity = map!.mapCellEntity(node: sprite, for: self, atMapPosition: MapPosition(x: mapX, y: mapY))
+                let entity = map!.mapCellEntity(node: sprite, for: self, atMapPosition: MapPosition(x: mapX, y: mapY, elevation: elevation))
                 if let cellComponent = entity.component(ofType: MapCellComponent.self) {
                     cellComponent.groundMaterialOverrides = localGroundMaterialOverride
                     cellComponent.leftElevationMaterialOverrides = localLeftElevationMaterialOverride
@@ -150,7 +150,12 @@ public class MapRegion : SKNode, Identifiable, Comparable {
             }
         }
         
-        regionDescription.assetPlacements?.forEach { _ = self.instantiateAsset(placement: $0) }
+        regionDescription.assetPlacements?.forEach {
+            if $0.mapPosition.elevation == nil {
+                $0.mapPosition = $0.mapPosition.withElevation(regionDescription.elevation)
+            }
+            self.instantiateAsset(placement: $0)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -241,42 +246,51 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         
         return (mainSubdivision, otherSubdivisions)
     }
-    
-    private func instantiateAsset(placement: AssetPlacement) -> AssetInstance? {
-        let mapPoint = regionDescription.area.convert(fromLocalPosition: placement.position)
-        let worldPosition = WorldPosition(Float(mapPoint.x), Float(mapPoint.y), Float(elevation)) + placement.position.worldOffset
 
-        if let (instance, _) = map?.instantiateAsset(placement: placement, atWorldPosition: worldPosition) {
+    @discardableResult
+    private func instantiateAsset(placement: AssetPlacement) -> AssetInstance? {
+        if let (instance, _) = map?.instantiateAsset(placement: placement) {
             addChild(instance.node!)
             assetInstances.append(instance)
             return instance
         }
-
         return nil
     }
     
-    @discardableResult
-    public func addAsset(_ asset: AssetLocator, named name: String, atMapPosition mapPosition: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
-        let footprint = asset.assetDescription!.footprint
-
+    private func checkLocationPreconditions(mapPosition: MapPosition, footprint: SIMD2<UInt32>) throws -> Bool {
         let localCoords = regionDescription.area.convert(fromMapPosition: mapPosition)
-         let minimalFootprint = localCoords &+ IntPoint.one
+        let minimalFootprint = localCoords &+ IntPoint.one
 
         guard minimalFootprint.x >= footprint.x, minimalFootprint.y >= footprint.y else {
             throw MapRegionErrors.assetTooCloseToRegionBorder
         }
 
         let assetArea = MapArea(x: mapPosition.x - Int(footprint.x), y: mapPosition.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
-        guard regionDescription.isFreeOfAsset(absoluteArea: assetArea) else {
+        guard regionDescription.isFreeOfAsset(mapArea: assetArea) else {
             throw MapRegionErrors.otherAssetInTheWay
         }
 
+        return true
+    }
+
+    @discardableResult
+    public func addAsset(_ asset: AssetLocator, named name: String, atMapPosition mapPosition: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
+        guard try checkLocationPreconditions(mapPosition: mapPosition, footprint: asset.assetDescription!.footprint) else { return nil }
+
         regionDescription.assetPlacements = regionDescription.assetPlacements ?? []
         
-        let placement = AssetPlacement(assetLocator: asset, horizontallyFlipped: horizontallyFlipped, position: MapPosition(x: localCoords.x, y: localCoords.y), name: name)
+        let placement = AssetPlacement(assetLocator: asset, horizontallyFlipped: horizontallyFlipped, position: mapPosition, name: name)
         regionDescription.assetPlacements!.append(placement)
         
         return instantiateAsset(placement: placement)
     }
-    
+
+    public func addAssetInstance(_ assetInstance: AssetInstance) throws {
+        guard try checkLocationPreconditions(mapPosition: assetInstance.placement.mapPosition, footprint: assetInstance.assetDescription.footprint) else { return }
+
+        regionDescription.assetPlacements = regionDescription.assetPlacements ?? []
+        regionDescription.assetPlacements!.append(assetInstance.placement)
+        addChild(assetInstance.node!)
+    }
+
 }

@@ -200,16 +200,18 @@ open class MapNode: SKNode, Collection {
         return nil
     }
     
-    open func instantiateAsset(placement: AssetPlacement, atWorldPosition worldPosition: WorldPosition) -> (AssetInstance, GKEntity)? {
-        guard let instance = AssetInstance(placement: placement, atWorldPosition: worldPosition) else { return nil }
-        
-        let entity = AssetComponent.entity(from: placement, with: instance)
-        assetComponentSystem.addComponent(foundIn: entity)
-        assetEntities.append(entity)
-
-        return (instance, entity)
+    public final func instantiateAsset(placement: AssetPlacement) -> (AssetInstance, GKEntity)? {
+        guard let instance = AssetInstance(placement: placement) else { return nil }
+        return (instance, createAssetEntity(assetInstance: instance))
     }
     
+    open func createAssetEntity(assetInstance: AssetInstance) -> GKEntity {
+        let entity = AssetComponent.entity(with: assetInstance)
+        assetComponentSystem.addComponent(foundIn: entity)
+        assetEntities.append(entity)
+        return entity
+    }
+
     open func remove(assetInstance: AssetInstance) {
         var foundComponent: AssetComponent? = nil
         for component in assetComponentSystem.components {
@@ -229,10 +231,15 @@ open class MapNode: SKNode, Collection {
     @discardableResult
     public final func addAsset(_ asset: AssetLocator, named: String, atMapPosition: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
         if let region = regionAt(mapPosition: atMapPosition) {
-            print(region.regionDescription.area)
             return try region.addAsset(asset, named: "", atMapPosition: atMapPosition, horizontallyFlipped: horizontallyFlipped)
         }
         return nil
+    }
+
+    public final func add(assetInstance: AssetInstance) throws {
+        if let region = regionAt(mapPosition: assetInstance.placement.mapPosition) {
+            try region.addAssetInstance(assetInstance)
+        }
     }
 
     public static func sceneToWorld(_ position: ScenePosition) -> WorldPosition {
