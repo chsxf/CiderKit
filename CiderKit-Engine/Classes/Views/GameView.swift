@@ -1,7 +1,10 @@
 import SpriteKit
 import GameplayKit
+import Combine
 
 open class GameView: LitSceneView {
+
+    public typealias GameViewPointerEventData = (eventData: PointerEventData, sender: GameView)
 
     public private(set) var map: MapNode!
     public let mapOverlay: SKNode
@@ -18,9 +21,13 @@ open class GameView: LitSceneView {
     open override var preferredSceneWidth: Int { Project.current?.settings.targetResolutionWidth ?? super.preferredSceneWidth }
     open override var preferredSceneHeight: Int { Project.current?.settings.targetResolutionHeight ?? super .preferredSceneHeight }
     
-    public let pointerDown = EventEmitter<PointerEventData, GameView>()
-    public let pointerUp = EventEmitter<PointerEventData, GameView>()
-    public let pointerMoved = EventEmitter<PointerEventData, GameView>()
+    public let pointerDown = PassthroughSubject<GameViewPointerEventData, Never>()
+    public let pointerUp = PassthroughSubject<GameViewPointerEventData, Never>()
+    public let pointerMoved = PassthroughSubject<GameViewPointerEventData, Never>()
+
+    private var backdropPointerDown: AnyCancellable?
+    private var backdropPointerUp: AnyCancellable?
+    private var backdropPointerMoved: AnyCancellable?
 
     public override init(frame frameRect: CGRect) {
         let defaultStyleSheetURL = CiderKitEngine.bundle.url(forResource: "Default Style Sheet", withExtension: "ckcss")!
@@ -56,9 +63,9 @@ open class GameView: LitSceneView {
         TrackingAreaManager.scene = gameScene
         #endif
 
-        eventBackdropNode.pointerDown.on { eventData, _ in self.pointerDown.notify(eventData, from: self) }
-        eventBackdropNode.pointerUp.on { eventData, _ in self.pointerUp.notify(eventData, from: self) }
-        eventBackdropNode.pointerMoved.on { eventData, _ in self.pointerMoved.notify(eventData, from: self) }
+        backdropPointerDown = eventBackdropNode.pointerDown.sink { self.pointerDown.send(($0.eventData, self)) }
+        backdropPointerUp = eventBackdropNode.pointerUp.sink { self.pointerUp.send(($0.eventData, self)) }
+        backdropPointerMoved = eventBackdropNode.pointerMoved.sink { self.pointerMoved.send(($0.eventData, self)) }
     }
     
     required public init?(coder: NSCoder) {
@@ -161,49 +168,51 @@ open class GameView: LitSceneView {
     #endif
 
     public func pickMapCell() async -> MapCellComponent? {
-        var pointerUpEventData: PointerEventData? = nil
+        return await Task {
+            var pointerUpEventData: PointerEventData? = nil
 
-        pointerUp.once { eventData, _ in
-            if eventData.mouseButtonIndex == 0 {
-                pointerUpEventData = eventData
+            let cancellable = pointerUp.sink { (eventData, _) in
+                if eventData.mouseButtonIndex == 0 {
+                    pointerUpEventData = eventData
+                }
             }
-        }
 
-        let task = Task {
             while true {
                 await Task.yield()
                 if pointerUpEventData != nil {
                     break
                 }
             }
+
+            cancellable.cancel()
 
             let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
             return map.raycastMapCell(at: locationInScene)
-        }
-        return await task.value
+        }.value
     }
 
     public func pickAsset() async -> AssetComponent? {
-        var pointerUpEventData: PointerEventData? = nil
+        return await Task {
+            var pointerUpEventData: PointerEventData? = nil
 
-        pointerUp.once { eventData, _ in
-            if eventData.mouseButtonIndex == 0 {
-                pointerUpEventData = eventData
+            let cancellable = pointerUp.sink { (eventData, _) in
+                if eventData.mouseButtonIndex == 0 {
+                    pointerUpEventData = eventData
+                }
             }
-        }
 
-        let task = Task {
-            while true {
+                while true {
                 await Task.yield()
                 if pointerUpEventData != nil {
                     break
                 }
             }
 
+            cancellable.cancel()
+
             let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
             return map.raycastAsset(at: locationInScene)
-        }
-        return await task.value
+        }.value
     }
 
 }

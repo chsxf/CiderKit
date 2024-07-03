@@ -1,5 +1,6 @@
 import SpriteKit
 import CiderCSSKit
+import Combine
 
 public final class CKUIButton : CKUIContainer, CKUILabelControl {
     
@@ -9,8 +10,8 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
     internal var label: SKLabelNode? = nil
     internal var sprite: SKSpriteNode? = nil
     
-    public let clicked = ParameterlessEventEmitter<CKUIButton>()
-    
+    public let clicked = PassthroughSubject<CKUIButton, Never>()
+
     public override var isUserInteractionEnabled: Bool { get { true } set { } }
     
     public override var frame: CGRect {
@@ -125,7 +126,7 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
         remove(pseudoClass: Self.activePseudoClass)
         let eventPoint = event.location(in: parent!)
         if frame.contains(eventPoint) {
-            clicked.notify(from: self)
+            clicked.send(self)
         }
         else {
             remove(pseudoClass: Self.hoverPseudoClass)
@@ -143,7 +144,7 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
         guard let touch = touches.first else { return }
         let eventPoint = touch.location(in: parent!)
         if frame.contains(eventPoint) {
-            clicked.notify(from: self)
+            clicked.send(from: self)
         }
     }
     #endif

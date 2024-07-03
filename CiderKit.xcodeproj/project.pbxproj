@@ -170,7 +170,6 @@
 		D9C0E23529461DFC002E6147 /* StringKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C0E23429461DFC002E6147 /* StringKeysProvider.swift */; };
 		D9C1FA4B2AA1255B008D78E7 /* MapRegionDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C1FA4A2AA1255B008D78E7 /* MapRegionDescription.swift */; };
 		D9C26B7A28D196960087CD60 /* AssetAnimationTrackIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C26B7928D196950087CD60 /* AssetAnimationTrackIdentifier.swift */; };
-		D9C98B522A916D9600EDB4D0 /* EventEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C98B512A916D9600EDB4D0 /* EventEmitter.swift */; };
 		D9CBDAFE2A78D9A900C51C69 /* RemoteCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBDAFD2A78D9A900C51C69 /* RemoteCacheManager.swift */; };
 		D9CC3529285D16B7003EEB6F /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC3528285D16B7003EEB6F /* Pool.swift */; };
 		D9CC4210276163700081A464 /* WorldGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CC420F276163700081A464 /* WorldGrid.swift */; };
@@ -418,7 +417,6 @@
 		D9C0E23429461DFC002E6147 /* StringKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringKeysProvider.swift; sourceTree = "<group>"; };
 		D9C1FA4A2AA1255B008D78E7 /* MapRegionDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRegionDescription.swift; sourceTree = "<group>"; };
 		D9C26B7928D196950087CD60 /* AssetAnimationTrackIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAnimationTrackIdentifier.swift; sourceTree = "<group>"; };
-		D9C98B512A916D9600EDB4D0 /* EventEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventEmitter.swift; sourceTree = "<group>"; };
 		D9CBDAFD2A78D9A900C51C69 /* RemoteCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCacheManager.swift; sourceTree = "<group>"; };
 		D9CC3528285D16B7003EEB6F /* Pool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pool.swift; sourceTree = "<group>"; };
 		D9CC420F276163700081A464 /* WorldGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldGrid.swift; sourceTree = "<group>"; };
@@ -986,7 +984,6 @@
 			isa = PBXGroup;
 			children = (
 				D9DB98552BC1700900ACABB1 /* EventBackdropNode.swift */,
-				D9C98B512A916D9600EDB4D0 /* EventEmitter.swift */,
 				D97053C92BBEF7A6008F194B /* PointerEventData.swift */,
 			);
 			path = Events;
@@ -1393,7 +1390,6 @@
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D91657F4290878B700510386 /* CGColorExtension.swift in Sources */,
-				D9C98B522A916D9600EDB4D0 /* EventEmitter.swift in Sources */,
 				D9CFEF842A2D3BF400991D7B /* CGFloatExtension.swift in Sources */,
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,
 				D9878FAE293AB7AD0016AABE /* CGMutablePathExtension.swift in Sources */,
