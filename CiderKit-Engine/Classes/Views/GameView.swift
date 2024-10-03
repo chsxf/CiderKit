@@ -41,6 +41,7 @@ open class GameView: LitSceneView {
         uiOverlayCanvas = CKUICanvas(styleSheet: styleSheet)
 
         mapOverlay = SKNode()
+        mapOverlay.zPosition = 100
 
         super.init(frame: frameRect)
 

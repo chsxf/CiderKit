@@ -25,24 +25,36 @@ open class MapCellComponent: GKComponent
     }
     
     public func contains(sceneCoordinates: ScenePosition) -> Bool {
+        getContainedWorldPosition(sceneCoordinates: sceneCoordinates) != nil
+    }
+
+    public func getContainedWorldPosition(sceneCoordinates: ScenePosition) -> WorldPosition? {
         guard let node = entity?.component(ofType: GKSKNodeComponent.self)?.node else {
-            return false
+            return nil
         }
-        
-        var result = false
-        
+
+        var result: WorldPosition? = nil
+
         let bounds = node.frame
         if bounds.contains(sceneCoordinates) {
             let normalizedLocalX = (sceneCoordinates.x - bounds.minX) / bounds.width
             let normalizedLocalY = (sceneCoordinates.y - bounds.minY) / bounds.height
-            
-            result = true
+
             if (normalizedLocalX < 0.5 && (normalizedLocalY > 0.5 + normalizedLocalX || normalizedLocalY < 0.5 - normalizedLocalX))
                 || (normalizedLocalX > 0.5 && (normalizedLocalY > 1.5 - normalizedLocalX || normalizedLocalY < normalizedLocalX - 0.5)) {
-                result = false
+                result = nil
+            }
+            else {
+                // Compute local scene position from the top corner of the cell
+                let localScenePosition = ScenePosition(
+                    x: bounds.width * (normalizedLocalX - 0.5),
+                    y: bounds.height * (normalizedLocalY - 1)
+                )
+                let localWorldPosition = MapNode.sceneToWorld(localScenePosition)
+                result = WorldPosition(Float(position.x) + localWorldPosition.x, Float(position.y) + localWorldPosition.y, Float(position.elevation ?? 0))
             }
         }
-        
+
         return result
     }
 }

@@ -171,6 +171,17 @@ open class MapNode: SKNode, Collection {
         return nil
     }
 
+    public func raycastWorldPosition(at sceneCoordinates: ScenePosition) -> WorldPosition? {
+        for region in regions {
+            for cell in region.cellEntities {
+                if let containedWorldPosition = cell.component(ofType: MapCellComponent.self)?.getContainedWorldPosition(sceneCoordinates: sceneCoordinates) {
+                    return containedWorldPosition
+                }
+            }
+        }
+        return nil
+    }
+
     public func raycastAsset(at sceneCoordinates: ScenePosition) -> AssetComponent? {
         assetComponentSystem.components.first(where: { $0.contains(sceneCoordinates: sceneCoordinates) && ($0.assetInstance?.interactive ?? false) })
     }
