@@ -5,6 +5,7 @@ import Combine
 open class GameView: LitSceneView {
 
     public typealias GameViewPointerEventData = (eventData: PointerEventData, sender: GameView)
+    public typealias GameViewKeyEventData = (eventData: KeyEventData, sender: GameView)
 
     public private(set) var map: MapNode!
     public let mapOverlay: SKNode
@@ -24,6 +25,8 @@ open class GameView: LitSceneView {
     public let pointerDown = PassthroughSubject<GameViewPointerEventData, Never>()
     public let pointerUp = PassthroughSubject<GameViewPointerEventData, Never>()
     public let pointerMoved = PassthroughSubject<GameViewPointerEventData, Never>()
+
+    public let keyPressed = PassthroughSubject<GameViewKeyEventData, Never>()
 
     private var backdropPointerDown: AnyCancellable?
     private var backdropPointerUp: AnyCancellable?
@@ -165,6 +168,10 @@ open class GameView: LitSceneView {
 
     open override func otherMouseUp(with event: NSEvent) {
         firstInteractiveNode(from: event)?.otherMouseUp(with: event)
+    }
+
+    open override func keyDown(with event: NSEvent) {
+        keyPressed.send((KeyEventData(with: event), self))
     }
     #endif
 

@@ -1,4 +1,9 @@
+#if os(macOS)
 import AppKit
+#else
+import UIKit
+#endif
+
 public struct PointerEventData {
 
     public let mouseButtonIndex: Int
