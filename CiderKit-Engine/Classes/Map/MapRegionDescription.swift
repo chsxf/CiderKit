@@ -7,7 +7,9 @@ public struct MapRegionDescription: Codable {
         case leftElevation = "l"
         case rightElevation = "r"
     }
-    
+
+    public var name: String?
+
     private var x: Int
     private var y: Int
     
