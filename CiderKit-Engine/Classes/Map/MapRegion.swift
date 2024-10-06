@@ -256,7 +256,16 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         }
         return nil
     }
-    
+
+    public func isLocationValidAndFreeOfAssets(mapPosition: MapPosition, footprint: SIMD2<UInt32>) -> Bool {
+        do {
+            return try checkLocationPreconditions(mapPosition: mapPosition, footprint: footprint)
+        }
+        catch {
+            return false
+        }
+    }
+
     private func checkLocationPreconditions(mapPosition: MapPosition, footprint: SIMD2<UInt32>) throws -> Bool {
         let localCoords = regionDescription.area.convert(fromMapPosition: mapPosition)
         let minimalFootprint = localCoords &+ IntPoint.one
