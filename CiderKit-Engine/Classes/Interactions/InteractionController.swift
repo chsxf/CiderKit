@@ -1,8 +1,8 @@
 import GameplayKit
 
-public class InteractionController: GKStateMachine {
+open class InteractionController: GKStateMachine {
 
-    init(states: [InteractionState]) {
+    public init(states: [InteractionState]) {
         super.init(states: states)
     }
 

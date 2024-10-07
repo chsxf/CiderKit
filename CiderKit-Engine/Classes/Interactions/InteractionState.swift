@@ -1,10 +1,10 @@
 import GameplayKit
 
-public class InteractionState: GKState {
+open class InteractionState: GKState {
 
     private weak var gameView: GameView? = nil
 
-    init(gameView: GameView) {
+    public init(gameView: GameView) {
         super.init()
         self.gameView = gameView
     }
