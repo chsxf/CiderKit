@@ -185,6 +185,8 @@
 		D9D9AD0D2BF7D0E900CC2ED7 /* NamedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D9AD0C2BF7D0E900CC2ED7 /* NamedObject.swift */; };
 		D9DB98562BC1700900ACABB1 /* EventBackdropNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DB98552BC1700900ACABB1 /* EventBackdropNode.swift */; };
 		D9DB98582BC178CF00ACABB1 /* SKViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DB98572BC178CF00ACABB1 /* SKViewExtension.swift */; };
+		D9DCAA5E2CB39E49001CBA1C /* InteractionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DCAA5D2CB39E49001CBA1C /* InteractionController.swift */; };
+		D9DCAA602CB39E81001CBA1C /* InteractionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DCAA5F2CB39E81001CBA1C /* InteractionState.swift */; };
 		D9DE549A28CDC58600E3761B /* AssetAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DE549928CDC58600E3761B /* AssetAnimation.swift */; };
 		D9DE549C28CDD6B200E3761B /* AssetAnimationTracksHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DE549B28CDD6B200E3761B /* AssetAnimationTracksHeaderView.swift */; };
 		D9DE549E28CDD8BF00E3761B /* AssetAnimationTracksDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DE549D28CDD8BF00E3761B /* AssetAnimationTracksDataSource.swift */; };
@@ -434,6 +436,8 @@
 		D9D9AD0C2BF7D0E900CC2ED7 /* NamedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedObject.swift; sourceTree = "<group>"; };
 		D9DB98552BC1700900ACABB1 /* EventBackdropNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBackdropNode.swift; sourceTree = "<group>"; };
 		D9DB98572BC178CF00ACABB1 /* SKViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKViewExtension.swift; sourceTree = "<group>"; };
+		D9DCAA5D2CB39E49001CBA1C /* InteractionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionController.swift; sourceTree = "<group>"; };
+		D9DCAA5F2CB39E81001CBA1C /* InteractionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionState.swift; sourceTree = "<group>"; };
 		D9DE549928CDC58600E3761B /* AssetAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAnimation.swift; sourceTree = "<group>"; };
 		D9DE549B28CDD6B200E3761B /* AssetAnimationTracksHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAnimationTracksHeaderView.swift; sourceTree = "<group>"; };
 		D9DE549D28CDD8BF00E3761B /* AssetAnimationTracksDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAnimationTracksDataSource.swift; sourceTree = "<group>"; };
@@ -821,7 +825,7 @@
 				D9C132E52827008D00DE8457 /* Atlases */,
 				D9DB98542BC16FE900ACABB1 /* Events */,
 				D9E34BDC2CB48810003F773F /* Extensions */,
-				D9DCAA5C2CB39E22001CBA1C /* Interaction */,
+				D9DCAA5C2CB39E22001CBA1C /* Interactions */,
 				D91061C02755F24100EA8A03 /* Map */,
 				D9E2C27E28018E9D00B17CD0 /* Materials */,
 				D9AF1F58280BE5E300BF34B3 /* Settings */,
@@ -979,6 +983,15 @@
 				D97053C92BBEF7A6008F194B /* PointerEventData.swift */,
 			);
 			path = Events;
+			sourceTree = "<group>";
+		};
+		D9DCAA5C2CB39E22001CBA1C /* Interactions */ = {
+			isa = PBXGroup;
+			children = (
+				D9DCAA5D2CB39E49001CBA1C /* InteractionController.swift */,
+				D9DCAA5F2CB39E81001CBA1C /* InteractionState.swift */,
+			);
+			path = Interactions;
 			sourceTree = "<group>";
 		};
 		D9E2C27E28018E9D00B17CD0 /* Materials */ = {
@@ -1157,7 +1170,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1510;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					D91061AA2755F0B200EA8A03 = {
 						CreatedOnToolsVersion = 13.1;
@@ -1345,6 +1358,7 @@
 				D93C4CB22800CBE8000955E1 /* MapRegion.swift in Sources */,
 				D9B67F3C2A3F9F6800464E57 /* CKUIStyleSheet.swift in Sources */,
 				D9CF6DC62A07F2FF00DE3876 /* EquatableExtension.swift in Sources */,
+				D9DCAA602CB39E81001CBA1C /* InteractionState.swift in Sources */,
 				D9A95DD32A91203E00578B3F /* SKNodeExtension.swift in Sources */,
 				D9254463281AB55B002DCA4C /* Project.swift in Sources */,
 				D91F3D802C303E8F00C8C19F /* ScenePosition.swift in Sources */,
@@ -1364,6 +1378,7 @@
 				D9EDB95D2B408F25001C0104 /* LitSceneView.swift in Sources */,
 				D9C26B7A28D196960087CD60 /* AssetAnimationTrackIdentifier.swift in Sources */,
 				D9171D2D2B1A96BE0099D0D6 /* TransformAssetElement.swift in Sources */,
+				D9DCAA5E2CB39E49001CBA1C /* InteractionController.swift in Sources */,
 				D9D9AD0D2BF7D0E900CC2ED7 /* NamedObject.swift in Sources */,
 				D9257D422A8D512E00D52928 /* CKUIButton.swift in Sources */,
 				D9DE90B22BBB40EA002D0FF3 /* AssetComponent.swift in Sources */,
@@ -1779,7 +1794,6 @@
 		D93C4CA22800CBD6000955E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -1797,7 +1811,6 @@
 		D93C4CA32800CBD6000955E1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
