@@ -284,7 +284,11 @@ public class MapRegion : SKNode, Identifiable, Comparable {
 
     @discardableResult
     public func addAsset(_ asset: AssetLocator, named name: String, atMapPosition mapPosition: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
-        guard try checkLocationPreconditions(mapPosition: mapPosition, footprint: asset.assetDescription!.footprint) else { return nil }
+        var footprint = asset.assetDescription!.footprint
+        if horizontallyFlipped {
+            footprint.flip()
+        }
+        guard try checkLocationPreconditions(mapPosition: mapPosition, footprint: footprint) else { return nil }
 
         regionDescription.assetPlacements = regionDescription.assetPlacements ?? []
         
