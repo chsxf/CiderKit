@@ -825,7 +825,7 @@
 				D9C132E52827008D00DE8457 /* Atlases */,
 				D9DB98542BC16FE900ACABB1 /* Events */,
 				D9E34BDC2CB48810003F773F /* Extensions */,
-				D9DCAA5C2CB39E22001CBA1C /* Interaction */,
+				D9DCAA5C2CB39E22001CBA1C /* Interactions */,
 				D91061C02755F24100EA8A03 /* Map */,
 				D9E2C27E28018E9D00B17CD0 /* Materials */,
 				D9AF1F58280BE5E300BF34B3 /* Settings */,
@@ -985,13 +985,13 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
-		D9DCAA5C2CB39E22001CBA1C /* Interaction */ = {
+		D9DCAA5C2CB39E22001CBA1C /* Interactions */ = {
 			isa = PBXGroup;
 			children = (
 				D9DCAA5D2CB39E49001CBA1C /* InteractionController.swift */,
 				D9DCAA5F2CB39E81001CBA1C /* InteractionState.swift */,
 			);
-			path = Interaction;
+			path = Interactions;
 			sourceTree = "<group>";
 		};
 		D9E2C27E28018E9D00B17CD0 /* Materials */ = {
