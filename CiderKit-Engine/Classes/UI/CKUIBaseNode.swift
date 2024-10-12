@@ -31,7 +31,12 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         get { super.position }
         set { }
     }
-    
+
+    public override var zPosition: CGFloat {
+        get { super.zPosition }
+        set { }
+    }
+
     open override var frame: CGRect {
         guard let parentUINode = parent as? CKUIBaseNode else { return CGRect() }
         
@@ -68,11 +73,6 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         self.style = style ?? CKUIStyle()
         super.init()
         zPosition = 1
-        
-        let shape = SKShapeNode(circleOfRadius: 1)
-        shape.fillColor = SKColor.red
-        shape.strokeColor = SKColor.orange
-        addChild(shape)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -94,8 +94,13 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         let y = localFrame.minY + localFrame.height * pivot.y
 
         super.position = CGPoint(x: x, y: y)
+        updateZPosition()
     }
-    
+
+    internal func updateZPosition() {
+        super.zPosition = CGFloat(zIndex)
+    }
+
     final func update() {
         guard scene != nil else { return }
         

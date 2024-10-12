@@ -54,8 +54,8 @@ open class GameView: LitSceneView {
         ignoresSiblingOrder = true
         allowsTransparency = true
         
-        uiOverlayCanvas.zPosition = 1000
-        eventBackdropNode.zPosition = uiOverlayCanvas.zPosition - 1
+        uiOverlayCanvas.zIndex = 1000
+        eventBackdropNode.zPosition = CGFloat(uiOverlayCanvas.zIndex - 1)
 
         camera.addChild(eventBackdropNode)
         camera.addChild(uiOverlayCanvas)

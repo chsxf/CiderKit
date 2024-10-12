@@ -38,7 +38,9 @@ public final class CKUICanvas: CKUIBaseNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    internal override func updatePosition() { }
+    internal override func updatePosition() {
+        updateZPosition()
+    }
     
     public override func updateLayout() { }
 

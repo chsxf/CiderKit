@@ -76,5 +76,16 @@ extension CKUIBaseNode {
             self.setStyleValue(key: CSSAttributes.paddingLeft, value: values[3])
         }
     }
-    
+
+    public var zIndex: Int {
+        get {
+            guard case .number(let value) = self.getStyleValue(key: CSSAttributes.zIndex) else {
+                return 1
+            }
+            return Int(value)
+        }
+
+        set { self.setStyleValue(key: CSSAttributes.zIndex, value: .number(Float(newValue))) }
+    }
+
 }
