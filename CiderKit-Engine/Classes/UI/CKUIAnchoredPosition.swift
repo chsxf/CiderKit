@@ -11,15 +11,27 @@ public struct CKUIAnchoredPosition {
     }
     
     init(values: [CSSValue]) {
-        guard
-            values.count == 2,
-            case let .length(x, _) = values[0],
-            case let .length(y, _) = values[1]
-        else {
+        guard values.count == 2 else {
             self.init()
             return
         }
-        
+
+        var x: Float
+        switch values[0] {
+            case let .length(lengthX, _):
+                x = lengthX
+            default:
+                x = 0
+        }
+
+        var y: Float
+        switch values[1] {
+            case let .length(lengthY, _):
+                y = lengthY
+            default:
+                y = 0
+        }
+
         self.init(x: x, y: y)
     }
     

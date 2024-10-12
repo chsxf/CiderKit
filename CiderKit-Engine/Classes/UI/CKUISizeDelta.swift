@@ -11,15 +11,27 @@ public struct CKUISizeDelta {
     }
     
     init(values: [CSSValue]) {
-        guard
-            values.count == 2,
-            case let .length(h, _) = values[0],
-            case let .length(v, _) = values[1]
-        else {
+        guard values.count == 2 else {
             self.init()
             return
         }
-        
+
+        var h: Float
+        switch values[0] {
+            case let .length(lengthH, _):
+                h = lengthH
+            default:
+                h = 0
+        }
+
+        var v: Float
+        switch values[1] {
+            case let .length(lengthV, _):
+                v = lengthV
+            default:
+                v = 0
+        }
+
         self.init(horizontal: h, vertical: v)
     }
     
