@@ -37,6 +37,11 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         set { }
     }
 
+    public override var isHidden: Bool {
+        get { super.isHidden }
+        set { }
+    }
+
     open override var frame: CGRect {
         guard let parentUINode = parent as? CKUIBaseNode else { return CGRect() }
         
@@ -86,7 +91,12 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
             super.position = CGPoint()
             return
         }
-        
+
+        updateVisibility()
+        if isHidden {
+            return
+        }
+
         let localFrame = frame
         let pivot = pivot
         
@@ -99,6 +109,10 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
 
     internal func updateZPosition() {
         super.zPosition = CGFloat(zIndex)
+    }
+
+    internal func updateVisibility() {
+        super.isHidden = visibility != .visible
     }
 
     final func update() {

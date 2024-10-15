@@ -39,6 +39,11 @@ public final class CKUICanvas: CKUIBaseNode {
     }
     
     internal override func updatePosition() {
+        updateVisibility()
+        if isHidden {
+            return
+        }
+
         updateZPosition()
     }
     

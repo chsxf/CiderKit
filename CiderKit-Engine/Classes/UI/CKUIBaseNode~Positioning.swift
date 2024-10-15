@@ -77,6 +77,17 @@ extension CKUIBaseNode {
         }
     }
 
+    public var visibility: CKUIVisibility {
+        get {
+            guard case .keyword(let keyword) = self.getStyleValue(key: CSSAttributes.visibility) else {
+                return .visible
+            }
+            return CKUIVisibility(rawValue: keyword) ?? .visible
+        }
+
+        set { self.setStyleValue(key: CSSAttributes.visibility, value: .keyword(newValue.rawValue)) }
+    }
+
     public var zIndex: Int {
         get {
             guard case .number(let value) = self.getStyleValue(key: CSSAttributes.zIndex) else {

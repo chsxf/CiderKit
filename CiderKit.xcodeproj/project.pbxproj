@@ -37,6 +37,7 @@
 		D91BC4C02B460CB40043787E /* SpriteAssetElementInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91BC4BF2B460CB40043787E /* SpriteAssetElementInstance.swift */; };
 		D91BC4C22B460CC00043787E /* ReferenceAssetElementInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91BC4C12B460CC00043787E /* ReferenceAssetElementInstance.swift */; };
 		D91BE3C92A76D77E004BC75C /* CKUIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91BE3C82A76D77E004BC75C /* CKUIContainer.swift */; };
+		D91D030E2CBE2E1F009832B4 /* CKUIVisibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91D030D2CBE2E1C009832B4 /* CKUIVisibility.swift */; };
 		D91ED91327E7AA520016D818 /* EditorAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D91ED91227E7AA520016D818 /* EditorAssets.xcassets */; };
 		D91F3D7E2C303CA700C8C19F /* WorldPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91F3D7D2C303CA700C8C19F /* WorldPosition.swift */; };
 		D91F3D802C303E8F00C8C19F /* ScenePosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91F3D7F2C303E8F00C8C19F /* ScenePosition.swift */; };
@@ -294,6 +295,7 @@
 		D91BC4BF2B460CB40043787E /* SpriteAssetElementInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetElementInstance.swift; sourceTree = "<group>"; };
 		D91BC4C12B460CC00043787E /* ReferenceAssetElementInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceAssetElementInstance.swift; sourceTree = "<group>"; };
 		D91BE3C82A76D77E004BC75C /* CKUIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIContainer.swift; sourceTree = "<group>"; };
+		D91D030D2CBE2E1C009832B4 /* CKUIVisibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIVisibility.swift; sourceTree = "<group>"; };
 		D91ED91227E7AA520016D818 /* EditorAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = EditorAssets.xcassets; sourceTree = "<group>"; };
 		D91F3D7D2C303CA700C8C19F /* WorldPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldPosition.swift; sourceTree = "<group>"; };
 		D91F3D7F2C303E8F00C8C19F /* ScenePosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenePosition.swift; sourceTree = "<group>"; };
@@ -1029,6 +1031,7 @@
 		D9E7A3C229BFB68E00F09A2E /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				D91D030D2CBE2E1C009832B4 /* CKUIVisibility.swift */,
 				D98C061A2A00F44A00750F0A /* CKUIAnchoredPosition.swift */,
 				D98C061C2A00F5A600750F0A /* CKUIAnchors.swift */,
 				D9E7A3C329BFB77200F09A2E /* CKUIBaseNode.swift */,
@@ -1366,6 +1369,7 @@
 				D93C4CB12800CBE8000955E1 /* MapNode.swift in Sources */,
 				D91BC4C22B460CC00043787E /* ReferenceAssetElementInstance.swift in Sources */,
 				D93C4CB02800CBE8000955E1 /* MapCellComponent.swift in Sources */,
+				D91D030E2CBE2E1F009832B4 /* CKUIVisibility.swift in Sources */,
 				D93C24F52801EBBE0023FE7A /* BaseMaterial.swift in Sources */,
 				D909E4D92A7851B600978163 /* CKUIURLResolver.swift in Sources */,
 				D91FA64C2B57AE8C001346C5 /* AssetBoundingBox.swift in Sources */,
