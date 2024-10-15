@@ -8,8 +8,8 @@ import AppKit
 public final class CKUICanvas: CKUIBaseNode {
     
     private let canvasStyleSheet: CKUIStyleSheet?
-    public override var styleSheet: CKUIStyleSheet? { canvasStyleSheet }
-    
+    public override var styleSheet: CKUIStyleSheet? { canvasStyleSheet ?? super.styleSheet }
+
     public override var frame: CGRect {
         let size = scene?.size ?? CGSize()
         return CGRect(x: -size.width / 2, y: -size.height / 2, width: size.width, height: size.height)
@@ -20,17 +20,17 @@ public final class CKUICanvas: CKUIBaseNode {
         set { }
     }
     
-    public convenience init(styleSheet: CKUIStyleSheet? = nil) {
+    public convenience init(identifier: String? = nil, styleSheet: CKUIStyleSheet? = nil) {
         var customData: [String: Any]? = nil
         if let styleSheet {
             customData = [ "stylesheet": styleSheet ]
         }
         
-        self.init(style: CKUIStyle(attributes: "anchors: left bottom; transform-origin: center center;"), customData: customData)
+        self.init(identifier: identifier, style: CKUIStyle(attributes: "anchors: left bottom; transform-origin: center center;"), customData: customData)
     }
     
     required init(type: String = "canvas", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String:Any]? = nil) {
-        canvasStyleSheet = customData!["stylesheet"] as? CKUIStyleSheet
+        canvasStyleSheet = customData?["stylesheet"] as? CKUIStyleSheet
         super.init(type: type, identifier: identifier, classes: classes, style: style, customData: customData)
     }
     
@@ -46,7 +46,7 @@ public final class CKUICanvas: CKUIBaseNode {
 
         updateZPosition()
     }
-    
+
     public override func updateLayout() { }
 
 }
