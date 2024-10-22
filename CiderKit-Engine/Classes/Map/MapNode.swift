@@ -236,6 +236,10 @@ open class MapNode: SKNode, Collection {
             let entity = foundComponent.entity
             assetComponentSystem.removeComponent(foundComponent)
             assetEntities.removeAll { $0 === entity }
+
+            if let region = regionAt(mapPosition: assetInstance.placement.mapPosition) {
+                region.remove(assetInstance: assetInstance)
+            }
         }
     }
 
@@ -249,7 +253,7 @@ open class MapNode: SKNode, Collection {
 
     public final func add(assetInstance: AssetInstance) throws {
         if let region = regionAt(mapPosition: assetInstance.placement.mapPosition) {
-            try region.addAssetInstance(assetInstance)
+            try region.add(assetInstance: assetInstance)
         }
     }
 

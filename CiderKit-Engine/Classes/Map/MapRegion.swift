@@ -298,12 +298,17 @@ public class MapRegion : SKNode, Identifiable, Comparable {
         return instantiateAsset(placement: placement)
     }
 
-    public func addAssetInstance(_ assetInstance: AssetInstance) throws {
+    public func add(assetInstance: AssetInstance) throws {
         guard try checkLocationPreconditions(mapPosition: assetInstance.placement.mapPosition, footprint: assetInstance.assetDescription.footprint) else { return }
 
         regionDescription.assetPlacements = regionDescription.assetPlacements ?? []
         regionDescription.assetPlacements!.append(assetInstance.placement)
         addChild(assetInstance.node!)
+    }
+
+    public func remove(assetInstance: AssetInstance) {
+        regionDescription.assetPlacements?.removeAll { $0 === assetInstance.placement }
+        assetInstance.node?.removeFromParent()
     }
 
 }
