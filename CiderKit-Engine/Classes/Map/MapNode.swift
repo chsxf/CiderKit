@@ -1,21 +1,21 @@
 import SpriteKit
 import GameplayKit
 
-open class MapNode: SKNode, Collection {
+open class MapNode: SKNode {
     
-    public static let elevationHeight: Int = 10
-    
-    public static let tileWidth: Int = 48
-    public static let tileHeight: Int = 24
-    public static let tileSize = CGSize(width: CGFloat(MapNode.tileWidth), height: CGFloat(MapNode.tileHeight))
+    nonisolated public static let elevationHeight: Int = 10
 
-    public static let halfWidth: Int = MapNode.tileWidth / 2
-    public static let halfHeight: Int = MapNode.tileHeight / 2
-    public static let halfTileSize = CGSize(width: CGFloat(MapNode.halfWidth), height: CGFloat(MapNode.halfHeight))
+    nonisolated public static let tileWidth: Int = 48
+    nonisolated public static let tileHeight: Int = 24
+    nonisolated public static let tileSize = CGSize(width: CGFloat(MapNode.tileWidth), height: CGFloat(MapNode.tileHeight))
 
-    public static let xVector = SIMD2(Float(MapNode.halfWidth), Float(-MapNode.halfHeight))
-    public static let yVector = SIMD2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
-    public static let zVector = SIMD2(0, Float(MapNode.elevationHeight))
+    nonisolated public static let halfWidth: Int = MapNode.tileWidth / 2
+    nonisolated public static let halfHeight: Int = MapNode.tileHeight / 2
+    nonisolated public static let halfTileSize = CGSize(width: CGFloat(MapNode.halfWidth), height: CGFloat(MapNode.halfHeight))
+
+    nonisolated public static let xVector = SIMD2(Float(MapNode.halfWidth), Float(-MapNode.halfHeight))
+    nonisolated public static let yVector = SIMD2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
+    nonisolated public static let zVector = SIMD2(0, Float(MapNode.elevationHeight))
 
     public var regions: [MapRegion] = [MapRegion]()
     
@@ -24,15 +24,8 @@ open class MapNode: SKNode, Collection {
     public let ambientLight: BaseLight
     public var lights: [PointLight]
     
-    public var startIndex: Int { regions.startIndex }
-    public var endIndex: Int { regions.endIndex }
-    
     public private(set) var assetEntities: [GKEntity] = []
     public let assetComponentSystem: GKComponentSystem<AssetComponent>
-    
-    public subscript(position: Int) -> MapRegion {
-        return regions[position]
-    }
     
     public init(description mapDescription: MapDescription) {
         cellRenderers = mapDescription.renderers
@@ -61,8 +54,6 @@ open class MapNode: SKNode, Collection {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    public func index(after i: Int) -> Int { regions.index(after: i) }
     
     public func regionAt(mapX x: Int, y: Int) -> MapRegion? { regions.first(where: { $0.containsMapCoordinates(mapX: x, y: y) }) }
 
@@ -257,24 +248,24 @@ open class MapNode: SKNode, Collection {
         }
     }
 
-    public static func sceneToWorld(_ position: ScenePosition) -> WorldPosition {
+    nonisolated public static func sceneToWorld(_ position: ScenePosition) -> WorldPosition {
         let xWorld = ((position.x / MapNode.halfTileSize.width) - (position.y / MapNode.halfTileSize.height)) / 2
         let yWorld = -(position.y / MapNode.halfTileSize.height) - xWorld
         return WorldPosition(Float(xWorld), Float(yWorld), 0)
     }
 
-    public static func worldToScene(_ position: WorldPosition) -> ScenePosition {
+    nonisolated public static func worldToScene(_ position: WorldPosition) -> ScenePosition {
         let xScene = MapNode.halfTileSize.width * (position.x - position.y)
         let yScene = -MapNode.halfTileSize.height * (position.x + position.y) + position.z * Float(MapNode.elevationHeight)
         return ScenePosition(x: xScene, y: yScene)
     }
 
-    public static func sceneToMap(_ position: ScenePosition) -> MapPosition {
+    nonisolated public static func sceneToMap(_ position: ScenePosition) -> MapPosition {
         let world = sceneToWorld(position)
         return world.mapPosition
     }
 
-    public static func mapToScene(_ position: MapPosition) -> ScenePosition {
+    nonisolated public static func mapToScene(_ position: MapPosition) -> ScenePosition {
         return worldToScene(position.worldPosition)
     }
 

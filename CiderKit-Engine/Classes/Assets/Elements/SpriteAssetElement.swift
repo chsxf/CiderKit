@@ -199,22 +199,7 @@ public class SpriteAssetElement : TransformAssetElement {
             }
         }
     }
-    
-    private func updateSprite(_ spriteNode: SKSpriteNode, spriteLocator: SpriteLocator?) {
-        if let spriteLocator {
-            let texture = Atlases[spriteLocator]!
-            spriteNode.texture = texture
-            spriteNode.size = texture.size()
-            
-            let atlas = Atlases[spriteLocator.atlasKey]!
-            spriteNode.shader = CiderKitEngine.instantianteUberShader(for: atlas)
-        }
-        else {
-            spriteNode.texture = CiderKitEngine.clearTexture
-            spriteNode.shader = nil
-        }
-    }
-    
+
     public override func instantiate() -> TransformAssetElementInstance {
         SpriteAssetElementInstance(element: self)
     }

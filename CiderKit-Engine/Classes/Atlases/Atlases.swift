@@ -5,7 +5,7 @@ enum AtlasesError: Error {
     case alreadyRegistered
 }
 
-final public class Atlases {
+final public actor Atlases {
     
     public static let MAIN_ATLAS_KEY = "main"
     

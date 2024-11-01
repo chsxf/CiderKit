@@ -10,11 +10,11 @@ fileprivate struct FontDescriptor: Hashable {
     let isBold: Bool
 }
 
-final class FontHelpers {
-    
+final actor FontHelpers {
+
     fileprivate static var fonts: [FontDescriptor: String] = [:]
     
-    class func fontName(with fontFamily: String, italic: Bool, bold: Bool) -> String? {
+    static func fontName(with fontFamily: String, italic: Bool, bold: Bool) -> String? {
         let fontDescriptor = FontDescriptor(fontFamily: fontFamily, isItalic: italic, isBold: bold)
         if let existingFontName = fonts[fontDescriptor] {
             return existingFontName
@@ -28,7 +28,7 @@ final class FontHelpers {
     
     #if os(macOS)
     
-    fileprivate class func getFontName(_ fontDescriptor: FontDescriptor) -> String? {
+    fileprivate static func getFontName(_ fontDescriptor: FontDescriptor) -> String? {
         var traits: NSFontTraitMask = []
         if fontDescriptor.isItalic {
             traits.insert(.italicFontMask)
@@ -42,7 +42,7 @@ final class FontHelpers {
     
     #else
     
-    fileprivate class func getFontName(_ fontDescriptor: FontDescriptor) -> String? {
+    fileprivate static func getFontName(_ fontDescriptor: FontDescriptor) -> String? {
         var descriptor = UIFontDescriptor().withFamily(fontDescriptor.fontFamily)
         if fontDescriptor.isBold || fontDescriptor.isItalic {
             var traits: UIFontDescriptor.SymbolicTraits = []

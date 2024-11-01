@@ -5,8 +5,8 @@ public enum CellRenderersError: Error {
     case notRegistered
 }
 
-final public class CellRenderers {
-    
+final public actor CellRenderers {
+
     private static var renderers: [String: CellRenderer] = [:]
     
     public static func register(cellRenderer: CellRenderer, named name: String) throws {

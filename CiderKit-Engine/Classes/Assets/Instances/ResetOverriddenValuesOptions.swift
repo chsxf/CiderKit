@@ -1,4 +1,4 @@
-public struct ResetOverriddenValuesOptions: OptionSet {
+public struct ResetOverriddenValuesOptions: OptionSet, Sendable {
 
     public let rawValue: Int
 

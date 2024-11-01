@@ -1,7 +1,7 @@
 import SpriteKit
 import GameplayKit
 
-open class LitSceneView: SKView, SKSceneDelegate {
+open class LitSceneView: SKView, @preconcurrency SKSceneDelegate {
 
     public let gameScene: SKScene
     public let litNodesRoot: SKNode

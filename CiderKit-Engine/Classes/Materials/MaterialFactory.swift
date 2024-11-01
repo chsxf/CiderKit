@@ -8,7 +8,7 @@ public enum MaterialFactoryErrors: Error {
     
 }
 
-final public class MaterialFactory {
+public final actor MaterialFactory {
     
     private static var materialByTypeName: [String:BaseMaterial.Type] = [:]
     

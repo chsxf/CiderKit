@@ -7,7 +7,7 @@ enum UberShaderShadeMode: Int {
     case normals = 2
 }
 
-public class CiderKitEngine {
+public final actor CiderKitEngine {
     
     enum ShaderUniformName: String {
         case shadeMode = "u_shadeMode"
@@ -143,7 +143,7 @@ public class CiderKitEngine {
     }
     
     public static func registerBuiltinFeatures() {
-        AssetAnimationTrackType.registerBuiltinTypes()
+        AssetAnimationTrackTypeRegistry.registerBuiltinTypes()
         AssetElementTypeRegistry.registerBuiltinTypes()
         registerDefaultMaterialsAndRenderers()
     }

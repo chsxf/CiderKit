@@ -6,7 +6,7 @@ public enum MapRegionErrors : Error {
     case otherAssetInTheWay
 }
 
-public class MapRegion : SKNode, Identifiable, Comparable {
+public class MapRegion : SKNode, Identifiable, @preconcurrency Comparable {
     
     private static var nextRegionId: Int = 1
     

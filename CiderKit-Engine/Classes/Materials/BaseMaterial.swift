@@ -20,7 +20,8 @@ open class BaseMaterial {
     open func clone(withOverrides overrides: CustomSettings?) -> BaseMaterial {
         return BaseMaterial(shader: shader)
     }
-    
+
+    @MainActor
     public final func applyOn(spriteNode: SKSpriteNode, withLocalOverrides localOverrides: CustomSettings?) {
         spriteNode.shader = shader
         spriteNode.run(toSKAction())

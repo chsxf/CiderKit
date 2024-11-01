@@ -1,5 +1,6 @@
 import SpriteKit
 
+@MainActor
 public final class SpritePool: Pool<SKSpriteNode> {
     
     public init() {

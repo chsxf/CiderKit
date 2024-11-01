@@ -17,7 +17,7 @@ public struct AssetAnimationTrackIdentifier: Hashable, CustomStringConvertible, 
     
     public init?(stringValue: String) {
         let chunks = stringValue.split(separator: ":")
-        if let elementUUID = UUID(uuidString: String(chunks[0])), let trackType = AssetAnimationTrackType.get(registered: String(chunks[1])) {
+        if let elementUUID = UUID(uuidString: String(chunks[0])), let trackType = AssetAnimationTrackTypeRegistry.get(registered: String(chunks[1])) {
             self.elementUUID = elementUUID
             self.trackType = trackType
         }

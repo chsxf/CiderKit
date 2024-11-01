@@ -5,8 +5,8 @@ public enum AssetElementTypeRegistryErrors: Error {
     
 }
 
-public final class AssetElementTypeRegistry {
-    
+public final actor AssetElementTypeRegistry {
+
     private static var registry: [String:TransformAssetElement.Type] = [:]
     
     public static var allRegistered: [TransformAssetElement.Type] = [TransformAssetElement.Type](registry.values)

@@ -1,4 +1,4 @@
-public struct GetElementInstancesOptions: OptionSet {
+public struct GetElementInstancesOptions: OptionSet, Sendable {
 
     public let rawValue: Int
 

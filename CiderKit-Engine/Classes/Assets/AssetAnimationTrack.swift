@@ -37,7 +37,7 @@ public final class AssetAnimationTrack: Codable {
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        type = AssetAnimationTrackType.get(registered: try container.decode(String.self, forKey: .type))!
+        type = AssetAnimationTrackTypeRegistry.get(registered: try container.decode(String.self, forKey: .type))!
         
         keys = []
         var keyContainer = try container.nestedUnkeyedContainer(forKey: .keys)
