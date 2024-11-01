@@ -2,11 +2,11 @@ import CiderKit_Engine
 
 extension Notification.Name {
     
-    static let animationCurrentFrameDidChange = Notification.Name(rawValue: "animationCurrentFrameDidChange")
-    static let animationCurrentTrackDidChange = Notification.Name(rawValue: "animationCurrentTrackDidChange")
-    static let animationCurrentAnimationDidChange = Notification.Name(rawValue: "animationCurrentAnimationDidChange")
-    static let animationPlayingDidChange = Notification.Name(rawValue: "animationPlayingDidChange")
-    
+    static let animationCurrentFrameDidChange = Self.init(rawValue: "animationCurrentFrameDidChange")
+    static let animationCurrentTrackDidChange = Self.init(rawValue: "animationCurrentTrackDidChange")
+    static let animationCurrentAnimationDidChange = Self.init(rawValue: "animationCurrentAnimationDidChange")
+    static let animationPlayingDidChange = Self.init(rawValue: "animationPlayingDidChange")
+
 }
 
 protocol AssetAnimationControlDelegate: AnyObject {

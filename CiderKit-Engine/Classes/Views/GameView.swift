@@ -10,7 +10,10 @@ open class GameView: LitSceneView {
     public private(set) var map: MapNode!
     public let mapOverlay: SKNode
 
-    private let eventBackdropNode = EventBackdropNode()
+    #if os(macOS)
+    private var trackingAreaManager: TrackingAreaManager!
+    #endif
+    private var eventBackdropNode: EventBackdropNode!
     public let uiOverlayCanvas: CKUICanvas
     
     public var lightingEnabled: Bool = true
@@ -54,7 +57,12 @@ open class GameView: LitSceneView {
         ignoresSiblingOrder = true
         allowsTransparency = true
         
+        #if os(macOS)
+        trackingAreaManager = .init(scene: gameScene)
+        #endif
+
         uiOverlayCanvas.zIndex = 1000
+        eventBackdropNode = .init()
         eventBackdropNode.zPosition = CGFloat(uiOverlayCanvas.zIndex - 1)
 
         camera.addChild(eventBackdropNode)
@@ -62,10 +70,6 @@ open class GameView: LitSceneView {
         
         unloadMap(removePreviousMap: false)
         litNodesRoot.addChild(mapOverlay)
-
-        #if os(macOS)
-        TrackingAreaManager.scene = gameScene
-        #endif
 
         backdropPointerDown = eventBackdropNode.pointerDown.sink { self.pointerDown.send(($0.eventData, self)) }
         backdropPointerUp = eventBackdropNode.pointerUp.sink { self.pointerUp.send(($0.eventData, self)) }
@@ -84,7 +88,7 @@ open class GameView: LitSceneView {
         super.update(currentTime, for: scene)
         
         #if os(macOS)
-        TrackingAreaManager.update()
+        trackingAreaManager.update()
         #endif
 
         eventBackdropNode.size = scene.size

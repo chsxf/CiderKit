@@ -4,7 +4,7 @@ import CiderKit_Engine
 
 extension Notification.Name {
     
-    static let selectableUpdated = Notification.Name(rawValue: "selectableUpdated")
+    static let selectableUpdated = Self.init(rawValue: "selectableUpdated")
     
 }
 

@@ -70,7 +70,7 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
         }
         
         #if os(macOS)
-        TrackingAreaManager.register(node: self)
+        NotificationCenter.default.post(name: .trackingAreaRegistrationRequested, object: self)
         #endif
     }
     

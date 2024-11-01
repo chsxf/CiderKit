@@ -14,7 +14,7 @@ final class EventBackdropNode: SKSpriteNode {
         isUserInteractionEnabled = true
 
         #if os(macOS)
-        TrackingAreaManager.register(node: self)
+        NotificationCenter.default.post(name: .trackingAreaRegistrationRequested, object: self)
         #endif
     }
 

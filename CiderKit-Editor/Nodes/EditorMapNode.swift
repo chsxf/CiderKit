@@ -3,7 +3,7 @@ import CiderKit_Engine
 import GameplayKit
 
 extension Notification.Name {
-    static let mapDirtyStatusChanged = Notification.Name(rawValue: "mapDirtyStatusChanged")
+    static let mapDirtyStatusChanged = Self.init(rawValue: "mapDirtyStatusChanged")
 }
 
 class EditorMapNode: MapNode {

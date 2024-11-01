@@ -2,7 +2,7 @@ import SpriteKit
 import CiderKit_Engine
 
 extension Notification.Name {
-    static let elevationChangeRequested = Notification.Name(rawValue: "elevationChangeRequested")
+    static let elevationChangeRequested = Self.init(rawValue: "elevationChangeRequested")
 }
 
 enum ElevationToolContext: ToolContext {
