@@ -1,6 +1,7 @@
 import SpriteKit
 import CiderCSSKit
 
+@MainActor
 protocol CKUILabelControl {
     
     var label: SKLabelNode? { get}

@@ -11,76 +11,25 @@ public enum CKUILoaderErrors: Error {
     case invalidClassType(className: String)
 }
 
-fileprivate struct NodeDescriptor {
-    let type: String
-    let identifier: String?
-    var classes: [String]?
-    
-    var style: String?
-    var customData: [String:Any] = [:]
-    
-    var children: [CKUIBaseNode] = []
+public struct NodeDescriptor: Sendable {
+    fileprivate let type: String
+    fileprivate let identifier: String?
+    fileprivate var classes: [String]?
+
+    fileprivate var style: String?
+    fileprivate var customData: [String: any Sendable] = [:]
+
+    fileprivate var children: [NodeDescriptor] = []
 }
 
-public final class CKUILoader : NSObject, XMLParserDelegate {
-    
-    fileprivate struct NodeTypeRegistrationData {
-        let typeRepresentation: String
-        let bundle: Bundle
-    }
-    
-    fileprivate static var registeredNodeTypes: [String: NodeTypeRegistrationData] = [:]
-    fileprivate static var builtinNodeTypesRegistered = false
-    
-    private var loadedNodes: [CKUIBaseNode] = []
-    private var detectedError: CKUILoaderErrors? = nil
-    
+fileprivate final class ParserDelegate: NSObject, XMLParserDelegate {
+
     private var nodeStack: [NodeDescriptor] = []
-    
-    public class func registerBuiltinComponents() {
-        guard !builtinNodeTypesRegistered else { return }
-        
-        try! registerNodeType(CKUIContainer.self, with: "container")
-        try! registerNodeType(CKUILabel.self, with: "label")
-        try! registerNodeType(CKUIButton.self, with: "button")
-        
-        builtinNodeTypesRegistered = true
-    }
-    
-    public class func load(contentsOf url: URL) throws -> [CKUIBaseNode] {
-        guard let parser = XMLParser(contentsOf: url) else {
-            throw CKUILoaderErrors.urlLoadingError
-        }
-        
-        let delegate = Self()
-        parser.delegate = delegate
-        guard parser.parse() else {
-            if let detectedError = delegate.detectedError {
-                throw detectedError
-            }
-            else if let error = parser.parserError {
-                throw error
-            }
-            else {
-                throw CKUILoaderErrors.unknownErrorDuringParsing
-            }
-        }
-        
-        return delegate.loadedNodes
-    }
-    
-    public class func load(contentsOf url: URL, into parent: CKUIBaseNode) throws {
-        let loadedNodes = try load(contentsOf: url)
-        
-        for node in loadedNodes {
-            parent.addChild(node)
-        }
-    }
-    
-    override fileprivate init() { }
-    
-    public func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        
+
+    var rootNodeDescriptors = [NodeDescriptor]()
+    var detectedError: CKUILoaderErrors? = nil
+
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         switch elementName {
         case "element":
             var nodeDescriptor = NodeDescriptor(type: attributeDict["type"] ?? "container", identifier: attributeDict["id"])
@@ -88,7 +37,7 @@ public final class CKUILoader : NSObject, XMLParserDelegate {
                 nodeDescriptor.classes = classes.split(separator: " ").map { String($0) }
             }
             nodeStack.append(nodeDescriptor)
-            
+
         case "style", "data":
             guard let name = attributeDict["name"] else {
                 detectedError = .missingRequiredAttribute(elementName: elementName, attributeName: "name")
@@ -108,60 +57,86 @@ public final class CKUILoader : NSObject, XMLParserDelegate {
                 currentNodeDescriptor.customData[name] = value
             }
             nodeStack.append(currentNodeDescriptor)
-            
+
         default:
             break
         }
     }
-    
-    public func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         guard elementName == "element" else { return }
-        
+
         let currentNodeDescriptor = nodeStack.removeLast()
-        
-        var style: CKUIStyle? = nil
-        if let elementStyleAttributes = currentNodeDescriptor.style {
-            style = CKUIStyle(attributes: elementStyleAttributes)
-        }
-        
-        let nodeClass = try! Self.getNodeClass(with: currentNodeDescriptor.type)
-        let node = nodeClass.init(type: currentNodeDescriptor.type, identifier: currentNodeDescriptor.identifier, classes: currentNodeDescriptor.classes, style: style, customData: currentNodeDescriptor.customData)
-        for childNode in currentNodeDescriptor.children {
-            node.addChild(childNode)
-        }
-        
         if nodeStack.isEmpty {
-            loadedNodes.append(node)
+            rootNodeDescriptors.append(currentNodeDescriptor)
         }
         else {
-            nodeStack[nodeStack.count - 1].children.append(node)
+            nodeStack[nodeStack.count - 1].children.append(currentNodeDescriptor)
         }
     }
-    
-    public class func registerNodeType<T: CKUIBaseNode>(_ type: T.Type, with name: String, in bundle: Bundle? = nil) throws {
-        if registeredNodeTypes[name] != nil {
-            throw CKUILoaderErrors.alreadyRegisteredComponentType(name: name)
+
+}
+
+@globalActor
+final actor CKUILoader {
+
+    static var shared: CKUILoader = CKUILoader()
+    typealias ActorType = CKUILoader
+
+    static func loadNodeDescriptors(contentsOf url: URL) async throws -> [NodeDescriptor] {
+        guard let parser = XMLParser(contentsOf: url) else {
+            throw CKUILoaderErrors.urlLoadingError
         }
-        registeredNodeTypes[name] = NodeTypeRegistrationData(
-            typeRepresentation: String(reflecting: type),
-            bundle: bundle ?? CiderKitEngine.bundle
-        )
+
+        let delegate = ParserDelegate()
+        parser.delegate = delegate
+        guard parser.parse() else {
+            if let detectedError = delegate.detectedError {
+                throw detectedError
+            }
+            else if let error = parser.parserError {
+                throw error
+            }
+            else {
+                throw CKUILoaderErrors.unknownErrorDuringParsing
+            }
+        }
+
+        return delegate.rootNodeDescriptors
     }
-    
-    fileprivate class func getNodeClass(with name: String) throws -> CKUIBaseNode.Type {
-        guard let componentRegistrationData = registeredNodeTypes[name] else {
-            throw CKUILoaderErrors.unregisteredComponentType(name: name)
+
+    @MainActor
+    @discardableResult
+    static func createNodes(with descriptors: [NodeDescriptor], into parent: CKUIBaseNode? = nil) -> [CKUIBaseNode] {
+        var loadedNodes = [CKUIBaseNode]()
+        for descriptor in descriptors {
+            let node = Self.createNode(with: descriptor)
+            loadedNodes.append(node)
         }
-        
-        guard let loadedClass = componentRegistrationData.bundle.classNamed(componentRegistrationData.typeRepresentation) else {
-            throw CKUILoaderErrors.componentClassNotFound(className: componentRegistrationData.typeRepresentation)
+        if let parent {
+            for node in loadedNodes {
+                parent.addChild(node)
+            }
         }
-        
-        guard let castedClass = loadedClass as? CKUIBaseNode.Type else {
-            throw CKUILoaderErrors.invalidClassType(className: componentRegistrationData.typeRepresentation)
-        }
-        
-        return castedClass
+
+        return loadedNodes
     }
-    
+
+    @MainActor
+    fileprivate static func createNode(with descriptor: NodeDescriptor) -> CKUIBaseNode {
+        var style: CKUIStyle? = nil
+        if let elementStyleAttributes = descriptor.style {
+            style = CKUIStyle(attributes: elementStyleAttributes)
+        }
+
+        let nodeClass = try! CKUINodeTypeRegistry.getNodeClass(with: descriptor.type)
+        let node = nodeClass.init(type: descriptor.type, identifier: descriptor.identifier, classes: descriptor.classes, style: style, customData: descriptor.customData)
+        for childDescriptor in descriptor.children {
+            let childNode = createNode(with: childDescriptor)
+            node.addChild(childNode)
+        }
+
+        return node
+    }
+
 }

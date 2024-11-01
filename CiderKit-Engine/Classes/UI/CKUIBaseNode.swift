@@ -224,8 +224,9 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         pseudoClasses?.contains(pseudoClass) ?? false
     }
     
-    public final func load(contentsOf url: URL) throws {
-        try CKUILoader.load(contentsOf: url, into: self)
+    public final func load(contentsOf url: URL) async throws {
+        let descriptors = try await CKUILoader.loadNodeDescriptors(contentsOf: url)
+        CKUILoader.createNodes(with: descriptors, into: self)
     }
     
 }

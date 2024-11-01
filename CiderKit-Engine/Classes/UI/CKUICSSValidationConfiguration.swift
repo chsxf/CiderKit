@@ -2,8 +2,8 @@ import CiderCSSKit
 
 public class CKUICSSValidationConfiguration: CSSValidationConfiguration {
     
-    static let `default`: CKUICSSValidationConfiguration = CKUICSSValidationConfiguration()
-    
+    static var `default`: CKUICSSValidationConfiguration { CKUICSSValidationConfiguration() }
+
     #if os(watchOS)
     private static let sansSerifFontName = "SF Compact"
     #else

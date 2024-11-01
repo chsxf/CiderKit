@@ -150,6 +150,7 @@
 		D9984E6C2CB2B52D005BF4C7 /* KeyEventData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9984E6B2CB2B52D005BF4C7 /* KeyEventData.swift */; };
 		D99ADB6028955D9000A4980D /* AssetDescriptionCollectionDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99ADB5F28955D9000A4980D /* AssetDescriptionCollectionDataSource.swift */; };
 		D99ADB6428955E6F00A4980D /* CollectionTextViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99ADB6328955E6F00A4980D /* CollectionTextViewItem.swift */; };
+		D99C646D2CD56CBE0083D292 /* CKUINodeTypeRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99C646C2CD56CB80083D292 /* CKUINodeTypeRegistry.swift */; };
 		D9A1430528C4F5DC00AFB228 /* AssetAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A1430428C4F5DC00AFB228 /* AssetAnimationView.swift */; };
 		D9A1430728C4F92500AFB228 /* AssetDescriptionSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A1430628C4F92500AFB228 /* AssetDescriptionSceneView.swift */; };
 		D9A1430928C4FC0000AFB228 /* NSButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A1430828C4FC0000AFB228 /* NSButtonExtension.swift */; };
@@ -398,6 +399,7 @@
 		D9984E6B2CB2B52D005BF4C7 /* KeyEventData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyEventData.swift; sourceTree = "<group>"; };
 		D99ADB5F28955D9000A4980D /* AssetDescriptionCollectionDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDescriptionCollectionDataSource.swift; sourceTree = "<group>"; };
 		D99ADB6328955E6F00A4980D /* CollectionTextViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionTextViewItem.swift; sourceTree = "<group>"; };
+		D99C646C2CD56CB80083D292 /* CKUINodeTypeRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUINodeTypeRegistry.swift; sourceTree = "<group>"; };
 		D9A1430428C4F5DC00AFB228 /* AssetAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAnimationView.swift; sourceTree = "<group>"; };
 		D9A1430628C4F92500AFB228 /* AssetDescriptionSceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDescriptionSceneView.swift; sourceTree = "<group>"; };
 		D9A1430828C4FC0000AFB228 /* NSButtonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSButtonExtension.swift; sourceTree = "<group>"; };
@@ -1034,7 +1036,6 @@
 		D9E7A3C229BFB68E00F09A2E /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				D91D030D2CBE2E1C009832B4 /* CKUIVisibility.swift */,
 				D98C061A2A00F44A00750F0A /* CKUIAnchoredPosition.swift */,
 				D98C061C2A00F5A600750F0A /* CKUIAnchors.swift */,
 				D9E7A3C329BFB77200F09A2E /* CKUIBaseNode.swift */,
@@ -1049,6 +1050,7 @@
 				D90440572A8590B8009DBADE /* CKUILabel.swift */,
 				D9257D432A8D53F200D52928 /* CKUILabelControl.swift */,
 				D938044C2A986CE900C03463 /* CKUILoader.swift */,
+				D99C646C2CD56CB80083D292 /* CKUINodeTypeRegistry.swift */,
 				D90ADA772A8DF03300ED5537 /* CKUIPadding.swift */,
 				D97DB8B92A70ECF4001C671D /* CKUIPivot.swift */,
 				D92B7DAB2A3DBEA00088E847 /* CKUISizeDelta.swift */,
@@ -1056,6 +1058,7 @@
 				D9B603692A1026AD00621996 /* CKUIStyle.swift */,
 				D9B67F3B2A3F9F6800464E57 /* CKUIStyleSheet.swift */,
 				D909E4D82A7851B600978163 /* CKUIURLResolver.swift */,
+				D91D030D2CBE2E1C009832B4 /* CKUIVisibility.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1459,6 +1462,7 @@
 				D9AF1F5B280BE5FF00BF34B3 /* ProjectSettings.swift in Sources */,
 				D91BC4BC2B4609270043787E /* AssetInstance.swift in Sources */,
 				D90ADA762A8DEFDA00ED5537 /* CKUIBaseNode~Positioning.swift in Sources */,
+				D99C646D2CD56CBE0083D292 /* CKUINodeTypeRegistry.swift in Sources */,
 				D9418FF029A16E900027E52E /* AssetPlacement.swift in Sources */,
 				D91BC4BE2B460CA70043787E /* TransformAssetElementInstance.swift in Sources */,
 				D93C24FE2802E2680023FE7A /* CellRenderers.swift in Sources */,
