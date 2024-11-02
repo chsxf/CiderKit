@@ -1,10 +1,5 @@
 import Foundation
 
-public enum MaterialsError: Error {
-    case alreadyExisting
-    case notRegistered
-}
-
 final public class Materials: Decodable {
     
     enum TopLevelCodingKeys: String, CodingKey {
@@ -15,23 +10,6 @@ final public class Materials: Decodable {
         case name
         case type
         case data
-    }
-    
-    private static var materials: [String: BaseMaterial] = [:]
-    
-    public static func register(material: BaseMaterial, forName name: String) throws {
-        if Self.materials[name] != nil {
-            throw MaterialsError.alreadyExisting
-        }
-        
-        materials[name] = material
-    }
-    
-    public static func material(named name: String, withOverrides overrides: CustomSettings?) throws -> BaseMaterial {
-        guard let material = Self.materials[name] else {
-            throw MaterialsError.notRegistered
-        }
-        return material.clone(withOverrides: overrides)
     }
     
     public required init(from decoder: Decoder) throws {
@@ -46,7 +24,7 @@ final public class Materials: Decodable {
             
             let dataContainer = try materialContainer.nestedContainer(keyedBy: StringCodingKey.self, forKey: .data)
             let material = try MaterialFactory.instantiateMaterial(named: type, dataContainer: dataContainer)
-            try Self.register(material: material, forName: name)
+            try MaterialRegistry.register(material: material, forName: name)
         }
     }
     

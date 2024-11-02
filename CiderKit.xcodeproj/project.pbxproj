@@ -66,6 +66,7 @@
 		D938044F2A988F8700C03463 /* CKUIBaseNode~Traversal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D938044E2A988F8700C03463 /* CKUIBaseNode~Traversal.swift */; };
 		D9387C19289D3A6800558E02 /* SpriteSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9387C18289D3A6800558E02 /* SpriteSelectorView.swift */; };
 		D938EE6B2A192E2F00D0D3AD /* CKUICanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D938EE6A2A192E2F00D0D3AD /* CKUICanvas.swift */; };
+		D939981C2CD645A00013848D /* MaterialRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = D939981B2CD6459C0013848D /* MaterialRegistry.swift */; };
 		D93C24F52801EBBE0023FE7A /* BaseMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */; };
 		D93C24F82801EBC90023FE7A /* CellRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */; };
 		D93C24FB280227690023FE7A /* Materials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C24F9280227500023FE7A /* Materials.swift */; };
@@ -327,6 +328,7 @@
 		D938044E2A988F8700C03463 /* CKUIBaseNode~Traversal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CKUIBaseNode~Traversal.swift"; sourceTree = "<group>"; };
 		D9387C18289D3A6800558E02 /* SpriteSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteSelectorView.swift; sourceTree = "<group>"; };
 		D938EE6A2A192E2F00D0D3AD /* CKUICanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUICanvas.swift; sourceTree = "<group>"; };
+		D939981B2CD6459C0013848D /* MaterialRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialRegistry.swift; sourceTree = "<group>"; };
 		D93C24F9280227500023FE7A /* Materials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Materials.swift; sourceTree = "<group>"; };
 		D93C24FC2802E2680023FE7A /* CellRenderers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellRenderers.swift; sourceTree = "<group>"; };
 		D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CiderKit_Engine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1006,6 +1008,7 @@
 			children = (
 				D9E2C28128018F3D00B17CD0 /* BaseMaterial.swift */,
 				D96D3187291C4C5A00CD498E /* MaterialFactory.swift */,
+				D939981B2CD6459C0013848D /* MaterialRegistry.swift */,
 				D93C24F9280227500023FE7A /* Materials.swift */,
 				D9E7E3A92924BA15003B61F0 /* SequenceMaterial.swift */,
 				D94302CC290E86D70013B4CA /* SingleTextureMaterial.swift */,
@@ -1421,6 +1424,7 @@
 				D9B6036E2A10BB6B00621996 /* StringExtension.swift in Sources */,
 				D9CF6DC12A07D2F500DE3876 /* CKUISpriteDescriptor.swift in Sources */,
 				D97053CA2BBEF7A6008F194B /* PointerEventData.swift in Sources */,
+				D939981C2CD645A00013848D /* MaterialRegistry.swift in Sources */,
 				D9257D442A8D53F200D52928 /* CKUILabelControl.swift in Sources */,
 				D918D2DA2A63139B00226B0E /* CKUICSSAttributeExpanders.swift in Sources */,
 				D95B8C38288319B80077DCA1 /* AssetDescription.swift in Sources */,
