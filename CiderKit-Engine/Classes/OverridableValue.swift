@@ -1,4 +1,4 @@
-public struct OverridableValue<ValueType> {
+public struct OverridableValue<ValueType: Sendable>: Sendable {
 
     public var baseValue: ValueType
     public var overriddenValue: ValueType?

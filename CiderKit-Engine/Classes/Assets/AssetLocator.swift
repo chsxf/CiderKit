@@ -1,4 +1,4 @@
-public struct AssetLocator : Codable, CustomStringConvertible, Equatable, Hashable {
+public struct AssetLocator : Codable, CustomStringConvertible, Equatable, Hashable, Sendable {
     
     public let databaseKey: String
     public let assetUUID: UUID

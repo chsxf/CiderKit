@@ -1,6 +1,6 @@
 import Foundation
 
-public struct StringCodingKey: CodingKey {
+public struct StringCodingKey: CodingKey, Sendable {
     
     public var stringValue: String
     

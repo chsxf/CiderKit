@@ -149,7 +149,7 @@ public class MapRegion : SKNode, Identifiable, @preconcurrency Comparable {
                 cellEntities.append(entity)
             }
         }
-        
+
         regionDescription.assetPlacements?.forEach {
             if $0.mapPosition.elevation == nil {
                 $0.mapPosition = $0.mapPosition.withElevation(regionDescription.elevation)

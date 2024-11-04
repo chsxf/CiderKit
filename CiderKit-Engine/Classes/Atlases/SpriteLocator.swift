@@ -1,4 +1,4 @@
-public struct SpriteLocator: Codable, CustomStringConvertible, Equatable {
+public struct SpriteLocator: Codable, CustomStringConvertible, Equatable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case atlas = "a"

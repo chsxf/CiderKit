@@ -1,7 +1,7 @@
 import Foundation
 
-public struct CustomSettings: Codable {
-    
+public struct CustomSettings: Codable, Sendable {
+
     enum CodingKeys : String, CodingKey {
         case bools = "b"
         case ints = "i"

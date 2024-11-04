@@ -1,4 +1,4 @@
-public struct MapPosition: Codable {
+public struct MapPosition: Codable, Sendable {
 
     public let x: Int
     public let y: Int

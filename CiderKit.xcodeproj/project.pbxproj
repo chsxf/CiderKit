@@ -131,6 +131,8 @@
 		D972C1B42827D1BB00D85376 /* Default Tile Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */; };
 		D972C1B82827D9FD00D85376 /* EditorMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D972C1B72827D9FD00D85376 /* EditorMapNode.swift */; };
 		D9741C5F290D64E10078571B /* FloatExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9741C5E290D64E10078571B /* FloatExtension.swift */; };
+		D97753242CD846820081FDC0 /* CellRendererMaterialResetPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97753232CD846820081FDC0 /* CellRendererMaterialResetPolicy.swift */; };
+		D97753262CD8469C0081FDC0 /* CellRendererDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97753252CD8469C0081FDC0 /* CellRendererDescription.swift */; };
 		D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D978AE1B282703C7008F8D0E /* AtlasDescription.swift */; };
 		D978AE2028270EE8008F8D0E /* Grid Atlas.ckatlas in Resources */ = {isa = PBXBuildFile; fileRef = D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */; };
 		D978C42B28281B6000BDF0BB /* UberShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D978C42A28281B6000BDF0BB /* UberShader.fsh */; };
@@ -379,6 +381,8 @@
 		D972C1AD2827B46500D85376 /* CiderKitEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKitEngine.swift; sourceTree = "<group>"; };
 		D972C1B72827D9FD00D85376 /* EditorMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMapNode.swift; sourceTree = "<group>"; };
 		D9741C5E290D64E10078571B /* FloatExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatExtension.swift; sourceTree = "<group>"; };
+		D97753232CD846820081FDC0 /* CellRendererMaterialResetPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellRendererMaterialResetPolicy.swift; sourceTree = "<group>"; };
+		D97753252CD8469C0081FDC0 /* CellRendererDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellRendererDescription.swift; sourceTree = "<group>"; };
 		D978AE1B282703C7008F8D0E /* AtlasDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtlasDescription.swift; sourceTree = "<group>"; };
 		D978AE1F28270EE8008F8D0E /* Grid Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Grid Atlas.ckatlas"; sourceTree = "<group>"; };
 		D978AE2A282715A6008F8D0E /* Default Tile Atlas.ckatlas */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Default Tile Atlas.ckatlas"; sourceTree = "<group>"; };
@@ -809,8 +813,6 @@
 		D972C1B02827D0E700D85376 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */,
-				D93C24FC2802E2680023FE7A /* CellRenderers.swift */,
 				D972C1AD2827B46500D85376 /* CiderKitEngine.swift */,
 				D92EE973281DD3F2009B2055 /* CustomSettings.swift */,
 				D9FD1A622A8C38D900713A8E /* FontHelpers.swift */,
@@ -832,6 +834,7 @@
 				D9B6036B2A10AB7300621996 /* XMLLoader.swift */,
 				D95B8C362883199B0077DCA1 /* Assets */,
 				D9C132E52827008D00DE8457 /* Atlases */,
+				D97753222CD846660081FDC0 /* CellRenderers */,
 				D9DB98542BC16FE900ACABB1 /* Events */,
 				D9E34BDC2CB48810003F773F /* Extensions */,
 				D9DCAA5C2CB39E22001CBA1C /* Interactions */,
@@ -862,6 +865,17 @@
 				D9A87A8427DD43770079C831 /* Shaders */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		D97753222CD846660081FDC0 /* CellRenderers */ = {
+			isa = PBXGroup;
+			children = (
+				D9E2C27F28018EB600B17CD0 /* CellRenderer.swift */,
+				D97753252CD8469C0081FDC0 /* CellRendererDescription.swift */,
+				D97753232CD846820081FDC0 /* CellRendererMaterialResetPolicy.swift */,
+				D93C24FC2802E2680023FE7A /* CellRenderers.swift */,
+			);
+			path = CellRenderers;
 			sourceTree = "<group>";
 		};
 		D978AE1E28270898008F8D0E /* Atlases */ = {
@@ -1397,6 +1411,7 @@
 				D9DE90B22BBB40EA002D0FF3 /* AssetComponent.swift in Sources */,
 				D93C24F82801EBC90023FE7A /* CellRenderer.swift in Sources */,
 				D9E7E3AA2924BA15003B61F0 /* SequenceMaterial.swift in Sources */,
+				D97753262CD8469C0081FDC0 /* CellRendererDescription.swift in Sources */,
 				D90BB9BD289B247000833C49 /* SpriteLocator.swift in Sources */,
 				D9E982322B39A4A90068ED96 /* SKActionExtension.swift in Sources */,
 				D93C4CA62800CBE0000955E1 /* Atlases.swift in Sources */,
@@ -1452,6 +1467,7 @@
 				D90BB9BB289B242800833C49 /* AtlasLocator.swift in Sources */,
 				D978AE1D282703C7008F8D0E /* AtlasDescription.swift in Sources */,
 				D90440582A8590B8009DBADE /* CKUILabel.swift in Sources */,
+				D97753242CD846820081FDC0 /* CellRendererMaterialResetPolicy.swift in Sources */,
 				D9CBDAFE2A78D9A900C51C69 /* RemoteCacheManager.swift in Sources */,
 				D94A83D72A9214B20017311B /* SKColorHelpers.swift in Sources */,
 				D9418FF429A18A000027E52E /* CGPointExtension.swift in Sources */,

@@ -1,31 +1,5 @@
 import Foundation
 
-public enum CellRendererError: Error {
-    case invalidResetPolicy
-}
-
-public enum CellRendererMaterialResetPolicy: Int, Codable {
-    case inherit = 0
-    case resetWithEachCell = 1
-    case resetWithEachRegion = 2
-    case resetAlways = 3
-}
-
-struct CellRendererDescription: Codable {
-    enum CodingKeys: String, CodingKey {
-        case groundMaterialName = "g"
-        case leftElevationMaterialName = "l"
-        case rightElevationMaterialName = "r"
-        case resetPolicy = "rp"
-    }
-    
-    let groundMaterialName: String
-    let leftElevationMaterialName: String
-    let rightElevationMaterialName: String
-    let resetPolicy: CellRendererMaterialResetPolicy
-    
-}
-
 public struct CellRenderer {
     
     private let groundMaterialName: String

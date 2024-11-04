@@ -1,6 +1,6 @@
 import Foundation
 
-public struct MapRegionDescription: Codable {
+public struct MapRegionDescription: Codable, Sendable {
     
     private enum MaterialOverrideContext: String {
         case ground = "g"
