@@ -110,14 +110,14 @@ open class GameView: LitSceneView {
         var maxVector = WorldPosition(-Float.infinity, -Float.infinity, 0)
         
         for region in map.regions {
-            let area = region.regionDescription.area
-            
+            let area = region.model.regionDescription.area
+
             minVector.x = min(minVector.x, Float(area.minX))
             minVector.y = min(minVector.y, Float(area.minY))
             
             maxVector.x = max(maxVector.x, Float(area.maxX))
             maxVector.y = max(maxVector.y, Float(area.maxY))
-            maxVector.z = max(maxVector.z, Float(region.regionDescription.elevation + 1))
+            maxVector.z = max(maxVector.z, Float(region.model.regionDescription.elevation + 1))
         }
         
         return matrix_float3x3(minVector, maxVector, SIMD3())

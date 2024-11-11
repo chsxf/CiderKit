@@ -21,26 +21,28 @@ class EditorMapNode: MapNode {
     func increaseElevation(area: MapArea?) {
         var appliedOnRegion = false
         var needsRebuilding = false
-        
+
         var regionsToRemove = [MapRegion]()
         var newRegions = [MapRegion]()
-        
+
         for region in regions {
-            if area == nil || area!.contains(absolute: region.regionDescription.area) {
+            if area == nil || area!.contains(absolute: region.model.regionDescription.area) {
                 appliedOnRegion = true
-                if region.increaseElevation() {
+                if region.model.increaseElevation() {
                     needsRebuilding = true
                 }
             }
             else if area != nil {
-                guard let subdivisions = region.subdivide(subArea: area!) else {
+                guard let subdivisions = region.model.subdivide(subArea: area!) else {
                     continue
                 }
                 
                 appliedOnRegion = true
                 regionsToRemove.append(region)
-                newRegions.append(contentsOf: subdivisions.otherSubdivisions)
-                newRegions.append(subdivisions.mainSubdivision)
+                for subdivision in subdivisions.otherSubdivisions {
+                    newRegions.append((subdivision, MapRegionNode(for: subdivision)))
+                }
+                newRegions.append((subdivisions.mainSubdivision, MapRegionNode(for: subdivisions.mainSubdivision)))
                 let _ = subdivisions.mainSubdivision.increaseElevation()
                 needsRebuilding = true
             }
@@ -48,16 +50,21 @@ class EditorMapNode: MapNode {
         
         if !appliedOnRegion {
             let newDescription = MapRegionDescription(area: area!, elevation: 1, renderer: nil)
-            let newRegion = MapRegion(forMap: self, description: newDescription)
-            newRegions.append(newRegion)
+            let newRegion = MapRegionModel(with: newDescription, in: self)
+            let newRegionNode = MapRegionNode(for: newRegion)
+            newRegions.append((newRegion, newRegionNode))
             needsRebuilding = true
         }
-        
-        regions.forEach { $0.removeFromParent() }
-        regions.removeAll { regionsToRemove.contains($0) }
+
+        regions.forEach { $0.node.removeFromParent() }
+        regions.removeAll { region in
+            regionsToRemove.contains { (model: MapRegionModel, node: MapRegionNode) in
+                region.model === model && region.node === node
+            }
+        }
         regions.append(contentsOf: newRegions)
         mergeRegions()
-        regions.forEach { addChild($0) }
+        regions.forEach { addChild($0.node) }
 
         if needsRebuilding {
             sortRegions()
@@ -68,35 +75,41 @@ class EditorMapNode: MapNode {
     
     func decreaseElevation(area: MapArea?) {
         var needsRebuilding = false
-        
+
         var regionsToRemove = [MapRegion]()
         var newRegions = [MapRegion]()
-        
+
         for region in regions {
-            if area == nil || area!.contains(absolute: region.regionDescription.area) {
-                if region.decreaseElevation() {
+            if area == nil || area!.contains(absolute: region.model.regionDescription.area) {
+                if region.model.decreaseElevation() {
                     needsRebuilding = true
                 }
             }
             else if area != nil {
-                guard let subdivisions = region.subdivide(subArea: area!) else {
+                guard let subdivisions = region.model.subdivide(subArea: area!) else {
                     continue
                 }
-                
+
                 regionsToRemove.append(region)
-                newRegions.append(contentsOf: subdivisions.otherSubdivisions)
-                newRegions.append(subdivisions.mainSubdivision)
+                for subdivision in subdivisions.otherSubdivisions {
+                    newRegions.append((subdivision, MapRegionNode(for: subdivision)))
+                }
+                newRegions.append((subdivisions.mainSubdivision, MapRegionNode(for: subdivisions.mainSubdivision)))
                 let _ = subdivisions.mainSubdivision.decreaseElevation()
                 needsRebuilding = true
             }
         }
-        
-        regions.forEach { $0.removeFromParent() }
-        regions.removeAll { regionsToRemove.contains($0) }
+
+        regions.forEach { $0.node.removeFromParent() }
+        regions.removeAll { region in
+            regionsToRemove.contains { (model: MapRegionModel, node: MapRegionNode) in
+                region.model === model && region.node === node
+            }
+        }
         regions.append(contentsOf: newRegions)
         mergeRegions()
-        regions.forEach { addChild($0) }
-        
+        regions.forEach { addChild($0.node) }
+
         if needsRebuilding {
             sortRegions()
             buildRegions()
@@ -117,9 +130,10 @@ class EditorMapNode: MapNode {
                 let region = regions[i]
                 for i2 in i+1..<regions.count {
                     let region2 = regions[i2]
-                    if let newRegionDescription = region.regionDescription.merged(with: region2.regionDescription) {
-                        let newRegion = MapRegion(forMap: self, description: newRegionDescription)
-                        regions[i] = newRegion
+                    if let newRegionDescription = region.model.regionDescription.merged(with: region2.model.regionDescription) {
+                        let newRegion = MapRegionModel(with: newRegionDescription, in: self)
+                        let newRegionNode = MapRegionNode(for: newRegion)
+                        regions[i] = (newRegion, newRegionNode)
                         regions.remove(at: i2)
                         regionsHaveChanged = true
                         break
@@ -135,13 +149,13 @@ class EditorMapNode: MapNode {
         super.buildRegions()
     }
     
-    override func mapCellEntity(node: SKNode, for region: MapRegion, atMapPosition position: MapPosition) -> GKEntity {
+    override func mapCellEntity(node: SKNode, for region: MapRegionNode, atMapPosition position: MapPosition) -> GKEntity {
         let entity = super.mapCellEntity(node: node, for: region, atMapPosition: position)
         hoverableEntities.append(entity)
         return entity
     }
     
-    override func mapCellComponent(for region: MapRegion, atMapPosition position: MapPosition) -> MapCellComponent {
+    override func mapCellComponent(for region: MapRegionNode, atMapPosition position: MapPosition) -> MapCellComponent {
         return EditorMapCellComponent(region: region, position: position)
     }
     
@@ -166,8 +180,8 @@ class EditorMapNode: MapNode {
             let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)?.node
             
             for region in regions {
-                if region.regionDescription.assetPlacements?.contains(where: { $0.id == assetComponent.placement.id }) ?? false {
-                    region.regionDescription.assetPlacements!.removeAll { $0.id == assetComponent.placement.id }
+                if region.model.regionDescription.assetPlacements?.contains(where: { $0.id == assetComponent.placement.id }) ?? false {
+                    region.model.regionDescription.assetPlacements!.removeAll { $0.id == assetComponent.placement.id }
                     assetNode?.removeFromParent()
                     break
                 }

@@ -1,6 +1,8 @@
 import SpriteKit
 import GameplayKit
 
+public typealias MapRegion = (model: MapRegionModel, node: MapRegionNode)
+
 open class MapNode: SKNode {
     
     nonisolated public static let elevationHeight: Int = 10
@@ -17,8 +19,8 @@ open class MapNode: SKNode {
     nonisolated public static let yVector = SIMD2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
     nonisolated public static let zVector = SIMD2(0, Float(MapNode.elevationHeight))
 
-    public var regions: [MapRegion] = [MapRegion]()
-    
+    public var regions = [MapRegion]()
+
     private let cellRenderers: [String:CellRendererDescription]
     
     public let ambientLight: BaseLight
@@ -40,9 +42,10 @@ open class MapNode: SKNode {
         registerCellRenderers()
         
         for regionDescription in mapDescription.regions {
-            let region = MapRegion(forMap: self, description: regionDescription)
-            regions.append(region)
-            addChild(region)
+            let region = MapRegionModel(with: regionDescription, in: self)
+            let regionNode = MapRegionNode(for: region)
+            regions.append((region, regionNode))
+            addChild(regionNode)
         }
         
         sortRegions()
@@ -55,16 +58,16 @@ open class MapNode: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func regionAt(mapX x: Int, y: Int) -> MapRegion? { regions.first(where: { $0.containsMapCoordinates(mapX: x, y: y) }) }
+    public func regionAt(mapX x: Int, y: Int) -> MapRegionNode? { regions.first(where: { $0.model.containsMapCoordinates(mapX: x, y: y) })?.node }
 
-    public func regionAt(mapPosition position: MapPosition) -> MapRegion? { regionAt(mapX: position.x, y: position.y) }
+    public func regionAt(mapPosition position: MapPosition) -> MapRegionNode? { regionAt(mapX: position.x, y: position.y) }
 
     public func hasCell(forMapX x: Int, y: Int) -> Bool { regionAt(mapX: x, y: y) != nil }
 
     public func toMapDescription() -> MapDescription {
         var newMapDescription = MapDescription()
         for region in regions {
-            newMapDescription.regions.append(region.regionDescription)
+            newMapDescription.regions.append(region.model.regionDescription)
         }
         
         newMapDescription.renderers = cellRenderers
@@ -79,8 +82,8 @@ open class MapNode: SKNode {
     private func updateRegionsZPosition() {
         var index = 0
         for region in regions {
-            region.zPosition = CGFloat(index)
-            index += region.layerCount
+            region.node.zPosition = CGFloat(index)
+            index += region.node.layerCount
         }
     }
     
@@ -92,13 +95,11 @@ open class MapNode: SKNode {
     }
     
     public func sortRegions() {
-        regions.sort()
+        regions.sort { $0.model < $1.model }
     }
     
     open func buildRegions() {
-        for region in regions {
-            region.build()
-        }
+        regions.forEach { $0.node.build() }
         updateRegionsZPosition()
     }
     
@@ -128,8 +129,8 @@ open class MapNode: SKNode {
     
     func getCellElevation(forX x: Int, y: Int) -> Int? {
         for region in regions {
-            if region.containsMapCoordinates(mapX: x, y: y) {
-                return region.regionDescription.elevation
+            if region.model.containsMapCoordinates(mapX: x, y: y) {
+                return region.model.regionDescription.elevation
             }
         }
         return nil
@@ -137,7 +138,7 @@ open class MapNode: SKNode {
     
     public func lookForMapCellEntity(atMapPosition position: MapPosition) -> GKEntity? {
         for region in regions {
-            for cell in region.cellEntities {
+            for cell in region.node.cellEntities {
                 for component in cell.components {
                     if let cellComponent = component as? MapCellComponent {
                         if cellComponent.position.x == position.x && cellComponent.position.y == position.y {
@@ -153,7 +154,7 @@ open class MapNode: SKNode {
     
     public func raycastMapCell(at sceneCoordinates: ScenePosition) -> MapCellComponent? {
         for region in regions {
-            for cell in region.cellEntities {
+            for cell in region.node.cellEntities {
                 if let cellComponent = cell.component(ofType: MapCellComponent.self), cellComponent.contains(sceneCoordinates: sceneCoordinates){
                     return cellComponent
                 }
@@ -164,7 +165,7 @@ open class MapNode: SKNode {
 
     public func raycastWorldPosition(at sceneCoordinates: ScenePosition) -> WorldPosition? {
         for region in regions {
-            for cell in region.cellEntities {
+            for cell in region.node.cellEntities {
                 if let containedWorldPosition = cell.component(ofType: MapCellComponent.self)?.getContainedWorldPosition(sceneCoordinates: sceneCoordinates) {
                     return containedWorldPosition
                 }
@@ -181,7 +182,7 @@ open class MapNode: SKNode {
         raycastAsset(at: sceneCoordinates) ?? raycastMapCell(at: sceneCoordinates)
     }
 
-    open func mapCellEntity(node: SKNode, for region: MapRegion, atMapPosition position: MapPosition) -> GKEntity {
+    open func mapCellEntity(node: SKNode, for region: MapRegionNode, atMapPosition position: MapPosition) -> GKEntity {
         let entity = GKEntity()
         entity.addComponent(GKSKNodeComponent(node: node))
         let cell = mapCellComponent(for: region, atMapPosition: position)
@@ -189,13 +190,13 @@ open class MapNode: SKNode {
         return entity
     }
     
-    open func mapCellComponent(for region: MapRegion, atMapPosition position: MapPosition) -> MapCellComponent {
+    open func mapCellComponent(for region: MapRegionNode, atMapPosition position: MapPosition) -> MapCellComponent {
         return MapCellComponent(region: region, position: position)
     }
     
     public func getAssetPlacement(by id: UUID) -> AssetPlacement? {
         for region in regions {
-            if let placement = region.regionDescription.assetPlacements?.first(where: { $0.id == id }) {
+            if let placement = region.model.regionDescription.assetPlacements?.first(where: { $0.id == id }) {
                 return placement
             }
         }

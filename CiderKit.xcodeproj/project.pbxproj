@@ -33,6 +33,7 @@
 		D9173DA92878E69A002E652C /* EditableComponentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */; };
 		D918D2DA2A63139B00226B0E /* CKUICSSAttributeExpanders.swift in Sources */ = {isa = PBXBuildFile; fileRef = D918D2D92A63139B00226B0E /* CKUICSSAttributeExpanders.swift */; };
 		D918D2DC2A63373900226B0E /* CKUICSSAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */; };
+		D91AD71D2CE259E800831426 /* MapRegionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91AD71C2CE259E700831426 /* MapRegionModel.swift */; };
 		D91BC4BC2B4609270043787E /* AssetInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91BC4BB2B4609270043787E /* AssetInstance.swift */; };
 		D91BC4BE2B460CA70043787E /* TransformAssetElementInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91BC4BD2B460CA70043787E /* TransformAssetElementInstance.swift */; };
 		D91BC4C02B460CB40043787E /* SpriteAssetElementInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91BC4BF2B460CB40043787E /* SpriteAssetElementInstance.swift */; };
@@ -82,7 +83,7 @@
 		D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C22755F24100EA8A03 /* MapDescription.swift */; };
 		D93C4CB02800CBE8000955E1 /* MapCellComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A87A8227DD320B0079C831 /* MapCellComponent.swift */; };
 		D93C4CB12800CBE8000955E1 /* MapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C32755F24100EA8A03 /* MapNode.swift */; };
-		D93C4CB22800CBE8000955E1 /* MapRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegion.swift */; };
+		D93C4CB22800CBE8000955E1 /* MapRegionNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061C12755F24100EA8A03 /* MapRegionNode.swift */; };
 		D93C4CB32800CBE8000955E1 /* MapArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B8557227EFC1A000D605F4 /* MapArea.swift */; };
 		D93C4CB42800CBED000955E1 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91061CB2755F27600EA8A03 /* GameView.swift */; };
 		D93C4CBC2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93C4CBB2800CC18000955E1 /* CiderKit_PlayerSampleApp.swift */; };
@@ -281,7 +282,7 @@
 		D91061AE2755F0B200EA8A03 /* CiderKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CiderKitApp.swift; sourceTree = "<group>"; };
 		D91061B72755F0B400EA8A03 /* CiderKit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CiderKit.entitlements; sourceTree = "<group>"; };
 		D91061BE2755F23700EA8A03 /* map.ckmap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = map.ckmap; sourceTree = "<group>"; };
-		D91061C12755F24100EA8A03 /* MapRegion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapRegion.swift; sourceTree = "<group>"; };
+		D91061C12755F24100EA8A03 /* MapRegionNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapRegionNode.swift; sourceTree = "<group>"; };
 		D91061C22755F24100EA8A03 /* MapDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDescription.swift; sourceTree = "<group>"; };
 		D91061C32755F24100EA8A03 /* MapNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapNode.swift; sourceTree = "<group>"; };
 		D91061C82755F27600EA8A03 /* Atlases.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atlases.swift; sourceTree = "<group>"; };
@@ -296,6 +297,7 @@
 		D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableComponentDelegate.swift; sourceTree = "<group>"; };
 		D918D2D92A63139B00226B0E /* CKUICSSAttributeExpanders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUICSSAttributeExpanders.swift; sourceTree = "<group>"; };
 		D918D2DB2A63373900226B0E /* CKUICSSAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUICSSAttributes.swift; sourceTree = "<group>"; };
+		D91AD71C2CE259E700831426 /* MapRegionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRegionModel.swift; sourceTree = "<group>"; };
 		D91BC4BB2B4609270043787E /* AssetInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetInstance.swift; sourceTree = "<group>"; };
 		D91BC4BD2B460CA70043787E /* TransformAssetElementInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformAssetElementInstance.swift; sourceTree = "<group>"; };
 		D91BC4BF2B460CB40043787E /* SpriteAssetElementInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteAssetElementInstance.swift; sourceTree = "<group>"; };
@@ -589,10 +591,11 @@
 				D9B8557227EFC1A000D605F4 /* MapArea.swift */,
 				D9A87A8227DD320B0079C831 /* MapCellComponent.swift */,
 				D91061C22755F24100EA8A03 /* MapDescription.swift */,
-				D978FAF22C1D9A71002CB43B /* MapPosition.swift */,
 				D91061C32755F24100EA8A03 /* MapNode.swift */,
-				D91061C12755F24100EA8A03 /* MapRegion.swift */,
+				D978FAF22C1D9A71002CB43B /* MapPosition.swift */,
+				D91AD71C2CE259E700831426 /* MapRegionModel.swift */,
 				D9C1FA4A2AA1255B008D78E7 /* MapRegionDescription.swift */,
+				D91061C12755F24100EA8A03 /* MapRegionNode.swift */,
 				D92002D5282FA50F007D5AC1 /* Lights */,
 			);
 			path = Map;
@@ -1381,7 +1384,7 @@
 				D9418FEC29A127EC0027E52E /* AssetLocator.swift in Sources */,
 				D9B56ED22A2D1520005688B9 /* CGRectExtension.swift in Sources */,
 				D9A95DD12A911F7600578B3F /* TrackingAreaManager.swift in Sources */,
-				D93C4CB22800CBE8000955E1 /* MapRegion.swift in Sources */,
+				D93C4CB22800CBE8000955E1 /* MapRegionNode.swift in Sources */,
 				D9B67F3C2A3F9F6800464E57 /* CKUIStyleSheet.swift in Sources */,
 				D9CF6DC62A07F2FF00DE3876 /* EquatableExtension.swift in Sources */,
 				D9DCAA602CB39E81001CBA1C /* InteractionState.swift in Sources */,
@@ -1447,6 +1450,7 @@
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D90CDA8D2CD52B8400C3245F /* AssetAnimationTrackTypeRegistry.swift in Sources */,
+				D91AD71D2CE259E800831426 /* MapRegionModel.swift in Sources */,
 				D91657F4290878B700510386 /* CGColorExtension.swift in Sources */,
 				D9CFEF842A2D3BF400991D7B /* CGFloatExtension.swift in Sources */,
 				D93C4CA82800CBE0000955E1 /* Atlas.swift in Sources */,
