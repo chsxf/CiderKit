@@ -7,6 +7,7 @@ open class GameView: LitSceneView {
     public typealias GameViewPointerEventData = (eventData: PointerEventData, sender: GameView)
     public typealias GameViewKeyEventData = (eventData: KeyEventData, sender: GameView)
 
+    public var mapModel: MapModel!
     public private(set) var map: MapNode!
     public let mapOverlay: SKNode
 
@@ -19,7 +20,7 @@ open class GameView: LitSceneView {
     public var lightingEnabled: Bool = true
     
     open override var ambientLightColorRGB: SIMD3<Float> {
-        lightingEnabled ? map.ambientLight.vector : super.ambientLightColorRGB
+        lightingEnabled ? mapModel.ambientLight.vector : super.ambientLightColorRGB
     }
     
     open override var preferredSceneWidth: Int { Project.current?.settings.targetResolutionWidth ?? super.preferredSceneWidth }
@@ -80,8 +81,13 @@ open class GameView: LitSceneView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public func initMapModel(with description: MapDescription) {
+        mapModel = MapModel(with: description)
+    }
+    
     open func mapNode(from description: MapDescription) -> MapNode {
-        return MapNode(description: description)
+        initMapModel(with: description)
+        return MapNode(with: mapModel)
     }
     
     open override func update(_ currentTime: TimeInterval, for scene: SKScene) {
@@ -109,15 +115,15 @@ open class GameView: LitSceneView {
         var minVector = WorldPosition(Float.infinity, Float.infinity, 0)
         var maxVector = WorldPosition(-Float.infinity, -Float.infinity, 0)
         
-        for region in map.regions {
-            let area = region.regionDescription.area
-            
+        for regionModel in mapModel.regions {
+            let area = regionModel.regionDescription.area
+
             minVector.x = min(minVector.x, Float(area.minX))
             minVector.y = min(minVector.y, Float(area.minY))
             
             maxVector.x = max(maxVector.x, Float(area.maxX))
             maxVector.y = max(maxVector.y, Float(area.maxY))
-            maxVector.z = max(maxVector.z, Float(region.regionDescription.elevation + 1))
+            maxVector.z = max(maxVector.z, Float(regionModel.regionDescription.elevation + 1))
         }
         
         return matrix_float3x3(minVector, maxVector, SIMD3())
@@ -159,10 +165,10 @@ open class GameView: LitSceneView {
     }
     
     open override func getLightMatrix(_ index: Int) -> matrix_float3x3 {
-        guard lightingEnabled, index < map.lights.count else {
+        guard lightingEnabled, index < mapModel.lights.count else {
             return super.getLightMatrix(index)
         }
-        return map.lights[index].matrix
+        return mapModel.lights[index].matrix
     }
 
     #if os(macOS)

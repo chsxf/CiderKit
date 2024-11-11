@@ -7,10 +7,15 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     
     public let placement: AssetPlacement
 
-    fileprivate var assetInstance: AssetInstance? { entity?.component(ofType: AssetComponent.self)?.assetInstance }
-    
-    var placementChangeCancellable: AnyCancellable?
-    
+    fileprivate var assetInstance: AssetInstance? {
+        if placementChangeCancellable != nil {
+            return entity?.component(ofType: AssetComponent.self)?.assetInstance
+        }
+        return nil
+    }
+
+    fileprivate var placementChangeCancellable: AnyCancellable?
+
     let supportedToolModes: ToolMode = .erase
     
     var inspectableDescription: String { "Asset" }
@@ -65,7 +70,12 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         let frame = node.calculateAccumulatedFrame()
         return frame.contains(sceneCoordinates)
     }
-    
+
+    func unlink() {
+        placementChangeCancellable?.cancel()
+        placementChangeCancellable = nil
+    }
+
     class func prepareEntity(_ assetComponentEntity: GKEntity) -> GKEntity {
         let placement = assetComponentEntity.component(ofType: AssetComponent.self)!.placement
 

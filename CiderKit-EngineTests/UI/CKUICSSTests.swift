@@ -4,31 +4,77 @@ import CiderCSSKit
 
 final class CKUICSSTests: XCTestCase {
 
-    func testExample() throws {
-        let spriteAttributeValue = "sprite(\"test\", sliced, 0.1, 0.2, 0.3, 0.4), sprite(\"test2\", scaled), spriteref(\"named_sprite\")"
-        let values = try CSSParser.parse(attributeValue: spriteAttributeValue, validationConfiguration: CKUICSSValidationConfiguration())
-        XCTAssertEqual(values.count, 3)
-        
-        guard case let .custom(customValue1) = values[0] else {
-            XCTFail("First value must be custom")
+    func testAnchoredPosition() throws {
+        let attribute = CKUICSSAttributes.anchoredPosition
+        var attributeValue = "0 0"
+        var values = try CSSParser.parse(attributeName: attribute, attributeValue: attributeValue, validationConfiguration: CKUICSSValidationConfiguration.default)
+        XCTAssertEqual(values.count, 2)
+
+        attributeValue = "50px -123in"
+        values = try CSSParser.parse(attributeName: attribute, attributeValue: attributeValue, validationConfiguration: CKUICSSValidationConfiguration.default)
+        XCTAssertEqual(values.count, 2)
+
+        guard case let .length(length1, unit1) = values[0] else {
+            XCTFail("First value is not a length")
             return
         }
-        let firstAttribute = CKUISpriteDescriptor.sprite("test", CKUIScalingMethod.sliced, 0.1, 0.2, 0.3, 0.4)
-        XCTAssertTrue(customValue1.isEqual(firstAttribute))
-        
-        guard case let .custom(customValue2) = values[1] else {
-            XCTFail("Second value must be custom")
+        XCTAssertEqual(length1, 50)
+        XCTAssertEqual(unit1, CSSLengthUnit.px)
+
+        guard case let .length(length2, unit2) = values[1] else {
+            XCTFail("Second value is not a length")
             return
         }
-        let secondAttribute = CKUISpriteDescriptor.sprite("test2", CKUIScalingMethod.scaled, 0, 0, 0, 0)
-        XCTAssertTrue(customValue2.isEqual(secondAttribute))
-        
-        guard case let .custom(customValue3) = values[2] else {
-            XCTFail("Third value must be custom")
+        XCTAssertEqual(length2, -123)
+        XCTAssertEqual(unit2, CSSLengthUnit.in)
+    }
+
+    func testAnchors() throws {
+        let attribute = CKUICSSAttributes.anchors
+        var attributeValue = "0 0 0 0"
+        var values = try CSSParser.parse(attributeName: attribute, attributeValue: attributeValue, validationConfiguration: CKUICSSValidationConfiguration.default)
+        XCTAssertEqual(values.count, 4)
+
+        attributeValue = "bottom right"
+        values = try CSSParser.parse(attributeName: attribute, attributeValue: attributeValue, validationConfiguration: CKUICSSValidationConfiguration.default)
+        XCTAssertEqual(values.count, 2)
+
+        guard case let .percentage(percent1) = values[0] else {
+            XCTFail("First value is not a percent")
             return
         }
-        let thirdAttribute = CKUISpriteDescriptor.spriteref("named_sprite")
-        XCTAssertTrue(customValue3.isEqual(thirdAttribute))
+        XCTAssertEqual(percent1, 0)
+
+        guard case let .percentage(percent2) = values[1] else {
+            XCTFail("Second value is not a percent")
+            return
+        }
+        XCTAssertEqual(percent2, 100)
+    }
+
+    func testSizeDelta() throws {
+        let attribute = CKUICSSAttributes.sizeDelta
+        var attributeValue = "0 0"
+        var values = try CSSParser.parse(attributeName: attribute, attributeValue: attributeValue, validationConfiguration: CKUICSSValidationConfiguration.default)
+        XCTAssertEqual(values.count, 2)
+
+        attributeValue = "50px -123in"
+        values = try CSSParser.parse(attributeName: attribute, attributeValue: attributeValue, validationConfiguration: CKUICSSValidationConfiguration.default)
+        XCTAssertEqual(values.count, 2)
+
+        guard case let .length(length1, unit1) = values[0] else {
+            XCTFail("First value is not a length")
+            return
+        }
+        XCTAssertEqual(length1, 50)
+        XCTAssertEqual(unit1, CSSLengthUnit.px)
+
+        guard case let .length(length2, unit2) = values[1] else {
+            XCTFail("Second value is not a length")
+            return
+        }
+        XCTAssertEqual(length2, -123)
+        XCTAssertEqual(unit2, CSSLengthUnit.in)
     }
 
 }

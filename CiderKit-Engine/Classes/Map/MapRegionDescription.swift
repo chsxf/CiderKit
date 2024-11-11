@@ -21,7 +21,7 @@ public struct MapRegionDescription: Codable, Sendable {
     var elevation: Int
     let renderer: String?
     
-    public var assetPlacements: [AssetPlacement]? = nil
+    public var assetPlacements = [AssetPlacement]()
     
     public var area: MapArea { MapArea(x: x, y: y, width: width, height: height) }
     
@@ -101,10 +101,12 @@ public struct MapRegionDescription: Codable, Sendable {
             )
         }
 
-        newDescription?.importMaterialOverrides(from: self)
-        newDescription?.importAssets(from: self)
-        newDescription?.importMaterialOverrides(from: other)
-        newDescription?.importAssets(from: other)
+        if newDescription != nil {
+            newDescription!.importMaterialOverrides(from: self)
+            newDescription!.importAssets(from: self)
+            newDescription!.importMaterialOverrides(from: other)
+            newDescription!.importAssets(from: other)
+        }
     
         return newDescription
     }
@@ -153,18 +155,13 @@ public struct MapRegionDescription: Codable, Sendable {
     }
     
     private mutating func importAssets(from other: MapRegionDescription) {
-        guard let otherAssetPlacements = other.assetPlacements else { return }
-        
-        for assetPlacement in otherAssetPlacements {
+        for assetPlacement in other.assetPlacements {
             guard area.contains(mapPosition: assetPlacement.mapPosition) else { continue }
-            assetPlacements = assetPlacements ?? []
-            assetPlacements!.append(assetPlacement)
+            assetPlacements.append(assetPlacement)
         }
     }
     
     public func isFreeOfAsset(mapArea: MapArea) -> Bool {
-        guard let assetPlacements else { return true }
-        
         for placement in assetPlacements {
             if let description = placement.assetLocator.assetDescription {
                 var footprint = description.footprint

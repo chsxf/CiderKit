@@ -26,13 +26,13 @@ class MapAreaTests: XCTestCase {
         let containerArea = MapArea(x: 10, y: 10, width: 100, height: 100)
         
         let containedArea = MapArea(x: 20, y: 20, width: 40, height: 40)
-        XCTAssertTrue(containerArea.contains(containedArea))
-        
+        XCTAssertTrue(containerArea.contains(absolute: containedArea))
+
         let matchingArea = MapArea(x: 10, y: 10, width: 100, height: 100)
-        XCTAssertTrue(containerArea.contains(matchingArea))
-        
+        XCTAssertTrue(containerArea.contains(absolute: matchingArea))
+
         let notContainedArea = MapArea(x: 0, y: 0, width: 100, height: 100)
-        XCTAssertFalse(containerArea.contains(notContainedArea))
+        XCTAssertFalse(containerArea.contains(absolute: notContainedArea))
     }
     
     func testIntersects() throws {

@@ -19,7 +19,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         if item.itemIdentifier == .addAsset {
             guard
                 let selectedArea = gameView?.selectionModel.selectedMapArea,
-                gameView?.map.hasCell(forMapX: selectedArea.x, y: selectedArea.y) ?? false
+                gameView?.mapModel.hasCell(forMapX: selectedArea.x, y: selectedArea.y) ?? false
             else {
                 return false
             }
@@ -121,7 +121,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         
         if let validURL = selectedURL {
             do {
-                let mapDescription = gameView.map.toMapDescription()
+                let mapDescription = gameView.mapModel.toMapDescription()
                 try EditorFunctions.save(mapDescription, to: validURL, prettyPrint: true)
                 currentMapURL = validURL
                 gameView.mutableMap.dirty = false

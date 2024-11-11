@@ -159,25 +159,26 @@ class EditorGameView: GameView {
     }
     
     func increaseElevation(area: MapArea?) {
-        mutableMap.increaseElevation(area: area)
+        mapModel.increaseElevation(area: area)
         
         if let area = area {
-            let selectable = map.lookForMapCellEntity(atMapPosition: MapPosition(x: area.x, y: area.y))?.findSelectableComponent()
+            let selectable = map.lookForMapCellEntity(at: MapPosition(x: area.x, y: area.y))?.findSelectableComponent()
             selectionModel.setSelectable(selectable)
         }
     }
     
     func decreaseElevation(area: MapArea?) {
-        mutableMap.decreaseElevation(area: area)
+        mapModel.decreaseElevation(area: area)
         
         if let area {
-            let selectable = map.lookForMapCellEntity(atMapPosition: MapPosition(x: area.x, y: area.y))?.findSelectableComponent()
+            let selectable = map.lookForMapCellEntity(at: MapPosition(x: area.x, y: area.y))?.findSelectableComponent()
             selectionModel.setSelectable(selectable)
         }
     }
     
     override func mapNode(from description: MapDescription) -> MapNode {
-        mutableMap = EditorMapNode(description: description)
+        initMapModel(with: description)
+        mutableMap = EditorMapNode(with: mapModel)
         return mutableMap
     }
     
@@ -214,8 +215,8 @@ class EditorGameView: GameView {
     }
     
     private func buildLightNodes() {
-        map.lights.forEach { setupPointLight($0) }
-        ambientLightEntity = AmbientLightComponent.entity(from: map.ambientLight)
+        mapModel.lights.forEach { setupPointLight($0) }
+        ambientLightEntity = AmbientLightComponent.entity(from: mapModel.ambientLight)
     }
     
     private func setupPointLight(_ light: PointLight) {
@@ -232,13 +233,14 @@ class EditorGameView: GameView {
     }
     
     func add(light: PointLight) {
-        mutableMap.add(light: light)
+        selectionManager?.deselect()
+        mapModel.add(light: light)
         setupPointLight(light)
     }
     
     func addAsset(_ asset: AssetLocator, atMapPosition position: MapPosition, horizontallyFlipped: Bool) {
         do {
-            try mutableMap.addAsset(asset, named: "", atMapPosition: position, horizontallyFlipped: horizontallyFlipped)
+            try mutableMap.addAsset(asset, named: "", at: position, horizontallyFlipped: horizontallyFlipped)
             mutableMap.dirty = true
         }
         catch MapRegionErrors.assetTooCloseToRegionBorder {
@@ -269,7 +271,7 @@ class EditorGameView: GameView {
         if let pointLightComponent = notification.object as? PointLightComponent {
             NotificationCenter.default.removeObserver(self, name: .selectableErased, object: pointLightComponent)
             
-            mutableMap.remove(light: pointLightComponent.lightDescription)
+            mapModel.remove(light: pointLightComponent.lightDescription)
             
             let lightEntity = pointLightComponent.entity!
             lightEntity.component(ofType: GKSKNodeComponent.self)!.node.removeFromParent()

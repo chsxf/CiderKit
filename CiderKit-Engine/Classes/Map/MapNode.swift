@@ -1,4 +1,5 @@
 import SpriteKit
+import Combine
 import GameplayKit
 
 open class MapNode: SKNode {
@@ -17,127 +18,100 @@ open class MapNode: SKNode {
     nonisolated public static let yVector = SIMD2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
     nonisolated public static let zVector = SIMD2(0, Float(MapNode.elevationHeight))
 
-    public var regions: [MapRegion] = [MapRegion]()
-    
-    private let cellRenderers: [String:CellRendererDescription]
-    
-    public let ambientLight: BaseLight
-    public var lights: [PointLight]
-    
+    public private(set) weak var model: MapModel? = nil
+    private var modelCancellable: AnyCancellable!
+
     public private(set) var assetEntities: [GKEntity] = []
     public let assetComponentSystem: GKComponentSystem<AssetComponent>
     
-    public init(description mapDescription: MapDescription) {
-        cellRenderers = mapDescription.renderers
-        
-        ambientLight = mapDescription.lighting.ambientLight
-        lights = mapDescription.lighting.lights
-        
+    private var nodesByRegionId = [Int:MapRegionNode]()
+    private var orderedRegionNodes = [MapRegionNode]()
+    
+    public init(with model: MapModel) {
+        self.model = model
         assetComponentSystem = GKComponentSystem(componentClass: AssetComponent.self)
         
         super.init()
         
         registerCellRenderers()
-        
-        for regionDescription in mapDescription.regions {
-            let region = MapRegion(forMap: self, description: regionDescription)
-            regions.append(region)
-            addChild(region)
-        }
-        
-        sortRegions()
-        buildRegions()
+        rebuildRegionNodes()
         
         zPosition = 2
+
+        modelCancellable = model.changed.sink(receiveValue: self.onModelChanged(_:))
     }
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    public func regionAt(mapX x: Int, y: Int) -> MapRegion? { regions.first(where: { $0.containsMapCoordinates(mapX: x, y: y) }) }
 
-    public func regionAt(mapPosition position: MapPosition) -> MapRegion? { regionAt(mapX: position.x, y: position.y) }
+    open func onModelChanged(_ changedModel: MapModel) {
+        rebuildRegionNodes()
+    }
 
-    public func hasCell(forMapX x: Int, y: Int) -> Bool { regionAt(mapX: x, y: y) != nil }
-
-    public func toMapDescription() -> MapDescription {
-        var newMapDescription = MapDescription()
-        for region in regions {
-            newMapDescription.regions.append(region.regionDescription)
+    private func registerCellRenderers() {
+        if let model {
+            for (name, rendererDescription) in model.cellRenderers {
+                let renderer = CellRenderer(from: rendererDescription)
+                try! CellRenderers.register(cellRenderer: renderer, named: name)
+            }
         }
-        
-        newMapDescription.renderers = cellRenderers
-        
-        var lighting = LightingDescription(ambientLight: ambientLight)
-        lighting.lights = lights
-        newMapDescription.lighting = lighting
-        
-        return newMapDescription
+    }
+    
+    open func rebuildRegionNodes() {
+        if let model {
+            orderedRegionNodes.forEach { $0.dismantle() }
+            orderedRegionNodes.removeAll()
+            
+            var idsToRemove = Array(nodesByRegionId.keys)
+            
+            for regionModel in model.regions {
+                if idsToRemove.contains(regionModel.id) {
+                    idsToRemove.removeAll { $0 == regionModel.id }
+                }
+                else {
+                    let regionNode = MapRegionNode(for: regionModel)
+                    nodesByRegionId[regionModel.id] = regionNode
+                    addChild(regionNode)
+                }
+                
+                if let node = nodesByRegionId[regionModel.id] {
+                    orderedRegionNodes.append(node)
+                }
+            }
+            
+            for idToRemove in idsToRemove {
+                if let node = nodesByRegionId.removeValue(forKey: idToRemove) {
+                    node.removeFromParent()
+                }
+            }
+            
+            orderedRegionNodes.forEach { $0.build() }
+            
+            updateRegionsZPosition()
+        }
     }
     
     private func updateRegionsZPosition() {
         var index = 0
-        for region in regions {
-            region.zPosition = CGFloat(index)
-            index += region.layerCount
+        for regionNode in orderedRegionNodes {
+            regionNode.zPosition = CGFloat(index)
+            index += regionNode.layerCount
         }
     }
     
-    private func registerCellRenderers() {
-        for (name, rendererDescription) in cellRenderers {
-            let renderer = CellRenderer(from: rendererDescription)
-            try! CellRenderers.register(cellRenderer: renderer, named: name)
-        }
-    }
-    
-    public func sortRegions() {
-        regions.sort()
-    }
-    
-    open func buildRegions() {
-        for region in regions {
-            region.build()
-        }
-        updateRegionsZPosition()
-    }
-    
-    func getLeftVisibleElevation(forX x: Int, y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
-        guard
-            let cellElevation = getCellElevation(forX: x, y: y),
-            let leftCellElevation = getCellElevation(forX: x, y: y + 1)
-        else {
-            return defaultElevation
-        }
-        
-        let diff = cellElevation - leftCellElevation
-        return Swift.max(diff, 0)
-    }
-    
-    func getRightVisibleElevation(forX x: Int, y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
-        guard
-            let cellElevation = getCellElevation(forX: x, y: y),
-            let rightCellElevation = getCellElevation(forX: x + 1, y: y)
-        else {
-            return defaultElevation
-        }
-        
-        let diff = cellElevation - rightCellElevation
-        return Swift.max(diff, 0)
-    }
-    
-    func getCellElevation(forX x: Int, y: Int) -> Int? {
-        for region in regions {
-            if region.containsMapCoordinates(mapX: x, y: y) {
-                return region.regionDescription.elevation
-            }
+    public func regionNode(atMapX x: Int, y: Int) -> MapRegionNode? {
+        if let regionModel = model?.regionAt(mapX: x, y: y) {
+            return nodesByRegionId[regionModel.id]
         }
         return nil
     }
-    
-    public func lookForMapCellEntity(atMapPosition position: MapPosition) -> GKEntity? {
-        for region in regions {
-            for cell in region.cellEntities {
+
+    public func regionNode(at position: MapPosition) -> MapRegionNode? { regionNode(atMapX: position.x, y: position.y) }
+
+    public func lookForMapCellEntity(at position: MapPosition) -> GKEntity? {
+        if let regionNode = regionNode(at: position) {
+            for cell in regionNode.cellEntities {
                 for component in cell.components {
                     if let cellComponent = component as? MapCellComponent {
                         if cellComponent.position.x == position.x && cellComponent.position.y == position.y {
@@ -152,8 +126,8 @@ open class MapNode: SKNode {
     }
     
     public func raycastMapCell(at sceneCoordinates: ScenePosition) -> MapCellComponent? {
-        for region in regions {
-            for cell in region.cellEntities {
+        for regionNode in orderedRegionNodes {
+            for cell in regionNode.cellEntities {
                 if let cellComponent = cell.component(ofType: MapCellComponent.self), cellComponent.contains(sceneCoordinates: sceneCoordinates){
                     return cellComponent
                 }
@@ -163,8 +137,8 @@ open class MapNode: SKNode {
     }
 
     public func raycastWorldPosition(at sceneCoordinates: ScenePosition) -> WorldPosition? {
-        for region in regions {
-            for cell in region.cellEntities {
+        for regionNode in orderedRegionNodes {
+            for cell in regionNode.cellEntities {
                 if let containedWorldPosition = cell.component(ofType: MapCellComponent.self)?.getContainedWorldPosition(sceneCoordinates: sceneCoordinates) {
                     return containedWorldPosition
                 }
@@ -181,7 +155,7 @@ open class MapNode: SKNode {
         raycastAsset(at: sceneCoordinates) ?? raycastMapCell(at: sceneCoordinates)
     }
 
-    open func mapCellEntity(node: SKNode, for region: MapRegion, atMapPosition position: MapPosition) -> GKEntity {
+    open func mapCellEntity(node: SKNode, for region: MapRegionNode, atMapPosition position: MapPosition) -> GKEntity {
         let entity = GKEntity()
         entity.addComponent(GKSKNodeComponent(node: node))
         let cell = mapCellComponent(for: region, atMapPosition: position)
@@ -189,17 +163,8 @@ open class MapNode: SKNode {
         return entity
     }
     
-    open func mapCellComponent(for region: MapRegion, atMapPosition position: MapPosition) -> MapCellComponent {
+    open func mapCellComponent(for region: MapRegionNode, atMapPosition position: MapPosition) -> MapCellComponent {
         return MapCellComponent(region: region, position: position)
-    }
-    
-    public func getAssetPlacement(by id: UUID) -> AssetPlacement? {
-        for region in regions {
-            if let placement = region.regionDescription.assetPlacements?.first(where: { $0.id == id }) {
-                return placement
-            }
-        }
-        return nil
     }
     
     public final func instantiateAsset(placement: AssetPlacement) -> (AssetInstance, GKEntity)? {
@@ -214,7 +179,7 @@ open class MapNode: SKNode {
         return entity
     }
 
-    open func remove(assetInstance: AssetInstance) {
+    open func remove(assetInstance: AssetInstance, includingPlacement: Bool = true) {
         var foundComponent: AssetComponent? = nil
         for component in assetComponentSystem.components {
             if component.assetInstance === assetInstance {
@@ -228,23 +193,23 @@ open class MapNode: SKNode {
             assetComponentSystem.removeComponent(foundComponent)
             assetEntities.removeAll { $0 === entity }
 
-            if let region = regionAt(mapPosition: assetInstance.placement.mapPosition) {
-                region.remove(assetInstance: assetInstance)
+            if let regionNode = regionNode(at: assetInstance.placement.mapPosition) {
+                regionNode.remove(assetInstance: assetInstance, includingPlacement: includingPlacement)
             }
         }
     }
 
     @discardableResult
-    public final func addAsset(_ asset: AssetLocator, named: String, atMapPosition: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
-        if let region = regionAt(mapPosition: atMapPosition) {
-            return try region.addAsset(asset, named: "", atMapPosition: atMapPosition, horizontallyFlipped: horizontallyFlipped)
+    public final func addAsset(_ asset: AssetLocator, named: String, at position: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
+        if let regionNode = regionNode(at: position) {
+            return try regionNode.addAsset(asset, named: "", atMapPosition: position, horizontallyFlipped: horizontallyFlipped)
         }
         return nil
     }
 
     public final func add(assetInstance: AssetInstance) throws {
-        if let region = regionAt(mapPosition: assetInstance.placement.mapPosition) {
-            try region.add(assetInstance: assetInstance)
+        if let regionNode = regionNode(at: assetInstance.placement.mapPosition) {
+            try regionNode.add(assetInstance: assetInstance)
         }
     }
 

@@ -2,7 +2,7 @@ import GameplayKit
 
 open class MapCellComponent: GKComponent
 {
-    public private(set) weak var region: MapRegion?
+    public private(set) weak var region: MapRegionNode?
     
     public var position: MapPosition
     
@@ -10,7 +10,7 @@ open class MapCellComponent: GKComponent
     var leftElevationMaterialOverrides: CustomSettings? = nil
     var rightElevationMaterialOverrides: CustomSettings? = nil
     
-    public init(region: MapRegion?, position: MapPosition) {
+    public init(region: MapRegionNode?, position: MapPosition) {
         self.region = region
         self.position = position
         super.init()

@@ -31,8 +31,12 @@ public struct MapPosition: Codable, Sendable {
         return MapPosition(x: x + x, y: y + y, elevation: newElevation, worldOffset: self.worldOffset + worldOffset)
     }
 
-    public func withElevation(_ newElevation: Int? = nil) -> MapPosition {
+    public func with(elevation newElevation: Int? = nil) -> MapPosition {
         MapPosition(x: x, y: y, elevation: newElevation, worldOffset: worldOffset)
+    }
+    
+    public func with(relativeElevation: Int) -> MapPosition {
+        MapPosition(x: x, y: y, elevation: (elevation ?? 0) + relativeElevation, worldOffset: worldOffset)
     }
 
 }
