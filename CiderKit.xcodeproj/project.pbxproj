@@ -14,6 +14,7 @@
 		D90299792880B975002A7606 /* ToolNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90299782880B975002A7606 /* ToolNode.swift */; };
 		D902997B2880BA92002A7606 /* ToolContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D902997A2880BA92002A7606 /* ToolContext.swift */; };
 		D902997D2880BEE3002A7606 /* ToolComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D902997C2880BEE3002A7606 /* ToolComponent.swift */; };
+		D902F1952DC60A59008008DF /* DirectionalLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D902F1942DC60A55008008DF /* DirectionalLight.swift */; };
 		D90440582A8590B8009DBADE /* CKUILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90440572A8590B8009DBADE /* CKUILabel.swift */; };
 		D909E4D92A7851B600978163 /* CKUIURLResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909E4D82A7851B600978163 /* CKUIURLResolver.swift */; };
 		D909FDB8287747640083EB8C /* MapCellInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D909FDB7287747640083EB8C /* MapCellInspector.swift */; };
@@ -55,6 +56,10 @@
 		D9257D442A8D53F200D52928 /* CKUILabelControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9257D432A8D53F200D52928 /* CKUILabelControl.swift */; };
 		D928562428B18271000F2D86 /* VSpacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928562328B18271000F2D86 /* VSpacer.swift */; };
 		D928562628B18BB5000F2D86 /* FloatField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D928562528B18BB5000F2D86 /* FloatField.swift */; };
+		D9296B862DCAA946009F0BA3 /* DirectionalLightNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9296B852DCAA946009F0BA3 /* DirectionalLightNode.swift */; };
+		D9296B882DCAA993009F0BA3 /* BaseLightNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9296B872DCAA993009F0BA3 /* BaseLightNode.swift */; };
+		D9296B8C2DCAACFD009F0BA3 /* DirectionalLightComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9296B8B2DCAACFD009F0BA3 /* DirectionalLightComponent.swift */; };
+		D9296B8E2DCAAD77009F0BA3 /* DirectionalLightInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9296B8D2DCAAD77009F0BA3 /* DirectionalLightInspector.swift */; };
 		D92A1ACD28D7C5DD0096972B /* AssetAnimationKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92A1ACC28D7C5DD0096972B /* AssetAnimationKey.swift */; };
 		D92B7DAC2A3DBEA00088E847 /* CKUISizeDelta.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92B7DAB2A3DBEA00088E847 /* CKUISizeDelta.swift */; };
 		D92D20D728860E23000B8DA9 /* AssetEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92D20D628860E23000B8DA9 /* AssetEditorView.swift */; };
@@ -269,6 +274,7 @@
 		D90299782880B975002A7606 /* ToolNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolNode.swift; sourceTree = "<group>"; };
 		D902997A2880BA92002A7606 /* ToolContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolContext.swift; sourceTree = "<group>"; };
 		D902997C2880BEE3002A7606 /* ToolComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolComponent.swift; sourceTree = "<group>"; };
+		D902F1942DC60A55008008DF /* DirectionalLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalLight.swift; sourceTree = "<group>"; };
 		D90440572A8590B8009DBADE /* CKUILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUILabel.swift; sourceTree = "<group>"; };
 		D909E4D82A7851B600978163 /* CKUIURLResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUIURLResolver.swift; sourceTree = "<group>"; };
 		D909FDB7287747640083EB8C /* MapCellInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCellInspector.swift; sourceTree = "<group>"; };
@@ -320,6 +326,10 @@
 		D9257D432A8D53F200D52928 /* CKUILabelControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUILabelControl.swift; sourceTree = "<group>"; };
 		D928562328B18271000F2D86 /* VSpacer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSpacer.swift; sourceTree = "<group>"; };
 		D928562528B18BB5000F2D86 /* FloatField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatField.swift; sourceTree = "<group>"; };
+		D9296B852DCAA946009F0BA3 /* DirectionalLightNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalLightNode.swift; sourceTree = "<group>"; };
+		D9296B872DCAA993009F0BA3 /* BaseLightNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLightNode.swift; sourceTree = "<group>"; };
+		D9296B8B2DCAACFD009F0BA3 /* DirectionalLightComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalLightComponent.swift; sourceTree = "<group>"; };
+		D9296B8D2DCAAD77009F0BA3 /* DirectionalLightInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionalLightInspector.swift; sourceTree = "<group>"; };
 		D92A1ACC28D7C5DD0096972B /* AssetAnimationKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAnimationKey.swift; sourceTree = "<group>"; };
 		D92B7DAB2A3DBEA00088E847 /* CKUISizeDelta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKUISizeDelta.swift; sourceTree = "<group>"; };
 		D92D20D628860E23000B8DA9 /* AssetEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetEditorView.swift; sourceTree = "<group>"; };
@@ -530,6 +540,7 @@
 				D92FD11928AA72790097945B /* BaseInspectorView.swift */,
 				D9D9AD0A2BF7CB8F00CC2ED7 /* BaseNamedInspectorView.swift */,
 				D9D9AD082BF7CB5A00CC2ED7 /* BaseTypedInsepctorView.swift */,
+				D9296B8D2DCAAD77009F0BA3 /* DirectionalLightInspector.swift */,
 				D92FD11728AA719A0097945B /* InspectorViewFactory.swift */,
 				D909FDB7287747640083EB8C /* MapCellInspector.swift */,
 				D909FDB9287748DD0083EB8C /* PointLightInspector.swift */,
@@ -608,6 +619,7 @@
 			isa = PBXGroup;
 			children = (
 				D92002D8282FAFCF007D5AC1 /* BaseLight.swift */,
+				D902F1942DC60A55008008DF /* DirectionalLight.swift */,
 				D92002DC282FB0E0007D5AC1 /* LightingDescription.swift */,
 				D92002DA282FB009007D5AC1 /* PointLight.swift */,
 			);
@@ -645,6 +657,8 @@
 		D933B7432830D34C00B63313 /* Nodes */ = {
 			isa = PBXGroup;
 			children = (
+				D9296B872DCAA993009F0BA3 /* BaseLightNode.swift */,
+				D9296B852DCAA946009F0BA3 /* DirectionalLightNode.swift */,
 				D933B7412830D32200B63313 /* PointLightNode.swift */,
 				D90299782880B975002A7606 /* ToolNode.swift */,
 				D9CC420F276163700081A464 /* WorldGrid.swift */,
@@ -720,6 +734,7 @@
 			isa = PBXGroup;
 			children = (
 				D96A3BE628798C0A008949A1 /* AmbientLightComponent.swift */,
+				D9296B8B2DCAACFD009F0BA3 /* DirectionalLightComponent.swift */,
 				D9173DA62878E134002E652C /* EditableComponent.swift */,
 				D9173DA82878E69A002E652C /* EditableComponentDelegate.swift */,
 				D94C153C29AE748B0065DD64 /* EditorAssetComponent.swift */,
@@ -1210,7 +1225,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					D91061AA2755F0B200EA8A03 = {
 						CreatedOnToolsVersion = 13.1;
@@ -1342,6 +1357,7 @@
 				D90299792880B975002A7606 /* ToolNode.swift in Sources */,
 				D9CC4210276163700081A464 /* WorldGrid.swift in Sources */,
 				D91061AF2755F0B200EA8A03 /* CiderKitApp.swift in Sources */,
+				D9296B8C2DCAACFD009F0BA3 /* DirectionalLightComponent.swift in Sources */,
 				D933B7442830D35B00B63313 /* PointLightNode.swift in Sources */,
 				D92D20D728860E23000B8DA9 /* AssetEditorView.swift in Sources */,
 				D9173DA92878E69A002E652C /* EditableComponentDelegate.swift in Sources */,
@@ -1371,10 +1387,13 @@
 				D9387C19289D3A6800558E02 /* SpriteSelectorView.swift in Sources */,
 				D93F23A328D59180002276EE /* AssetAnimationDopeSheetHeaderView.swift in Sources */,
 				D923F9EC2973731C000F040C /* NSMenuItemExtension.swift in Sources */,
+				D9296B8E2DCAAD77009F0BA3 /* DirectionalLightInspector.swift in Sources */,
 				D93FE0DF28BA43C800215D83 /* LabelledColorWell.swift in Sources */,
+				D9296B862DCAA946009F0BA3 /* DirectionalLightNode.swift in Sources */,
 				D923F9EA29736D74000F040C /* MainActionsManager.swift in Sources */,
 				D936187B27E71D77009A14E2 /* EditorGameView.swift in Sources */,
 				D96A3BE728798C0A008949A1 /* AmbientLightComponent.swift in Sources */,
+				D9296B882DCAA993009F0BA3 /* BaseLightNode.swift in Sources */,
 				D9DE549E28CDD8BF00E3761B /* AssetAnimationTracksDataSource.swift in Sources */,
 				D909FDB8287747640083EB8C /* MapCellInspector.swift in Sources */,
 				D96A3BEB2879D8C7008949A1 /* Tool.swift in Sources */,
@@ -1462,6 +1481,7 @@
 				D93C4CAA2800CBE0000955E1 /* Functions.swift in Sources */,
 				D93C4CAF2800CBE8000955E1 /* MapDescription.swift in Sources */,
 				D90CDA8D2CD52B8400C3245F /* AssetAnimationTrackTypeRegistry.swift in Sources */,
+				D902F1952DC60A59008008DF /* DirectionalLight.swift in Sources */,
 				D91AD71D2CE259E800831426 /* MapRegionModel.swift in Sources */,
 				D91657F4290878B700510386 /* CGColorExtension.swift in Sources */,
 				D9CFEF842A2D3BF400991D7B /* CGFloatExtension.swift in Sources */,
@@ -1597,6 +1617,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1661,6 +1682,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1692,7 +1714,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1725,7 +1746,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1758,7 +1778,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1804,7 +1823,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1845,7 +1863,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
@@ -1862,7 +1879,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
@@ -1885,7 +1901,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1916,7 +1931,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1943,7 +1957,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1969,7 +1982,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 5L9YG7YEUA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -3,7 +3,8 @@ import AppKit
 extension NSToolbarItem.Identifier {
     static let tool = NSToolbarItem.Identifier(rawValue: "tool")
     static let addAsset = NSToolbarItem.Identifier(rawValue: "addAsset")
-    static let addLight = NSToolbarItem.Identifier(rawValue: "addLight")
+    static let addPointLight = NSToolbarItem.Identifier(rawValue: "addPointLight")
+    static let addDirectionalLight = NSToolbarItem.Identifier(rawValue: "addDirectionalLight")
     static let ambientLightSettings = NSToolbarItem.Identifier(rawValue: "ambientlight_settings")
     static let toggleLighting = NSToolbarItem.Identifier(rawValue: "toogle_lighting")
     static let assetEditor = NSToolbarItem.Identifier(rawValue: "asset_editor")
@@ -12,11 +13,11 @@ extension NSToolbarItem.Identifier {
 final class MainToolbar: NSObject, NSToolbarDelegate {
     
     private let allowedToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .space, .addLight, .ambientLightSettings, .toggleLighting, .assetEditor
+        .tool, .space, .addPointLight, .addDirectionalLight, .ambientLightSettings, .toggleLighting, .assetEditor
     ]
     
     private let defaultToolbarIdentifiers: [NSToolbarItem.Identifier] = [
-        .tool, .space, .addAsset, .space, .addLight, .ambientLightSettings, .toggleLighting, .space, .assetEditor
+        .tool, .space, .addAsset, .space, .addPointLight, .addDirectionalLight, .ambientLightSettings, .toggleLighting, .space, .assetEditor
     ]
     
     private weak var actionsManager: MainActionsManager? = nil
@@ -56,6 +57,7 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
             NSImage(systemSymbolName: "arrow.up.arrow.down", accessibilityDescription: "Elevation")!
         ], selectionMode: .selectOne, labels: ["Select", "Move", "Elevation"], target: actionsManager, action: #selector(MainActionsManager.switchTool))
         toolItemGroup.selectedIndex = 0
+        toolItemGroup.toolTip = "Tool Mode"
         for i in 1...2 {
             toolItemGroup.subitems[i].isEnabled = false
         }
@@ -63,20 +65,31 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
         
         let addAssetItem = NSToolbarItem(itemIdentifier: .addAsset)
         addAssetItem.label = "Add Asset"
+        addAssetItem.toolTip = addAssetItem.label
         addAssetItem.image = NSImage(systemSymbolName: "cube.fill", accessibilityDescription: "Add Asset")
         addAssetItem.target = actionsManager
         addAssetItem.action = #selector(MainActionsManager.addAsset)
         definedToolbarItems[.addAsset] = addAssetItem
         
-        let addLightItem = NSToolbarItem(itemIdentifier: .addLight)
-        addLightItem.label = "Add Light"
-        addLightItem.image = NSImage(systemSymbolName: "lightbulb.fill", accessibilityDescription: "Add Light")
-        addLightItem.target = actionsManager
-        addLightItem.action = #selector(MainActionsManager.addLight)
-        definedToolbarItems[.addLight] = addLightItem
-        
+        let addPointLightItem = NSToolbarItem(itemIdentifier: .addPointLight)
+        addPointLightItem.label = "Add Point Light"
+        addPointLightItem.toolTip = addPointLightItem.label
+        addPointLightItem.image = NSImage(systemSymbolName: "lightbulb.fill", accessibilityDescription: "Add Point Light")
+        addPointLightItem.target = actionsManager
+        addPointLightItem.action = #selector(MainActionsManager.addPointLight)
+        definedToolbarItems[.addPointLight] = addPointLightItem
+
+        let addDirectionalLightItem = NSToolbarItem(itemIdentifier: .addDirectionalLight)
+        addDirectionalLightItem.label = "Add Directional Light"
+        addDirectionalLightItem.toolTip = addDirectionalLightItem.label
+        addDirectionalLightItem.image = NSImage(systemSymbolName: "flashlight.on.fill", accessibilityDescription: "Add Directional Light")
+        addDirectionalLightItem.target = actionsManager
+        addDirectionalLightItem.action = #selector(MainActionsManager.addDirectionalLight)
+        definedToolbarItems[.addDirectionalLight] = addDirectionalLightItem
+
         let ambientLightSettingsItem = NSToolbarItem(itemIdentifier: .ambientLightSettings)
         ambientLightSettingsItem.label = "Ambient Light Settings"
+        ambientLightSettingsItem.toolTip = ambientLightSettingsItem.label
         ambientLightSettingsItem.image = NSImage(systemSymbolName: "sun.max.fill", accessibilityDescription: "Ambient Light Settings")
         ambientLightSettingsItem.target = actionsManager
         ambientLightSettingsItem.action = #selector(MainActionsManager.selectAmbientLight)
@@ -84,6 +97,7 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
         
         let toggleLightingItem = NSToolbarItem(itemIdentifier: .toggleLighting)
         toggleLightingItem.label = "Toggle Lighting"
+        toggleLightingItem.toolTip = toggleLightingItem.label
         toggleLightingItem.image = NSImage(systemSymbolName: "lightbulb.circle.fill", accessibilityDescription: "Toggle Lighting")
         toggleLightingItem.target = actionsManager
         toggleLightingItem.action = #selector(MainActionsManager.toggleLighting)
@@ -91,6 +105,7 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
         
         let assetEditorItem = NSToolbarItem(itemIdentifier: .assetEditor)
         assetEditorItem.label = "Asset Editor"
+        assetEditorItem.toolTip = assetEditorItem.label
         assetEditorItem.image = NSImage(systemSymbolName: "photo.fill", accessibilityDescription: "Asset Editor")
         assetEditorItem.target = actionsManager
         assetEditorItem.action = #selector(MainActionsManager.openAssetEditor)

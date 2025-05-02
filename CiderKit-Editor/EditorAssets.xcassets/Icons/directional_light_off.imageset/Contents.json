@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "flashlight_shine.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

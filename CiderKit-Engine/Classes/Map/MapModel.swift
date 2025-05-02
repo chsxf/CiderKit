@@ -7,7 +7,7 @@ open class MapModel {
     internal let cellRenderers: [String:CellRendererDescription]
 
     public let ambientLight: BaseLight
-    public var lights: [PointLight]
+    public var lights: [BaseLight]
 
     public let changed = PassthroughSubject<MapModel, Never>()
     
@@ -78,13 +78,13 @@ open class MapModel {
         regionAt(mapX: x, y: y)?.regionDescription.elevation
     }
 
-    public func add(light: PointLight) {
+    public func add(light: BaseLight) {
         lights.append(light)
         changed.send(self)
     }
 
     @discardableResult
-    public func remove(light: PointLight) -> Bool {
+    public func remove(light: BaseLight) -> Bool {
         let countBefore = lights.count
         lights.removeAll { $0 === light }
         if countBefore != lights.count {

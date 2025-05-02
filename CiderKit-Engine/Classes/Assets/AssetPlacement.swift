@@ -17,7 +17,7 @@ public final class AssetPlacement: Codable, Identifiable, ObservableObject, Name
 
     private static let VERSION = AssetPlacement.WITH_MAP_POSITION_VERSION
 
-    public let version: Int
+    public let version: Int = AssetPlacement.VERSION
     public let id: UUID
     @Published public var name: String
     @Published public var assetLocator: AssetLocator
@@ -27,7 +27,6 @@ public final class AssetPlacement: Codable, Identifiable, ObservableObject, Name
     
     public init(assetLocator: AssetLocator, horizontallyFlipped: Bool, position: MapPosition = MapPosition(), name: String = "") {
         id = UUID()
-        self.version = Self.VERSION
         self.name = name
         self.assetLocator = assetLocator
         self.mapPosition = position
@@ -38,11 +37,11 @@ public final class AssetPlacement: Codable, Identifiable, ObservableObject, Name
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        version = try container.decodeIfPresent(Int.self, forKey: .version) ?? 1
+        let savedVersion = try container.decodeIfPresent(Int.self, forKey: .version) ?? 1
         id = try container.decode(UUID.self, forKey: .id)
         name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
         assetLocator = try container.decode(AssetLocator.self, forKey: .assetLocator)
-        if version < Self.WITH_MAP_POSITION_VERSION {
+        if savedVersion < Self.WITH_MAP_POSITION_VERSION {
             let x = try container.decode(Int.self, forKey: .x)
             let y = try container.decode(Int.self, forKey: .y)
             let worldOffset = try container.decode(CGPoint.self, forKey: .worldOffset)
@@ -58,7 +57,8 @@ public final class AssetPlacement: Codable, Identifiable, ObservableObject, Name
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
+
+        try container.encode(version, forKey: .version)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
         try container.encode(assetLocator, forKey: .assetLocator)

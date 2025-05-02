@@ -2,31 +2,45 @@ float inverseLerp(float min, float max, float value) {
     return (value - min) / (max - min);
 }
 
+float luminance(vec3 color) {
+    return color.r * 0.299 + color.g * 0.587 + color.b * 0.114;
+}
+
 vec4 processLight(mat3 light, vec3 pos, vec3 normals) {
     if (light[2][1] == 0) {
         return vec4();
     }
     
-    vec3 lightToPos = light[0] - pos;
-    vec3 normalizedLightToPos = normalize(lightToPos);
-    
     float lightPower = 0;
-    float dotProduct = dot(normals, normalizedLightToPos);
-    if (dotProduct > 0) {
-        float distanceToLight = length(lightToPos);
-        vec3 lightFalloff = light[2];
-        if (distanceToLight < lightFalloff[1]) {
-            if (lightFalloff[2] < 0) {
-                lightPower = 1;
-            }
-            else {
-                lightPower = clamp(1.0 - inverseLerp(lightFalloff[0], lightFalloff[1], distanceToLight), 0.0, 1.0);
-                lightPower *= pow(dotProduct, lightFalloff[2]);
+
+    if (light[2][2] == 0) {
+        vec3 lightDirection = light[1];
+        float dotProduct = dot(normals, lightDirection);
+        if (dotProduct > 0) {
+            lightPower = dotProduct;
+        }
+    }
+    else {
+        vec3 lightToPos = light[1] - pos;
+        vec3 normalizedLightToPos = normalize(lightToPos);
+        
+        float dotProduct = dot(normals, normalizedLightToPos);
+        if (dotProduct > 0) {
+            float distanceToLight = length(lightToPos);
+            vec3 lightFalloff = light[2];
+            if (distanceToLight < lightFalloff[1]) {
+                if (lightFalloff[2] < 0) {
+                    lightPower = 1;
+                }
+                else {
+                    lightPower = clamp(1.0 - inverseLerp(lightFalloff[0], lightFalloff[1], distanceToLight), 0.0, 1.0);
+                    lightPower *= pow(dotProduct, lightFalloff[2]);
+                }
             }
         }
     }
-    
-    return vec4(light[1] * lightPower, lightPower);
+
+    return vec4(light[0] * lightPower, luminance(light[0]) * lightPower);
 }
 
 void main() {

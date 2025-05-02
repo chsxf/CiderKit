@@ -51,10 +51,15 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     }
     
     @objc
-    func addLight() {
-        gameView?.add(light: PointLight(name: "New Light", color: CGColor.white, position: WorldPosition(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
+    func addPointLight() {
+        gameView?.add(light: PointLight(name: "New Point Light", color: CGColor.white, position: WorldPosition(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
     }
-    
+
+    @objc
+    func addDirectionalLight() {
+        gameView?.add(light: DirectionalLight(name: "New Directional Light", color: CGColor.white, position: SIMD3(), orientation: SIMD2()))
+    }
+
     @objc
     func selectAmbientLight() {
         gameView?.selectionModel.setSelectable(gameView?.ambientLightEntity?.findSelectableComponent())

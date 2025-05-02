@@ -20,7 +20,7 @@ open class GameView: LitSceneView {
     public var lightingEnabled: Bool = true
     
     open override var ambientLightColorRGB: SIMD3<Float> {
-        lightingEnabled ? mapModel.ambientLight.vector : super.ambientLightColorRGB
+        lightingEnabled ? mapModel.ambientLight.colorVector : super.ambientLightColorRGB
     }
     
     open override var preferredSceneWidth: Int { Project.current?.settings.targetResolutionWidth ?? super.preferredSceneWidth }

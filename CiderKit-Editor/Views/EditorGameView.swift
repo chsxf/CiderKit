@@ -215,10 +215,25 @@ class EditorGameView: GameView {
     }
     
     private func buildLightNodes() {
-        mapModel.lights.forEach { setupPointLight($0) }
+        mapModel.lights.forEach { setupLight($0) }
         ambientLightEntity = AmbientLightComponent.entity(from: mapModel.ambientLight)
     }
     
+    func add(light: BaseLight) {
+        selectionManager?.deselect()
+        mapModel.add(light: light)
+        setupLight(light)
+    }
+
+    func setupLight(_ light: BaseLight) {
+        if let pointLight = light as? PointLight {
+            setupPointLight(pointLight)
+        }
+        else if let directionalLight = light as? DirectionalLight {
+            setupDirectionalLight(directionalLight)
+        }
+    }
+
     private func setupPointLight(_ light: PointLight) {
         let lightEntity = PointLightComponent.entity(from: light)
         if let lightNode = lightEntity.component(ofType: GKSKNodeComponent.self)?.node {
@@ -226,18 +241,25 @@ class EditorGameView: GameView {
         }
         lightEntities.append(lightEntity)
         editableComponents.addComponent(foundIn: lightEntity)
-        
+
         if let pointLightComponent = lightEntity.component(ofType: PointLightComponent.self) {
             NotificationCenter.default.addObserver(self, selector: #selector(pointLightErased(notification:)), name: .selectableErased, object: pointLightComponent)
         }
     }
     
-    func add(light: PointLight) {
-        selectionManager?.deselect()
-        mapModel.add(light: light)
-        setupPointLight(light)
+    private func setupDirectionalLight(_ light: DirectionalLight) {
+        let lightEntity = DirectionalLightComponent.entity(from: light)
+        if let lightNode = lightEntity.component(ofType: GKSKNodeComponent.self)?.node {
+            lightsRoot.addChild(lightNode)
+        }
+        lightEntities.append(lightEntity)
+        editableComponents.addComponent(foundIn: lightEntity)
+
+        if let directionalLightComponent = lightEntity.component(ofType: DirectionalLightComponent.self) {
+            NotificationCenter.default.addObserver(self, selector: #selector(directionalLightErased(notification:)), name: .selectableErased, object: directionalLightComponent)
+        }
     }
-    
+
     func addAsset(_ asset: AssetLocator, atMapPosition position: MapPosition, horizontallyFlipped: Bool) {
         do {
             try mutableMap.addAsset(asset, named: "", at: position, horizontallyFlipped: horizontallyFlipped)
@@ -274,6 +296,20 @@ class EditorGameView: GameView {
             mapModel.remove(light: pointLightComponent.lightDescription)
             
             let lightEntity = pointLightComponent.entity!
+            lightEntity.component(ofType: GKSKNodeComponent.self)!.node.removeFromParent()
+            lightEntities.removeAll { $0 === lightEntity }
+            editableComponents.removeComponent(foundIn: lightEntity)
+        }
+    }
+    
+    @objc
+    private func directionalLightErased(notification: Notification) {
+        if let directionalLightComponent = notification.object as? DirectionalLightComponent {
+            NotificationCenter.default.removeObserver(self, name: .selectableErased, object: directionalLightComponent)
+            
+            mapModel.remove(light: directionalLightComponent.lightDescription)
+            
+            let lightEntity = directionalLightComponent.entity!
             lightEntity.component(ofType: GKSKNodeComponent.self)!.node.removeFromParent()
             lightEntities.removeAll { $0 === lightEntity }
             editableComponents.removeComponent(foundIn: lightEntity)
