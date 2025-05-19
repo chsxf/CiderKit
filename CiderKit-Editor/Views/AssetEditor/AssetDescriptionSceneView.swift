@@ -14,9 +14,9 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
     private static let defaultSize: Int = 320
     
     private static let lights = [
-        matrix_float3x3([SIMD3(0, 0, 5), SIMD3(1, 1, 1), SIMD3(0, 20, 0.5)]),
-        matrix_float3x3([SIMD3(5, 1, 1), SIMD3(0.5, 0.4, 0.4), SIMD3(0, 20, 0.5)]),
-        matrix_float3x3([SIMD3(1, 5, 1), SIMD3(0.4, 0.4, 0.5), SIMD3(0, 20, 0.5)]),
+        matrix_float3x3([SIMD3(1, 1, 1), SIMD3(0, 0, 1), SIMD3(0, 1, 0)]),
+        matrix_float3x3([SIMD3(0.5, 0.4, 0.4), SIMD3(1, 0, 0), SIMD3(0, 1, 0)]),
+        matrix_float3x3([SIMD3(0.4, 0.4, 0.5), SIMD3(0, 1, 0), SIMD3(0, 1, 0)]),
     ]
     
     private static var gridTexture: SKTexture? = nil
