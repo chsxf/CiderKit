@@ -7,7 +7,6 @@ open class AppCore {
     public private(set) var transitioning: Bool = false
     
     private var interactionContextStack = [InteractionContextStackData]()
-    public var currentInteractionContext: InteractionContext? { interactionContextStack.last?.instance }
     
     public init(gameView: GameView) {
         self.gameView = gameView
@@ -70,6 +69,11 @@ open class AppCore {
     public func moveBackToPreviousInteractionContext() async throws {
         if interactionContextStack.count < 2 {
             throw InteractionContextError.noPreviousContext
+        }
+        
+        let canMoveToPrevious = interactionContextStack.last?.instance.canMoveToPreviousContext ?? false
+        if !canMoveToPrevious {
+            throw InteractionContextError.invalidTransition
         }
         
         try await moveTo(interactionContext: interactionContextStack[interactionContextStack.endIndex - 2].type)
