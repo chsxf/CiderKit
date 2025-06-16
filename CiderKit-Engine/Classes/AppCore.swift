@@ -10,10 +10,12 @@ open class AppCore {
     
     private var interactionContextStack = [InteractionContextStackData]()
     
-    public init(gameView: GameView) {
+    private init(gameView: GameView) {
         self.gameView = gameView
-        
-        Self.shared = self
+    }
+    
+    open class func start(gameView: GameView) {
+        Self.shared = .init(gameView: gameView)
     }
     
     public func moveTo<T: InteractionContext>(interactionContext contextClass: T.Type, withStategy strategy: InteractionContextFocusStrategy = InteractionContextFocusStrategy.replaceCurrent) async throws {
