@@ -1,8 +1,10 @@
 open class AppCore {
     
+    public private(set) static var shared: AppCore!
+    
     typealias InteractionContextStackData = (type: InteractionContext.Type, instance: InteractionContext)
     
-    public var gameView: GameView
+    public let gameView: GameView
     
     public private(set) var transitioning: Bool = false
     
@@ -10,6 +12,8 @@ open class AppCore {
     
     public init(gameView: GameView) {
         self.gameView = gameView
+        
+        Self.shared = self
     }
     
     public func moveTo<T: InteractionContext>(interactionContext contextClass: T.Type, withStategy strategy: InteractionContextFocusStrategy = InteractionContextFocusStrategy.replaceCurrent) async throws {
@@ -46,8 +50,12 @@ open class AppCore {
             await destinationContextData.instance.willEnter(from: currentContextData?.type)
         }
         
-        interactionContextStack.removeLast()
-        interactionContextStack.removeAll { $0.type === contextClass }
+        if hasCurrentContext {
+            interactionContextStack.removeLast()
+        }
+        if destinationIsAlreadyOnStack {
+            interactionContextStack.removeAll { $0.type === contextClass }
+        }
         interactionContextStack.append(destinationContextData)
         
         if currentContextWillRemainOnStack {
