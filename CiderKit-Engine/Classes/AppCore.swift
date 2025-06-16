@@ -37,13 +37,16 @@ open class AppCore {
         let destinationIsAlreadyOnStack = preExistingContextData != nil
         let destinationContextData = preExistingContextData ?? InteractionContextStackData(type: contextClass, instance: contextClass.init())
         
-        let currentContextWillRemainOnStack = strategy == .additive
-        
-        if currentContextWillRemainOnStack {
+        if strategy == .additive {
             await currentContextData?.instance.willLoseFocus(to: contextClass)
         }
-        else {
+        else if strategy == .replaceCurrent {
             await currentContextData?.instance.willExit(to: contextClass)
+        }
+        else {
+            for i in stride(from: interactionContextStack.count - 1, through: 0, by: -1) {
+                await interactionContextStack[i].instance.willExit(to: contextClass)
+            }
         }
         if destinationIsAlreadyOnStack {
             await destinationContextData.instance.willGainFocus(from: currentContextData?.type)
@@ -52,19 +55,16 @@ open class AppCore {
             await destinationContextData.instance.willEnter(from: currentContextData?.type)
         }
         
-        if hasCurrentContext {
-            interactionContextStack.removeLast()
-        }
-        if destinationIsAlreadyOnStack {
-            interactionContextStack.removeAll { $0.type === contextClass }
-        }
-        interactionContextStack.append(destinationContextData)
-        
-        if currentContextWillRemainOnStack {
+        if strategy == .additive {
             await currentContextData?.instance.didLoseFocus(to: contextClass)
         }
-        else {
+        else if strategy == .replaceCurrent {
             await currentContextData?.instance.didExit(to: contextClass)
+        }
+        else {
+            for i in stride(from: interactionContextStack.count - 1, through: 0, by: -1) {
+                await interactionContextStack[i].instance.didExit(to: contextClass)
+            }
         }
         if destinationIsAlreadyOnStack {
             await destinationContextData.instance.didGainFocus(from: currentContextData?.type)
@@ -72,6 +72,19 @@ open class AppCore {
         else {
             await destinationContextData.instance.didEnter(from: currentContextData?.type)
         }
+        
+        if strategy == .replaceCurrent {
+            if hasCurrentContext {
+                interactionContextStack.removeLast()
+            }
+        }
+        else if strategy == .single {
+            interactionContextStack.removeAll()
+        }
+        if destinationIsAlreadyOnStack {
+            interactionContextStack.removeAll { $0.type === contextClass }
+        }
+        interactionContextStack.append(destinationContextData)
         
         transitioning = false
     }

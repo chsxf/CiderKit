@@ -2,7 +2,7 @@ open class InteractionContext {
     
     public required init() { }
     
-    open var canMoveToPreviousContext: Bool = false
+    open var canMoveToPreviousContext: Bool { false }
     
     open func canMove<T: InteractionContext>(to otherContextClass: T.Type) -> Bool {
         true
