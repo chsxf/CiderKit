@@ -2,8 +2,8 @@ import SpriteKit
 import CiderCSSKit
 import Combine
 
-public final class CKUIButton : CKUIContainer, CKUILabelControl {
-    
+public final class CKUIButton : CKUIContainer, CKUILabelControl, CKUIInteractable {
+
     private static let hoverPseudoClass = "hover"
     private static let activePseudoClass = "active"
     
@@ -12,8 +12,8 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
     
     public let clicked = PassthroughSubject<CKUIButton, Never>()
 
-    public override var isUserInteractionEnabled: Bool { get { true } set { } }
-    
+    public override var isUserInteractionEnabled: Bool { get { enabled } set { } }
+
     public override var frame: CGRect {
         var frame = super.frame
         let pivot = self.pivot
@@ -68,7 +68,7 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl {
             sprite = SKSpriteNode(texture: image)
             addChild(sprite!)
         }
-        
+
         #if os(macOS)
         NotificationCenter.default.post(name: .trackingAreaRegistrationRequested, object: self)
         #endif
