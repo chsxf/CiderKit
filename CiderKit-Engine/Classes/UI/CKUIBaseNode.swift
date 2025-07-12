@@ -71,7 +71,7 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     
     public var ancestor: CSSConsumer? { parent as? CSSConsumer }
     
-    public required init(type: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String:Any]? = nil) {
+    public required init(type: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: any Sendable]? = nil) {
         self.type = type
         self.identifier = identifier
         self.classes = classes
@@ -83,7 +83,11 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    public class func parseCustomData(_ customData: [String: String]) throws -> [String: any Sendable] {
+        [String: any Sendable]()
+    }
+
     open func updateLayout() { }
     
     internal func updatePosition() {
@@ -226,7 +230,7 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     
     public final func load(contentsOf url: URL) async throws {
         let descriptors = try await CKUILoader.loadNodeDescriptors(contentsOf: url)
-        CKUILoader.createNodes(with: descriptors, into: self)
+        try CKUILoader.createNodes(with: descriptors, into: self)
     }
     
 }

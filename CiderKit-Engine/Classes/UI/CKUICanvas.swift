@@ -29,11 +29,15 @@ public final class CKUICanvas: CKUIBaseNode {
         self.init(identifier: identifier, style: CKUIStyle(attributes: "anchors: left bottom; transform-origin: center center;"), customData: customData)
     }
     
-    required init(type: String = "canvas", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String:Any]? = nil) {
+    required init(type: String = "canvas", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: any Sendable]? = nil) {
         canvasStyleSheet = customData?["stylesheet"] as? CKUIStyleSheet
         super.init(type: type, identifier: identifier, classes: classes, style: style, customData: customData)
     }
-    
+
+    public override class func parseCustomData(_ customData: [String : String]) throws -> [String : any Sendable] {
+        try super.parseCustomData(customData)
+    }
+
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -2,20 +2,32 @@ import SpriteKit
 import CiderCSSKit
 
 public final class CKUILabel : CKUIBaseNode, CKUILabelControl {
-    
+
+    private static let textCustomData: String = "text"
+
     internal var label: SKLabelNode?
     
     public convenience init(text: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
         self.init(identifier: identifier, classes: classes, style: style, customData: ["text": text])
     }
     
-    public required init(type: String = "lebel", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String:Any]? = nil) {
+    public required init(type: String = "lebel", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: any Sendable]? = nil) {
         super.init(type: type, identifier: identifier, classes: classes, style: style, customData: customData)
         
-        label = Self.initLabel(text: customData!["text"] as! String)
+        label = Self.initLabel(text: customData![Self.textCustomData] as! String)
         addChild(label!)
     }
-    
+
+    public override class func parseCustomData(_ customData: [String : String]) throws -> [String : any Sendable] {
+        guard let text = customData[Self.textCustomData] else {
+            throw CKUILoaderErrors.missingCustomData(name: Self.textCustomData)
+        }
+
+        var parsedCustomData = try super.parseCustomData(customData)
+        parsedCustomData[Self.textCustomData] = text
+        return parsedCustomData
+    }
+
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

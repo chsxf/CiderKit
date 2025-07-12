@@ -9,6 +9,9 @@ public enum CKUILoaderErrors: Error {
     case unregisteredComponentType(name: String)
     case componentClassNotFound(className: String)
     case invalidClassType(className: String)
+
+    case missingCustomData(name: String)
+    case invalidCustomDataValue(name: String, value: String)
 }
 
 public struct NodeDescriptor: Sendable {
@@ -17,7 +20,7 @@ public struct NodeDescriptor: Sendable {
     fileprivate var classes: [String]?
 
     fileprivate var style: String?
-    fileprivate var customData: [String: any Sendable] = [:]
+    fileprivate var customData: [String: String] = [:]
 
     fileprivate var children: [NodeDescriptor] = []
 }
@@ -107,10 +110,10 @@ final actor CKUILoader {
 
     @MainActor
     @discardableResult
-    static func createNodes(with descriptors: [NodeDescriptor], into parent: CKUIBaseNode? = nil) -> [CKUIBaseNode] {
+    static func createNodes(with descriptors: [NodeDescriptor], into parent: CKUIBaseNode? = nil) throws -> [CKUIBaseNode] {
         var loadedNodes = [CKUIBaseNode]()
         for descriptor in descriptors {
-            let node = Self.createNode(with: descriptor)
+            let node = try Self.createNode(with: descriptor)
             loadedNodes.append(node)
         }
         if let parent {
@@ -123,16 +126,17 @@ final actor CKUILoader {
     }
 
     @MainActor
-    fileprivate static func createNode(with descriptor: NodeDescriptor) -> CKUIBaseNode {
+    fileprivate static func createNode(with descriptor: NodeDescriptor) throws -> CKUIBaseNode {
         var style: CKUIStyle? = nil
         if let elementStyleAttributes = descriptor.style {
             style = CKUIStyle(attributes: elementStyleAttributes)
         }
 
         let nodeClass = try! CKUINodeTypeRegistry.getNodeClass(with: descriptor.type)
-        let node = nodeClass.init(type: descriptor.type, identifier: descriptor.identifier, classes: descriptor.classes, style: style, customData: descriptor.customData)
+        let parsedCustomData = try nodeClass.parseCustomData(descriptor.customData)
+        let node = nodeClass.init(type: descriptor.type, identifier: descriptor.identifier, classes: descriptor.classes, style: style, customData: parsedCustomData)
         for childDescriptor in descriptor.children {
-            let childNode = createNode(with: childDescriptor)
+            let childNode = try createNode(with: childDescriptor)
             node.addChild(childNode)
         }
 

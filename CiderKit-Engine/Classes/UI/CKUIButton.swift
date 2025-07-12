@@ -6,7 +6,12 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl, CKUIInteractabl
 
     private static let hoverPseudoClass = "hover"
     private static let activePseudoClass = "active"
-    
+
+    private static let textCustomData = "text"
+    private static let imageCustomData = "image"
+    private static let imageURLCustomData = "imageURL"
+    private static let disabledCustomData = "disabled"
+
     internal var label: SKLabelNode? = nil
     internal var sprite: SKSpriteNode? = nil
     
@@ -39,45 +44,69 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl, CKUIInteractabl
     }
     
     public convenience init(text: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
-        self.init(identifier: identifier, classes: classes, style: style, customData: ["text": text])
+        self.init(identifier: identifier, classes: classes, style: style, customData: [Self.textCustomData: text])
     }
     
     public convenience init(image: SKTexture, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
-        self.init(identifier: identifier, classes: classes, style: style, customData: ["image": image])
+        self.init(identifier: identifier, classes: classes, style: style, customData: [Self.imageCustomData: image])
     }
     
     public convenience init(imageOf url: URL, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil) {
         let texture = CKUIURLResolver.resolveTexture(url: url)
-        self.init(identifier: identifier, classes: classes, style: style, customData: ["image": texture])
+        self.init(identifier: identifier, classes: classes, style: style, customData: [Self.imageCustomData: texture])
     }
     
-    public required init(type: String = "button", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String:Any]? = nil) {
+    public required init(type: String = "button", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: any Sendable]? = nil) {
         super.init(type: type, identifier: identifier, classes: classes, style: style, customData: customData)
-        
-        if let text = customData!["text"] as? String {
+
+        var shouldBeEnabled = true
+
+        if let text = customData![Self.textCustomData] as? String {
             label = Self.initLabel(text: text)
             addChild(label!)
         }
-        else if let image = customData!["image"] as? SKTexture {
-            sprite = SKSpriteNode(texture: image)
-            addChild(sprite!)
-        }
-        else if let imageURL = customData!["imageURL"] as? String {
-            let url = URL(string: imageURL)!
-            let image = CKUIURLResolver.resolveTexture(url: url)
+        else if let image = customData![Self.imageCustomData] as? SKTexture {
             sprite = SKSpriteNode(texture: image)
             addChild(sprite!)
         }
 
-        #if os(macOS)
-        NotificationCenter.default.post(name: .trackingAreaRegistrationRequested, object: self)
-        #endif
+        if let disabled = customData![Self.disabledCustomData] as? Bool {
+            shouldBeEnabled = !disabled
+        }
+
+        enabled = shouldBeEnabled
     }
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    public override class func parseCustomData(_ customData: [String : String]) throws -> [String : any Sendable] {
+        var parsedCustomData = try super.parseCustomData(customData)
+
+        guard let text = customData[Self.textCustomData] else {
+            throw CKUILoaderErrors.missingCustomData(name: Self.textCustomData)
+        }
+        parsedCustomData[Self.textCustomData] = text
+
+        if let imageURL = customData[Self.imageURLCustomData] {
+            let url = URL(string: imageURL)!
+            parsedCustomData[Self.imageCustomData] = CKUIURLResolver.resolveTexture(url: url)
+        }
+
+        if let disabled = customData[Self.disabledCustomData] {
+            let trueValue = "true"
+            let falseValue = "false"
+
+            guard disabled == trueValue || disabled == falseValue else {
+                throw CKUILoaderErrors.invalidCustomDataValue(name: Self.disabledCustomData, value: disabled)
+            }
+            parsedCustomData[Self.disabledCustomData] = disabled == trueValue
+        }
+
+        return parsedCustomData
+    }
+
     private static func initLabel(text: String) -> SKLabelNode {
         let label = SKLabelNode(text: text)
         label.numberOfLines = 1
