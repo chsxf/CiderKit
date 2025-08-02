@@ -1,4 +1,5 @@
 import SpriteKit
+import CiderKit_Tween
 
 public enum AssetAnimationKeyError: Error {
     case noDefinedValue
@@ -29,8 +30,8 @@ public final class AssetAnimationKey: Codable {
     public private(set) var stringValue: String? = nil
     
     public var maintainValue: Bool = false
-    public var timingInterpolation: SKActionTimingMode = .linear
-    
+    public var timingInterpolation: Easing = .linear
+
     public var time: TimeInterval { AssetAnimationTrack.frameTime * Double(frame) }
     
     public init(frame: UInt, boolValue: Bool) {
@@ -86,7 +87,7 @@ public final class AssetAnimationKey: Codable {
         
         frame = try container.decode(UInt.self, forKey: .frame)
         maintainValue = try container.decode(Bool.self, forKey: .maintainValue)
-        timingInterpolation = SKActionTimingMode(rawValue: try container.decode(Int.self, forKey: .timingInterpolation))!
+        timingInterpolation = try container.decode(Easing.self, forKey: .timingInterpolation)
         
         if container.contains(.bool) {
             boolValue = try container.decode(Bool.self, forKey: .bool)
@@ -171,19 +172,8 @@ public final class AssetAnimationKey: Codable {
             return firstKeyStringValue
         }
         
-        var interpolationRatio = ratio
-        switch firstKey.timingInterpolation {
-        case .linear:
-            interpolationRatio = linearInterpolationFunction(time: interpolationRatio)
-        case .easeIn:
-            interpolationRatio = easeInInterpolationFunction(time: interpolationRatio)
-        case .easeOut:
-            interpolationRatio = easeOutInterpolationFunction(time: interpolationRatio)
-        case .easeInEaseOut:
-            interpolationRatio = easeInEaseOutInterpolationFunction(time: interpolationRatio)
-        @unknown default:
-            break
-        }
+        let easingFunction = firstKey.timingInterpolation.easingFunction()
+        let interpolationRatio = easingFunction(ratio)
 
         if let firstValue = firstKey.colorValue, let secondValue = secondKey.colorValue {
             return CGColor.interpolateRGB(from: firstValue, to: secondValue, t: interpolationRatio)
@@ -194,21 +184,6 @@ public final class AssetAnimationKey: Codable {
         }
         
         return nil
-    }
-    
-    public class func linearInterpolationFunction(time: Float) -> Float { time }
-    
-    public class func easeInInterpolationFunction(time: Float) -> Float { pow(time, 0.5) }
-    
-    public class func easeOutInterpolationFunction(time: Float) -> Float { 1.0 - pow(1.0 - time, 0.5) }
-    
-    public class func easeInEaseOutInterpolationFunction(time: Float) -> Float {
-        if time < 0.5 {
-            return pow(time * 2.0, 0.5) * 0.5
-        }
-        else {
-            return 1.0 - pow(1.0 - (time - 0.5) * 2.0, 0.5) * 0.5
-        }
     }
     
 }
