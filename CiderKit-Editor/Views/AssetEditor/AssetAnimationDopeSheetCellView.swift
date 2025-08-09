@@ -162,13 +162,11 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
                 
                 let timingInterpolationSubmenu = NSMenu()
                 for easing in Easing.allCases {
-                    if easing != .custom {
-                        menuItem = NSMenuItem(title: easing.rawValue, action: #selector(Self.setTimingInterpolation(_:)), keyEquivalent: "")
-                        menuItem.state = key!.timingInterpolation == easing ? .on : .off
-                        menuItem.target = self
-                        menuItem.representedObject = easing
-                        timingInterpolationSubmenu.addItem(menuItem)
-                    }
+                    menuItem = NSMenuItem(title: easing.description, action: #selector(Self.setTimingInterpolation(_:)), keyEquivalent: "")
+                    menuItem.state = key!.timingInterpolation.description == easing.description ? .on : .off
+                    menuItem.target = self
+                    menuItem.representedObject = easing
+                    timingInterpolationSubmenu.addItem(menuItem)
                 }
 
                 menuItem = NSMenuItem(title: "Timing interpolation", action: nil, keyEquivalent: "")

@@ -118,7 +118,7 @@ public final class AssetAnimationKey: Codable {
         
         try container.encode(frame, forKey: .frame)
         try container.encode(maintainValue, forKey: .maintainValue)
-        try container.encode(timingInterpolation.rawValue, forKey: .timingInterpolation)
+        try container.encode(timingInterpolation, forKey: .timingInterpolation)
         
         if let boolValue = boolValue {
             try container.encode(boolValue, forKey: .bool)
