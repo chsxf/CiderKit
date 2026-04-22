@@ -1,5 +1,5 @@
 import XCTest
-import CiderCSSKit
+import CiderKit_CSS
 @testable import CiderKit_Engine
 
 final class CKUICSSTests: XCTestCase {

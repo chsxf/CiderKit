@@ -1,5 +1,5 @@
 import SpriteKit
-import CiderCSSKit
+import CiderKit_CSS
 
 open class CKUIBaseNode : SKNode, CSSConsumer {
     

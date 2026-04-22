@@ -1,6 +1,6 @@
 import SpriteKit
 import CoreGraphics
-import CiderCSSKit
+import CiderKit_CSS
 
 open class CKUIContainer : CKUIBaseNode {
     

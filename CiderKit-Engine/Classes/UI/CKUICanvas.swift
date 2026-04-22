@@ -1,5 +1,5 @@
 import CoreGraphics
-import CiderCSSKit
+import CiderKit_CSS
 
 #if os(macOS)
 import AppKit

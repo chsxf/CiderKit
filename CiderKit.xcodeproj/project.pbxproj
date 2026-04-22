@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D91258EB29FF0487005822DD /* CiderCSSKit in Frameworks */ = {isa = PBXBuildFile; productRef = D91258EA29FF0487005822DD /* CiderCSSKit */; };
+		D921CF272F989F7600E3601B /* CiderKit.CSS in Frameworks */ = {isa = PBXBuildFile; productRef = D921CF262F989F7600E3601B /* CiderKit.CSS */; };
 		D92E95802E3E38AD00CB6691 /* CiderKit.Tween in Frameworks */ = {isa = PBXBuildFile; productRef = D92E957F2E3E38AD00CB6691 /* CiderKit.Tween */; };
 		D93C4C992800CBD6000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
 		D93C4CC92800CC25000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
@@ -111,8 +111,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D921CF272F989F7600E3601B /* CiderKit.CSS in Frameworks */,
 				D92E95802E3E38AD00CB6691 /* CiderKit.Tween in Frameworks */,
-				D91258EB29FF0487005822DD /* CiderCSSKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,8 +225,8 @@
 			);
 			name = "CiderKit-Engine";
 			packageProductDependencies = (
-				D91258EA29FF0487005822DD /* CiderCSSKit */,
 				D92E957F2E3E38AD00CB6691 /* CiderKit.Tween */,
+				D921CF262F989F7600E3601B /* CiderKit.CSS */,
 			);
 			productName = "CiderKit-Engine";
 			productReference = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */;
@@ -298,7 +298,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					D91061AA2755F0B200EA8A03 = {
 						CreatedOnToolsVersion = 13.1;
@@ -329,8 +329,8 @@
 			);
 			mainGroup = D91061A22755F0B200EA8A03;
 			packageReferences = (
-				D91258E929FF0487005822DD /* XCRemoteSwiftPackageReference "CiderCSSKit" */,
 				D92E957E2E3E38AD00CB6691 /* XCRemoteSwiftPackageReference "CiderKit" */,
+				D921CF252F989F7600E3601B /* XCRemoteSwiftPackageReference "CiderKit" */,
 			);
 			productRefGroup = D91061AC2755F0B200EA8A03 /* Products */;
 			projectDirPath = "";
@@ -921,9 +921,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D91258E929FF0487005822DD /* XCRemoteSwiftPackageReference "CiderCSSKit" */ = {
+		D921CF252F989F7600E3601B /* XCRemoteSwiftPackageReference "CiderKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/chsxf/CiderCSSKit.git";
+			repositoryURL = "https://github.com/chsxf/CiderKit.CSS";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -940,10 +940,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D91258EA29FF0487005822DD /* CiderCSSKit */ = {
+		D921CF262F989F7600E3601B /* CiderKit.CSS */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D91258E929FF0487005822DD /* XCRemoteSwiftPackageReference "CiderCSSKit" */;
-			productName = CiderCSSKit;
+			package = D921CF252F989F7600E3601B /* XCRemoteSwiftPackageReference "CiderKit" */;
+			productName = CiderKit.CSS;
 		};
 		D92E957F2E3E38AD00CB6691 /* CiderKit.Tween */ = {
 			isa = XCSwiftPackageProductDependency;

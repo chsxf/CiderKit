@@ -1,5 +1,5 @@
 import SpriteKit
-import CiderCSSKit
+import CiderKit_CSS
 import Combine
 
 public final class CKUIButton : CKUIContainer, CKUILabelControl, CKUIInteractable {
