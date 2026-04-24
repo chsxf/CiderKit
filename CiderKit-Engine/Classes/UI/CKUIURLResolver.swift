@@ -18,8 +18,9 @@ public final actor CKUIURLResolver {
             break
             
         case "sprite":
-            if let atlasName = url.host, let atlas = Atlases[atlasName] {
-                let texture = atlas[url.lastPathComponent]!
+            if let atlasName = url.host {
+                let atlas = try! Atlases[atlasName]
+                let texture = try! atlas[url.lastPathComponent]
                 resolvedTextures[url] = texture
                 return texture
             }

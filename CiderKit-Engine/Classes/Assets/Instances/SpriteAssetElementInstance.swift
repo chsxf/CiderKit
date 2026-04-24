@@ -122,11 +122,11 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
     
     private func updateSprite(_ spriteNode: SKSpriteNode, spriteLocator: SpriteLocator?) {
         if let spriteLocator {
-            let texture = Atlases[spriteLocator]!
+            let texture = try! Atlases[spriteLocator]
             spriteNode.texture = texture
             spriteNode.size = texture.size()
             
-            let atlas = Atlases[spriteLocator.atlasKey]!
+            let atlas = try! Atlases[spriteLocator.atlasKey]
             spriteNode.shader = CiderKitEngine.instantianteUberShader(for: atlas)
         }
         else {
@@ -223,7 +223,7 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
                 sequence.append(SKAction.run {
                     if let spriteNode = self.spriteNode {
                         spriteNode.alpha = 1
-                        spriteNode.texture = Atlases[spriteLocator]!
+                        spriteNode.texture = try! Atlases[spriteLocator]
                     }
                 })
             }

@@ -13,5 +13,9 @@ public struct StringCodingKey: CodingKey, Sendable {
     public init?(intValue: Int) {
         return nil
     }
-    
+
+    public init?(codingKey: CodingKey) {
+        self.init(stringValue: codingKey.stringValue)
+    }
+
 }

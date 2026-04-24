@@ -3,6 +3,7 @@ import SpriteKit
 
 enum AtlasesError: Error {
     case alreadyRegistered
+    case unknownAtlas
 }
 
 final public actor Atlases {
@@ -11,8 +12,8 @@ final public actor Atlases {
     
     public private(set) static var loadedAtlases: [String: Atlas] = [:]
     
-    static var main: Atlas? { self[MAIN_ATLAS_KEY] }
-    
+    static var main: Atlas? { try? self[MAIN_ATLAS_KEY] }
+
     public static func load(atlases: [String: AtlasLocator]) throws {
         for (name, locator) in atlases {
             if loadedAtlases[name] != nil {
@@ -67,24 +68,26 @@ final public actor Atlases {
         }
     }
     
-    public static subscript(name: String) -> Atlas? {
-        return loadedAtlases[name]
+    public static subscript(name: String) -> Atlas {
+        get throws {
+            guard let atlas = loadedAtlases[name] else {
+                throw AtlasesError.unknownAtlas
+            }
+            return atlas
+        }
     }
     
-    public static subscript(locator: SpriteLocator) -> SKTexture? {
-        guard let atlas = self[locator.atlasKey] else {
-            return nil
-        }
-        
-        var variant = atlas
-        if let variantKey = locator.atlasVariantKey {
-            guard let variantAtlas = atlas.variant(for: variantKey) else {
-                return nil
+    public static subscript(locator: SpriteLocator) -> SKTexture {
+        get throws {
+            let atlas = try self[locator.atlasKey]
+
+            var variant = atlas
+            if let variantKey = locator.atlasVariantKey {
+                variant = try atlas.variant(for: variantKey)
             }
-            variant = variantAtlas
+
+            return try variant[locator.spriteName]
         }
-        
-        return variant[locator.spriteName]
     }
     
 }

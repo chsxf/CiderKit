@@ -3,12 +3,6 @@ import GameplayKit
 
 open class SequenceMaterial: BaseMaterial {
     
-    enum CodingKeys: String {
-        case frameDuration
-        case atlas
-        case sprites
-    }
-    
     public let sprites: [SKTexture]
     public let frameDuration: TimeInterval
     public var firstFrame: Int
@@ -18,28 +12,6 @@ open class SequenceMaterial: BaseMaterial {
         self.frameDuration = frameDuration
         self.firstFrame = 0
         super.init(shader: shader)
-    }
-    
-    required public init(dataContainer: KeyedDecodingContainer<StringCodingKey>) throws {
-        firstFrame = 0
-        
-        let durationKey = StringCodingKey(stringValue: CodingKeys.frameDuration.rawValue)!
-        self.frameDuration = try dataContainer.decode(TimeInterval.self, forKey: durationKey)
-        
-        let atlasKey = StringCodingKey(stringValue: CodingKeys.atlas.rawValue)!
-        let atlasName = try dataContainer.decode(String.self, forKey: atlasKey)
-        let atlas = Atlases[atlasName]!
-        
-        let spritesKey = StringCodingKey(stringValue: CodingKeys.sprites.rawValue)!
-        var spritesContainer = try dataContainer.nestedUnkeyedContainer(forKey: spritesKey)
-        var sprites = [SKTexture]()
-        while !spritesContainer.isAtEnd {
-            let textureName = try spritesContainer.decode(String.self)
-            sprites.append(atlas[textureName]!)
-        }
-        self.sprites = sprites
-        
-        super.init(shader: CiderKitEngine.instantianteUberShader(for: atlas))
     }
     
     open override func reset() {

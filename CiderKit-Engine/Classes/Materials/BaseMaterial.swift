@@ -11,10 +11,6 @@ open class BaseMaterial {
         self.shader = shader
     }
     
-    required public init(dataContainer: KeyedDecodingContainer<StringCodingKey>) throws {
-        shader = SKShader()
-    }
-    
     open func reset() { }
     
     open func clone(withOverrides overrides: CustomSettings?) -> BaseMaterial {

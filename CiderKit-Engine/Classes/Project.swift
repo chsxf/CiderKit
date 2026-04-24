@@ -108,7 +108,8 @@ open class Project {
     private func preloadMaterialDatabases() throws {
         for fileName in settings.preloadedMaterialDatabases {
             let url = URL(fileURLWithPath: "\(fileName).ckmatdb", relativeTo: materialDatabasesDirectoryURL)
-            let _: Materials = try Functions.load(url)
+            let materialRegistryDescription: MaterialRegistryDescription = try Functions.load(url)
+            try MaterialRegistry.register(from: materialRegistryDescription)
         }
     }
     

@@ -181,7 +181,7 @@ class AssetDescriptionSceneView: LitSceneView, ObservableObject {
         ])
                 
         if Self.gridTexture == nil {
-            Self.gridTexture = Atlases["grid"]!["grid_tile_Base"]!
+            Self.gridTexture = try! Atlases["grid"]["grid_tile_Base"]
         }
         
         let litNodesRootIndex = litNodesRoot.parent!.children.firstIndex(of: litNodesRoot)!

@@ -18,7 +18,7 @@ class SpriteSelectorView: ItemSelectorView<SpriteLocator, Atlas> {
         return keys.sorted()
     }
     
-    override class func getGroup(with key: String) -> Atlas? { Atlases[key] }
+    override class func getGroup(with key: String) -> Atlas { try! Atlases[key] }
     
 }
 

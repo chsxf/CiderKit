@@ -1,6 +1,11 @@
 import Foundation
 import SpriteKit
 
+public enum AtlasErrors: Error {
+    case unknownSprite
+    case unknownVariant
+}
+
 public final class Atlas: StringKeysProvider {
 
     public let name: String
@@ -72,16 +77,24 @@ public final class Atlas: StringKeysProvider {
         }
     }
     
-    public subscript(spriteName: String) -> SKTexture? {
-        return atlasSprites[spriteName]
+    public subscript(spriteName: String) -> SKTexture {
+        get throws {
+            guard let sprite = atlasSprites[spriteName] else {
+                throw AtlasErrors.unknownSprite
+            }
+            return sprite
+        }
     }
     
     func add(variant: Atlas, for key: String) {
         variants[key] = variant
     }
     
-    public func variant(for key: String) -> Atlas? {
-        return variants[key]
+    public func variant(for key: String) throws -> Atlas {
+        guard let variant = variants[key] else {
+            throw AtlasErrors.unknownVariant
+        }
+        return variant
     }
     
 }

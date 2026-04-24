@@ -109,8 +109,8 @@ public final actor CiderKitEngine {
         let uberShader = SKShader(source: source, uniforms: [
             SKUniform(name: ShaderUniformName.shadeMode.rawValue, float: 0),
             SKUniform(name: ShaderUniformName.textureSize.rawValue, vectorFloat2: uTexSize),
-            SKUniform(name: ShaderUniformName.normalsTexture.rawValue, texture: atlas.variant(for: "normals")?.atlasTexture ?? clearTexture),
-            SKUniform(name: ShaderUniformName.positionTexture.rawValue, texture: atlas.variant(for: "position")?.atlasTexture ?? clearTexture),
+            SKUniform(name: ShaderUniformName.normalsTexture.rawValue, texture: (try? atlas.variant(for: "normals").atlasTexture) ?? clearTexture),
+            SKUniform(name: ShaderUniformName.positionTexture.rawValue, texture: (try? atlas.variant(for: "position").atlasTexture) ?? clearTexture),
             SKUniform(name: ShaderUniformName.positionRanges.rawValue, matrixFloat3x3: matrix_float3x3())
         ])
         uberShader.attributes = [
@@ -150,7 +150,8 @@ public final actor CiderKitEngine {
     
     private static func registerDefaultMaterialsAndRenderers() {
         let url = CiderKitEngine.bundle.url(forResource: "Default Materials", withExtension: "ckmatdb")
-        let _: Materials = try! Functions.load(url!)
+        let materialRegistryDescription: MaterialRegistryDescription = try! Functions.load(url!)
+        try! MaterialRegistry.register(from: materialRegistryDescription)
         
         let defaultRenderer = CellRenderer(
             groundMaterialName: "default_ground",
