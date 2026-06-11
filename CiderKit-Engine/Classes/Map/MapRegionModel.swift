@@ -58,10 +58,11 @@ public class MapRegionModel : Identifiable, Comparable {
     
     public func increaseElevation() -> Bool {
         regionDescription.elevation += 1
-        for assetPlacement in regionDescription.assetPlacements {
-            if assetPlacement.mapPosition.elevation != nil {
-                assetPlacement.mapPosition = assetPlacement.mapPosition.with(relativeElevation: 1)
+        regionDescription.assetPlacements = regionDescription.assetPlacements.map { item in
+            if item.mapPosition.elevation != nil {
+                return item.with(newPosition: item.mapPosition.with(relativeElevation: 1))
             }
+            return item
         }
         return true
     }
@@ -70,10 +71,11 @@ public class MapRegionModel : Identifiable, Comparable {
         var needsRebuilding = false
         if regionDescription.elevation > 0 {
             regionDescription.elevation -= 1
-            for assetPlacement in regionDescription.assetPlacements {
-                if assetPlacement.mapPosition.elevation != nil {
-                    assetPlacement.mapPosition = assetPlacement.mapPosition.with(relativeElevation: -1)
+            regionDescription.assetPlacements = regionDescription.assetPlacements.map { item in
+                if item.mapPosition.elevation != nil {
+                    return item.with(newPosition: item.mapPosition.with(relativeElevation: -1))
                 }
+                return item
             }
             needsRebuilding = true
         }
@@ -158,7 +160,7 @@ public class MapRegionModel : Identifiable, Comparable {
     }
 
     public func add(assetPlacement: AssetPlacement) {
-        regionDescription.assetPlacements.append(assetPlacement)
+        regionDescription.assetPlacements.append(assetPlacement.toDescription())
     }
 
     @discardableResult
@@ -166,6 +168,16 @@ public class MapRegionModel : Identifiable, Comparable {
         return removeAssetPlacement(with: assetPlacement.id)
     }
 
+    public func update(assetPlacement: AssetPlacementDescription) {
+        for i in 0..<regionDescription.assetPlacements.count {
+            let placement = regionDescription.assetPlacements[i]
+            if placement.id == assetPlacement.id {
+                regionDescription.assetPlacements[i] = assetPlacement
+                return
+            }
+        }
+    }
+    
     @discardableResult
     public func removeAssetPlacement(with placementId: UUID) -> Bool {
         if regionDescription.assetPlacements.contains(where: { $0.id == placementId }) {

@@ -21,7 +21,7 @@ public struct MapRegionDescription: Codable, Sendable {
     var elevation: Int
     let renderer: String?
     
-    public var assetPlacements = [AssetPlacement]()
+    public var assetPlacements = [AssetPlacementDescription]()
     
     public var area: MapArea { MapArea(x: x, y: y, width: width, height: height) }
     

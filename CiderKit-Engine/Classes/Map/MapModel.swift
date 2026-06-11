@@ -192,7 +192,7 @@ open class MapModel {
         changeElevation(area: area, createIfNotApplied: false) { $0.decreaseElevation() }
     }
 
-    public func getAssetPlacement(by id: UUID) -> AssetPlacement? {
+    public func getAssetPlacement(withId id: UUID) -> AssetPlacementDescription? {
         for region in regions {
             if let placement = region.regionDescription.assetPlacements.first(where: { $0.id == id }) {
                 return placement
@@ -201,8 +201,12 @@ open class MapModel {
         return nil
     }
 
+    public func update(assetPlacement: AssetPlacementDescription) {
+        regions.forEach { $0.update(assetPlacement: assetPlacement) }
+    }
+    
     @discardableResult
-    public func removeAsset(with placementId: UUID) -> Bool {
+    public func removeAsset(withId placementId: UUID) -> Bool {
         for region in regions {
             if region.removeAssetPlacement(with: placementId) {
                 changed.send(self)

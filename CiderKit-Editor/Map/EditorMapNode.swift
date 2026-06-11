@@ -20,6 +20,8 @@ class EditorMapNode: MapNode {
     
     override init(with model: MapModel) {
         super.init(with: model)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(Self.assetPlacementModified(notification:)), name: .assetPlacementModified, object: nil)
     }
     
     @MainActor required init?(coder aDecoder: NSCoder) {
@@ -61,8 +63,16 @@ class EditorMapNode: MapNode {
             let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)?.node
             assetNode?.removeFromParent()
 
-            model?.removeAsset(with: assetComponent.placement.id)
+            model?.removeAsset(withId: assetComponent.placement.id)
 
+            dirty = true
+        }
+    }
+    
+    @objc
+    private func assetPlacementModified(notification: Notification) {
+        if let assetComponent = notification.object as? EditorAssetComponent {
+            model?.update(assetPlacement: assetComponent.placement.toDescription())
             dirty = true
         }
     }

@@ -3,6 +3,12 @@ import GameplayKit
 import CiderKit_Engine
 import Combine
 
+extension Notification.Name {
+    
+    static let assetPlacementModified = Self.init(rawValue: "assetPlacementModified")
+    
+}
+
 class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     
     public let placement: AssetPlacement
@@ -36,6 +42,7 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
                 editableComponent.invalidate()
                 DispatchQueue.main.async {
                     self.assetInstance?.updateAll(applyDefaults: true)
+                    NotificationCenter.default.post(name: .assetPlacementModified, object: self)
                 }
             }
         }
