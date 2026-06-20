@@ -6,7 +6,7 @@ public enum MapRegionErrors : Error {
     case otherAssetInTheWay
 }
 
-public class MapRegionModel : Identifiable, Comparable {
+public final class MapRegionModel: Identifiable, Comparable {
 
     private static var nextRegionId: Int = 1
     

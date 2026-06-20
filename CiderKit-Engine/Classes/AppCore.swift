@@ -5,7 +5,7 @@ open class AppCore {
     typealias InteractionContextStackData = (type: InteractionContext.Type, instance: InteractionContext)
     
     public let gameView: GameView
-    
+
     public private(set) var transitioning: Bool = false
     
     private var interactionContextStack = [InteractionContextStackData]()

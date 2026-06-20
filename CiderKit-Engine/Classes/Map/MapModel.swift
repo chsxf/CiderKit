@@ -1,6 +1,7 @@
 import Combine
+import CoreGraphics
 
-open class MapModel {
+public actor MapModel {
 
     public var regions = [MapRegionModel]()
 
@@ -11,7 +12,7 @@ open class MapModel {
 
     public let changed = PassthroughSubject<MapModel, Never>()
     
-    public init(with description: MapDescription) {
+    public init(with description: MapDescription) async {
         cellRenderers = description.renderers
 
         ambientLight = description.lighting.ambientLight
@@ -23,6 +24,12 @@ open class MapModel {
         }
 
         sortRegions()
+    }
+
+    internal init() {
+        cellRenderers = [:]
+        ambientLight = BaseLight(color: CGColor.white)
+        lights = []
     }
 
     public func sortRegions() {

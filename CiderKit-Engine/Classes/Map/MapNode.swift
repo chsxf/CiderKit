@@ -38,7 +38,9 @@ open class MapNode: SKNode {
         
         zPosition = 2
 
-        modelCancellable = model.changed.sink(receiveValue: self.onModelChanged(_:))
+        Task {
+            self.modelCancellable = await model.changed.sink(receiveValue: self.onModelChanged(_:))
+        }
     }
     
     required public init?(coder aDecoder: NSCoder) {

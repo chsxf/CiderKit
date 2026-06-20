@@ -19,7 +19,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         if item.itemIdentifier == .addAsset {
             guard
                 let selectedArea = gameView?.selectionModel.selectedMapArea,
-                gameView?.mapModel.hasCell(forMapX: selectedArea.x, y: selectedArea.y) ?? false
+                CiderKitEngine.worldManager.activeMapModel?.hasCell(forMapX: selectedArea.x, y: selectedArea.y) ?? false
             else {
                 return false
             }
@@ -79,33 +79,40 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         AssetEditor.open()
     }
     
-    func saveCurrentMapIfModified() -> Bool {
+    func saveCurrentMapIfModified() async -> Bool {
         guard let gameView else { return true }
         
         var shouldSave = false
-        if gameView.mutableMap.dirty {
-            let alert = NSAlert()
-            alert.messageText = "Would you like to save the current map?"
-            alert.informativeText = "Confirmation"
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: "Yes")
-            alert.addButton(withTitle: "No")
-            alert.addButton(withTitle: "Cancel")
-            switch alert.runModal() {
+        if await gameView.mutableMap?.dirty ?? false {
+            let modalResult = await MainActor.run {
+                let alert = NSAlert()
+                alert.messageText = "Would you like to save the current map?"
+                alert.informativeText = "Confirmation"
+                alert.alertStyle = .warning
+                alert.addButton(withTitle: "Yes")
+                alert.addButton(withTitle: "No")
+                alert.addButton(withTitle: "Cancel")
+                return alert.runModal()
+            }
+
+            switch modalResult {
             case .alertFirstButtonReturn:
                 shouldSave = true
             case .alertSecondButtonReturn:
                 shouldSave = false
-                gameView.unloadMap()
-                currentMapURL = nil
             default:
                 return false
             }
         }
-        return !shouldSave || saveCurrentMap()
+
+        if shouldSave {
+            return await saveCurrentMap()
+        }
+        return true
     }
-    
-    private func saveCurrentMap(forceFileSelection: Bool = false) -> Bool {
+
+    @discardableResult
+    private func saveCurrentMap(forceFileSelection: Bool = false) async -> Bool {
         guard let gameView else { return false }
         
         var selectedURL: URL? = currentMapURL
@@ -113,31 +120,33 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
             selectedURL = nil
         }
         if selectedURL == nil {
-            let savePanel = NSSavePanel()
-            savePanel.directoryURL = Project.current?.mapsDirectoryURL
-            if let type = UTType("com.xhaleera.CiderKit.map") {
-                savePanel.allowedContentTypes = [ type ]
+            let responseURL = await MainActor.run {
+                let savePanel = NSSavePanel()
+                savePanel.directoryURL = Project.current?.mapsDirectoryURL
+                if let type = UTType("com.xhaleera.CiderKit.map") {
+                    savePanel.allowedContentTypes = [ type ]
+                }
+                return savePanel.runModal() == .OK ? savePanel.url : nil
             }
-            let response = savePanel.runModal()
-            if response == .OK {
-                selectedURL = savePanel.url
+            if let validResponseURL = responseURL {
+                selectedURL = validResponseURL
             }
         }
         
         if let validURL = selectedURL {
             do {
-                let mapDescription = gameView.mapModel.toMapDescription()
+                let mapDescription = await CiderKitEngine.worldManager.activeMapModel!.toMapDescription()
                 try EditorFunctions.save(mapDescription, to: validURL, prettyPrint: true)
                 currentMapURL = validURL
-                gameView.mutableMap.dirty = false
+                await MainActor.run {
+                    gameView.mutableMap?.dirty = false
+                }
                 return true
             }
             catch {
-                let alert = NSAlert()
-                alert.informativeText = "Error"
-                alert.messageText = "Unable to save map to file \(validURL)"
-                alert.addButton(withTitle: "OK")
-                let _ = alert.runModal()
+                await MainActor.run {
+                    UIHelpers.fatalErrorAlert(titled: "Error", message: "Unable to save map to file \(validURL)")
+                }
             }
         }
         return false
@@ -145,40 +154,87 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     
     @objc
     func newMap() {
-        if saveCurrentMapIfModified() {
-            gameView?.unloadMap()
-            currentMapURL = nil
-            app?.updateWindowTitle()
+        Task {
+            if await saveCurrentMapIfModified() {
+                if let currentMapURL {
+                    await CiderKitEngine.worldManager.unloadMap(file: currentMapURL)
+                }
+                else {
+                    await CiderKitEngine.worldManager.unloadAllMaps()
+                }
+                let model = await CiderKitEngine.worldManager.addEmptyMap()
+                currentMapURL = nil
+
+                await MainActor.run {
+                    app?.updateWindowTitle()
+
+                    if let gameView {
+                        let mapNode = gameView.mapNode(from: model)
+                        gameView.litNodesRoot.insertChild(mapNode, at: 0)
+                    }
+                }
+            }
         }
     }
     
     @objc
     func loadMap() {
-        if saveCurrentMapIfModified() {
-            let openPanel = NSOpenPanel()
-            openPanel.canChooseFiles = true
-            openPanel.canChooseDirectories = false
-            openPanel.directoryURL = Project.current?.mapsDirectoryURL
-            if let type = UTType("com.xhaleera.CiderKit.map") {
-                openPanel.allowedContentTypes = [ type ]
-            }
-            let response = openPanel.runModal()
-            if response == .OK {
-                currentMapURL = openPanel.urls[0]
-                gameView?.loadMap(file: currentMapURL!)
-                app?.updateWindowTitle()
+        Task {
+            if let gameView, await saveCurrentMapIfModified() {
+                let mapURLToLoad = await MainActor.run {
+                    let openPanel = NSOpenPanel()
+                    openPanel.canChooseFiles = true
+                    openPanel.canChooseDirectories = false
+                    openPanel.directoryURL = Project.current?.mapsDirectoryURL
+                    if let type = UTType("com.xhaleera.CiderKit.map") {
+                        openPanel.allowedContentTypes = [ type ]
+                    }
+                    let response = openPanel.runModal()
+                    return  response == .OK ? openPanel.urls[0] : nil
+                }
+                if let confirmedMapURLToLoad = mapURLToLoad {
+                    Task {
+                        if let currentMapURL {
+                            await CiderKitEngine.worldManager.unloadMap(file: currentMapURL)
+                        }
+                        else {
+                            await CiderKitEngine.worldManager.unloadAllMaps()
+                        }
+                        currentMapURL = nil
+
+                        do {
+                            let model = try await CiderKitEngine.worldManager.loadMap(file: confirmedMapURLToLoad)
+                            currentMapURL = confirmedMapURLToLoad
+
+                            await MainActor.run {
+                                let map = gameView.mapNode(from: model)
+                                gameView.litNodesRoot.insertChild(map, at: 0)
+                                app?.updateWindowTitle()
+                            }
+                        }
+                        catch {
+                            await MainActor.run {
+                                UIHelpers.fatalErrorAlert(titled: "Error", message: "Unable to load map file at \(confirmedMapURLToLoad)")
+                            }
+                        }
+                    }
+                }
             }
         }
     }
     
     @objc
     func saveMap() {
-        let _ = saveCurrentMap()
+        Task {
+            await saveCurrentMap()
+        }
     }
     
     @objc
     func saveMapAs() {
-        let _ = saveCurrentMap(forceFileSelection: true)
+        Task {
+            await saveCurrentMap(forceFileSelection: true)
+        }
     }
     
     @objc
@@ -188,12 +244,16 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     
     @objc
     func increaseElevationForWholeMap() {
-        gameView?.increaseElevation(area: nil)
+        Task {
+            await gameView?.increaseElevation(area: nil)
+        }
     }
     
     @objc
     func decreaseElevationForWholeMap() {
-        gameView?.decreaseElevation(area: nil)
+        Task {
+            await gameView?.decreaseElevation(area: nil)
+        }
     }
     
     @objc

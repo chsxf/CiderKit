@@ -5,7 +5,7 @@ import CiderKit_Engine
 import SpriteKit
 
 @main
-final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSToolbarDelegate, SKViewDelegate {
+final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKViewDelegate {
 
     public static let appName = "CiderKit Editor"
     public static private(set) var mainWindow: NSWindow!
@@ -18,28 +18,26 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
     private var mapDirtyFlagCancellable: AnyCancellable?
     
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        if actionsManager.saveCurrentMapIfModified() {
-            return .terminateNow
+        Task {
+            if await actionsManager.saveCurrentMapIfModified() {
+                sender.reply(toApplicationShouldTerminate: true)
+            }
+            sender.reply(toApplicationShouldTerminate: false)
         }
-        return .terminateCancel
+        return .terminateLater
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return true
-    }
-    
-    func windowShouldClose(_ sender: NSWindow) -> Bool {
-        return actionsManager.saveCurrentMapIfModified()
+        true
     }
     
     func view(_ view: SKView, shouldRenderAtTime time: TimeInterval) -> Bool {
-        return window.attachedSheet == nil
+        window.attachedSheet == nil
     }
     
     private func setupMainWindow() -> NSWindow {
         let windowRect = CGRect(x: 100, y: 100, width: 640, height: 360)
-        window = NSWindow(contentRect: windowRect, styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
-        window.delegate = self
+        window = NSWindow(contentRect: windowRect, styleMask: [.titled, .resizable, .miniaturizable], backing: .buffered, defer: false)
         window.acceptsMouseMovedEvents = true
         gameView = EditorGameView(frame: windowRect)
         gameView.delegate = self
@@ -112,6 +110,18 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
             if response == .abort {
                 NSApp.terminate(self)
             }
+            else {
+                Task {
+                    if let gameView = self.gameView {
+                        await CiderKitEngine.worldManager.unloadAllMaps()
+                        let model = await CiderKitEngine.worldManager.addEmptyMap()
+                        await MainActor.run {
+                            let mapNode = gameView.mapNode(from: model)
+                            gameView.litNodesRoot.insertChild(mapNode, at: 0)
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -122,7 +132,7 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
     
     func updateWindowTitle() {
         var title = "\(CiderKitApp.appName) - \(actionsManager.currentMapURL?.lastPathComponent ?? "Untitled")"
-        if gameView.mutableMap.dirty {
+        if gameView.mutableMap?.dirty ?? false {
             title += " *"
         }
         window.title = title
@@ -130,16 +140,18 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSWindowDelegate, NSTo
     
     @objc
     private func onElevationChangeRequested(notification: Notification) {
-        if
-            let elevationToolContext = notification.object as? ElevationToolContext,
-            let area = gameView.selectionModel.selectedMapArea
-        {
-            switch elevationToolContext {
-            case .up:
-                gameView.increaseElevation(area: area)
-                
-            case .down:
-                gameView.decreaseElevation(area: area)
+        Task {
+            if
+                let elevationToolContext = notification.object as? ElevationToolContext,
+                let area = await MainActor.run(body: { gameView.selectionModel.selectedMapArea })
+            {
+                switch elevationToolContext {
+                case .up:
+                    await gameView.increaseElevation(area: area)
+
+                case .down:
+                    await gameView.decreaseElevation(area: area)
+                }
             }
         }
     }

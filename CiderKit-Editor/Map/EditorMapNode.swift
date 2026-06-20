@@ -30,7 +30,11 @@ class EditorMapNode: MapNode {
 
     override func onModelChanged(_ changedModel: MapModel) {
         super.onModelChanged(changedModel)
-        dirty = true
+        Task {
+            await MainActor.run {
+                dirty = true
+            }
+        }
     }
 
     override func rebuildRegionNodes() {
@@ -54,26 +58,30 @@ class EditorMapNode: MapNode {
 
     @objc
     private func assetErased(notification: Notification) {
-        if let assetComponent = notification.object as? EditorAssetComponent {
-            NotificationCenter.default.removeObserver(self, name: .selectableErased, object: assetComponent)
-            
-            let entity = assetComponent.entity!
-            cleanHoverableEntities { $0 === entity }
+        Task { @MainActor in
+            if let assetComponent = notification.object as? EditorAssetComponent {
+                NotificationCenter.default.removeObserver(self, name: .selectableErased, object: assetComponent)
 
-            let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)?.node
-            assetNode?.removeFromParent()
+                let entity = assetComponent.entity!
+                cleanHoverableEntities { $0 === entity }
 
-            model?.removeAsset(withId: assetComponent.placement.id)
+                let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)?.node
+                assetNode?.removeFromParent()
 
-            dirty = true
+                await model?.removeAsset(withId: assetComponent.placement.id)
+
+                dirty = true
+            }
         }
     }
     
     @objc
     private func assetPlacementModified(notification: Notification) {
-        if let assetComponent = notification.object as? EditorAssetComponent {
-            model?.update(assetPlacement: assetComponent.placement.toDescription())
-            dirty = true
+        Task {
+            if let assetComponent = notification.object as? EditorAssetComponent {
+                await model?.update(assetPlacement: assetComponent.placement.toDescription())
+                dirty = true
+            }
         }
     }
     

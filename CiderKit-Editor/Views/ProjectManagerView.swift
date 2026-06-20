@@ -59,10 +59,13 @@ struct ProjectManagerView: View {
         CiderKitApp.mainWindow.endSheet(hostingWindow, returnCode: response)
     }
     
-    fileprivate func openProject(at url: URL) {
+    fileprivate func openProject(at url: URL) async {
         do {
             try ProjectManager.openProject(at: url)
             projectDetails = nil
+
+            await CiderKitEngine.worldManager.addEmptyMap()
+
             dismiss(response: .OK)
         }
         catch {
@@ -80,7 +83,7 @@ struct ProjectManagerView: View {
             if projectManager.recentProjects.count > 0 {
                 List {
                     ForEach(projectManager.recentProjects) { project in
-                        Button(action: { openProject(at: project.url) }) {
+                        Button(action: { Task { await openProject(at: project.url) } }) {
                             VStack(alignment: .leading) {
                                 Text(project.url.lastPathComponent)
                                     .bold()
@@ -121,7 +124,7 @@ struct ProjectManagerView: View {
                 
                 Button("Open Other Project...") {
                     if let url = selectFolderPanel(canCreateDirectories: false) {
-                        openProject(at: url)
+                        Task { await openProject(at: url) }
                     }
                 }
                 .modifier(ProjectOperationModifier(isPresented: $openProjectAlertShown, projectDetails: projectDetails))

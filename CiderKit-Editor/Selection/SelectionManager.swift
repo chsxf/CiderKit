@@ -120,10 +120,10 @@ class SelectionManager: NSResponder {
         
         editableSubscription?.cancel()
         if let editableComponent = (selectable as? GKComponent)?.entity?.component(ofType: EditableComponent.self) {
-            editableSubscription = editableComponent.objectWillChange.sink { self.editorGameView.mutableMap.dirty = true }
+            editableSubscription = editableComponent.objectWillChange.sink { self.editorGameView.mutableMap?.dirty = true }
         }
         else if let editorMapCellComponent = (selectable as? EditorMapCellComponent) {
-            editableSubscription = editorMapCellComponent.objectWillChange.sink { self.editorGameView.mutableMap.dirty = true }
+            editableSubscription = editorMapCellComponent.objectWillChange.sink { self.editorGameView.mutableMap?.dirty = true }
         }
     }
     

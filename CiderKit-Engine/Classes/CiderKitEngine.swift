@@ -52,6 +52,8 @@ public final actor CiderKitEngine {
     
     public static var bundle: Bundle { Bundle(for: Self.self) }
 
+    public static let worldManager = WorldManager()
+
     private static var _clearTexture: SKTexture? = nil
     public static var clearTexture: SKTexture {
         if _clearTexture == nil {
