@@ -28,6 +28,8 @@ class SelectionManager: NSResponder {
     
     private var editableSubscription: AnyCancellable? = nil
     
+    private var notificationTask: Task<Void, Never>? = nil
+    
     var currentToolMode: ToolMode = .select {
         didSet {
             if currentToolMode != oldValue {
@@ -51,22 +53,72 @@ class SelectionManager: NSResponder {
         
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(SelectionManager.onSelectableUpdated(notification:)), name: .selectableUpdated, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onSelectableHighlighted(notification:)), name: .selectableHighlighted, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onSelectableDeemphasized(notification:)), name: .selectableDeemphasized, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onHoverableHovered(notification:)), name: .hoverableHovered, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onSelectableDeparted(notification:)), name: .hoverableDeparted, object: nil)
-        
         let scene = editorGameView.scene!
         scene.addChild(selectionOutlinesRoot)
         EditorMapCellComponent.initSelectionShapes(in: selectionOutlinesRoot)
         scene.addChild(toolsRoot)
         initTools()
+        
+        notificationTask = setupNotifications()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        notificationTask?.cancel()
+    }
+    
+    func setupNotifications() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await selectable in NotificationCenter.default.notifications(named: .selectableUpdated).compactMap({ $0.object as? Selectable }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onSelectableUpdated(selectable: selectable)
+                        }
+                    }
+                }
+                
+                group.addTask {
+                    for await assetInstance in NotificationCenter.default.notifications(named: .selectableHighlighted).compactMap({ $0.object as? AssetInstance }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onSelectableHighlighted(assetInstance: assetInstance)
+                        }
+                    }
+                }
+                
+                group.addTask {
+                    for await assetInstance in NotificationCenter.default.notifications(named: .selectableDeemphasized).compactMap({ $0.object as? AssetInstance }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onSelectableDeemphasized(assetInstance: assetInstance)
+                        }
+                    }
+                }
+                
+                group.addTask {
+                    for await assetInstance in NotificationCenter.default.notifications(named: .hoverableHovered).compactMap({ $0.object as? AssetInstance }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onHoverableHovered(assetInstance: assetInstance)
+                        }
+                    }
+                }
+                
+                group.addTask {
+                    for await assetInstance in NotificationCenter.default.notifications(named: .hoverableDeparted).compactMap({ $0.object as? AssetInstance }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onSelectableDeparted(assetInstance: assetInstance)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func hideTools() {
@@ -100,11 +152,8 @@ class SelectionManager: NSResponder {
         }
     }
     
-    @objc
-    private func onSelectableUpdated(notification: Notification) {
-        if let selectable = notification.object as? Selectable {
-            updateFor(selectable: selectable)
-        }
+    private func onSelectableUpdated(selectable: Selectable) {
+        updateFor(selectable: selectable)
     }
     
     private func updateFor(selectable: Selectable) {
@@ -218,9 +267,8 @@ class SelectionManager: NSResponder {
         }
     }
     
-    @objc
-    private func onSelectableHighlighted(notification: Notification) {
-        guard let assetInstance = notification.object as? AssetInstance, let assetNode = assetInstance.node else { return }
+    private func onSelectableHighlighted(assetInstance: AssetInstance) {
+        guard let assetNode = assetInstance.node else { return }
         requestSelectionOutline(for: assetInstance.uuid, with: assetNode.calculateAccumulatedFrame())
     }
     
@@ -242,9 +290,7 @@ class SelectionManager: NSResponder {
         updateOutlineColor(outlineData: outlineData)
     }
     
-    @objc
-    private func onSelectableDeemphasized(notification: Notification) {
-        guard let assetInstance = notification.object as? AssetInstance else { return }
+    private func onSelectableDeemphasized(assetInstance: AssetInstance) {
         dismissSelectionOutline(for: assetInstance.uuid)
     }
     
@@ -268,9 +314,8 @@ class SelectionManager: NSResponder {
         }
     }
     
-    @objc
-    private func onHoverableHovered(notification: Notification) {
-        guard let assetInstance = notification.object as? AssetInstance, let assetNode = assetInstance.node else { return }
+    private func onHoverableHovered(assetInstance: AssetInstance) {
+        guard let assetNode = assetInstance.node else { return }
         requestHoverOutline(for: assetInstance.uuid, with: assetNode.calculateAccumulatedFrame())
     }
     
@@ -292,9 +337,7 @@ class SelectionManager: NSResponder {
         updateOutlineColor(outlineData: outlineData)
     }
     
-    @objc
-    private func onSelectableDeparted(notification: Notification) {
-        guard let assetInstance = notification.object as? AssetInstance else { return }
+    private func onSelectableDeparted(assetInstance: AssetInstance) {
         dismissHoverOutline(for: assetInstance.uuid)
     }
     

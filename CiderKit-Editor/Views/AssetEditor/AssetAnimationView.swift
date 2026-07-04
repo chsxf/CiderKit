@@ -20,6 +20,8 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
     private let tracksView: NSTableView
     private var dopeSheetView: NSTableView
     
+    private var notificationTask: Task<Void, Never>? = nil
+    
     private(set) var isPlaying: Bool = false
     
     private(set) var currentAnimationFrame: UInt = 0
@@ -147,15 +149,62 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
         rightScrollView.documentView = dopeSheetView
         rightScrollView.contentView.scroll(to: NSPoint())
         
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onScrollViewDidLiveScroll(_:)), name: NSScrollView.didLiveScrollNotification, object: leftScrollView)
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onScrollViewDidLiveScroll(_:)), name: NSScrollView.didLiveScrollNotification, object: rightScrollView)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onTableViewSelectionDidChange(_:)), name: NSTableView.selectionDidChangeNotification, object: tracksView)
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onTableViewSelectionDidChange(_:)), name: NSTableView.selectionDidChangeNotification, object: dopeSheetView)
+        notificationTask = setupNotifications()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        notificationTask?.cancel()
+    }
+    
+    private func setupNotifications() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await scrollView in NotificationCenter.default.notifications(named: NSScrollView.didLiveScrollNotification, object: self.leftScrollView)
+                                                                        .compactMap({ $0.object as? NSScrollView }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onScrollViewDidLiveScroll(scrollView: scrollView)
+                        }
+                    }
+                }
+                
+                group.addTask {
+                    for await scrollView in NotificationCenter.default.notifications(named: NSScrollView.didLiveScrollNotification, object: self.rightScrollView)
+                                                                        .compactMap({ $0.object as? NSScrollView }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onScrollViewDidLiveScroll(scrollView: scrollView)
+                        }
+                    }
+                }
+                
+                group.addTask {
+                    for await tableView in NotificationCenter.default.notifications(named: NSTableView.selectionDidChangeNotification, object: self.tracksView)
+                                                                        .compactMap({ $0.object as? NSTableView }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onTableViewSelectionDidChange(tableView: tableView)
+                        }
+                    }
+                }
+                
+                group.addTask {
+                    let dopeSheetView = await self.dopeSheetView
+                    for await tableView in NotificationCenter.default.notifications(named: NSTableView.selectionDidChangeNotification, object: dopeSheetView)
+                                                                        .compactMap({ $0.object as? NSTableView }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onTableViewSelectionDidChange(tableView: tableView)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func animationGoToFrame(_ sender: Any, frame: UInt) {
@@ -257,33 +306,27 @@ final class AssetAnimationView: NSView, NSSplitViewDelegate, NSTableViewDelegate
         dopeSheetView.reloadData()
     }
     
-    @objc
-    private func onScrollViewDidLiveScroll(_ notif: Notification) {
-        if let scrollView = notif.object as? NSScrollView {
-            let otherScrollView = scrollView === leftScrollView ? rightScrollView : leftScrollView
-            let newOrigin = CGPoint(x: otherScrollView.documentVisibleRect.origin.x, y: scrollView.documentVisibleRect.origin.y)
-            otherScrollView.contentView.scroll(to: newOrigin)
-        }
+    private func onScrollViewDidLiveScroll(scrollView: NSScrollView) {
+        let otherScrollView = scrollView === leftScrollView ? rightScrollView : leftScrollView
+        let newOrigin = CGPoint(x: otherScrollView.documentVisibleRect.origin.x, y: scrollView.documentVisibleRect.origin.y)
+        otherScrollView.contentView.scroll(to: newOrigin)
     }
     
-    @objc
-    private func onTableViewSelectionDidChange(_ notif: Notification) {
-        if let tableView = notif.object as? NSTableView {
-            let isTracksView = tableView === tracksView
-            let otherTableView = isTracksView ? dopeSheetView : tracksView
-            let selectedRow = tableView.selectedRow
-            if selectedRow >= 0 {
-                otherTableView.selectRowIndexes(IndexSet(integer: selectedRow), byExtendingSelection: false)
-                
-                if isTracksView {
-                    let item = tracksView.dataSource?.tableView?(tableView, objectValueFor: nil, row: selectedRow) as? AssetAnimationTrackIdentifier
-                    animationChangeTrack(self, trackIdentifier: item)
-                }
+    private func onTableViewSelectionDidChange(tableView: NSTableView) {
+        let isTracksView = tableView === tracksView
+        let otherTableView = isTracksView ? dopeSheetView : tracksView
+        let selectedRow = tableView.selectedRow
+        if selectedRow >= 0 {
+            otherTableView.selectRowIndexes(IndexSet(integer: selectedRow), byExtendingSelection: false)
+            
+            if isTracksView {
+                let item = tracksView.dataSource?.tableView?(tableView, objectValueFor: nil, row: selectedRow) as? AssetAnimationTrackIdentifier
+                animationChangeTrack(self, trackIdentifier: item)
             }
-            else if isTracksView {
-                otherTableView.deselectAll(nil)
-                animationChangeTrack(self, trackIdentifier: nil)
-            }
+        }
+        else if isTracksView {
+            otherTableView.deselectAll(nil)
+            animationChangeTrack(self, trackIdentifier: nil)
         }
     }
 

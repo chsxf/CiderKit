@@ -11,17 +11,51 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
     
     private var animationTrack: AssetAnimationTrack { assetDescription.animations[animationControlDelegate!.currentAnimationName!]!.animationTracks[trackIdentifier]! }
     
+    private var notificationTask: Task<Void, Never>? = nil
+    
     init(tableView: NSTableView, row: Int, assetDescription: AssetDescription, trackIdentifier: AssetAnimationTrackIdentifier, animationControlDelegate: AssetAnimationControlDelegate) {
         super.init(tableView: tableView, row: row, assetDescription: assetDescription, trackIdentifier: trackIdentifier)
         
         self.animationControlDelegate = animationControlDelegate
         
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onTableViewSelectionDidChange(_:)), name: NSTableView.selectionDidChangeNotification, object: tableView)
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onAnimationCurrentFrameDidChange(_:)), name: .animationCurrentFrameDidChange, object: animationControlDelegate)
+        notificationTask = setupNotifications()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        notificationTask?.cancel()
+    }
+    
+    private func setupNotifications() -> Task<Void, Never> {
+        Task {
+            guard
+                let tableView = self.tableView,
+                let animationControlDelegate = self.animationControlDelegate
+            else { return }
+            
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await _ in NotificationCenter.default.notifications(named: NSTableView.selectionDidChangeNotification, object: tableView) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onTableViewSelectionDidChange()
+                        }
+                    }
+                }
+                
+                group.addTask {
+                    for await _ in NotificationCenter.default.notifications(named: .animationCurrentFrameDidChange, object: animationControlDelegate) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.onAnimationCurrentFrameDidChange()
+                        }
+                    }
+                }
+            }
+        }
     }
     
     override func draw(_ dirtyRect: NSRect) {
@@ -112,16 +146,14 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
         }
     }
     
-    @objc
-    private func onTableViewSelectionDidChange(_ notif: Notification) {
+    private func onTableViewSelectionDidChange() {
         refreshSelectedAnimation()
         if wasSelected != isSelected {
             setNeedsDisplay(visibleRect)
         }
     }
     
-    @objc
-    private func onAnimationCurrentFrameDidChange(_ notif: Notification) {
+    private func onAnimationCurrentFrameDidChange() {
         setNeedsDisplay(visibleRect)
     }
     

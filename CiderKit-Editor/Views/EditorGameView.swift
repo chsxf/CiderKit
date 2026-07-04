@@ -22,6 +22,8 @@ class EditorGameView: GameView {
     
     private var editableComponents: GKComponentSystem = GKComponentSystem(componentClass: EditableComponent.self)
     
+    private var notificationTask: Task<Void, Never>? = nil
+    
     var hoverableEntities: HoverableSequence {
         get {
             if let mutableMap {
@@ -47,19 +49,34 @@ class EditorGameView: GameView {
         
         updateViewFrustrum()
         
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.selectionManager = SelectionManager(editorGameView: self)
             self.nextResponder = self.selectionManager
-            
-            NotificationCenter.default.addObserver(forName: ProjectManager.projectOpened, object: nil, queue: OperationQueue.main) { notif in
-                self.updateViewFrustrum()
-                self.viewDidEndLiveResize()
-            }
         }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        notificationTask?.cancel()
+    }
+    
+    private func setupNotifications() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await _ in NotificationCenter.default.notifications(named: ProjectManager.projectOpened) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.updateViewFrustrum()
+                            self.viewDidEndLiveResize()
+                        }
+                    }
+                }
+            }
+        }
     }
     
     private func updateViewFrustrum() {

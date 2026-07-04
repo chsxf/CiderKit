@@ -8,6 +8,8 @@ extension Notification.Name {
 
 class EditorMapNode: MapNode {
 
+    private var notificationTask: Task<Void, Never>? = nil
+    
     var dirty: Bool = false {
         didSet {
             if dirty != oldValue {
@@ -21,13 +23,22 @@ class EditorMapNode: MapNode {
     override init(with model: MapModel) {
         super.init(with: model)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.assetPlacementModified(notification:)), name: .assetPlacementModified, object: nil)
+        notificationTask = Task {
+            await handleNotifications()
+        }
     }
     
     @MainActor required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private func handleNotifications() async {
+        for await assetComponent in NotificationCenter.default.notifications(named: .assetPlacementModified)
+                                                                .compactMap({ $0.object as? EditorAssetComponent }) {
+            await assetPlacementModified(assetComponent: assetComponent)
+        }
+    }
+    
     override func onModelChanged(_ changedModel: MapModel) {
         super.onModelChanged(changedModel)
         Task {
@@ -75,14 +86,9 @@ class EditorMapNode: MapNode {
         }
     }
     
-    @objc
-    private func assetPlacementModified(notification: Notification) {
-        Task {
-            if let assetComponent = notification.object as? EditorAssetComponent {
-                await model?.update(assetPlacement: assetComponent.placement.toDescription())
-                dirty = true
-            }
-        }
+    private func assetPlacementModified(assetComponent: EditorAssetComponent) async {
+        await model?.update(assetPlacement: assetComponent.placement.toDescription())
+        dirty = true
     }
     
     override func createAssetEntity(assetInstance: AssetInstance) -> GKEntity {

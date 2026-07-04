@@ -23,6 +23,8 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
     private weak var actionsManager: MainActionsManager? = nil
     private var definedToolbarItems: [NSToolbarItem.Identifier: NSToolbarItem] = [:]
     
+    private var notificationTask: Task<Void, Never>? = nil
+    
     init(actionsManager: MainActionsManager, window: NSWindow) {
         self.actionsManager = actionsManager
         
@@ -35,7 +37,24 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
         toolbar.delegate = self
         window.toolbar = toolbar
         
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onSelectableUpdated), name: .selectableUpdated, object: nil)
+        notificationTask = setupNotifications()
+    }
+    
+    deinit {
+        notificationTask?.cancel()
+    }
+    
+    private func setupNotifications() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await hasSelection in NotificationCenter.default.notifications(named: .selectableUpdated).map({ $0.object != nil }) {
+                        try Task.checkCancellation()
+                        self.onSelectableUpdated(hasSelection: hasSelection)
+                    }
+                }
+            }
+        }
     }
     
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
@@ -112,10 +131,7 @@ final class MainToolbar: NSObject, NSToolbarDelegate {
         definedToolbarItems[.assetEditor] = assetEditorItem
     }
     
-    @objc
-    private func onSelectableUpdated(_ notif: Notification) {
-        let hasSelection = notif.object != nil
-        
+    private func onSelectableUpdated(hasSelection: Bool) {
         let toolGroup = definedToolbarItems[.tool] as! NSToolbarItemGroup
         let tools = toolGroup.subitems
         for i in 1...2 {

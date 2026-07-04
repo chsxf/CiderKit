@@ -21,30 +21,43 @@ public final class TrackingAreaManager {
     private var previousViewSize: CGSize?
     private var nodes = [SKNode]()
     private var trackingAreas = [SKNode: TrackingAreaData]()
+    
+    private var notificationTask: Task<Void, Never>? = nil
 
     public init(scene: SKScene) {
         self.scene = scene;
 
-        NotificationCenter.default.addObserver(self, selector: #selector(onTrackingAreaRegistrationRequested(_:)), name: .trackingAreaRegistrationRequested, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onTrackingAreaUnregistrationRequested(_:)), name: .trackingAreaUnregistrationRequested, object: nil)
+        notificationTask = setupNotifications()
     }
 
-    @objc
-    private func onTrackingAreaRegistrationRequested(_ notification: Notification) -> Void {
-        guard let node = notification.object as? SKNode else { return }
-        register(node: node)
+    deinit {
+        notificationTask?.cancel()
     }
-
+    
+    private func setupNotifications() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await node in NotificationCenter.default.notifications(named: .trackingAreaRegistrationRequested).compactMap({ $0.object as? SKNode }) {
+                        try Task.checkCancellation()
+                        self.register(node: node)
+                    }
+                }
+                
+                group.addTask {
+                    for await node in NotificationCenter.default.notifications(named: .trackingAreaUnregistrationRequested).compactMap({ $0.object as? SKNode }) {
+                        try Task.checkCancellation()
+                        self.unregister(node: node)
+                    }
+                }
+            }
+        }
+    }
+    
     private func register(node: SKNode) {
         if !nodes.contains(node) {
             nodes.append(node)
         }
-    }
-
-    @objc
-    private func onTrackingAreaUnregistrationRequested(_ notification: Notification) -> Void {
-        guard let node = notification.object as? SKNode else { return }
-        unregister(node: node)
     }
 
     private func unregister(node: SKNode) {

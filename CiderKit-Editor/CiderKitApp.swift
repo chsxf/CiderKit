@@ -35,6 +35,7 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKV
         window.attachedSheet == nil
     }
     
+    @MainActor
     private func setupMainWindow() -> NSWindow {
         let windowRect = CGRect(x: 100, y: 100, width: 640, height: 360)
         window = NSWindow(contentRect: windowRect, styleMask: [.titled, .resizable, .miniaturizable], backing: .buffered, defer: false)
@@ -44,8 +45,6 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKV
         window.contentView = EditorMainView(gameView: gameView, frame: windowRect)
         
         actionsManager = MainActionsManager(app: self, gameView: gameView)
-        
-        updateWindowTitle()
         
         return window
     }
@@ -95,9 +94,21 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKV
         let _ = MainToolbar(actionsManager: actionsManager, window: window)
     }
     
-    private func setupNotifications() -> Void {
-        NotificationCenter.default.addObserver(self, selector: #selector(CiderKitApp.onElevationChangeRequested(notification:)), name: .elevationChangeRequested, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(CiderKitApp.onMapDirtyStatusChanged(notification:)), name: .mapDirtyStatusChanged, object: nil)
+    private func setupNotifications() async -> Void {
+        await withTaskGroup { group in
+            group.addTask {
+                for await toolContext in NotificationCenter.default.notifications(named: .elevationChangeRequested)
+                                                                    .compactMap({ $0.object as? ElevationToolContext }) {
+                    await self.onElevationChangeRequested(elevationToolContext: toolContext)
+                }
+            }
+            
+            group.addTask {
+                for await _ in NotificationCenter.default.notifications(named: .mapDirtyStatusChanged) {
+                    await self.onMapDirtyStatusChanged()
+                }
+            }
+        }
     }
     
     private func openProjectManagerView() -> Void {
@@ -125,11 +136,11 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKV
         }
     }
     
-    @objc
-    private func onMapDirtyStatusChanged(notification: Notification) {
-        updateWindowTitle()
+    private func onMapDirtyStatusChanged() async {
+        await MainActor.run { updateWindowTitle() }
     }
     
+    @MainActor
     func updateWindowTitle() {
         var title = "\(CiderKitApp.appName) - \(actionsManager.currentMapURL?.lastPathComponent ?? "Untitled")"
         if gameView.mutableMap?.dirty ?? false {
@@ -138,20 +149,14 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKV
         window.title = title
     }
     
-    @objc
-    private func onElevationChangeRequested(notification: Notification) {
-        Task {
-            if
-                let elevationToolContext = notification.object as? ElevationToolContext,
-                let area = await MainActor.run(body: { gameView.selectionModel.selectedMapArea })
-            {
-                switch elevationToolContext {
-                case .up:
-                    await gameView.increaseElevation(area: area)
+    private func onElevationChangeRequested(elevationToolContext: ElevationToolContext) async {
+        if let area = await MainActor.run(body: { gameView.selectionModel.selectedMapArea }) {
+            switch elevationToolContext {
+            case .up:
+                await gameView.increaseElevation(area: area)
 
-                case .down:
-                    await gameView.decreaseElevation(area: area)
-                }
+            case .down:
+                await gameView.decreaseElevation(area: area)
             }
         }
     }
@@ -173,13 +178,17 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKV
         Self.mainWindow = delegate.setupMainWindow()
         delegate.setupMainMenu()
         delegate.setupToolbar()
-        delegate.setupNotifications()
         
         delegate.window.makeKeyAndOrderFront(nil)
         delegate.window.toggleFullScreen(nil)
-        
+
         delegate.openProjectManagerView()
-        
+        delegate.updateWindowTitle()
+
+        Task {
+            await delegate.setupNotifications()
+        }
+
         NSApp.run()
     }
 

@@ -7,16 +7,37 @@ class AssetAnimationDopeSheetHeaderView: NSTableHeaderView {
     
     private weak var animationControlDelegate: AssetAnimationControlDelegate? = nil
     
+    private var notificationTask: Task<Void, Never>? = nil
+    
     init(frame: NSRect, animationControlDelegate: AssetAnimationControlDelegate) {
         super.init(frame: frame)
         
         self.animationControlDelegate = animationControlDelegate
         
-        NotificationCenter.default.addObserver(self, selector: #selector(Self.onAnimationCurrentFrameDidChange(_:)), name: .animationCurrentFrameDidChange, object: animationControlDelegate)
+        notificationTask = setupNotifications()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        notificationTask?.cancel()
+    }
+    
+    private func setupNotifications() -> Task<Void, Never> {
+        Task {
+            guard let animationControlDelegate = self.animationControlDelegate else { return }
+            
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await _ in NotificationCenter.default.notifications(named: .animationCurrentFrameDidChange, object: animationControlDelegate) {
+                        try Task.checkCancellation()
+                        await self.onAnimationCurrentFrameDidChange()
+                    }
+                }
+            }
+        }
     }
     
     override func draw(_ dirtyRect: NSRect) {
@@ -103,9 +124,10 @@ class AssetAnimationDopeSheetHeaderView: NSTableHeaderView {
         }
     }
     
-    @objc
-    private func onAnimationCurrentFrameDidChange(_ notif: Notification) {
-        setNeedsDisplay(visibleRect)
+    private func onAnimationCurrentFrameDidChange() async {
+        await MainActor.run {
+            setNeedsDisplay(visibleRect)
+        }
     }
     
 }
