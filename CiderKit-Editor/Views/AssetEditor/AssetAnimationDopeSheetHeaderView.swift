@@ -41,9 +41,11 @@ class AssetAnimationDopeSheetHeaderView: NSTableHeaderView {
     }
     
     override func draw(_ dirtyRect: NSRect) {
+        print(dirtyRect)
+        
         var color = NSColor.windowBackgroundColor
         color.setFill()
-        NSBezierPath.fill(dirtyRect)
+        NSBezierPath.fill(visibleRect)
         
         let textAttributes = [
             NSAttributedString.Key.foregroundColor: NSColor(white: 1, alpha: 0.5),
@@ -55,8 +57,8 @@ class AssetAnimationDopeSheetHeaderView: NSTableHeaderView {
         let tickEverySecondPath = NSBezierPath()
         
         var counter = 1
-        for x in stride(from: Self.frameWidth, to: dirtyRect.maxX, by: Self.frameWidth) {
-            if x >= dirtyRect.minX {
+        for x in stride(from: Self.frameWidth, to: visibleRect.maxX, by: Self.frameWidth) {
+            if x >= visibleRect.minX {
                 var path = allTicksPath
                 var offset = 8
                 if counter % 60 == 0 {
@@ -78,7 +80,7 @@ class AssetAnimationDopeSheetHeaderView: NSTableHeaderView {
         
         if let animationControlDelegate = animationControlDelegate {
             let currentFrameRect = NSRect(x: CGFloat(animationControlDelegate.currentAnimationFrame) * Self.frameWidth, y: 0, width: Self.frameWidth, height: frame.height)
-            if dirtyRect.intersects(currentFrameRect) {
+            if visibleRect.intersects(currentFrameRect) {
                 color = NSColor(red: 1, green: 0.5, blue: 0.5, alpha: 0.35)
                 color.setFill()
                 NSBezierPath.fill(currentFrameRect)

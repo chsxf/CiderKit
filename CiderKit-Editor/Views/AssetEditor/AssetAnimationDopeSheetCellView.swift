@@ -70,9 +70,11 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
         let tickEverySecondPath = NSBezierPath()
         let keysPath = NSBezierPath()
         let keyBackgroundsPath = NSBezierPath()
-        var frameIndex = UInt(Float(dirtyRect.minX / Self.frameWidth).rounded(.down))
-        let loopMin = CGFloat(frameIndex) * Self.frameWidth
-        for x in stride(from: loopMin, to: dirtyRect.maxX, by: Self.frameWidth) {
+        
+        let firstFrameIndex = UInt(Float(dirtyRect.minX / Self.frameWidth).rounded(.down))
+        let lastFrameIndex = UInt(Float(dirtyRect.maxX / Self.frameWidth).rounded(.up))
+        
+        for frameIndex in firstFrameIndex...lastFrameIndex {
             var path = allTicksPath
             if frameIndex > 0 {
                 if frameIndex % 60 == 0 {
@@ -82,32 +84,35 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
                     path = tickEveryTenthPath
                 }
             }
+            
+            let x = CGFloat(frameIndex) * Self.frameWidth
             path.move(to: NSPoint(x: x, y: 0))
             path.line(to: NSPoint(x: x, y: frame.height))
             
             if animationTrack.hasKey(at: frameIndex) {
-                var keyBackgroundRect = NSRect(x: x, y: 0, width: Self.frameWidth, height: frame.height)
-                if let prevKey = animationTrack.getPrevKey(from: frameIndex) {
-                    let keyMaxX = CGFloat(prevKey.frame + 1) * Self.frameWidth
-                    if keyMaxX < loopMin {
-                        keyBackgroundRect.origin = CGPoint(x: keyMaxX - Self.frameWidth, y: 0)
-                        keyBackgroundRect.size = CGSize(width: keyBackgroundRect.width + CGFloat(frameIndex - prevKey.frame) * Self.frameWidth, height: keyBackgroundRect.height)
-                    }
-                }
-                if let nextKey = animationTrack.getNextKey(from: frameIndex) {
-                    keyBackgroundRect.size = CGSize(width: keyBackgroundRect.width + Self.frameWidth * CGFloat(nextKey.frame - frameIndex - 1), height: keyBackgroundRect.height)
-                }
-                keyBackgroundsPath.appendRect(keyBackgroundRect)
-                
                 keysPath.appendOval(in: NSRect(x: x + 1, y: 2, width: 4, height: 4))
             }
-            
-            frameIndex += 1
+        }
+        
+        var leftmostKey = animationTrack.getKey(at: firstFrameIndex) ?? animationTrack.getPrevKey(from: firstFrameIndex)
+        var rightmostKey = animationTrack.getKey(at: lastFrameIndex) ?? animationTrack.getNextKey(from: lastFrameIndex)
+        if leftmostKey != nil && rightmostKey == nil {
+            rightmostKey = animationTrack.getPrevKey(from: lastFrameIndex)
+        }
+        else if leftmostKey == nil && rightmostKey != nil {
+            leftmostKey = animationTrack.getNextKey(from: firstFrameIndex)
+        }
+        
+        if let leftmostKey, let rightmostKey {
+            let x = CGFloat(leftmostKey.frame) * Self.frameWidth
+            let w = CGFloat(rightmostKey.frame - leftmostKey.frame + 1) * Self.frameWidth
+            let backgroundRect = NSRect(x: x, y: 0, width: w, height: dirtyRect.height)
+            keyBackgroundsPath.appendRect(backgroundRect)
         }
         
         var color: NSColor
         
-        if let animationControlDelegate = animationControlDelegate {
+        if let animationControlDelegate {
             let currentFrameRect = NSRect(x: CGFloat(animationControlDelegate.currentAnimationFrame) * Self.frameWidth, y: 0, width: Self.frameWidth, height: frame.height)
             if dirtyRect.intersects(currentFrameRect) {
                 color = NSColor(red: 1, green: 0.5, blue: 0.5, alpha: 0.15)
@@ -136,7 +141,7 @@ class AssetAnimationDopeSheetCellView: AssetAnimationTrackBaseView {
         color.setStroke()
         tickEverySecondPath.stroke()
         
-        if isSelected, let animationControlDelegate = animationControlDelegate {
+        if isSelected, let animationControlDelegate {
             let currentFrameRect = NSRect(x: CGFloat(animationControlDelegate.currentAnimationFrame) * Self.frameWidth, y: 0, width: Self.frameWidth, height: frame.height)
             if dirtyRect.intersects(currentFrameRect) {
                 color = NSColor.controlAccentColor
