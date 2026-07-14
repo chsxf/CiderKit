@@ -298,7 +298,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 2640;
+				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					D91061AA2755F0B200EA8A03 = {
 						CreatedOnToolsVersion = 13.1;
@@ -934,7 +934,7 @@
 			repositoryURL = "https://github.com/chsxf/CiderKit.Tween";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.0;
+				minimumVersion = 0.7.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

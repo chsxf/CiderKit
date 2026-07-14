@@ -30,11 +30,15 @@ open class GameView: LitSceneView {
     open override var preferredSceneWidth: Int { Project.current?.settings.targetResolutionWidth ?? super.preferredSceneWidth }
     open override var preferredSceneHeight: Int { Project.current?.settings.targetResolutionHeight ?? super .preferredSceneHeight }
     
-    public let pointerDown = PassthroughSubject<GameViewPointerEventData, Never>()
-    public let pointerUp = PassthroughSubject<GameViewPointerEventData, Never>()
-    public let pointerMoved = PassthroughSubject<GameViewPointerEventData, Never>()
+    private let pointerDownSubject = PassthroughSubject<GameViewPointerEventData, Never>()
+    public let pointerDown: AsyncPublisher<PassthroughSubject<GameViewPointerEventData, Never>>
+    private let pointerUpSubject = PassthroughSubject<GameViewPointerEventData, Never>()
+    public let pointerUp: AsyncPublisher<PassthroughSubject<GameViewPointerEventData, Never>>
+    private let pointerMovedSubject = PassthroughSubject<GameViewPointerEventData, Never>()
+    public let pointerMoved: AsyncPublisher<PassthroughSubject<GameViewPointerEventData, Never>>
 
-    public let keyPressed = PassthroughSubject<GameViewKeyEventData, Never>()
+    private let keyPressedSubject = PassthroughSubject<GameViewKeyEventData, Never>()
+    public let keyPressed: AsyncPublisher<PassthroughSubject<GameViewKeyEventData, Never>>
 
     private var backdropPointerDown: AnyCancellable?
     private var backdropPointerUp: AnyCancellable?
@@ -54,6 +58,12 @@ open class GameView: LitSceneView {
         mapOverlay = SKNode()
         mapOverlay.zPosition = 100
 
+        pointerDown = AsyncPublisher(pointerDownSubject)
+        pointerUp = AsyncPublisher(pointerUpSubject)
+        pointerMoved = AsyncPublisher(pointerMovedSubject)
+
+        keyPressed = AsyncPublisher(keyPressedSubject)
+
         super.init(frame: frameRect)
 
         showsFPS = true
@@ -62,9 +72,9 @@ open class GameView: LitSceneView {
         ignoresSiblingOrder = true
         allowsTransparency = true
         
-        #if os(macOS)
+#if os(macOS)
         trackingAreaManager = .init(scene: gameScene)
-        #endif
+#endif
 
         uiOverlayCanvas.zIndex = 1000
         eventBackdropNode = .init()
@@ -76,9 +86,9 @@ open class GameView: LitSceneView {
         map = nil
         litNodesRoot.addChild(mapOverlay)
 
-        backdropPointerDown = eventBackdropNode.pointerDown.sink { self.pointerDown.send(($0.eventData, self)) }
-        backdropPointerUp = eventBackdropNode.pointerUp.sink { self.pointerUp.send(($0.eventData, self)) }
-        backdropPointerMoved = eventBackdropNode.pointerMoved.sink { self.pointerMoved.send(($0.eventData, self)) }
+        backdropPointerDown = eventBackdropNode.pointerDown.sink { self.pointerDownSubject.send(($0.eventData, self)) }
+        backdropPointerUp = eventBackdropNode.pointerUp.sink { self.pointerUpSubject.send(($0.eventData, self)) }
+        backdropPointerMoved = eventBackdropNode.pointerMoved.sink { self.pointerMovedSubject.send(($0.eventData, self)) }
     }
     
     required public init?(coder: NSCoder) {
@@ -161,7 +171,7 @@ open class GameView: LitSceneView {
     }
 
     open override func keyDown(with event: NSEvent) {
-        keyPressed.send((KeyEventData(with: event), self))
+        keyPressedSubject.send((KeyEventData(with: event), self))
     }
 #endif // os(macOS)
 
@@ -169,20 +179,10 @@ open class GameView: LitSceneView {
         return await Task {
             var pointerUpEventData: PointerEventData? = nil
 
-            let cancellable = pointerUp.sink { (eventData, _) in
-                if eventData.mouseButtonIndex == 0 {
-                    pointerUpEventData = eventData
-                }
+            for await (eventData, _) in pointerUp {
+                pointerUpEventData = eventData
+                break
             }
-
-            while true {
-                await Task.yield()
-                if pointerUpEventData != nil {
-                    break
-                }
-            }
-
-            cancellable.cancel()
 
             let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
             return map?.raycastMapCell(at: locationInScene)
@@ -193,20 +193,10 @@ open class GameView: LitSceneView {
         return await Task {
             var pointerUpEventData: PointerEventData? = nil
 
-            let cancellable = pointerUp.sink { (eventData, _) in
-                if eventData.mouseButtonIndex == 0 {
-                    pointerUpEventData = eventData
-                }
+            for await (eventData, _) in pointerUp {
+                pointerUpEventData = eventData
+                break
             }
-
-                while true {
-                await Task.yield()
-                if pointerUpEventData != nil {
-                    break
-                }
-            }
-
-            cancellable.cancel()
 
             let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
             return map?.raycastAsset(at: locationInScene)
