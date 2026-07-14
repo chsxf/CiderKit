@@ -2,10 +2,10 @@
 import SpriteKit
 
 public extension Notification.Name {
-
+    
     static let trackingAreaRegistrationRequested = Self.init(rawValue: "trackingAreaRegistrationRequested")
     static let trackingAreaUnregistrationRequested = Self.init(rawValue: "trackingAreaUnregistrationRequested")
-
+    
 }
 
 public final class TrackingAreaManager {
@@ -23,7 +23,13 @@ public final class TrackingAreaManager {
     private var trackingAreas = [SKNode: TrackingAreaData]()
     
     private var notificationTask: Task<Void, Never>? = nil
+    
+    private var forceInvalidation = false
 
+    private static var listeningToRegistrations: Bool = false
+    private static var listeningToUnregistrations: Bool = false
+    public static var isReady: Bool { listeningToRegistrations && listeningToUnregistrations }
+    
     public init(scene: SKScene) {
         self.scene = scene;
 
@@ -38,6 +44,7 @@ public final class TrackingAreaManager {
         Task {
             await withThrowingTaskGroup { group in
                 group.addTask {
+                    Self.listeningToRegistrations = true
                     for await node in NotificationCenter.default.notifications(named: .trackingAreaRegistrationRequested).compactMap({ $0.object as? SKNode }) {
                         try Task.checkCancellation()
                         self.register(node: node)
@@ -45,9 +52,21 @@ public final class TrackingAreaManager {
                 }
                 
                 group.addTask {
+                    Self.listeningToUnregistrations = true
                     for await node in NotificationCenter.default.notifications(named: .trackingAreaUnregistrationRequested).compactMap({ $0.object as? SKNode }) {
                         try Task.checkCancellation()
                         self.unregister(node: node)
+                    }
+                }
+                
+                group.addTask {
+                    while true {
+                        for await _ in NotificationCenter.default.notifications(named: NSWindow.didResizeNotification) {
+                            try Task.checkCancellation()
+                            break
+                        }
+                        try await Task.sleep(nanoseconds: 100_000_000)
+                        self.forceInvalidation = true
                     }
                 }
             }
@@ -93,7 +112,8 @@ public final class TrackingAreaManager {
             }
         }
 
-        var invalidateTrackingAreas = false
+        var invalidateTrackingAreas = forceInvalidation
+        forceInvalidation = false
         let viewSize = view.frame.size
         if previousViewSize != nil && viewSize != previousViewSize! {
             invalidateTrackingAreas = true

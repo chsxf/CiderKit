@@ -13,16 +13,26 @@ final class EventBackdropNode: SKSpriteNode {
         super.init(texture: CiderKitEngine.clearTexture, color: SKColor.clear, size: CGSize(width: 100, height: 100))
         isUserInteractionEnabled = true
 
-        #if os(macOS)
-        NotificationCenter.default.post(name: .trackingAreaRegistrationRequested, object: self)
-        #endif
+#if os(macOS)
+        registerTrackingArea()
+#endif
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    #if os(macOS)
+#if os(macOS)
+    private func registerTrackingArea() {
+        Task {
+            while !TrackingAreaManager.isReady {
+                await Task.yield()
+            }
+            
+            NotificationCenter.default.post(name: .trackingAreaRegistrationRequested, object: self)
+        }
+    }
+
     override func mouseDown(with event: NSEvent) {
         if let view = scene?.view {
             pointerDown.send((PointerEventData(with: event, in: view), self))
@@ -64,6 +74,6 @@ final class EventBackdropNode: SKSpriteNode {
             pointerMoved.send((PointerEventData(with: event, in: view), self))
         }
     }
-    #endif
+#endif
 
 }
