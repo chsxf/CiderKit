@@ -27,7 +27,7 @@ public final class MapRegionModel: Identifiable, Comparable {
     }
 
     public func rename(to newName: String) {
-        regionDescription.name = newName
+        regionDescription = regionDescription.renamed(as: newName)
     }
 
     func containsMapCoordinates(mapX x: Int, y: Int) -> Bool { regionDescription.area.contains(mapX: x, y: y) }
@@ -57,26 +57,14 @@ public final class MapRegionModel: Identifiable, Comparable {
     }
     
     public func increaseElevation() -> Bool {
-        regionDescription.elevation += 1
-        regionDescription.assetPlacements = regionDescription.assetPlacements.map { item in
-            if item.mapPosition.elevation != nil {
-                return item.with(newPosition: item.mapPosition.with(relativeElevation: 1))
-            }
-            return item
-        }
+        regionDescription = regionDescription.elevated(by: 1)
         return true
     }
     
     public func decreaseElevation() -> Bool {
         var needsRebuilding = false
         if regionDescription.elevation > 0 {
-            regionDescription.elevation -= 1
-            regionDescription.assetPlacements = regionDescription.assetPlacements.map { item in
-                if item.mapPosition.elevation != nil {
-                    return item.with(newPosition: item.mapPosition.with(relativeElevation: -1))
-                }
-                return item
-            }
+            regionDescription = regionDescription.elevated(by: -1)
             needsRebuilding = true
         }
         return needsRebuilding
@@ -160,7 +148,7 @@ public final class MapRegionModel: Identifiable, Comparable {
     }
 
     public func add(assetPlacement: AssetPlacement) {
-        regionDescription.assetPlacements.append(assetPlacement.toDescription())
+        regionDescription = regionDescription.withAssetPlacement(added: assetPlacement.toDescription())
     }
 
     @discardableResult
@@ -169,20 +157,15 @@ public final class MapRegionModel: Identifiable, Comparable {
     }
 
     public func update(assetPlacement: AssetPlacementDescription) {
-        for i in 0..<regionDescription.assetPlacements.count {
-            let placement = regionDescription.assetPlacements[i]
-            if placement.id == assetPlacement.id {
-                regionDescription.assetPlacements[i] = assetPlacement
-                return
-            }
-        }
+        regionDescription = regionDescription.withAssetPlacement(updated: assetPlacement)
     }
     
     @discardableResult
     public func removeAssetPlacement(with placementId: UUID) -> Bool {
-        if regionDescription.assetPlacements.contains(where: { $0.id == placementId }) {
-            regionDescription.assetPlacements.removeAll { $0.id == placementId }
+        if let newRegionDescription = regionDescription.withAssetPlacement(removed: placementId) {
+            regionDescription = newRegionDescription
             return true
+            
         }
         return false
     }

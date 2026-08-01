@@ -8,44 +8,57 @@ public struct MapRegionDescription: Codable, Sendable {
         case rightElevation = "r"
     }
 
-    public var name: String?
+    public let name: String?
 
-    private var x: Int
-    private var y: Int
+    public let materialOverrides: [String: [CustomSettings?]]?
     
-    private var width: Int
-    private var height: Int
+    public let elevation: Int
+    public let renderer: String?
     
-    private var materialOverrides: [String: [CustomSettings?]]?
+    public let assetPlacements: [AssetPlacementDescription]
     
-    var elevation: Int
-    let renderer: String?
+    public let area: MapArea
     
-    public var assetPlacements = [AssetPlacementDescription]()
+    public init(area: MapArea, elevation: Int, renderer: String?) {
+        self.init(name: nil, area: area, elevation: elevation, renderer: renderer, materialOverrides: nil, assetPlacements: [])
+    }
     
-    public var area: MapArea { MapArea(x: x, y: y, width: width, height: height) }
+    internal init(byExporting area: MapArea, from other: MapRegionDescription) {
+        var materialOverrides: [String: [CustomSettings?]]? = nil
+        Self.importMaterialOverrides(over: area, from: other, into: &materialOverrides)
+        var assetPlacements = [AssetPlacementDescription]()
+        Self.importAssets(over: area, from: other, into: &assetPlacements)
+        
+        self.init(name: nil, area: area, elevation: other.elevation, renderer: other.renderer, materialOverrides: materialOverrides, assetPlacements: assetPlacements)
+    }
     
-    public init(x: Int, y: Int, width: Int, height: Int, elevation: Int, renderer: String?) {
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+    private init(name: String?, area: MapArea, elevation: Int, renderer: String?, materialOverrides: [String: [CustomSettings?]]?, assetPlacements: [AssetPlacementDescription]) {
+        self.name = name
+        self.area = area
         self.elevation = elevation
         
         self.renderer = renderer
-        materialOverrides = nil
+        self.materialOverrides = materialOverrides
         
-        assetPlacements = []
+        self.assetPlacements = assetPlacements
     }
     
-    public init(area: MapArea, elevation: Int, renderer: String?) {
-        self.init(x: area.minX, y: area.minY, width: area.width, height: area.height, elevation: elevation, renderer: renderer)
-    }
-    
-    init(byExporting area: MapArea, from other: MapRegionDescription) {
-        self.init(area: area, elevation: other.elevation, renderer: other.renderer)
-        importMaterialOverrides(from: other)
-        importAssets(from: other)
+    public func isFreeOfAsset(mapArea: MapArea) -> Bool {
+        for placement in assetPlacements {
+            if let description = placement.assetLocator.assetDescription {
+                var footprint = description.footprint
+                if placement.horizontallyFlipped {
+                    footprint.flip()
+                }
+
+                let assetArea = MapArea(x: placement.mapPosition.x - Int(footprint.x), y: placement.mapPosition.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
+                if assetArea.intersects(mapArea) {
+                    return false
+                }
+            }
+        }
+        
+        return true
     }
     
     private func getMaterialOverride(for context: MaterialOverrideContext, at index: Int) -> CustomSettings? {
@@ -76,51 +89,77 @@ public struct MapRegionDescription: Codable, Sendable {
             return nil
         }
         
-        var newDescription: MapRegionDescription? = nil
+        var newArea: MapArea? = nil
         
         if area.width == other.area.width && area.minX == other.area.minX
                     && (area.maxY == other.area.minY || other.area.maxY == area.minY) {
-            newDescription = MapRegionDescription(
-                x: area.minX,
-                y: min(area.minY, other.area.minY),
-                width: area.width,
-                height: area.height + other.area.height,
-                elevation: elevation,
-                renderer: renderer
-            )
+            newArea = MapArea(x: area.minX, y: min(area.minY, other.area.minY), width: area.width, height: area.height + other.area.height)
         }
         else if area.height == other.area.height && area.minY == other.area.minY
                     && (area.maxX == other.area.minX || other.area.maxX == area.minX) {
-            newDescription = MapRegionDescription(
-                x: min(area.minX, other.area.minX),
-                y: area.minY,
-                width: area.width + other.area.width,
-                height: area.height,
-                elevation: elevation,
-                renderer: renderer
-            )
+            newArea = MapArea(x: min(area.minX, other.area.minX), y: area.minY, width: area.width + other.area.width, height: area.height)
         }
 
-        if newDescription != nil {
-            newDescription!.importMaterialOverrides(from: self)
-            newDescription!.importAssets(from: self)
-            newDescription!.importMaterialOverrides(from: other)
-            newDescription!.importAssets(from: other)
+        guard let unwrappedNewArea = newArea else { return nil }
+
+        var materialOverrides: [String: [CustomSettings?]]? = nil
+        Self.importMaterialOverrides(over: unwrappedNewArea, from: self, into: &materialOverrides)
+        Self.importMaterialOverrides(over: unwrappedNewArea, from: other, into: &materialOverrides)
+        
+        var assetPlacemeents = [AssetPlacementDescription]()
+        Self.importAssets(over: unwrappedNewArea, from: self, into: &assetPlacemeents)
+        Self.importAssets(over: unwrappedNewArea, from: other, into: &assetPlacemeents)
+        
+        return MapRegionDescription(name: nil, area: unwrappedNewArea, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: [])
+    }
+    
+    public func renamed(as newName: String) -> MapRegionDescription {
+        MapRegionDescription(name: newName, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: assetPlacements)
+    }
+    
+    public func elevated(by relativeElevation: Int) -> MapRegionDescription {
+        guard relativeElevation != 0 else { return self }
+        let newAssetPlacements = changeAssetPlacementsElevation(placements: assetPlacements, relativeElevation: relativeElevation)
+        let newElevation = elevation + relativeElevation
+        return MapRegionDescription(name: name, area: area, elevation: newElevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+    }
+    
+    public func withAssetPlacement(added newAssetPlacement: AssetPlacementDescription) -> MapRegionDescription {
+        var newAssetPlacements = assetPlacements;
+        newAssetPlacements.append(newAssetPlacement)
+        return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+    }
+    
+    public func withAssetPlacement(updated updatedAssetPlacement: AssetPlacementDescription) -> MapRegionDescription {
+        for i in 0..<assetPlacements.count {
+            let placement = assetPlacements[i]
+            if placement.id == updatedAssetPlacement.id {
+                var newAssetPlacements = assetPlacements
+                newAssetPlacements[i] = updatedAssetPlacement
+                return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+            }
         }
-    
-        return newDescription
+        return self
     }
     
-    private mutating func importMaterialOverrides(from other: MapRegionDescription) {
-        let relativeArea = other.area.relative(to: area)
-        importMaterialOverrides(for: MaterialOverrideContext.ground, from: other, over: relativeArea)
-        importMaterialOverrides(for: MaterialOverrideContext.leftElevation, from: other, over: relativeArea)
-        importMaterialOverrides(for: MaterialOverrideContext.rightElevation, from: other, over: relativeArea)
+    public func withAssetPlacement(removed assetPlacementId: UUID) -> MapRegionDescription? {
+        let newAssetPlacements = assetPlacements.compactMap { $0.id != assetPlacementId ? $0 : nil }
+        if newAssetPlacements.count != assetPlacements.count {
+            return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+        }
+        return nil
     }
     
-    private mutating func importMaterialOverrides(for context: MaterialOverrideContext, from other: MapRegionDescription, over relativeArea: MapArea) {
+    private static func importMaterialOverrides(over area: MapArea, from region: MapRegionDescription, into existingMaterialOverrides: inout [String: [CustomSettings?]]?) {
+        let relativeArea = region.area.relative(to: area)
+        importMaterialOverrides(over: area, for: MaterialOverrideContext.ground, from: region, in: relativeArea, into: &existingMaterialOverrides)
+        importMaterialOverrides(over: area, for: MaterialOverrideContext.leftElevation, from: region, in: relativeArea, into: &existingMaterialOverrides)
+        importMaterialOverrides(over: area, for: MaterialOverrideContext.rightElevation, from: region, in: relativeArea, into: &existingMaterialOverrides)
+    }
+    
+    private static func importMaterialOverrides(over area: MapArea, for context: MaterialOverrideContext, from region: MapRegionDescription, in relativeArea: MapArea, into existingMaterialOverrides: inout [String: [CustomSettings?]]?) {
         let key = context.rawValue
-        guard let otherMaterialOverrides = other.materialOverrides?[key] else {
+        guard let otherMaterialOverrides = region.materialOverrides?[key] else {
             return
         }
         
@@ -137,46 +176,37 @@ public struct MapRegionDescription: Codable, Sendable {
                     continue
                 }
                 
-                if materialOverrides == nil {
-                    materialOverrides = [key: []]
+                if existingMaterialOverrides == nil {
+                    existingMaterialOverrides = [key: []]
                 }
-                if materialOverrides![key] == nil {
-                    materialOverrides![key] = []
+                if existingMaterialOverrides![key] == nil {
+                    existingMaterialOverrides![key] = []
                 }
-                var materialOverridesArray = materialOverrides![key]!
+                var materialOverridesArray = existingMaterialOverrides![key]!
                 let localIndex = y * area.width + x
                 if materialOverridesArray.count < localIndex {
                     materialOverridesArray.append(contentsOf: [CustomSettings?](repeating: nil, count: localIndex - materialOverridesArray.count))
                 }
                 materialOverridesArray.append(otherOverride)
-                materialOverrides![key] = materialOverridesArray
+                existingMaterialOverrides![key] = materialOverridesArray
             }
         }
     }
     
-    private mutating func importAssets(from other: MapRegionDescription) {
+    private static func importAssets(over area: MapArea, from other: MapRegionDescription, into existingAssetPlacements: inout [AssetPlacementDescription]) {
         for assetPlacement in other.assetPlacements {
             guard area.contains(mapPosition: assetPlacement.mapPosition) else { continue }
-            assetPlacements.append(assetPlacement)
+            existingAssetPlacements.append(assetPlacement)
         }
     }
     
-    public func isFreeOfAsset(mapArea: MapArea) -> Bool {
-        for placement in assetPlacements {
-            if let description = placement.assetLocator.assetDescription {
-                var footprint = description.footprint
-                if placement.horizontallyFlipped {
-                    footprint.flip()
-                }
+}
 
-                let assetArea = MapArea(x: placement.mapPosition.x - Int(footprint.x), y: placement.mapPosition.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
-                if assetArea.intersects(mapArea) {
-                    return false
-                }
-            }
+fileprivate func changeAssetPlacementsElevation(placements: [AssetPlacementDescription], relativeElevation: Int) -> [AssetPlacementDescription] {
+    placements.map { item in
+        if item.mapPosition.elevation != nil {
+            return item.with(newPosition: item.mapPosition.with(relativeElevation: relativeElevation))
         }
-        
-        return true
+        return item
     }
-    
 }

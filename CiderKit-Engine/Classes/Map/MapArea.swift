@@ -1,7 +1,7 @@
 import Foundation
 import CoreGraphics
 
-public struct MapArea: Equatable, CustomStringConvertible, Sendable {
+public struct MapArea: Equatable, CustomStringConvertible, Sendable, Codable {
     
     public var x: Int
     public var y: Int
