@@ -21,8 +21,7 @@ final public actor Atlases {
             }
             
             let description: AtlasDescription = try Functions.load(locator.url)
-            let atlas = Atlas(named: name, from: description, in: locator.bundle, variant: nil)
-            loadedAtlases[name] = atlas
+            var atlas = Atlas(named: name, from: description, in: locator.bundle, variant: nil)
             
             if let variants = description.variants {
                 for (variantKey, _) in variants {
@@ -35,9 +34,11 @@ final public actor Atlases {
                     let variantAtlas = Atlas(named: name, from: description, in: locator.bundle, variant: variantKey)
                     loadedAtlases[fullVariantKey] = variantAtlas
                     
-                    atlas.add(variant: variantAtlas, for: variantKey)
+                    atlas = atlas.with(newVariant: variantAtlas, for: variantKey)
                 }
             }
+            
+            loadedAtlases[name] = atlas
         }
     }
     
@@ -48,8 +49,7 @@ final public actor Atlases {
             }
             
             let description: AtlasDescription = try Functions.load(url)
-            let atlas = Atlas(named: name, from: description, withTextureDirectoryURL: directoryURL, variant: nil)
-            loadedAtlases[name] = atlas
+            var atlas = Atlas(named: name, from: description, withTextureDirectoryURL: directoryURL, variant: nil)
             
             if let variants = description.variants {
                 for (variantKey, _) in variants {
@@ -62,9 +62,11 @@ final public actor Atlases {
                     let variantAtlas = Atlas(named: name, from: description, withTextureDirectoryURL: directoryURL, variant: variantKey)
                     loadedAtlases[fullVariantKey] = variantAtlas
                     
-                    atlas.add(variant: variantAtlas, for: variantKey)
+                    atlas = atlas.with(newVariant: variantAtlas, for: variantKey)
                 }
             }
+            
+            loadedAtlases[name] = atlas
         }
     }
     

@@ -1,12 +1,12 @@
 import Foundation
-import SpriteKit
+@preconcurrency import SpriteKit
 
 public enum AtlasErrors: Error {
     case unknownSprite
     case unknownVariant
 }
 
-public final class Atlas: StringKeysProvider {
+public struct Atlas: StringKeysProvider, Sendable {
 
     public let name: String
     
@@ -14,11 +14,20 @@ public final class Atlas: StringKeysProvider {
     public let isVariant: Bool
     
     public let atlasTexture: SKTexture
-    public private(set) var atlasSprites: [String: SKTexture]
+    public let atlasSprites: [String: SKTexture]
     
-    private var variants: [String: Atlas] = [:]
+    private let variants: [String: Atlas]
     
     public var keys: any Collection<String> { atlasSprites.keys }
+    
+    private init(name: String, editorOnly: Bool, isVariant: Bool, atlasTexture: SKTexture, atlasSprites: [String: SKTexture], variants: [String: Atlas]) {
+        self.name = name
+        self.editorOnly = editorOnly
+        self.isVariant = isVariant
+        self.atlasTexture = atlasTexture
+        self.atlasSprites = atlasSprites
+        self.variants = variants
+    }
     
     init(named name: String, from description: AtlasDescription, in bundle: Bundle, variant: String?) {
         self.name = name
@@ -40,12 +49,9 @@ public final class Atlas: StringKeysProvider {
         #endif
         atlasTexture = SKTexture(image: image)
         atlasTexture.filteringMode = .nearest
-        atlasSprites = [:]
-        for spriteDescription in description.sprites {
-            let normalizedRect = spriteDescription.normalizedRect(in: atlasTexture)
-            let sprite = SKTexture(rect: normalizedRect, in: atlasTexture)
-            atlasSprites[spriteDescription.name] = sprite
-        }
+        atlasSprites = Self.buildAtlasSprites(texture: atlasTexture, sprites: description.sprites)
+        
+        variants = [:]
     }
     
     init(named name: String, from description: AtlasDescription, withTextureDirectoryURL directoryURL: URL, variant: String?) {
@@ -69,12 +75,19 @@ public final class Atlas: StringKeysProvider {
         #endif
         atlasTexture = SKTexture(image: image)
         atlasTexture.filteringMode = .nearest
-        atlasSprites = [:]
-        for spriteDescription in description.sprites {
-            let normalizedRect = spriteDescription.normalizedRect(in: atlasTexture)
-            let sprite = SKTexture(rect: normalizedRect, in: atlasTexture)
+        atlasSprites = Self.buildAtlasSprites(texture: atlasTexture, sprites: description.sprites)
+        
+        variants = [:]
+    }
+    
+    private static func buildAtlasSprites(texture: SKTexture, sprites: [AtlasSpriteDescription]) -> [String: SKTexture] {
+        var atlasSprites = [String: SKTexture]()
+        for spriteDescription in sprites {
+            let normalizedRect = spriteDescription.normalizedRect(in: texture)
+            let sprite = SKTexture(rect: normalizedRect, in: texture)
             atlasSprites[spriteDescription.name] = sprite
         }
+        return atlasSprites
     }
     
     public subscript(spriteName: String) -> SKTexture {
@@ -86,15 +99,17 @@ public final class Atlas: StringKeysProvider {
         }
     }
     
-    func add(variant: Atlas, for key: String) {
-        variants[key] = variant
-    }
-    
     public func variant(for key: String) throws -> Atlas {
         guard let variant = variants[key] else {
             throw AtlasErrors.unknownVariant
         }
         return variant
+    }
+    
+    internal func with(newVariant: Atlas, for key: String) -> Atlas {
+        var newVariants = variants
+        newVariants[key] = newVariant
+        return Atlas(name: name, editorOnly: editorOnly, isVariant: isVariant, atlasTexture: atlasTexture, atlasSprites: atlasSprites, variants: newVariants)
     }
     
 }
