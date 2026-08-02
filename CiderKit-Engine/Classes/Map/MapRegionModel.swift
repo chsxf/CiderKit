@@ -27,7 +27,7 @@ public final class MapRegionModel: Identifiable, Comparable {
     }
 
     public func rename(to newName: String) {
-        regionDescription = regionDescription.renamed(as: newName)
+        regionDescription = regionDescription.mutated(withName: newName)
     }
 
     func containsMapCoordinates(mapX x: Int, y: Int) -> Bool { regionDescription.area.contains(mapX: x, y: y) }

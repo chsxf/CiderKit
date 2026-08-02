@@ -1,5 +1,7 @@
 import Foundation
+import CiderKitMacros
 
+@MutableStruct
 public struct MapRegionDescription: Codable, Sendable {
     
     private enum MaterialOverrideContext: String {
@@ -8,16 +10,15 @@ public struct MapRegionDescription: Codable, Sendable {
         case rightElevation = "r"
     }
 
-    public let name: String?
+    @MutatingProperty public let name: String?
 
+    public let area: MapArea
+    public let elevation: Int
+    
+    public let renderer: String?
     public let materialOverrides: [String: [CustomSettings?]]?
     
-    public let elevation: Int
-    public let renderer: String?
-    
     public let assetPlacements: [AssetPlacementDescription]
-    
-    public let area: MapArea
     
     public init(area: MapArea, elevation: Int, renderer: String?) {
         self.init(name: nil, area: area, elevation: elevation, renderer: renderer, materialOverrides: nil, assetPlacements: [])
@@ -30,17 +31,6 @@ public struct MapRegionDescription: Codable, Sendable {
         Self.importAssets(over: area, from: other, into: &assetPlacements)
         
         self.init(name: nil, area: area, elevation: other.elevation, renderer: other.renderer, materialOverrides: materialOverrides, assetPlacements: assetPlacements)
-    }
-    
-    private init(name: String?, area: MapArea, elevation: Int, renderer: String?, materialOverrides: [String: [CustomSettings?]]?, assetPlacements: [AssetPlacementDescription]) {
-        self.name = name
-        self.area = area
-        self.elevation = elevation
-        
-        self.renderer = renderer
-        self.materialOverrides = materialOverrides
-        
-        self.assetPlacements = assetPlacements
     }
     
     public func isFreeOfAsset(mapArea: MapArea) -> Bool {
@@ -111,10 +101,6 @@ public struct MapRegionDescription: Codable, Sendable {
         Self.importAssets(over: unwrappedNewArea, from: other, into: &assetPlacemeents)
         
         return MapRegionDescription(name: nil, area: unwrappedNewArea, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: [])
-    }
-    
-    public func renamed(as newName: String) -> MapRegionDescription {
-        MapRegionDescription(name: newName, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: assetPlacements)
     }
     
     public func elevated(by relativeElevation: Int) -> MapRegionDescription {

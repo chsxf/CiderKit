@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D921CF272F989F7600E3601B /* CiderKit.CSS in Frameworks */ = {isa = PBXBuildFile; productRef = D921CF262F989F7600E3601B /* CiderKit.CSS */; };
 		D92E95802E3E38AD00CB6691 /* CiderKit.Tween in Frameworks */ = {isa = PBXBuildFile; productRef = D92E957F2E3E38AD00CB6691 /* CiderKit.Tween */; };
+		D93B3290301F6BBF0012973E /* CiderKit.Macros in Frameworks */ = {isa = PBXBuildFile; productRef = D93B328F301F6BBF0012973E /* CiderKit.Macros */; };
 		D93C4C992800CBD6000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
 		D93C4CC92800CC25000955E1 /* CiderKit_Engine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; };
 		D93C4CCA2800CC25000955E1 /* CiderKit_Engine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -111,6 +112,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D93B3290301F6BBF0012973E /* CiderKit.Macros in Frameworks */,
 				D921CF272F989F7600E3601B /* CiderKit.CSS in Frameworks */,
 				D92E95802E3E38AD00CB6691 /* CiderKit.Tween in Frameworks */,
 			);
@@ -227,6 +229,7 @@
 			packageProductDependencies = (
 				D92E957F2E3E38AD00CB6691 /* CiderKit.Tween */,
 				D921CF262F989F7600E3601B /* CiderKit.CSS */,
+				D93B328F301F6BBF0012973E /* CiderKit.Macros */,
 			);
 			productName = "CiderKit-Engine";
 			productReference = D93C4C8F2800CBD6000955E1 /* CiderKit_Engine.framework */;
@@ -331,6 +334,7 @@
 			packageReferences = (
 				D92E957E2E3E38AD00CB6691 /* XCRemoteSwiftPackageReference "CiderKit" */,
 				D921CF252F989F7600E3601B /* XCRemoteSwiftPackageReference "CiderKit" */,
+				D93B328E301F6BBF0012973E /* XCRemoteSwiftPackageReference "CiderKit" */,
 			);
 			productRefGroup = D91061AC2755F0B200EA8A03 /* Products */;
 			projectDirPath = "";
@@ -937,6 +941,14 @@
 				minimumVersion = 0.7.0;
 			};
 		};
+		D93B328E301F6BBF0012973E /* XCRemoteSwiftPackageReference "CiderKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/chsxf/CiderKit.Macros";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -949,6 +961,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D92E957E2E3E38AD00CB6691 /* XCRemoteSwiftPackageReference "CiderKit" */;
 			productName = CiderKit.Tween;
+		};
+		D93B328F301F6BBF0012973E /* CiderKit.Macros */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D93B328E301F6BBF0012973E /* XCRemoteSwiftPackageReference "CiderKit" */;
+			productName = CiderKit.Macros;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
