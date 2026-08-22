@@ -28,9 +28,9 @@ public final class AssetPlacement: Identifiable, ObservableObject, NamedObject {
     public func toDescription() -> AssetPlacementDescription {
         AssetPlacementDescription(id: id,
                                   assetLocator: assetLocator,
-                                  horizontallyFlipped: horizontallyFlipped,
-                                  position: mapPosition,
                                   name: name,
+                                  mapPosition: mapPosition,
+                                  horizontallyFlipped: horizontallyFlipped,
                                   interactive: interactive)
     }
 

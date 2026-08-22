@@ -20,14 +20,18 @@ class EditorMapNode: MapNode {
     
     private(set) var hoverableEntities: [GKEntity] = []
     
-    override init(with model: MapModel) {
-        super.init(with: model)
+    override init() {
+        super.init()
         
         notificationTask = Task {
             await handleNotifications()
         }
     }
-    
+
+    deinit {
+        notificationTask?.cancel()
+    }
+
     @MainActor required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -39,18 +43,13 @@ class EditorMapNode: MapNode {
         }
     }
     
-    override func onModelChanged(_ changedModel: MapModel) {
-        super.onModelChanged(changedModel)
-        Task {
-            await MainActor.run {
-                dirty = true
-            }
-        }
-    }
+    override func dismantle(regionNode: MapRegionNode, detach: Bool = true) {
+        super.dismantle(regionNode: regionNode, detach: detach)
 
-    override func rebuildRegionNodes() {
-        removeHoverableMapCellEntities()
-        super.rebuildRegionNodes()
+        cleanHoverableEntities {
+            guard let editorMCC = $0.component(ofType: EditorMapCellComponent.self) else { return false }
+            return editorMCC.region == regionNode
+        }
     }
 
     override func mapCellEntity(node: SKNode, for region: MapRegionNode, atMapPosition position: MapPosition) -> GKEntity {
@@ -79,7 +78,7 @@ class EditorMapNode: MapNode {
                 let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)?.node
                 assetNode?.removeFromParent()
 
-                await model?.removeAsset(withId: assetComponent.placement.id)
+                await MapModel.shared.removeAsset(withId: assetComponent.placement.id)
 
                 dirty = true
             }
@@ -87,7 +86,7 @@ class EditorMapNode: MapNode {
     }
     
     private func assetPlacementModified(assetComponent: EditorAssetComponent) async {
-        await model?.update(assetPlacement: assetComponent.placement.toDescription())
+        await MapModel.shared.update(assetPlacement: assetComponent.placement.toDescription())
         dirty = true
     }
     
@@ -100,8 +99,8 @@ class EditorMapNode: MapNode {
         return entity
     }
 
-    override func remove(assetInstance: AssetInstance, includingPlacement: Bool = true) {
-        super.remove(assetInstance: assetInstance, includingPlacement: includingPlacement)
+    override func remove(assetInstance: AssetInstance) async {
+        await super.remove(assetInstance: assetInstance)
         cleanHoverableEntities { $0.component(ofType: AssetComponent.self)?.assetInstance === assetInstance }
     }
 

@@ -4,23 +4,23 @@ import Combine
 
 class AmbientLightComponent: GKComponent, Selectable, EditableComponentDelegate {
     
-    let lightDescription: BaseLight
+    let lightImplementation: AmbientLight
     
-    var lightDescriptionChangeCancellable: AnyCancellable?
+    var lightImplementationChangeCancellable: AnyCancellable?
     
     var inspectableDescription: String { "Ambient Light" }
     
     var inspectorView: BaseInspectorView? {
         let view = InspectorViewFactory.getView(forClass: Self.self, generator: { AmbientLightInspector() })
-        view.setObservableObject(lightDescription)
+        view.setObservableObject(lightImplementation)
         return view
     }
     
-    fileprivate init(from lightDescription: BaseLight) {
-        self.lightDescription = lightDescription
+    fileprivate init(from lightImplementation: AmbientLight) {
+        self.lightImplementation = lightImplementation
         super.init()
         
-        lightDescriptionChangeCancellable = self.lightDescription.objectWillChange.sink {
+        lightImplementationChangeCancellable = self.lightImplementation.objectWillChange.sink {
             if let editable = self.entity?.component(ofType: EditableComponent.self) {
                 editable.invalidate()
             }
@@ -45,10 +45,10 @@ class AmbientLightComponent: GKComponent, Selectable, EditableComponentDelegate 
         return true
     }
     
-    class func entity(from lightDescription: BaseLight) -> GKEntity {
+    class func entity(from lightImplementation: AmbientLight) -> GKEntity {
         let newEntity = GKEntity();
         
-        let ambientLightComponent = AmbientLightComponent(from: lightDescription)
+        let ambientLightComponent = AmbientLightComponent(from: lightImplementation)
         newEntity.addComponent(ambientLightComponent)
         
         newEntity.addComponent(EditableComponent(delegate: ambientLightComponent))

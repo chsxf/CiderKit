@@ -123,14 +123,7 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKV
             }
             else {
                 Task {
-                    if let gameView = self.gameView {
-                        await CiderKitEngine.worldManager.unloadAllMaps()
-                        let model = await CiderKitEngine.worldManager.addEmptyMap()
-                        await MainActor.run {
-                            let mapNode = gameView.mapNode(from: model)
-                            gameView.litNodesRoot.insertChild(mapNode, at: 0)
-                        }
-                    }
+                    await MapModel.shared.clear()
                 }
             }
         }

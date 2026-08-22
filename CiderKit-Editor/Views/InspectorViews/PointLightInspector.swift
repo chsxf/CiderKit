@@ -97,11 +97,11 @@ class PointLightInspector: BaseNamedInspectorView<PointLight>, FloatFieldDelegat
             case elevationField:
                 inspectedObject.position.z = elevationField.value
             case nearFalloffField:
-                inspectedObject.falloff.near = nearFalloffField.value
+                inspectedObject.falloff = inspectedObject.falloff.mutated(withNear: nearFalloffField.value)
             case farFalloffField:
-                inspectedObject.falloff.far = farFalloffField.value
+                inspectedObject.falloff = inspectedObject.falloff.mutated(withFar: farFalloffField.value)
             case exponentFalloffField:
-                inspectedObject.falloff.exponent = exponentFalloffField.value
+                inspectedObject.falloff = inspectedObject.falloff.mutated(withExponent: exponentFalloffField.value)
             default:
                 break
             }

@@ -1,7 +1,7 @@
 import AppKit
 import CiderKit_Engine
 
-class AmbientLightInspector: BaseTypedInspectorView<BaseLight>, LabelledColorWellDelegate {
+class AmbientLightInspector: BaseTypedInspectorView<AmbientLight>, LabelledColorWellDelegate {
 
     private let colorWell: LabelledColorWell
     
@@ -34,3 +34,4 @@ class AmbientLightInspector: BaseTypedInspectorView<BaseLight>, LabelledColorWel
     }
     
 }
+

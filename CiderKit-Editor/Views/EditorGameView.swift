@@ -3,11 +3,11 @@ import SpriteKit
 import GameplayKit
 import CiderKit_Engine
 
-class EditorGameView: GameView {
+class EditorGameView: RuntimeGameView {
     
     private(set) var worldGrid: WorldGrid!
     
-    private(set) var mutableMap: EditorMapNode?
+    public private(set) var mutableMap: EditorMapNode!
 
     let selectionModel: SelectionModel = SelectionModel()
     
@@ -16,7 +16,7 @@ class EditorGameView: GameView {
     private(set) var selectionManager: SelectionManager?
     private var viewFrustrumShape: SKShapeNode?
     
-    private let lightsRoot: SKNode
+    private let lightIconsRoot: SKNode
     private var lightEntities: [GKEntity] = []
     private(set) var ambientLightEntity: GKEntity? = nil
     
@@ -24,31 +24,29 @@ class EditorGameView: GameView {
     
     private var notificationTask: Task<Void, Never>? = nil
     
-    var hoverableEntities: HoverableSequence {
-        get {
-            if let mutableMap {
-                return HoverableSequence(worldGrid.hoverableEntities, mutableMap.hoverableEntities, lightEntities)
-            }
-            return HoverableSequence(worldGrid.hoverableEntities, lightEntities)
-        }
-    }
+    var hoverableEntities: HoverableSequence { HoverableSequence(worldGrid.hoverableEntities, mutableMap.hoverableEntities, lightEntities) }
 
     override init(frame frameRect: CGRect) {
-        lightsRoot = SKNode()
-        lightsRoot.zPosition = 10000
+        lightIconsRoot = SKNode()
+        lightIconsRoot.zPosition = 10000
         
         super.init(frame: frameRect)
-        
-        showsPhysics = true
+
+        mutableMap = (map as! EditorMapNode)
+
         isAsynchronous = false
         
         worldGrid = WorldGrid()
         scene!.addChild(worldGrid)
     
-        scene!.addChild(lightsRoot)
+        scene!.addChild(lightIconsRoot)
         
         updateViewFrustrum()
-        
+
+        ambientLightEntity = AmbientLightComponent.entity(from: lighting.ambientLight)
+
+        notificationTask = setupNotifications()
+
         Task { @MainActor in
             self.selectionManager = SelectionManager(editorGameView: self)
             self.nextResponder = self.selectionManager
@@ -72,6 +70,24 @@ class EditorGameView: GameView {
                         await MainActor.run {
                             self.updateViewFrustrum()
                             self.viewDidEndLiveResize()
+                        }
+                    }
+                }
+
+                group.addTask {
+                    for await lightImplementation in await self.lighting.lightAdded {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.setup(light: lightImplementation)
+                        }
+                    }
+                }
+
+                group.addTask {
+                    for await lightImplementation in await self.lighting.lightRemoved {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.remove(light: lightImplementation)
                         }
                     }
                 }
@@ -183,30 +199,17 @@ class EditorGameView: GameView {
     }
     
     func increaseElevation(area: MapArea?) async {
-        await CiderKitEngine.worldManager.activeMapModel?.increaseElevation(area: area)
-
-        if let area = area {
-            let selectable = mutableMap?.lookForMapCellEntity(at: MapPosition(x: area.x, y: area.y))?.findSelectableComponent()
-            selectionModel.setSelectable(selectable)
-        }
+        selectionModel.clear()
+        await MapModel.shared.increaseElevation(area: area)
     }
     
     func decreaseElevation(area: MapArea?) async {
-        await CiderKitEngine.worldManager.activeMapModel?.decreaseElevation(area: area)
-
-        if let area {
-            let selectable = mutableMap?.lookForMapCellEntity(at: MapPosition(x: area.x, y: area.y))?.findSelectableComponent()
-            selectionModel.setSelectable(selectable)
-        }
+        selectionModel.clear()
+        await MapModel.shared.decreaseElevation(area: area)
     }
     
-    override func mapNode(from model: MapModel) -> MapNode {
-        removePreviousMapNodes()
-        selectionModel.clear()
-        buildLightNodes()
-
-        mutableMap = EditorMapNode(with: model)
-        return mutableMap!
+    override class func mapNode() -> MapNode {
+        EditorMapNode()
     }
 
     override func prepareSceneForPrepasses() {
@@ -214,7 +217,7 @@ class EditorGameView: GameView {
         
         worldGrid.isHidden = true
         viewFrustrumShape?.isHidden = true
-        lightsRoot.isHidden = true
+        lightIconsRoot.isHidden = true
         selectionManager?.hideTools()
     }
     
@@ -223,61 +226,52 @@ class EditorGameView: GameView {
         
         worldGrid.isHidden = false
         viewFrustrumShape?.isHidden = false
-        lightsRoot.isHidden = false
+        lightIconsRoot.isHidden = false
         selectionManager?.showTools()
     }
     
-    private func buildLightNodes() {
-        if let mapModel = CiderKitEngine.worldManager.activeMapModel {
-            mapModel.lights.forEach { setupLight($0) }
-            ambientLightEntity = AmbientLightComponent.entity(from: mapModel.ambientLight)
-        }
-    }
-    
-    func add(light: BaseLight) {
-        selectionManager?.deselect()
-        CiderKitEngine.worldManager.activeMapModel?.add(light: light)
-        setupLight(light)
-    }
-
-    func setupLight(_ light: BaseLight) {
+    func setup(light: any LightImplementation) {
         if let pointLight = light as? PointLight {
-            setupPointLight(pointLight)
+            setup(lightEntity: PointLightComponent.entity(from: pointLight))
         }
         else if let directionalLight = light as? DirectionalLight {
-            setupDirectionalLight(directionalLight)
+            setup(lightEntity: DirectionalLightComponent.entity(from: directionalLight))
         }
     }
 
-    private func setupPointLight(_ light: PointLight) {
-        let lightEntity = PointLightComponent.entity(from: light)
+    private func setup(lightEntity: GKEntity) {
         if let lightNode = lightEntity.component(ofType: GKSKNodeComponent.self)?.node {
-            lightsRoot.addChild(lightNode)
+            lightIconsRoot.addChild(lightNode)
         }
         lightEntities.append(lightEntity)
         editableComponents.addComponent(foundIn: lightEntity)
-
-        if let pointLightComponent = lightEntity.component(ofType: PointLightComponent.self) {
-            NotificationCenter.default.addObserver(self, selector: #selector(pointLightErased(notification:)), name: .selectableErased, object: pointLightComponent)
-        }
     }
-    
-    private func setupDirectionalLight(_ light: DirectionalLight) {
-        let lightEntity = DirectionalLightComponent.entity(from: light)
-        if let lightNode = lightEntity.component(ofType: GKSKNodeComponent.self)?.node {
-            lightsRoot.addChild(lightNode)
-        }
-        lightEntities.append(lightEntity)
-        editableComponents.addComponent(foundIn: lightEntity)
 
-        if let directionalLightComponent = lightEntity.component(ofType: DirectionalLightComponent.self) {
-            NotificationCenter.default.addObserver(self, selector: #selector(directionalLightErased(notification:)), name: .selectableErased, object: directionalLightComponent)
+    private func remove(light: any LightImplementation) {
+        if light is PointLight {
+            remove(light: PointLight.self, with: PointLightComponent.self)
+        }
+        else if light is DirectionalLight {
+            remove(light: DirectionalLight.self, with: DirectionalLightComponent.self)
         }
     }
 
-    func addAsset(_ asset: AssetLocator, atMapPosition position: MapPosition, horizontallyFlipped: Bool) {
+    private func remove<ComponentType, LightType>(light: LightType.Type, with componentType: ComponentType.Type) where ComponentType: GKComponent & BaseLightComponent, LightType: LightImplementation {
+        guard
+            let lightEntity = lightEntities.first(where: { $0.component(ofType: componentType)?.lightImplementation === light }),
+            let sknodeComponent = lightEntity.component(ofType: GKSKNodeComponent.self)
+        else {
+            return
+        }
+
+        sknodeComponent.node.removeFromParent()
+        editableComponents.removeComponent(foundIn: lightEntity)
+        lightEntities.removeAll { $0 === lightEntity }
+    }
+
+    func addAsset(_ asset: AssetLocator, atMapPosition position: MapPosition, horizontallyFlipped: Bool) async {
         do {
-            try mutableMap?.addAsset(asset, named: "", at: position, horizontallyFlipped: horizontallyFlipped)
+            try await mutableMap?.addAsset(asset, named: "", at: position, horizontallyFlipped: horizontallyFlipped)
             mutableMap?.dirty = true
         }
         catch MapRegionErrors.assetTooCloseToRegionBorder {
@@ -300,38 +294,6 @@ class EditorGameView: GameView {
             alert.messageText = "Unexpected error: \(error)"
             alert.addButton(withTitle: "OK")
             alert.runModal()
-        }
-    }
-    
-    @objc
-    private func pointLightErased(notification: Notification) {
-        Task {
-            if let pointLightComponent = notification.object as? PointLightComponent {
-                NotificationCenter.default.removeObserver(self, name: .selectableErased, object: pointLightComponent)
-
-                await CiderKitEngine.worldManager.activeMapModel?.remove(light: pointLightComponent.lightDescription)
-
-                let lightEntity = pointLightComponent.entity!
-                lightEntity.component(ofType: GKSKNodeComponent.self)!.node.removeFromParent()
-                lightEntities.removeAll { $0 === lightEntity }
-                editableComponents.removeComponent(foundIn: lightEntity)
-            }
-        }
-    }
-    
-    @objc
-    private func directionalLightErased(notification: Notification) {
-        Task {
-            if let directionalLightComponent = notification.object as? DirectionalLightComponent {
-                NotificationCenter.default.removeObserver(self, name: .selectableErased, object: directionalLightComponent)
-
-                await CiderKitEngine.worldManager.activeMapModel?.remove(light: directionalLightComponent.lightDescription)
-
-                let lightEntity = directionalLightComponent.entity!
-                lightEntity.component(ofType: GKSKNodeComponent.self)!.node.removeFromParent()
-                lightEntities.removeAll { $0 === lightEntity }
-                editableComponents.removeComponent(foundIn: lightEntity)
-            }
         }
     }
     

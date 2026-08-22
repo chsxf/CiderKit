@@ -1,3 +1,6 @@
+import CiderKitMacros
+
+@MutableStruct(versioned: .internal)
 public struct AssetPlacementDescription: Codable, Identifiable, Sendable {
 
     enum CodingKeys: String, CodingKey {
@@ -15,24 +18,15 @@ public struct AssetPlacementDescription: Codable, Identifiable, Sendable {
     
     private static let WITH_MAP_POSITION_VERSION = 2
 
-    private static let VERSION = AssetPlacementDescription.WITH_MAP_POSITION_VERSION
+    private static let SERIALIZATION_VERSION = AssetPlacementDescription.WITH_MAP_POSITION_VERSION
 
-    public let version: Int = AssetPlacementDescription.VERSION
+    public let serializationVersion: Int = AssetPlacementDescription.SERIALIZATION_VERSION
     public let id: UUID
     public let assetLocator: AssetLocator
     public let name: String
-    public let mapPosition: MapPosition
+    @MutatingProperty public let mapPosition: MapPosition
     public let horizontallyFlipped: Bool
     public let interactive: Bool
-    
-    public init(id: UUID, assetLocator: AssetLocator, horizontallyFlipped: Bool, position: MapPosition = MapPosition(), name: String = "", interactive: Bool = false) {
-        self.id = id
-        self.name = name
-        self.assetLocator = assetLocator
-        self.mapPosition = position
-        self.horizontallyFlipped = horizontallyFlipped
-        self.interactive = interactive
-    }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -53,27 +47,20 @@ public struct AssetPlacementDescription: Codable, Identifiable, Sendable {
         }
         horizontallyFlipped = try container.decodeIfPresent(Bool.self, forKey: .horizontallyFlipped) ?? false
         interactive = try container.decodeIfPresent(Bool.self, forKey: .interactive) ?? false
+
+        version = 0
     }
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
-        try container.encode(version, forKey: .version)
+        try container.encode(serializationVersion, forKey: .version)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
         try container.encode(assetLocator, forKey: .assetLocator)
         try container.encode(mapPosition, forKey: .position)
         try container.encode(horizontallyFlipped, forKey: .horizontallyFlipped)
         try container.encode(interactive, forKey: .interactive)
-    }
-    
-    public func with(newPosition: MapPosition) -> Self {
-        AssetPlacementDescription(id: id,
-                                  assetLocator: assetLocator,
-                                  horizontallyFlipped: horizontallyFlipped,
-                                  position: newPosition,
-                                  name: name,
-                                  interactive: interactive)
     }
 
 }

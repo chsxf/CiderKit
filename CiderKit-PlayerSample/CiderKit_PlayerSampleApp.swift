@@ -14,13 +14,17 @@ class CiderKit_PlayerSampleApp: NSObject, NSApplicationDelegate {
         let window = NSWindow(contentRect: windowRect, styleMask: [.titled, .closable, .resizable], backing: .buffered, defer: false)
         window.acceptsMouseMovedEvents = true
         window.title = "CiderKit Player Sample"
-        let gameView = GameView(frame: windowRect)
+        let gameView = RuntimeGameView(frame: windowRect)
         window.contentView = gameView
         window.makeKeyAndOrderFront(nil)
         window.toggleFullScreen(nil)
         
-        let url = Bundle.main.url(forResource: "map", withExtension: "ckmap")
-        gameView.loadMap(file: url!)
+        if let url = Bundle.main.url(forResource: "map", withExtension: "ckmap") {
+            Task {
+                let mapDescription: MapDescription = try! Functions.load(url)
+                await MapModel.shared.match(mapDescription: mapDescription)
+            }
+        }
     }
     
     private func setupMainMenu() -> Void {
@@ -43,10 +47,10 @@ class CiderKit_PlayerSampleApp: NSObject, NSApplicationDelegate {
         NSApp.delegate = delegate
         
         Task.detached {
-            try? await Atlases.preload(atlases: [
-                "main": "Main Atlas"
+            try! Atlases.load(atlases: [
+                "default_tile": AtlasLocator(url: CiderKitEngine.bundle.url(forResource: "Default Tile Atlas", withExtension: "ckatlas")!, bundle: CiderKitEngine.bundle)
             ])
-            
+
             DispatchQueue.main.async {
                 delegate.setup()
                 delegate.setupMainMenu()
