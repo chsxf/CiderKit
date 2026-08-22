@@ -5,27 +5,27 @@ import Combine
 
 class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
     
-    let lightDescription: PointLight
-    
-    var lightDescriptionChangeCancellable: AnyCancellable?
-    
+    let lightImplementation: PointLight
+
+    var lightImplementationChangeCancellable: AnyCancellable?
+
     let supportedToolModes: ToolMode = [.move, .erase]
     
     var inspectableDescription: String { "Point Light" }
     
     var inspectorView: BaseInspectorView? {
         let view = InspectorViewFactory.getView(forClass: Self.self, generator: { PointLightInspector() })
-        view.setObservableObject(lightDescription)
+        view.setObservableObject(lightImplementation)
         return view
     }
     
     fileprivate var lightNode: PointLightNode? { entity?.component(ofType: GKSKNodeComponent.self)?.node as? PointLightNode }
     
-    fileprivate init(from lightDescription: PointLight) {
-        self.lightDescription = lightDescription
+    fileprivate init(from lightImplementation: PointLight) {
+        self.lightImplementation = lightImplementation
         super.init()
         
-        lightDescriptionChangeCancellable = self.lightDescription.objectWillChange.sink {
+        lightImplementationChangeCancellable = self.lightImplementation.objectWillChange.sink {
             if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
                 editableComponent.invalidate()
             }
@@ -58,18 +58,18 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
         lightNode?.selected = false
     }
     
-    class func entity(from lightDescription: PointLight) -> GKEntity {
+    class func entity(from lightImplementation: PointLight) -> GKEntity {
         let newEntity = GKEntity();
         
-        let scenePosition = MapNode.worldToScene(lightDescription.position)
+        let scenePosition = MapNode.worldToScene(lightImplementation.position)
 
         let pointLight = PointLightNode()
         pointLight.position = scenePosition
-        pointLight.enabled = lightDescription.enabled
-        pointLight.setLightColor(lightDescription.color)
+        pointLight.enabled = lightImplementation.enabled
+        pointLight.setLightColor(lightImplementation.color)
         newEntity.addComponent(GKSKNodeComponent(node: pointLight))
         
-        let pointLightComponent = PointLightComponent(from: lightDescription)
+        let pointLightComponent = PointLightComponent(from: lightImplementation)
         newEntity.addComponent(pointLightComponent)
         
         newEntity.addComponent(EditableComponent(delegate: pointLightComponent))
@@ -82,15 +82,15 @@ class PointLightComponent: GKComponent, Selectable, EditableComponentDelegate {
             return false
         }
         
-        pointLight.position = MapNode.worldToScene(lightDescription.position)
-        pointLight.enabled = lightDescription.enabled
-        pointLight.setLightColor(lightDescription.color)
-        
+        pointLight.position = MapNode.worldToScene(lightImplementation.position)
+        pointLight.enabled = lightImplementation.enabled
+        pointLight.setLightColor(lightImplementation.color)
+
         return true
     }
     
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) {
-        lightDescription.position += WorldPosition(x: Float(x), y: Float(y), z: Float(z))
+        lightImplementation.position += WorldPosition(x: Float(x), y: Float(y), z: Float(z))
         entity?.component(ofType: EditableComponent.self)?.invalidate()
     }
     

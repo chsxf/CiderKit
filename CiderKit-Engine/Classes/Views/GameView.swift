@@ -2,12 +2,16 @@ import SpriteKit
 import GameplayKit
 import Combine
 
+public extension Notification.Name {
+    static let addUiElementRequested: Self = .init(rawValue: "addUiElementRequested")
+}
+
 open class GameView: LitSceneView {
 
     public typealias GameViewPointerEventData = (eventData: PointerEventData, sender: GameView)
     public typealias GameViewKeyEventData = (eventData: KeyEventData, sender: GameView)
 
-    public private(set) var map: MapNode?
+    public let map: MapNode
     public let mapOverlay: SKNode
 
 #if os(macOS)
@@ -20,10 +24,10 @@ open class GameView: LitSceneView {
     
     open override var ambientLightColorRGB: SIMD3<Float> {
         get {
-            guard lightingEnabled, let mapModel = CiderKitEngine.worldManager.activeMapModel else {
+            guard lightingEnabled else {
                 return super.ambientLightColorRGB
             }
-            return mapModel.ambientLight.colorVector
+            return MapModel.shared.ambientLight.colorVector
         }
     }
     
@@ -43,6 +47,9 @@ open class GameView: LitSceneView {
     private var backdropPointerDown: AnyCancellable?
     private var backdropPointerUp: AnyCancellable?
     private var backdropPointerMoved: AnyCancellable?
+
+    private var asyncListenerTask: Task<Void, Never>? = nil
+    private var latestMapDescription: SendableRef<MapDescription>? = nil
 
     public override init(frame frameRect: CGRect) {
         let defaultStyleSheetURL = CiderKitEngine.bundle.url(forResource: "Default Style Sheet", withExtension: "ckcss")!
@@ -64,6 +71,8 @@ open class GameView: LitSceneView {
 
         keyPressed = AsyncPublisher(keyPressedSubject)
 
+        map = Self.mapNode()
+
         super.init(frame: frameRect)
 
         showsFPS = true
@@ -83,33 +92,57 @@ open class GameView: LitSceneView {
         camera.addChild(eventBackdropNode)
         camera.addChild(uiOverlayCanvas)
 
-        map = nil
+        litNodesRoot.addChild(map)
         litNodesRoot.addChild(mapOverlay)
 
         backdropPointerDown = eventBackdropNode.pointerDown.sink { self.pointerDownSubject.send(($0.eventData, self)) }
         backdropPointerUp = eventBackdropNode.pointerUp.sink { self.pointerUpSubject.send(($0.eventData, self)) }
         backdropPointerMoved = eventBackdropNode.pointerMoved.sink { self.pointerMovedSubject.send(($0.eventData, self)) }
+
+        asyncListenerTask = setupAsyncListeners()
     }
-    
+
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public func removePreviousMapNodes() {
-        for i in stride(from: litNodesRoot.children.count - 1, through: 0, by: -1) {
-            if let previousMapNode = litNodesRoot.children[i] as? MapNode {
-                previousMapNode.removeFromParent()
+    deinit {
+        asyncListenerTask?.cancel()
+    }
+
+    private func setupAsyncListeners() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await newMapDescription in await MapModel.shared.updateStream {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.latestMapDescription = SendableRef(newMapDescription)
+                        }
+                    }
+                }
+
+                group.addTask {
+                    for await newUINode in NotificationCenter.default.notifications(named: .addUiElementRequested).compactMap({ $0.object as? SKNode }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.uiOverlayCanvas.addChild(newUINode)
+                        }
+                    }
+                }
             }
         }
     }
 
-    open func mapNode(from model: MapModel) -> MapNode {
-        removePreviousMapNodes()
-        map = MapNode(with: model)
-        return map!
+    open class func mapNode() -> MapNode {
+        MapNode()
     }
 
     open override func update(_ currentTime: TimeInterval, for scene: SKScene) {
+        if let latestMapDescription {
+            map.match(mapDescription: latestMapDescription)
+        }
+
         super.update(currentTime, for: scene)
         
 #if os(macOS)
@@ -134,16 +167,16 @@ open class GameView: LitSceneView {
         var minVector = WorldPosition(Float.infinity, Float.infinity, 0)
         var maxVector = WorldPosition(-Float.infinity, -Float.infinity, 0)
 
-        if let mapModel = CiderKitEngine.worldManager.activeMapModel {
-            for regionModel in mapModel.regions {
-                let area = regionModel.regionDescription.area
+        if let mapDescription = map.mapDescription {
+            for region in mapDescription.regions {
+                let area = region.area
 
                 minVector.x = min(minVector.x, Float(area.minX))
                 minVector.y = min(minVector.y, Float(area.minY))
 
                 maxVector.x = max(maxVector.x, Float(area.maxX))
                 maxVector.y = max(maxVector.y, Float(area.maxY))
-                maxVector.z = max(maxVector.z, Float(regionModel.regionDescription.elevation + 1))
+                maxVector.z = max(maxVector.z, Float(region.elevation + 1))
             }
         }
 
@@ -151,8 +184,8 @@ open class GameView: LitSceneView {
     }
     
     open override func getLightMatrix(_ index: Int) -> matrix_float3x3 {
-        guard let mapModel = CiderKitEngine.worldManager.activeMapModel,
-              lightingEnabled,
+        let mapModel = MapModel.shared
+        guard lightingEnabled,
               index < mapModel.lights.count
         else {
             return super.getLightMatrix(index)
@@ -185,7 +218,7 @@ open class GameView: LitSceneView {
             }
 
             let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
-            return map?.raycastMapCell(at: locationInScene)
+            return map.raycastMapCell(at: locationInScene)
         }.value
     }
 
@@ -199,7 +232,7 @@ open class GameView: LitSceneView {
             }
 
             let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
-            return map?.raycastAsset(at: locationInScene)
+            return map.raycastAsset(at: locationInScene)
         }.value
     }
 

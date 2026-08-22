@@ -100,8 +100,8 @@ class EditorMapNode: MapNode {
         return entity
     }
 
-    override func remove(assetInstance: AssetInstance, includingPlacement: Bool = true) {
-        super.remove(assetInstance: assetInstance, includingPlacement: includingPlacement)
+    override func remove(assetInstance: AssetInstance) async {
+        await super.remove(assetInstance: assetInstance)
         cleanHoverableEntities { $0.component(ofType: AssetComponent.self)?.assetInstance === assetInstance }
     }
 

@@ -124,10 +124,9 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKV
             else {
                 Task {
                     if let gameView = self.gameView {
-                        await CiderKitEngine.worldManager.unloadAllMaps()
-                        let model = await CiderKitEngine.worldManager.addEmptyMap()
+                        await MapModel.shared.clear()
                         await MainActor.run {
-                            let mapNode = gameView.mapNode(from: model)
+                            let mapNode = gameView.mapNode(from: MapModel.shared)
                             gameView.litNodesRoot.insertChild(mapNode, at: 0)
                         }
                     }

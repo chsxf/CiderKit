@@ -55,10 +55,10 @@ class MapCellInspector: BaseTypedInspectorView<EditorMapCellComponent>, NSTextFi
         super.updateContent()
         
         if let inspectedObject {
-            regionField.stringValue = inspectedObject.region?.regionModel?.id.description ?? "N/A"
+            regionField.stringValue = inspectedObject.region?.regionDescription.id.description ?? "N/A"
 
-            if let regionModel = inspectedObject.region?.regionModel {
-                nameField.stringValue = regionModel.regionDescription.name ?? ""
+            if let regionDescription = inspectedObject.region?.regionDescription {
+                nameField.stringValue = regionDescription.name ?? ""
                 nameField.isEditable = true
             }
             else {
@@ -74,11 +74,13 @@ class MapCellInspector: BaseTypedInspectorView<EditorMapCellComponent>, NSTextFi
     }
 
     func controlTextDidChange(_ obj: Notification) {
-        if let inspectedObject, let regionModel = inspectedObject.region?.regionModel {
-            isEditing = true
-            regionModel.rename(to: nameField.stringValue)
-            isEditing = false
-            inspectedObject.objectWillChange.send()
+        Task {
+            if let inspectedObject, let regionDescription = inspectedObject.region?.regionDescription {
+                isEditing = true
+                await MapModel.shared.rename(regionId: regionDescription.id, to: nameField.stringValue)
+                isEditing = false
+                inspectedObject.objectWillChange.send()
+            }
         }
     }
 

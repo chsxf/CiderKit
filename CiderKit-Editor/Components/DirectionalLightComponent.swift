@@ -5,9 +5,9 @@ import Combine
 
 class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDelegate {
     
-    let lightDescription: DirectionalLight
+    let lightImplementation: DirectionalLight
     
-    var lightDescriptionChangeCancellable: AnyCancellable?
+    var lightImplementationChangeCancellable: AnyCancellable?
     
     let supportedToolModes: ToolMode = [.move, .erase]
     
@@ -15,17 +15,17 @@ class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDeleg
     
     var inspectorView: BaseInspectorView? {
         let view = InspectorViewFactory.getView(forClass: Self.self, generator: { DirectionalLightInspector() })
-        view.setObservableObject(lightDescription)
+        view.setObservableObject(lightImplementation)
         return view
     }
     
     fileprivate var lightNode: DirectionalLightNode? { entity?.component(ofType: GKSKNodeComponent.self)?.node as? DirectionalLightNode }
     
-    fileprivate init(from lightDescription: DirectionalLight) {
-        self.lightDescription = lightDescription
+    fileprivate init(from lightImplementation: DirectionalLight) {
+        self.lightImplementation = lightImplementation
         super.init()
         
-        lightDescriptionChangeCancellable = self.lightDescription.objectWillChange.sink {
+        lightImplementationChangeCancellable = self.lightImplementation.objectWillChange.sink {
             if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
                 editableComponent.invalidate()
             }
@@ -58,18 +58,18 @@ class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDeleg
         lightNode?.selected = false
     }
     
-    class func entity(from lightDescription: DirectionalLight) -> GKEntity {
+    class func entity(from lightImplementation: DirectionalLight) -> GKEntity {
         let newEntity = GKEntity();
         
-        let scenePosition = MapNode.worldToScene(lightDescription.position)
+        let scenePosition = MapNode.worldToScene(lightImplementation.position)
 
         let directionalLight = DirectionalLightNode()
         directionalLight.position = scenePosition
-        directionalLight.enabled = lightDescription.enabled
-        directionalLight.setLightColor(lightDescription.color)
+        directionalLight.enabled = lightImplementation.enabled
+        directionalLight.setLightColor(lightImplementation.color)
         newEntity.addComponent(GKSKNodeComponent(node: directionalLight))
         
-        let directionalLightComponent = DirectionalLightComponent(from: lightDescription)
+        let directionalLightComponent = DirectionalLightComponent(from: lightImplementation)
         newEntity.addComponent(directionalLightComponent)
         
         newEntity.addComponent(EditableComponent(delegate: directionalLightComponent))
@@ -82,15 +82,15 @@ class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDeleg
             return false
         }
         
-        directionalLight.position = MapNode.worldToScene(lightDescription.position)
-        directionalLight.enabled = lightDescription.enabled
-        directionalLight.setLightColor(lightDescription.color)
+        directionalLight.position = MapNode.worldToScene(lightImplementation.position)
+        directionalLight.enabled = lightImplementation.enabled
+        directionalLight.setLightColor(lightImplementation.color)
         
         return true
     }
     
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) {
-        lightDescription.position += WorldPosition(x: Float(x), y: Float(y), z: Float(z))
+        lightImplementation.position += WorldPosition(x: Float(x), y: Float(y), z: Float(z))
         entity?.component(ofType: EditableComponent.self)?.invalidate()
     }
     
