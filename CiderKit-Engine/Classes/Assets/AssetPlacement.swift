@@ -1,37 +1,50 @@
-public final class AssetPlacement: Identifiable, ObservableObject, NamedObject {
+public final class AssetPlacement: Identifiable, UpdatableObject, NamedObject {
 
-    public let id: UUID
-    public let assetLocator: AssetLocator
-    @Published public var name: String
-    @Published public var mapPosition: MapPosition
-    @Published public var horizontallyFlipped: Bool
-    @Published public var interactive: Bool
-    
+    typealias AssetPlacementEventData = (stream: AsyncStream<Void>, continuation: AsyncStream<Void>.Continuation)
+
+    private var updateStreams = [AssetPlacementEventData]()
+    public var updated: AsyncStream<Void> { Self.makeStream(streamArray: &updateStreams) }
+
+    public private(set) var placementDescription: AssetPlacementDescription
+
+    public var id: UUID { placementDescription.id }
+    public var assetLocator: AssetLocator { placementDescription.assetLocator }
+    public var name: String { placementDescription.name }
+    public var mapPosition: MapPosition { placementDescription.mapPosition }
+    public var horizontallyFlipped: Bool { placementDescription.horizontallyFlipped }
+    public var interactive: Bool { placementDescription.interactive }
+
     public init(description: AssetPlacementDescription) {
-        id = description.id
-        assetLocator = description.assetLocator
-        name = description.name
-        mapPosition = description.mapPosition
-        horizontallyFlipped = description.horizontallyFlipped
-        interactive = description.interactive
+        placementDescription = description
     }
     
     public init(assetLocator: AssetLocator, horizontallyFlipped: Bool, position: MapPosition = MapPosition(), name: String = "") {
-        id = UUID()
-        self.name = name
-        self.assetLocator = assetLocator
-        self.mapPosition = position
-        self.horizontallyFlipped = horizontallyFlipped
-        interactive = false
+        placementDescription = AssetPlacementDescription(id: UUID(), assetLocator: assetLocator, name: name, mapPosition: position, horizontallyFlipped: horizontallyFlipped, interactive: false)
     }
-    
-    public func toDescription() -> AssetPlacementDescription {
-        AssetPlacementDescription(id: id,
-                                  assetLocator: assetLocator,
-                                  horizontallyFlipped: horizontallyFlipped,
-                                  position: mapPosition,
-                                  name: name,
-                                  interactive: interactive)
+
+    deinit {
+        updateStreams.forEach { $0.continuation.finish() }
+    }
+
+    public func match(description newDescription: AssetPlacementDescription) {
+        guard placementDescription.id != newDescription.id || placementDescription.version != newDescription.version else { return }
+        placementDescription = newDescription
+        notifyUpdate()
+    }
+
+    public func rename(_ newName: String) async {
+        let newDescription = placementDescription.mutated(withName: newName)
+        await MapModel.shared.update(assetPlacement: newDescription)
+    }
+
+    public func notifyUpdate() {
+        updateStreams.forEach { $0.continuation.yield() }
+    }
+
+    private static func makeStream(streamArray: inout [AssetPlacementEventData]) -> AsyncStream<Void> {
+        let streamData = AsyncStream<Void>.makeStream(bufferingPolicy: .unbounded)
+        streamArray.append(streamData)
+        return streamData.stream
     }
 
 }

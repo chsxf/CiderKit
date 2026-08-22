@@ -2,28 +2,36 @@ import SpriteKit
 import GameplayKit
 
 public class MapRegionNode : SKNode {
-    
-    public weak var regionModel: MapRegionModel?
+
+    public private(set) var regionDescription: MapRegionDescription
 
     public private(set) var cellEntities: [GKEntity] = []
-    public private(set) var assetInstances: [AssetInstance] = []
-    
-    var layerCount: Int { 10 }
+    private var assetInstances: [UUID: AssetInstance] = [:]
+
+    var layerCount: Int { 4 }
+
+    private let leftElevationRoot = SKNode()
+    private var leftElevationNodes = [IntPoint: [SKSpriteNode]]()
+    private let rightElevationRoot = SKNode()
+    private var rightElevationNodes = [IntPoint: [SKSpriteNode]]()
+    private let groundRoot = SKNode()
+    private var groundNodes = [IntPoint: SKSpriteNode]()
+    private let assetsRoot = SKNode()
 
     var map: MapNode? { parent as? MapNode }
 
-    public init(for regionModel: MapRegionModel) {
+    public init(for regionDescription: MapRegionDescription) {
+        self.regionDescription = regionDescription
+
         super.init()
-        
-        self.regionModel = regionModel
+
+        addChild(leftElevationRoot)
+        addChild(rightElevationRoot)
+        addChild(groundRoot)
+        addChild(assetsRoot)
     }
 
-    func build() {
-        guard
-            let regionDescription = regionModel?.regionDescription,
-            let mapModel = regionModel?.map
-        else { return }
-
+    func build(in mapDescription: SendableRef<MapDescription>) {
         let rendererName = regionDescription.renderer ?? "default_cell"
         let renderer = try! CellRenderers[rendererName]
         
@@ -50,15 +58,17 @@ public class MapRegionNode : SKNode {
                 
                 let indexInRegion = y * regionDescription.area.width + x
                 let mapY = y + Int(regionDescription.area.minY)
-                
-                let baseScenePosition = MapNode.worldToScene(WorldPosition(Float(mapX), Float(mapY), Float(regionDescription.elevation)))
+
+                let mapPoint = IntPoint(mapX, mapY)
+                let baseWorldPosition = WorldPosition(mapPoint: mapPoint, elevation: regionDescription.elevation)
+                let baseScenePosition = MapNode.worldToScene(baseWorldPosition)
 
                 let zForShader = Float(regionDescription.elevation)
                 
                 if renderer.leftElevationMaterialResetPolicy == .resetWithEachCell {
                     leftElevationMaterial.reset()
                 }
-                let leftElevationCount = mapModel.getLeftVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
+                let leftElevationCount = mapDescription.ref.getLeftVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<leftElevationCount {
                     if renderer.leftElevationMaterialResetPolicy == .resetAlways {
                         leftElevationMaterial.reset()
@@ -78,13 +88,21 @@ public class MapRegionNode : SKNode {
                     localLeftElevationMaterialOverride = regionDescription.leftElevationMaterialOverride(at: indexInRegion)
                     leftElevationMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localLeftElevationMaterialOverride)
                     
-                    addChild(sprite)
+                    leftElevationRoot.addChild(sprite)
+
+                    if var nodeList = leftElevationNodes[mapPoint] {
+                        nodeList.append(sprite)
+                        leftElevationNodes[mapPoint] = nodeList
+                    }
+                    else {
+                        leftElevationNodes[mapPoint] = [sprite]
+                    }
                 }
 
                 if renderer.rightElevationMaterialResetPolicy == .resetWithEachCell {
                     rightElevationMaterial.reset()
                 }
-                let rightElevationCount = mapModel.getRightVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
+                let rightElevationCount = mapDescription.ref.getRightVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<rightElevationCount {
                     if renderer.rightElevationMaterialResetPolicy == .resetAlways {
                         rightElevationMaterial.reset()
@@ -104,7 +122,15 @@ public class MapRegionNode : SKNode {
                     localRightElevationMaterialOverride = regionDescription.rightElevationMaterialOverride(at: indexInRegion)
                     rightElevationMaterial.applyOn(spriteNode: sprite, withLocalOverrides: localRightElevationMaterialOverride)
                     
-                    addChild(sprite)
+                    rightElevationRoot.addChild(sprite)
+
+                    if var nodeList = rightElevationNodes[mapPoint] {
+                        nodeList.append(sprite)
+                        rightElevationNodes[mapPoint] = nodeList
+                    }
+                    else {
+                        rightElevationNodes[mapPoint] = [sprite]
+                    }
                 }
             
                 let groundMaterialResetPolicy = renderer.groundMaterialResetPolicy
@@ -122,11 +148,12 @@ public class MapRegionNode : SKNode {
                     CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: WorldPosition(Float(mapX), Float(mapY), zForShader)),
                     CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(WorldPosition(1, 1, 0), 0))
                 ]
-                
-                addChild(sprite)
-                
+
+                groundRoot.addChild(sprite)
+                groundNodes[mapPoint] = sprite
+
                 let entity = map!.mapCellEntity(node: sprite, for: self, atMapPosition: MapPosition(x: mapX, y: mapY, elevation: regionDescription.elevation))
-                if let cellComponent = entity.component(ofType: MapCellComponent.self) {
+                if let cellComponent = entity.components.first(where: { $0 is MapCellComponent }) as? MapCellComponent {
                     cellComponent.groundMaterialOverrides = localGroundMaterialOverride
                     cellComponent.leftElevationMaterialOverrides = localLeftElevationMaterialOverride
                     cellComponent.rightElevationMaterialOverrides = localRightElevationMaterialOverride
@@ -134,83 +161,176 @@ public class MapRegionNode : SKNode {
                 cellEntities.append(entity)
             }
         }
+    }
 
-        regionDescription.assetPlacements.forEach {
-            var newItem = $0
-            if newItem.mapPosition.elevation == nil {
-                newItem = newItem.with(newPosition: newItem.mapPosition.with(elevation: regionDescription.elevation))
+    func match(regionDescription newRegionDescription: MapRegionDescription, in map: SendableRef<MapDescription>) {
+        let oldRegionDescription = regionDescription
+        regionDescription = newRegionDescription
+
+        if oldRegionDescription.elevation != regionDescription.elevation {
+            let rendererName = regionDescription.renderer ?? "default_cell"
+            let renderer = try! CellRenderers[rendererName]
+
+            let leftElevationMaterial = try! renderer.leftElevationMaterial
+            if renderer.leftElevationMaterialResetPolicy == .resetWithEachRegion {
+                leftElevationMaterial.reset()
             }
-            self.instantiateAsset(placement: AssetPlacement(description: newItem))
+
+            let rightElevationMaterial = try! renderer.rightElevationMaterial
+            if renderer.leftElevationMaterialResetPolicy == .resetWithEachRegion {
+                rightElevationMaterial.reset()
+            }
+
+            let zForShader = Float(regionDescription.elevation)
+
+            // Left elevation
+            for x in 0..<regionDescription.area.width {
+                let mapPoint = IntPoint(x + regionDescription.area.minX, regionDescription.area.minY)
+                let indexInRegion = mapPoint.y * regionDescription.area.width + mapPoint.x
+
+                let previousVisibleElevation = leftElevationNodes[mapPoint]?.count ?? 0
+                let visibleElevation = map.ref.getLeftVisibleElevation(forX: mapPoint.x, y: mapPoint.y, usingDefaultElevation: regionDescription.elevation)
+                guard previousVisibleElevation != visibleElevation else { continue }
+
+                var nodes = leftElevationNodes[mapPoint] ?? []
+
+                if previousVisibleElevation > visibleElevation {
+                    for _ in 0..<(previousVisibleElevation - visibleElevation) {
+                        leftElevationRoot.children.first!.removeFromParent()
+                        nodes.removeFirst()
+                    }
+                }
+                else if previousVisibleElevation < visibleElevation {
+                    let baseWorldPosition = WorldPosition(mapPoint: mapPoint, elevation: regionDescription.elevation)
+                    let baseScenePosition = MapNode.worldToScene(baseWorldPosition)
+                    for i in stride(from: visibleElevation - previousVisibleElevation - 1, through: 0, by: -1) {
+                        let sprite = SKSpriteNode(texture: nil)
+                        sprite.anchorPoint = CGPoint(x: 1, y: 1)
+                        sprite.position = baseScenePosition + ScenePosition(x: 0, y: -MapNode.halfHeight - (i * MapNode.elevationHeight))
+                        sprite.zPosition = -2
+
+                        let z = zForShader - Float(i + 1)
+                        sprite.attributeValues = [
+                            CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: baseWorldPosition.with(z: z)),
+                            CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(WorldPosition(1, 1, 1), 0))
+                        ]
+
+                        leftElevationRoot.insertChild(sprite, at: 0)
+                        nodes.insert(sprite, at: 0)
+                    }
+                }
+
+                for i in 0..<nodes.count {
+                    if renderer.leftElevationMaterialResetPolicy == .resetAlways {
+                        leftElevationMaterial.reset()
+                    }
+
+                    let localLeftElevationMaterialOverride = regionDescription.leftElevationMaterialOverride(at: indexInRegion)
+                    leftElevationMaterial.applyOn(spriteNode: nodes[i], withLocalOverrides: localLeftElevationMaterialOverride)
+                }
+
+                leftElevationNodes[mapPoint] = nodes
+            }
+
+            // Right elevation
+            for y in 0..<regionDescription.area.height {
+                let mapPoint = IntPoint(regionDescription.area.maxX - 1, y + regionDescription.area.minY)
+                let indexInRegion = mapPoint.y * regionDescription.area.width + mapPoint.x
+
+                let previousVisibleElevation = rightElevationNodes[mapPoint]?.count ?? 0
+                let visibleElevation = map.ref.getRightVisibleElevation(forX: mapPoint.x, y: mapPoint.y, usingDefaultElevation: regionDescription.elevation)
+                guard previousVisibleElevation != visibleElevation else { continue }
+
+                var nodes = rightElevationNodes[mapPoint] ?? []
+
+                if previousVisibleElevation > visibleElevation {
+                    for _ in 0..<(previousVisibleElevation - visibleElevation) {
+                        rightElevationRoot.children.first!.removeFromParent()
+                        nodes.removeFirst()
+                    }
+                }
+                else if previousVisibleElevation < visibleElevation {
+                    let baseWorldPosition = WorldPosition(mapPoint: mapPoint, elevation: regionDescription.elevation)
+                    let baseScenePosition = MapNode.worldToScene(baseWorldPosition)
+                    for i in stride(from: visibleElevation - previousVisibleElevation - 1, through: 0, by: -1) {
+                        let sprite = SKSpriteNode(texture: nil)
+                        sprite.anchorPoint = CGPoint(x: 0, y: 1)
+                        sprite.position = baseScenePosition + ScenePosition(x: 0, y: -MapNode.halfHeight - (i * MapNode.elevationHeight))
+                        sprite.zPosition = -2
+
+                        let z = zForShader - Float(i + 1)
+                        sprite.attributeValues = [
+                            CiderKitEngine.ShaderAttributeName.position.rawValue: SKAttributeValue(vectorFloat3: baseWorldPosition.with(z: z)),
+                            CiderKitEngine.ShaderAttributeName.sizeAndFlip.rawValue: SKAttributeValue(vectorFloat4: SIMD4(WorldPosition(1, 1, 1), 0))
+                        ]
+
+                        rightElevationRoot.insertChild(sprite, at: 0)
+                        nodes.insert(sprite, at: 0)
+                    }
+                }
+
+                for i in 0..<nodes.count {
+                    if renderer.rightElevationMaterialResetPolicy == .resetAlways {
+                        rightElevationMaterial.reset()
+                    }
+
+                    let localRightElevationMaterialOverride = regionDescription.rightElevationMaterialOverride(at: indexInRegion)
+                    rightElevationMaterial.applyOn(spriteNode: nodes[i], withLocalOverrides: localRightElevationMaterialOverride)
+                }
+
+                rightElevationNodes[mapPoint] = nodes
+            }
+
+            // Ground
+            for (mapPoint, sprite) in groundNodes {
+                let newWorldPos = WorldPosition(mapPoint: mapPoint, elevation: regionDescription.elevation)
+                sprite.position = MapNode.worldToScene(newWorldPos)
+            }
+
+            // Cell entities
+            for cellEntity in cellEntities {
+                if let cellComponent = cellEntity.components.first(where: { $0 is MapCellComponent }) as? MapCellComponent {
+                    cellComponent.position = cellComponent.position.with(elevation: regionDescription.elevation)
+                }
+            }
         }
     }
 
-    func dismantle() {
+    func dismantle(detach: Bool = true) {
         cellEntities.removeAll()
-        removeAllAssetInstances(includingPlacement: false)
-        removeAllChildren()
+        assetInstances.removeAll()
+
+        leftElevationRoot.removeAllChildren()
+        leftElevationNodes.removeAll()
+        rightElevationRoot.removeAllChildren()
+        rightElevationNodes.removeAll()
+        groundRoot.removeAllChildren()
+        groundNodes.removeAll()
+        assetsRoot.removeAllChildren()
+
+        if detach {
+            removeFromParent()
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @discardableResult
-    private func instantiateAsset(placement: AssetPlacement) -> AssetInstance? {
-        if let (instance, _) = map?.instantiateAsset(placement: placement) {
-            addChild(instance.node!)
-            assetInstances.append(instance)
-            return instance
-        }
-        return nil
+    public func add(assetInstance: AssetInstance) {
+        assetsRoot.addChild(assetInstance.node!)
+        assetInstances[assetInstance.placement.id] = assetInstance
     }
 
-    @discardableResult
-    public func addAsset(_ asset: AssetLocator, named name: String, atMapPosition mapPosition: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
-        guard let regionModel else { return nil }
-
-        var footprint = asset.assetDescription!.footprint
-        if horizontallyFlipped {
-            footprint.flip()
-        }
-        guard regionModel.isLocationValidAndFreeOfAssets(mapPosition: mapPosition, footprint: footprint) else { return nil }
-
-        let placement = AssetPlacement(assetLocator: asset, horizontallyFlipped: horizontallyFlipped, position: mapPosition, name: name)
-        regionModel.add(assetPlacement: placement)
-
-        return instantiateAsset(placement: placement)
+    public func remove(assetInstance: AssetInstance) {
+        assetInstances[assetInstance.placement.id] = nil
+        assetInstance.node?.removeFromParent()
     }
 
-    public func add(assetInstance: AssetInstance) throws {
-        guard
-            let regionModel,
-            regionModel.isLocationValidAndFreeOfAssets(mapPosition: assetInstance.placement.mapPosition, footprint: assetInstance.assetDescription.footprint)
-        else {
-            return
+    public func match(assetPlacement placementDescription: AssetPlacementDescription) {
+        if let assetInstance = assetInstances[placementDescription.id] {
+            assetInstance.placement.match(description: placementDescription)
         }
-
-        regionModel.add(assetPlacement: assetInstance.placement)
-        addChild(assetInstance.node!)
-    }
-
-    @discardableResult
-    public func remove(assetInstance: AssetInstance, includingPlacement: Bool = true) -> Bool {
-        assetInstances.removeAll { $0 === assetInstance }
-        if includingPlacement {
-            if regionModel?.remove(assetPlacement: assetInstance.placement) ?? false {
-                assetInstance.node?.removeFromParent()
-                return true
-            }
-        }
-        else {
-            assetInstance.node?.removeFromParent()
-            return true
-        }
-        return false
-    }
-
-    public func removeAllAssetInstances(includingPlacement: Bool = true) {
-        assetInstances.forEach { map?.remove(assetInstance: $0, includingPlacement: includingPlacement) }
-        assetInstances.removeAll()
     }
 
 }

@@ -18,7 +18,6 @@ open class AssetInstance : TransformAssetElementInstance {
         set {
             if currentWorldPosition != newValue {
                 currentWorldPosition = newValue
-                placement.mapPosition = currentWorldPosition.mapPosition
             }
         }
     }
@@ -46,10 +45,7 @@ open class AssetInstance : TransformAssetElementInstance {
         }
     }
     
-    public var name: String {
-        get { placement.name }
-        set { placement.name = newValue }
-    }
+    public var name: String { placement.name }
 
     public override var absoluteWorldOffset: WorldPosition { parent?.absoluteWorldOffset ?? (worldPosition + adjustedCurrentWorldOffset) }
     public let offsetByWorldPosition: Bool
@@ -58,7 +54,9 @@ open class AssetInstance : TransformAssetElementInstance {
     
     private var elementInstancesByUUID: [UUID: TransformAssetElementInstance] = [:]
     private var referenceElementInstancesByUUID: [UUID: ReferenceAssetElementInstance] = [:]
-    
+
+    private var notificationTask: Task<Void, Never>? = nil
+
     public subscript(element: TransformAssetElement) -> TransformAssetElementInstance? { elementInstancesByUUID[element.uuid] }
     
     public convenience init(assetDescription: AssetDescription, horizontallyFlipped: Bool, atWorldPosition worldPosition: WorldPosition = WorldPosition(), offsetNodeByWorldPosition: Bool = true) {
@@ -93,8 +91,27 @@ open class AssetInstance : TransformAssetElementInstance {
         for child in assetDescription.rootElement.children {
             try! instantiateElement(element: child, parent: self, atWorldPosition: newWorldPosition)
         }
+
+        notificationTask = setupNotifications()
     }
-    
+
+    deinit {
+        notificationTask?.cancel()
+    }
+
+    private func setupNotifications() -> Task<Void, Never> {
+        return Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await _ in self.placement.updated {
+                        try Task.checkCancellation()
+                        self.currentWorldPosition = self.placement.mapPosition.worldPosition
+                    }
+                }
+            }
+        }
+    }
+
     private func instantiateElement(element: TransformAssetElement, parent: TransformAssetElementInstance, atWorldPosition worldPosition: WorldPosition) throws {
         guard elementInstancesByUUID[element.uuid] == nil else { throw AssetInstanceErrors.duplicateUUID }
         

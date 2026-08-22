@@ -1,13 +1,10 @@
 import Foundation
 import GameplayKit
 import CiderKit_Engine
-import Combine
 
-class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDelegate {
-    
-    let lightDescription: DirectionalLight
-    
-    var lightDescriptionChangeCancellable: AnyCancellable?
+class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDelegate, BaseLightComponent {
+
+    let lightImplementation: DirectionalLight
     
     let supportedToolModes: ToolMode = [.move, .erase]
     
@@ -15,27 +12,45 @@ class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDeleg
     
     var inspectorView: BaseInspectorView? {
         let view = InspectorViewFactory.getView(forClass: Self.self, generator: { DirectionalLightInspector() })
-        view.setObservableObject(lightDescription)
+        view.setUpdatableObject(lightImplementation)
         return view
     }
-    
+
     fileprivate var lightNode: DirectionalLightNode? { entity?.component(ofType: GKSKNodeComponent.self)?.node as? DirectionalLightNode }
-    
-    fileprivate init(from lightDescription: DirectionalLight) {
-        self.lightDescription = lightDescription
+    fileprivate var notificationTask: Task<Void, Never>? = nil
+
+    fileprivate init(from lightImplementation: DirectionalLight) {
+        self.lightImplementation = lightImplementation
         super.init()
         
-        lightDescriptionChangeCancellable = self.lightDescription.objectWillChange.sink {
-            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
-                editableComponent.invalidate()
-            }
-        }
+        notificationTask = setupNotifications()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    deinit {
+        notificationTask?.cancel()
+    }
+
+    fileprivate func setupNotifications() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await _ in self.lightImplementation.updated {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
+                                editableComponent.invalidate()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     func contains(sceneCoordinates: ScenePosition) -> Bool {
         guard let lightNode = lightNode else { return false }
         let frame = lightNode.calculateAccumulatedFrame()
@@ -58,18 +73,18 @@ class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDeleg
         lightNode?.selected = false
     }
     
-    class func entity(from lightDescription: DirectionalLight) -> GKEntity {
+    class func entity(from lightImplementation: DirectionalLight) -> GKEntity {
         let newEntity = GKEntity();
         
-        let scenePosition = MapNode.worldToScene(lightDescription.position)
+        let scenePosition = MapNode.worldToScene(lightImplementation.position)
 
         let directionalLight = DirectionalLightNode()
         directionalLight.position = scenePosition
-        directionalLight.enabled = lightDescription.enabled
-        directionalLight.setLightColor(lightDescription.color)
+        directionalLight.enabled = lightImplementation.enabled
+        directionalLight.setLightColor(lightImplementation.color)
         newEntity.addComponent(GKSKNodeComponent(node: directionalLight))
         
-        let directionalLightComponent = DirectionalLightComponent(from: lightDescription)
+        let directionalLightComponent = DirectionalLightComponent(from: lightImplementation)
         newEntity.addComponent(directionalLightComponent)
         
         newEntity.addComponent(EditableComponent(delegate: directionalLightComponent))
@@ -82,16 +97,19 @@ class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDeleg
             return false
         }
         
-        directionalLight.position = MapNode.worldToScene(lightDescription.position)
-        directionalLight.enabled = lightDescription.enabled
-        directionalLight.setLightColor(lightDescription.color)
+        directionalLight.position = MapNode.worldToScene(lightImplementation.position)
+        directionalLight.enabled = lightImplementation.enabled
+        directionalLight.setLightColor(lightImplementation.color)
         
         return true
     }
-    
+
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) {
-        lightDescription.position += WorldPosition(x: Float(x), y: Float(y), z: Float(z))
-        entity?.component(ofType: EditableComponent.self)?.invalidate()
+        Task {
+            let newPosition = lightImplementation.position + WorldPosition(x: Float(x), y: Float(y), z: Float(z))
+            let newDescription = lightImplementation.description.mutated(withPosition: newPosition)
+            await MapModel.shared.update(light: newDescription)
+        }
     }
     
 }

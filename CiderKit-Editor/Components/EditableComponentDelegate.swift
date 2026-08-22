@@ -1,5 +1,5 @@
 protocol EditableComponentDelegate {
     
-    func validate() -> Bool
-    
+    @discardableResult func validate() -> Bool
+
 }

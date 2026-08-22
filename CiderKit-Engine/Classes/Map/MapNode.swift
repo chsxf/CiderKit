@@ -18,82 +18,197 @@ open class MapNode: SKNode {
     nonisolated public static let yVector = SIMD2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
     nonisolated public static let zVector = SIMD2(0, Float(MapNode.elevationHeight))
 
-    public private(set) weak var model: MapModel? = nil
-    private var modelCancellable: AnyCancellable!
+    public private(set) var mapDescription: SendableRef<MapDescription>? = nil
 
-    public private(set) var assetEntities: [GKEntity] = []
-    public let assetComponentSystem: GKComponentSystem<AssetComponent>
-    
-    private var nodesByRegionId = [Int:MapRegionNode]()
+    private var assetEntities: [UUID: GKEntity] = [:]
+    private let assetComponentSystem: GKComponentSystem<AssetComponent>
+
+    private var nodesByRegionId = [UInt: MapRegionNode]()
     private var orderedRegionNodes = [MapRegionNode]()
     
-    public init(with model: MapModel) {
-        self.model = model
+    public override init() {
         assetComponentSystem = GKComponentSystem(componentClass: AssetComponent.self)
         
         super.init()
         
-        registerCellRenderers()
-        rebuildRegionNodes()
-        
         zPosition = 2
-
-        Task {
-            self.modelCancellable = await model.changed.sink(receiveValue: self.onModelChanged(_:))
-        }
     }
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    open func onModelChanged(_ changedModel: MapModel) {
-        rebuildRegionNodes()
+    public func match(mapDescription newMapDescription: SendableRef<MapDescription>) {
+        let differentIds = self.mapDescription?.id != newMapDescription.id
+        let differentVersions = self.mapDescription?.version != newMapDescription.version
+        guard differentIds || differentVersions else {
+            return
+        }
+
+        if differentIds {
+            unregisterCellRenderers()
+        }
+
+        self.mapDescription = newMapDescription
+
+        if (differentIds) {
+            registerCellRenderers()
+            buildRegionNodes()
+        }
+        else {
+            updateRegionNodes()
+        }
     }
 
     private func registerCellRenderers() {
-        if let model {
-            for (name, rendererDescription) in model.cellRenderers {
+        if let mapDescription {
+            for (name, rendererDescription) in mapDescription.renderers {
                 let renderer = CellRenderer(from: rendererDescription)
                 try! CellRenderers.register(cellRenderer: renderer, named: name)
             }
         }
     }
-    
-    open func rebuildRegionNodes() {
-        if let model {
-            orderedRegionNodes.forEach { $0.dismantle() }
+
+    private func unregisterCellRenderers() {
+        if let mapDescription {
+            for (name, _) in mapDescription.renderers {
+                CellRenderers.unregister(named: name)
+            }
+        }
+    }
+
+    func buildRegionNodes() {
+        guard let mapDescription else {
+            return
+        }
+
+        orderedRegionNodes.forEach { dismantle(regionNode: $0) }
+        orderedRegionNodes.removeAll()
+
+        nodesByRegionId.removeAll()
+
+        for region in mapDescription.regions {
+            let regionNode = MapRegionNode(for: region)
+            orderedRegionNodes.append(regionNode)
+            nodesByRegionId[region.id] = regionNode
+            addChild(regionNode)
+        }
+
+        orderedRegionNodes.forEach { build(regionNode: $0, in: mapDescription) }
+
+        updateRegionsZPosition()
+    }
+
+    func updateRegionNodes() {
+        guard let mapDescription else {
+            return
+        }
+
+        var orderHasChanged = orderedRegionNodes.count != mapDescription.regions.count
+        if !orderHasChanged {
+            for i in 0..<mapDescription.regions.count {
+                let ordered = orderedRegionNodes[i].regionDescription
+                let new = mapDescription.regions[i]
+                if ordered.id != new.id || ordered.version != new.version {
+                    orderHasChanged = true
+                    break
+                }
+            }
+        }
+        if orderHasChanged {
             orderedRegionNodes.removeAll()
-            
-            var idsToRemove = Array(nodesByRegionId.keys)
-            
-            for regionModel in model.regions {
-                if idsToRemove.contains(regionModel.id) {
-                    idsToRemove.removeAll { $0 == regionModel.id }
-                }
-                else {
-                    let regionNode = MapRegionNode(for: regionModel)
-                    nodesByRegionId[regionModel.id] = regionNode
-                    addChild(regionNode)
-                }
-                
-                if let node = nodesByRegionId[regionModel.id] {
-                    orderedRegionNodes.append(node)
+        }
+
+        // Removing regions
+        let previousRegions = nodesByRegionId
+        for (regionId, regionNode) in previousRegions {
+            if !mapDescription.regions.contains(where: { $0.id == regionId }) {
+                dismantle(regionNode: regionNode)
+                nodesByRegionId[regionId] = nil
+            }
+        }
+
+        // Adding new or updating existing regions
+        for region in mapDescription.regions {
+            var regionNode = nodesByRegionId[region.id]
+            if let existingRegionNode = regionNode {
+                if existingRegionNode.regionDescription.version != region.version {
+                    if existingRegionNode.regionDescription.area != region.area {
+                        dismantle(regionNode: existingRegionNode, detach: false)
+                        build(regionNode: existingRegionNode, in: mapDescription)
+                    }
+                    else {
+                        match(regionNode: existingRegionNode, withNewDescription: region, in: mapDescription)
+                    }
                 }
             }
-            
-            for idToRemove in idsToRemove {
-                if let node = nodesByRegionId.removeValue(forKey: idToRemove) {
-                    node.removeFromParent()
-                }
+            else {
+                regionNode = MapRegionNode(for: region)
+                nodesByRegionId[region.id] = regionNode!
+                addChild(regionNode!)
+                build(regionNode: regionNode!, in: mapDescription)
             }
-            
-            orderedRegionNodes.forEach { $0.build() }
-            
+
+            if orderHasChanged {
+                orderedRegionNodes.append(regionNode!)
+            }
+        }
+
+        // Reordering if necessary
+        if orderHasChanged {
             updateRegionsZPosition()
         }
     }
-    
+
+    open func build(regionNode: MapRegionNode, in map: SendableRef<MapDescription>) {
+        regionNode.build(in: map)
+
+        let regionDescription = regionNode.regionDescription
+        for assetPlacementDescription in regionDescription.assetPlacements {
+            let fixedAssetPlacementDescription = assetPlacementDescription.mapPosition.elevation != nil ? assetPlacementDescription : assetPlacementDescription.mutated(withMapPosition: assetPlacementDescription.mapPosition.with(elevation: regionDescription.elevation))
+            if let (instance, _) = instantiateAsset(placement: AssetPlacement(description: fixedAssetPlacementDescription)) {
+                regionNode.add(assetInstance: instance)
+            }
+        }
+    }
+
+    open func match(regionNode: MapRegionNode, withNewDescription newRegionDescription: MapRegionDescription, in map: SendableRef<MapDescription>) {
+        let oldRegionDescription = regionNode.regionDescription
+
+        regionNode.match(regionDescription: newRegionDescription, in: map)
+
+        for assetPlacementDescription in oldRegionDescription.assetPlacements {
+            if !newRegionDescription.contains(assetPlacement: assetPlacementDescription.id), let entity = assetEntities[assetPlacementDescription.id] {
+                assetComponentSystem.removeComponent(foundIn: entity)
+                assetEntities[assetPlacementDescription.id] = nil
+            }
+        }
+
+        for assetPlacementDescription in newRegionDescription.assetPlacements {
+            if oldRegionDescription.contains(assetPlacement: assetPlacementDescription.id) {
+                regionNode.match(assetPlacement: assetPlacementDescription)
+            }
+            else {
+                let fixedAssetPlacementDescription = assetPlacementDescription.mapPosition.elevation != nil ? assetPlacementDescription : assetPlacementDescription.mutated(withMapPosition: assetPlacementDescription.mapPosition.with(elevation: newRegionDescription.elevation))
+                if let (instance, _) = instantiateAsset(placement: AssetPlacement(description: fixedAssetPlacementDescription)) {
+                    regionNode.add(assetInstance: instance)
+                }
+            }
+        }
+    }
+
+    open func dismantle(regionNode: MapRegionNode, detach: Bool = true) {
+        assetEntities = assetEntities.compactMapValues({ assetEntity in
+            if let assetComponent = assetEntity.component(ofType: AssetComponent.self), regionNode.regionDescription.contains(assetPlacement: assetComponent.placement.id) {
+                assetComponentSystem.removeComponent(foundIn: assetEntity)
+                return nil
+            }
+            return assetEntity
+        })
+
+        regionNode.dismantle(detach: detach)
+    }
+
     private func updateRegionsZPosition() {
         var index = 0
         for regionNode in orderedRegionNodes {
@@ -103,13 +218,15 @@ open class MapNode: SKNode {
     }
     
     public func regionNode(atMapX x: Int, y: Int) -> MapRegionNode? {
-        if let regionModel = model?.regionAt(mapX: x, y: y) {
-            return nodesByRegionId[regionModel.id]
+        if let region = mapDescription?.ref.regionAt(mapX: x, y: y) {
+            return nodesByRegionId[region.id]
         }
         return nil
     }
 
-    public func regionNode(at position: MapPosition) -> MapRegionNode? { regionNode(atMapX: position.x, y: position.y) }
+    public func regionNode(at position: MapPosition) -> MapRegionNode? {
+        regionNode(atMapX: position.x, y: position.y)
+    }
 
     public func lookForMapCellEntity(at position: MapPosition) -> GKEntity? {
         if let regionNode = regionNode(at: position) {
@@ -177,11 +294,11 @@ open class MapNode: SKNode {
     open func createAssetEntity(assetInstance: AssetInstance) -> GKEntity {
         let entity = AssetComponent.entity(with: assetInstance)
         assetComponentSystem.addComponent(foundIn: entity)
-        assetEntities.append(entity)
+        assetEntities[assetInstance.placement.id] = entity
         return entity
     }
 
-    open func remove(assetInstance: AssetInstance, includingPlacement: Bool = true) {
+    open func remove(assetInstance: AssetInstance) async {
         var foundComponent: AssetComponent? = nil
         for component in assetComponentSystem.components {
             if component.assetInstance === assetInstance {
@@ -191,27 +308,39 @@ open class MapNode: SKNode {
         }
 
         if let foundComponent {
-            let entity = foundComponent.entity
             assetComponentSystem.removeComponent(foundComponent)
-            assetEntities.removeAll { $0 === entity }
+            assetEntities[assetInstance.placement.id] = nil
 
-            if let regionNode = regionNode(at: assetInstance.placement.mapPosition) {
-                regionNode.remove(assetInstance: assetInstance, includingPlacement: includingPlacement)
+            if
+                let regionNode = regionNode(at: assetInstance.placement.mapPosition),
+                await MapModel.shared.removeAsset(withId: assetInstance.placement.id)
+            {
+                regionNode.remove(assetInstance: assetInstance)
             }
         }
     }
 
     @discardableResult
-    public final func addAsset(_ asset: AssetLocator, named: String, at position: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
-        if let regionNode = regionNode(at: position) {
-            return try regionNode.addAsset(asset, named: "", atMapPosition: position, horizontallyFlipped: horizontallyFlipped)
+    public final func addAsset(_ asset: AssetLocator, named: String, at position: MapPosition, horizontallyFlipped: Bool) async throws -> AssetInstance? {
+        guard
+            let regionNode = regionNode(at: position),
+            let placementDescription = try await MapModel.shared.addAsset(asset, named: named, atMapPosition: position, horizontallyFlipped: horizontallyFlipped, interactive: false)
+        else {
+            return nil
         }
-        return nil
+            
+        let placement = AssetPlacement(description: placementDescription)
+        guard let (assetInstance, _) = instantiateAsset(placement: placement) else {
+            return nil
+        }
+        
+        regionNode.add(assetInstance: assetInstance)
+        return assetInstance
     }
 
     public final func add(assetInstance: AssetInstance) throws {
         if let regionNode = regionNode(at: assetInstance.placement.mapPosition) {
-            try regionNode.add(assetInstance: assetInstance)
+            regionNode.add(assetInstance: assetInstance)
         }
     }
 

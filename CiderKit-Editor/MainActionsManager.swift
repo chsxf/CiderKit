@@ -16,14 +16,14 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     }
     
     func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
-        if item.itemIdentifier == .addAsset {
-            guard
-                let selectedArea = gameView?.selectionModel.selectedMapArea,
-                CiderKitEngine.worldManager.activeMapModel?.hasCell(forMapX: selectedArea.x, y: selectedArea.y) ?? false
-            else {
-                return false
-            }
-        }
+//        if item.itemIdentifier == .addAsset {
+//            guard
+//                let selectedArea = gameView?.selectionModel.selectedMapArea,
+//                MapModel.shared.hasCell(forMapX: selectedArea.x, y: selectedArea.y)
+//            else {
+//                return false
+//            }
+//        }
         return true
     }
     
@@ -44,7 +44,9 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         app!.window.beginSheet(window) { responseCode in
             if responseCode == .OK {
                 if let locator = selectorView.getResult(), let selectedArea = self.gameView?.selectionModel.selectedMapArea {
-                    self.gameView?.addAsset(locator, atMapPosition: MapPosition(x: selectedArea.x, y: selectedArea.y), horizontallyFlipped: false)
+                    Task {
+                        await self.gameView?.addAsset(locator, atMapPosition: MapPosition(x: selectedArea.x, y: selectedArea.y), horizontallyFlipped: false)
+                    }
                 }
             }
         }
@@ -52,12 +54,18 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     
     @objc
     func addPointLight() {
-        gameView?.add(light: PointLight(name: "New Point Light", color: CGColor.white, position: WorldPosition(0, 0, 5), falloff: PointLight.Falloff(near: 0, far: 5, exponent: 0.5)))
+        let description = PointLightDescription(color: CGColor.white, enabled: true, name: "New Point Light", position: WorldPosition(0, 0, 5), falloff: .init(near: 0, far: 5, exponent: 0.5))
+        Task {
+            await MapModel.shared.add(light: description)
+        }
     }
 
     @objc
     func addDirectionalLight() {
-        gameView?.add(light: DirectionalLight(name: "New Directional Light", color: CGColor.white, position: SIMD3(), orientation: SIMD2()))
+        let description = DirectionalLightDescription(color: CGColor.white, enabled: true, name: "New Directional Light", position: SIMD3(), orientation: SIMD2())
+        Task {
+            await MapModel.shared.add(light: description)
+        }
     }
 
     @objc
@@ -83,7 +91,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         guard let gameView else { return true }
         
         var shouldSave = false
-        if await gameView.mutableMap?.dirty ?? false {
+        if await gameView.dirty {
             let modalResult = await MainActor.run {
                 let alert = NSAlert()
                 alert.messageText = "Would you like to save the current map?"
@@ -113,8 +121,6 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
 
     @discardableResult
     private func saveCurrentMap(forceFileSelection: Bool = false) async -> Bool {
-        guard let gameView else { return false }
-        
         var selectedURL: URL? = currentMapURL
         if forceFileSelection {
             selectedURL = nil
@@ -135,12 +141,10 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         
         if let validURL = selectedURL {
             do {
-                let mapDescription = await CiderKitEngine.worldManager.activeMapModel!.toMapDescription()
+                let mapDescription = await MapModel.shared.workingMapDescription
                 try EditorFunctions.save(mapDescription, to: validURL, prettyPrint: true)
                 currentMapURL = validURL
-                await MainActor.run {
-                    gameView.mutableMap?.dirty = false
-                }
+                await gameView?.resetDirtyFlag()
                 return true
             }
             catch {
@@ -156,22 +160,11 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     func newMap() {
         Task {
             if await saveCurrentMapIfModified() {
-                if let currentMapURL {
-                    await CiderKitEngine.worldManager.unloadMap(file: currentMapURL)
-                }
-                else {
-                    await CiderKitEngine.worldManager.unloadAllMaps()
-                }
-                let model = await CiderKitEngine.worldManager.addEmptyMap()
+                await MapModel.shared.clear()
                 currentMapURL = nil
 
                 await MainActor.run {
                     app?.updateWindowTitle()
-
-                    if let gameView {
-                        let mapNode = gameView.mapNode(from: model)
-                        gameView.litNodesRoot.insertChild(mapNode, at: 0)
-                    }
                 }
             }
         }
@@ -180,7 +173,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
     @objc
     func loadMap() {
         Task {
-            if let gameView, await saveCurrentMapIfModified() {
+            if await saveCurrentMapIfModified() {
                 let mapURLToLoad = await MainActor.run {
                     let openPanel = NSOpenPanel()
                     openPanel.canChooseFiles = true
@@ -194,21 +187,12 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
                 }
                 if let confirmedMapURLToLoad = mapURLToLoad {
                     Task {
-                        if let currentMapURL {
-                            await CiderKitEngine.worldManager.unloadMap(file: currentMapURL)
-                        }
-                        else {
-                            await CiderKitEngine.worldManager.unloadAllMaps()
-                        }
-                        currentMapURL = nil
-
                         do {
-                            let model = try await CiderKitEngine.worldManager.loadMap(file: confirmedMapURLToLoad)
+                            let mapDescription: MapDescription = try Functions.load(confirmedMapURLToLoad)
+                            await MapModel.shared.match(mapDescription: mapDescription)
                             currentMapURL = confirmedMapURLToLoad
 
                             await MainActor.run {
-                                let map = gameView.mapNode(from: model)
-                                gameView.litNodesRoot.insertChild(map, at: 0)
                                 app?.updateWindowTitle()
                             }
                         }

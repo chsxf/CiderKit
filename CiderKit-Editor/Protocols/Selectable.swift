@@ -21,8 +21,8 @@ protocol Selectable: Hoverable {
     func deemphasize()
     
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) -> Void
-    func erase() -> Void
-    
+    func erase() async -> Void
+
 }
 
 extension Selectable where Self: GKComponent {
@@ -40,7 +40,7 @@ extension Selectable where Self: GKComponent {
     
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) { }
     
-    func erase() {
+    func erase() async {
         NotificationCenter.default.post(name: .selectableErased, object: self)
     }
     

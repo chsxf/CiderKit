@@ -21,8 +21,24 @@ public extension SIMD3<Float> {
 
     var scenePosition: ScenePosition { MapNode.worldToScene(self) }
 
+    init(mapPoint: IntPoint, elevation: Int) {
+        self.init(intX: mapPoint.x, y: mapPoint.y, z: elevation)
+    }
+
     init(intX x: Int, y: Int, z: Int) {
         self.init(Float(x), Float(y), Float(z))
+    }
+
+    func with(x: Float) -> Self {
+        .init(x, self.y, self.z)
+    }
+
+    func with(y: Float) -> Self {
+        .init(self.x, y, self.z)
+    }
+
+    func with(z: Float) -> Self {
+        .init(self.x, self.y, z)
     }
 
 }
