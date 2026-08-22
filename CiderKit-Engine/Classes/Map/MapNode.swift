@@ -37,19 +37,13 @@ open class MapNode: SKNode {
         rebuildRegionNodes()
         
         zPosition = 2
-
-        Task {
-            self.modelCancellable = await model.changed.sink(receiveValue: self.onModelChanged(_:))
-        }
     }
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    open func onModelChanged(_ changedModel: MapModel) {
-        rebuildRegionNodes()
-    }
+    open func onModelChanged(_ changedModel: MapModel) { }
 
     private func registerCellRenderers() {
         if let model {
@@ -67,17 +61,17 @@ open class MapNode: SKNode {
             
             var idsToRemove = Array(nodesByRegionId.keys)
             
-            for regionModel in model.regions {
-                if idsToRemove.contains(regionModel.id) {
-                    idsToRemove.removeAll { $0 == regionModel.id }
+            for region in model.regions {
+                if idsToRemove.contains(region.id) {
+                    idsToRemove.removeAll { $0 == region.id }
                 }
                 else {
-                    let regionNode = MapRegionNode(for: regionModel)
-                    nodesByRegionId[regionModel.id] = regionNode
+                    let regionNode = MapRegionNode(for: region)
+                    nodesByRegionId[region.id] = regionNode
                     addChild(regionNode)
                 }
                 
-                if let node = nodesByRegionId[regionModel.id] {
+                if let node = nodesByRegionId[region.id] {
                     orderedRegionNodes.append(node)
                 }
             }
@@ -103,8 +97,8 @@ open class MapNode: SKNode {
     }
     
     public func regionNode(atMapX x: Int, y: Int) -> MapRegionNode? {
-        if let regionModel = model?.regionAt(mapX: x, y: y) {
-            return nodesByRegionId[regionModel.id]
+        if let region = model?.regionAt(mapX: x, y: y) {
+            return nodesByRegionId[region.id]
         }
         return nil
     }
@@ -181,7 +175,7 @@ open class MapNode: SKNode {
         return entity
     }
 
-    open func remove(assetInstance: AssetInstance, includingPlacement: Bool = true) {
+    open func remove(assetInstance: AssetInstance) async {
         var foundComponent: AssetComponent? = nil
         for component in assetComponentSystem.components {
             if component.assetInstance === assetInstance {
@@ -195,23 +189,36 @@ open class MapNode: SKNode {
             assetComponentSystem.removeComponent(foundComponent)
             assetEntities.removeAll { $0 === entity }
 
-            if let regionNode = regionNode(at: assetInstance.placement.mapPosition) {
-                regionNode.remove(assetInstance: assetInstance, includingPlacement: includingPlacement)
+            if
+                let regionNode = regionNode(at: assetInstance.placement.mapPosition),
+                await MapModel.shared.removeAsset(withId: assetInstance.placement.id)
+            {
+                regionNode.remove(assetInstance: assetInstance)
             }
         }
     }
 
     @discardableResult
-    public final func addAsset(_ asset: AssetLocator, named: String, at position: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
-        if let regionNode = regionNode(at: position) {
-            return try regionNode.addAsset(asset, named: "", atMapPosition: position, horizontallyFlipped: horizontallyFlipped)
+    public final func addAsset(_ asset: AssetLocator, named: String, at position: MapPosition, horizontallyFlipped: Bool) async throws -> AssetInstance? {
+        guard
+            let regionNode = regionNode(at: position),
+            let placementDescription = await MapModel.shared.addAsset(asset, named: named, atMapPosition: position, horizontallyFlipped: horizontallyFlipped)
+        else {
+            return nil
         }
-        return nil
+            
+        let placement = AssetPlacement(description: placementDescription)
+        guard let (assetInstance, _) = instantiateAsset(placement: placement) else {
+            return nil
+        }
+        
+        regionNode.add(assetInstance: assetInstance)
+        return assetInstance
     }
 
     public final func add(assetInstance: AssetInstance) throws {
         if let regionNode = regionNode(at: assetInstance.placement.mapPosition) {
-            try regionNode.add(assetInstance: assetInstance)
+            regionNode.add(assetInstance: assetInstance)
         }
     }
 

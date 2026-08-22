@@ -183,7 +183,7 @@ class EditorGameView: GameView {
     }
     
     func increaseElevation(area: MapArea?) async {
-        await CiderKitEngine.worldManager.activeMapModel?.increaseElevation(area: area)
+        await MapModel.shared.increaseElevation(area: area)
 
         if let area = area {
             let selectable = mutableMap?.lookForMapCellEntity(at: MapPosition(x: area.x, y: area.y))?.findSelectableComponent()
@@ -192,7 +192,7 @@ class EditorGameView: GameView {
     }
     
     func decreaseElevation(area: MapArea?) async {
-        await CiderKitEngine.worldManager.activeMapModel?.decreaseElevation(area: area)
+        await MapModel.shared.decreaseElevation(area: area)
 
         if let area {
             let selectable = mutableMap?.lookForMapCellEntity(at: MapPosition(x: area.x, y: area.y))?.findSelectableComponent()
@@ -228,19 +228,18 @@ class EditorGameView: GameView {
     }
     
     private func buildLightNodes() {
-        if let mapModel = CiderKitEngine.worldManager.activeMapModel {
-            mapModel.lights.forEach { setupLight($0) }
-            ambientLightEntity = AmbientLightComponent.entity(from: mapModel.ambientLight)
-        }
+        let mapModel = MapModel.shared
+        mapModel.lights.forEach { setupLight($0) }
+        ambientLightEntity = AmbientLightComponent.entity(from: mapModel.ambientLight)
     }
     
-    func add(light: BaseLight) {
+    func add(light: any LightImplementation) {
         selectionManager?.deselect()
-        CiderKitEngine.worldManager.activeMapModel?.add(light: light)
+        MapModel.shared.add(light: light)
         setupLight(light)
     }
 
-    func setupLight(_ light: BaseLight) {
+    func setupLight(_ light: any LightImplementation) {
         if let pointLight = light as? PointLight {
             setupPointLight(pointLight)
         }
@@ -275,9 +274,9 @@ class EditorGameView: GameView {
         }
     }
 
-    func addAsset(_ asset: AssetLocator, atMapPosition position: MapPosition, horizontallyFlipped: Bool) {
+    func addAsset(_ asset: AssetLocator, atMapPosition position: MapPosition, horizontallyFlipped: Bool) async {
         do {
-            try mutableMap?.addAsset(asset, named: "", at: position, horizontallyFlipped: horizontallyFlipped)
+            try await mutableMap?.addAsset(asset, named: "", at: position, horizontallyFlipped: horizontallyFlipped)
             mutableMap?.dirty = true
         }
         catch MapRegionErrors.assetTooCloseToRegionBorder {
@@ -309,7 +308,7 @@ class EditorGameView: GameView {
             if let pointLightComponent = notification.object as? PointLightComponent {
                 NotificationCenter.default.removeObserver(self, name: .selectableErased, object: pointLightComponent)
 
-                await CiderKitEngine.worldManager.activeMapModel?.remove(light: pointLightComponent.lightDescription)
+                await MapModel.shared.remove(light: pointLightComponent.lightImplementation)
 
                 let lightEntity = pointLightComponent.entity!
                 lightEntity.component(ofType: GKSKNodeComponent.self)!.node.removeFromParent()
@@ -325,7 +324,7 @@ class EditorGameView: GameView {
             if let directionalLightComponent = notification.object as? DirectionalLightComponent {
                 NotificationCenter.default.removeObserver(self, name: .selectableErased, object: directionalLightComponent)
 
-                await CiderKitEngine.worldManager.activeMapModel?.remove(light: directionalLightComponent.lightDescription)
+                await MapModel.shared.remove(light: directionalLightComponent.lightImplementation)
 
                 let lightEntity = directionalLightComponent.entity!
                 lightEntity.component(ofType: GKSKNodeComponent.self)!.node.removeFromParent()

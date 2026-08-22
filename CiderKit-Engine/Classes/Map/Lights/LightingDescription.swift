@@ -1,7 +1,7 @@
 import Foundation
 import CoreGraphics
 
-struct LightingDescription: Codable {
+struct LightingDescription: Codable, Sendable {
 
     enum LightDescriptionDecodingError: Error {
         case unknownLightType(String)
@@ -12,32 +12,43 @@ struct LightingDescription: Codable {
         case lights
     }
 
-    let ambientLight: BaseLight
-    var lights: [BaseLight]
+    let ambientLight: AmbientLightDescription
+    let lights: [any LightDescriptor]
 
-    init(ambientLight: BaseLight? = nil) {
-        self.ambientLight = ambientLight ?? BaseLight(color: CGColor(srgbRed: 1, green: 1, blue: 1, alpha: 1))
-        lights = []
+    init(ambientLight: AmbientLightDescription? = nil, lights: [any LightDescriptor] = []) {
+        self.ambientLight = ambientLight ?? AmbientLightDescription(color: CGColor.white)
+        self.lights = lights
     }
 
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let ambientLightContainer = try container.nestedContainer(keyedBy: BaseLight.CodingKeys.self, forKey: .ambientLight)
-        self.ambientLight = try BaseLight(from: ambientLightContainer)
-        lights = []
+        let ambientLightContainer = try container.nestedContainer(keyedBy: LightDescriptorCodingKeys.self, forKey: .ambientLight)
+        self.ambientLight = try AmbientLightDescription(from: ambientLightContainer)
+        var lightsBuffer = [any LightDescriptor]()
         var lightsContainer = try container.nestedUnkeyedContainer(forKey: .lights)
         while !lightsContainer.isAtEnd {
-            let lightContainer = try lightsContainer.nestedContainer(keyedBy: BaseLight.CodingKeys.self)
+            let lightContainer = try lightsContainer.nestedContainer(keyedBy: LightDescriptorCodingKeys.self)
             let type = (try? lightContainer.decode(String.self, forKey: .type)) ?? "point"
             if type == "point" {
-                lights.append(try PointLight(from: lightContainer))
+                lightsBuffer.append(try PointLightDescription(from: lightContainer))
             }
             else if type == "directional" {
-                lights.append(try DirectionalLight(from: lightContainer))
+                lightsBuffer.append(try DirectionalLightDescription(from: lightContainer))
             }
             else {
                 throw LightDescriptionDecodingError.unknownLightType(type)
             }
+        }
+        lights = lightsBuffer
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(ambientLight, forKey: .ambientLight)
+        
+        var lightsContainer = container.nestedUnkeyedContainer(forKey: .lights)
+        for light in lights {
+            try lightsContainer.encode(light)
         }
     }
 

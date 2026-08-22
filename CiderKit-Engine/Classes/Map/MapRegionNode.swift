@@ -3,8 +3,8 @@ import GameplayKit
 
 public class MapRegionNode : SKNode {
     
-    public weak var regionModel: MapRegionModel?
-
+    public private(set) var regionDescription: MapRegionDescription
+    
     public private(set) var cellEntities: [GKEntity] = []
     public private(set) var assetInstances: [AssetInstance] = []
     
@@ -12,18 +12,12 @@ public class MapRegionNode : SKNode {
 
     var map: MapNode? { parent as? MapNode }
 
-    public init(for regionModel: MapRegionModel) {
+    public init(for regionDescription: MapRegionDescription) {
+        self.regionDescription = regionDescription
         super.init()
-        
-        self.regionModel = regionModel
     }
 
     func build() {
-        guard
-            let regionDescription = regionModel?.regionDescription,
-            let mapModel = regionModel?.map
-        else { return }
-
         let rendererName = regionDescription.renderer ?? "default_cell"
         let renderer = try! CellRenderers[rendererName]
         
@@ -58,7 +52,7 @@ public class MapRegionNode : SKNode {
                 if renderer.leftElevationMaterialResetPolicy == .resetWithEachCell {
                     leftElevationMaterial.reset()
                 }
-                let leftElevationCount = mapModel.getLeftVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
+                let leftElevationCount = MapModel.shared.getLeftVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<leftElevationCount {
                     if renderer.leftElevationMaterialResetPolicy == .resetAlways {
                         leftElevationMaterial.reset()
@@ -84,7 +78,7 @@ public class MapRegionNode : SKNode {
                 if renderer.rightElevationMaterialResetPolicy == .resetWithEachCell {
                     rightElevationMaterial.reset()
                 }
-                let rightElevationCount = mapModel.getRightVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
+                let rightElevationCount = MapModel.shared.getRightVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<rightElevationCount {
                     if renderer.rightElevationMaterialResetPolicy == .resetAlways {
                         rightElevationMaterial.reset()
@@ -146,7 +140,7 @@ public class MapRegionNode : SKNode {
 
     func dismantle() {
         cellEntities.removeAll()
-        removeAllAssetInstances(includingPlacement: false)
+        assetInstances.removeAll()
         removeAllChildren()
     }
 
@@ -164,53 +158,14 @@ public class MapRegionNode : SKNode {
         return nil
     }
 
-    @discardableResult
-    public func addAsset(_ asset: AssetLocator, named name: String, atMapPosition mapPosition: MapPosition, horizontallyFlipped: Bool) throws -> AssetInstance? {
-        guard let regionModel else { return nil }
-
-        var footprint = asset.assetDescription!.footprint
-        if horizontallyFlipped {
-            footprint.flip()
-        }
-        guard regionModel.isLocationValidAndFreeOfAssets(mapPosition: mapPosition, footprint: footprint) else { return nil }
-
-        let placement = AssetPlacement(assetLocator: asset, horizontallyFlipped: horizontallyFlipped, position: mapPosition, name: name)
-        regionModel.add(assetPlacement: placement)
-
-        return instantiateAsset(placement: placement)
-    }
-
-    public func add(assetInstance: AssetInstance) throws {
-        guard
-            let regionModel,
-            regionModel.isLocationValidAndFreeOfAssets(mapPosition: assetInstance.placement.mapPosition, footprint: assetInstance.assetDescription.footprint)
-        else {
-            return
-        }
-
-        regionModel.add(assetPlacement: assetInstance.placement)
+    public func add(assetInstance: AssetInstance) {
         addChild(assetInstance.node!)
+        assetInstances.append(assetInstance)
     }
 
-    @discardableResult
-    public func remove(assetInstance: AssetInstance, includingPlacement: Bool = true) -> Bool {
+    public func remove(assetInstance: AssetInstance) {
         assetInstances.removeAll { $0 === assetInstance }
-        if includingPlacement {
-            if regionModel?.remove(assetPlacement: assetInstance.placement) ?? false {
-                assetInstance.node?.removeFromParent()
-                return true
-            }
-        }
-        else {
-            assetInstance.node?.removeFromParent()
-            return true
-        }
-        return false
-    }
-
-    public func removeAllAssetInstances(includingPlacement: Bool = true) {
-        assetInstances.forEach { map?.remove(assetInstance: $0, includingPlacement: includingPlacement) }
-        assetInstances.removeAll()
+        assetInstance.node?.removeFromParent()
     }
 
 }

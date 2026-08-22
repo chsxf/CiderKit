@@ -2,16 +2,26 @@ import Foundation
 import CiderKitMacros
 
 @MutableStruct
-public struct MapRegionDescription: Codable, Sendable {
-    
+public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable {
+
     private enum MaterialOverrideContext: String {
         case ground = "g"
         case leftElevation = "l"
         case rightElevation = "r"
     }
 
+    private static var internalNextRegionId: Int = 0
+    private static var nextRegionId: Int {
+        get {
+            internalNextRegionId += 1
+            return internalNextRegionId
+        }
+    }
+    
     @MutatingProperty public let name: String?
 
+    @MutableStructOptional(defaultValue: "Self.nextRegionId") public let id: Int
+    
     public let area: MapArea
     public let elevation: Int
     
@@ -31,6 +41,26 @@ public struct MapRegionDescription: Codable, Sendable {
         Self.importAssets(over: area, from: other, into: &assetPlacements)
         
         self.init(name: nil, area: area, elevation: other.elevation, renderer: other.renderer, materialOverrides: materialOverrides, assetPlacements: assetPlacements)
+    }
+    
+    public func isLocationValidAndFreeOfAssets(mapPosition: MapPosition, footprint: SIMD2<UInt32>) throws -> Bool {
+        return try checkLocationPreconditions(mapPosition: mapPosition, footprint: footprint)
+    }
+
+    private func checkLocationPreconditions(mapPosition: MapPosition, footprint: SIMD2<UInt32>) throws -> Bool {
+        let localCoords = area.convert(fromMapPosition: mapPosition)
+        let minimalFootprint = localCoords &+ IntPoint.one
+
+        guard minimalFootprint.x >= footprint.x, minimalFootprint.y >= footprint.y else {
+            throw MapRegionErrors.assetTooCloseToRegionBorder
+        }
+
+        let assetArea = MapArea(x: mapPosition.x - Int(footprint.x), y: mapPosition.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
+        guard isFreeOfAsset(mapArea: assetArea) else {
+            throw MapRegionErrors.otherAssetInTheWay
+        }
+
+        return true
     }
     
     public func isFreeOfAsset(mapArea: MapArea) -> Bool {
@@ -103,10 +133,11 @@ public struct MapRegionDescription: Codable, Sendable {
         return MapRegionDescription(name: nil, area: unwrappedNewArea, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: [])
     }
     
-    public func elevated(by relativeElevation: Int) -> MapRegionDescription {
-        guard relativeElevation != 0 else { return self }
+    public func elevated(by relativeElevation: Int) -> MapRegionDescription? {
+        let newElevation = max(0, elevation + relativeElevation)
+        guard elevation != newElevation else { return nil }
+        
         let newAssetPlacements = changeAssetPlacementsElevation(placements: assetPlacements, relativeElevation: relativeElevation)
-        let newElevation = elevation + relativeElevation
         return MapRegionDescription(name: name, area: area, elevation: newElevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
     }
     
@@ -136,6 +167,50 @@ public struct MapRegionDescription: Codable, Sendable {
         return nil
     }
     
+    public func subdivide(subArea: MapArea) -> (mainSubdivision: MapRegionDescription, otherSubdivisions: [MapRegionDescription])? {
+        guard let intersection = area.intersection(subArea) else {
+            return nil
+        }
+        
+        let hasLeftSubdiv = intersection.minX > area.minX
+        let hasRightSubdiv = intersection.maxX < area.maxX
+        let hasBottomSubdiv = intersection.minY > area.minY
+        let hasTopSubdiv = intersection.maxY < area.maxY
+        
+        let mainSubdivDescription = MapRegionDescription(byExporting: intersection, from: self)
+
+        var otherSubdivisions = [MapRegionDescription]()
+
+        if hasLeftSubdiv {
+            var area = area
+            area.width = intersection.minX - area.minX
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: self)
+            otherSubdivisions.append(otherSubdivDescription)
+        }
+        
+        if hasRightSubdiv {
+            var area = area
+            area.width = area.maxX - intersection.maxX
+            area.x = intersection.maxX
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: self)
+            otherSubdivisions.append(otherSubdivDescription)
+        }
+        
+        if hasTopSubdiv {
+            let area = MapArea(x: intersection.minX, y: intersection.maxY, width: intersection.width, height: area.maxY - intersection.maxY)
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: self)
+            otherSubdivisions.append(otherSubdivDescription)
+        }
+        
+        if hasBottomSubdiv {
+            let area = MapArea(x: intersection.minX, y: area.minY, width: intersection.width, height: intersection.minY - area.minY)
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: self)
+            otherSubdivisions.append(otherSubdivDescription)
+        }
+        
+        return (mainSubdivDescription, otherSubdivisions)
+    }
+
     private static func importMaterialOverrides(over area: MapArea, from region: MapRegionDescription, into existingMaterialOverrides: inout [String: [CustomSettings?]]?) {
         let relativeArea = region.area.relative(to: area)
         importMaterialOverrides(over: area, for: MaterialOverrideContext.ground, from: region, in: relativeArea, into: &existingMaterialOverrides)
@@ -186,6 +261,30 @@ public struct MapRegionDescription: Codable, Sendable {
         }
     }
     
+    public static func == (lhs: MapRegionDescription, rhs: MapRegionDescription) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public static func < (lhs: MapRegionDescription, rhs: MapRegionDescription) -> Bool {
+        let lhsArea = lhs.area
+        let rhsArea = rhs.area
+        
+        let regionsOverlapOnX = (lhsArea.maxX > rhsArea.minX && lhsArea.minX < rhsArea.maxX)
+        let regionsOverlapOnY = (lhsArea.maxY > rhsArea.minY && lhsArea.minY < rhsArea.maxY)
+        
+        var result: Bool
+        if regionsOverlapOnX {
+            result = lhsArea.minY < rhsArea.minY
+        }
+        else if regionsOverlapOnY {
+            result = lhsArea.minX < rhsArea.minX
+        }
+        else {
+            result = (lhsArea.minX + lhsArea.minY) < (rhsArea.minX + rhsArea.minY)
+        }
+        return result
+    }
+
 }
 
 fileprivate func changeAssetPlacementsElevation(placements: [AssetPlacementDescription], relativeElevation: Int) -> [AssetPlacementDescription] {

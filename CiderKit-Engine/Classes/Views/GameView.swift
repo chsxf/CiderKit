@@ -20,10 +20,10 @@ open class GameView: LitSceneView {
     
     open override var ambientLightColorRGB: SIMD3<Float> {
         get {
-            guard lightingEnabled, let mapModel = CiderKitEngine.worldManager.activeMapModel else {
+            guard lightingEnabled else {
                 return super.ambientLightColorRGB
             }
-            return mapModel.ambientLight.colorVector
+            return MapModel.shared.ambientLight.colorVector
         }
     }
     
@@ -134,25 +134,23 @@ open class GameView: LitSceneView {
         var minVector = WorldPosition(Float.infinity, Float.infinity, 0)
         var maxVector = WorldPosition(-Float.infinity, -Float.infinity, 0)
 
-        if let mapModel = CiderKitEngine.worldManager.activeMapModel {
-            for regionModel in mapModel.regions {
-                let area = regionModel.regionDescription.area
+        for region in MapModel.shared.regions {
+            let area = region.area
 
-                minVector.x = min(minVector.x, Float(area.minX))
-                minVector.y = min(minVector.y, Float(area.minY))
+            minVector.x = min(minVector.x, Float(area.minX))
+            minVector.y = min(minVector.y, Float(area.minY))
 
-                maxVector.x = max(maxVector.x, Float(area.maxX))
-                maxVector.y = max(maxVector.y, Float(area.maxY))
-                maxVector.z = max(maxVector.z, Float(regionModel.regionDescription.elevation + 1))
-            }
+            maxVector.x = max(maxVector.x, Float(area.maxX))
+            maxVector.y = max(maxVector.y, Float(area.maxY))
+            maxVector.z = max(maxVector.z, Float(region.elevation + 1))
         }
 
         return matrix_float3x3(minVector, maxVector, SIMD3())
     }
     
     open override func getLightMatrix(_ index: Int) -> matrix_float3x3 {
-        guard let mapModel = CiderKitEngine.worldManager.activeMapModel,
-              lightingEnabled,
+        let mapModel = MapModel.shared
+        guard lightingEnabled,
               index < mapModel.lights.count
         else {
             return super.getLightMatrix(index)
