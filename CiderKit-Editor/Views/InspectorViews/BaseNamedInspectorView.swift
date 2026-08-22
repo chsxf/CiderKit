@@ -1,8 +1,7 @@
 import AppKit
-import Combine
 import CiderKit_Engine
 
-class BaseNamedInspectorView<InspectedType : ObservableObject & NamedObject> : BaseTypedInspectorView<InspectedType>, NSTextFieldDelegate {
+class BaseNamedInspectorView<InspectedType : NamedObject & UpdatableObject> : BaseTypedInspectorView<InspectedType>, NSTextFieldDelegate {
 
     private let objectNameField: NSTextField
 
@@ -36,10 +35,12 @@ class BaseNamedInspectorView<InspectedType : ObservableObject & NamedObject> : B
     }
 
     func controlTextDidChange(_ obj: Notification) {
-        if var inspectedObject {
-            isEditing = true
-            inspectedObject.name = objectNameField.stringValue
-            isEditing = false
+        if let inspectedObject {
+            Task {
+                isEditing = true
+                await inspectedObject.rename(objectNameField.stringValue)
+                isEditing = false
+            }
         }
     }
 

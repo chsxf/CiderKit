@@ -75,42 +75,56 @@ class DirectionalLightInspector: BaseNamedInspectorView<DirectionalLight>, Float
     @objc
     private func onEnabledToggled() {
         if let inspectedObject {
-            isEditing = true
-            inspectedObject.enabled = enabledCheckbox.state == .on
-            isEditing = false
+            Task {
+                self.isEditing = true
+                let newLight = inspectedObject.description.mutated(withEnabled: enabledCheckbox.state == .on)
+                await MapModel.shared.update(light: newLight)
+                self.isEditing = false
+            }
         }
     }
     
     func floatField(_ field: FloatField, valueChanged newValue: Float) {
         if let inspectedObject {
-            isEditing = true
-            switch field {
-            case positionXField:
-                inspectedObject.position.x = positionXField.value
-            case positionYField:
-                inspectedObject.position.y = positionYField.value
-            case elevationField:
-                inspectedObject.position.z = elevationField.value
-            case declinationField:
-                var orientation = inspectedObject.orientation
-                orientation.x = declinationField.value.toRadians()
-                inspectedObject.orientation = orientation
-            case rightAscensionField:
-                var orientation = inspectedObject.orientation
-                orientation.y = rightAscensionField.value.toRadians()
-                inspectedObject.orientation = orientation
-            default:
-                break
+            Task {
+                isEditing = true
+                var newLight: DirectionalLightDescription? = nil
+
+                switch field {
+                case positionXField:
+                    newLight = inspectedObject.description.mutated(withPosition: inspectedObject.position.with(x: newValue))
+                case positionYField:
+                    newLight = inspectedObject.description.mutated(withPosition: inspectedObject.position.with(y: newValue))
+                case elevationField:
+                    newLight = inspectedObject.description.mutated(withPosition: inspectedObject.position.with(z: newValue))
+                case declinationField:
+                    var orientation = inspectedObject.orientation
+                    orientation.x = declinationField.value.toRadians()
+                    newLight = inspectedObject.description.mutated(withOrientation: orientation)
+                case rightAscensionField:
+                    var orientation = inspectedObject.orientation
+                    orientation.y = rightAscensionField.value.toRadians()
+                    newLight = inspectedObject.description.mutated(withOrientation: orientation)
+                default:
+                    break
+                }
+
+                if let newLight {
+                    await MapModel.shared.update(light: newLight)
+                }
+                isEditing = false
             }
-            isEditing = false
         }
     }
     
     func labelledColorWell(_ colorWell: LabelledColorWell, colorChanged color: CGColor) {
-        if let inspectedObject {
-            isEditing = true
-            inspectedObject.color = colorWell.color.toRGB()!
-            isEditing = false
+        if let inspectedObject, let rgbColor = color.toRGB() {
+            Task {
+                self.isEditing = true
+                let newLight = inspectedObject.description.mutated(withColor: rgbColor)
+                await MapModel.shared.update(light: newLight)
+                self.isEditing = false
+            }
         }
     }
     

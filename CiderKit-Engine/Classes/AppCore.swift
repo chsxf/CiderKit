@@ -1,22 +1,13 @@
-open class AppCore {
-    
-    public private(set) static var shared: AppCore!
-    
+@globalActor
+public actor AppCore: GlobalActor {
+
+    public static let shared = AppCore()
+
     typealias InteractionContextStackData = (type: InteractionContext.Type, instance: InteractionContext)
-    
-    public let gameView: GameView
 
     public private(set) var transitioning: Bool = false
-    
+
     private var interactionContextStack = [InteractionContextStackData]()
-    
-    private init(gameView: GameView) {
-        self.gameView = gameView
-    }
-    
-    open class func start(gameView: GameView) {
-        Self.shared = .init(gameView: gameView)
-    }
     
     public func moveTo<T: InteractionContext>(interactionContext contextClass: T.Type, withStategy strategy: InteractionContextFocusStrategy = InteractionContextFocusStrategy.replaceCurrent) async throws {
         if transitioning {
@@ -102,9 +93,9 @@ open class AppCore {
         try await moveTo(interactionContext: interactionContextStack[interactionContextStack.endIndex - 2].type)
     }
     
-    public func interactionContextInstance<T: InteractionContext>(for contextClass: T.Type) -> InteractionContext? {
-        let contextStackData = interactionContextStack.first { $0.type == contextClass }
-        return contextStackData?.instance
+    public func interactionContextInstance<T: InteractionContext>(for contextClass: T.Type) -> T? {
+        guard let contextStackData = interactionContextStack.first(where: { $0.type == contextClass }) else { return nil }
+        return contextStackData.instance as? T
     }
     
 }

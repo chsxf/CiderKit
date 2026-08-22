@@ -64,8 +64,6 @@ struct ProjectManagerView: View {
             try ProjectManager.openProject(at: url)
             projectDetails = nil
 
-            await CiderKitEngine.worldManager.addEmptyMap()
-
             dismiss(response: .OK)
         }
         catch {

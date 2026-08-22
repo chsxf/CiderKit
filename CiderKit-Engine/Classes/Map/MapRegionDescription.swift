@@ -1,16 +1,30 @@
 import Foundation
 import CiderKitMacros
 
-@MutableStruct
-public struct MapRegionDescription: Codable, Sendable {
-    
+@MutableStruct(versioned: .internal)
+public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable {
+
+    private enum CodingKeys: String, CodingKey {
+        case name, id, area, elevation, renderer, materialOverrides, assetPlacements
+    }
+
     private enum MaterialOverrideContext: String {
         case ground = "g"
         case leftElevation = "l"
         case rightElevation = "r"
     }
 
+    private static var internalNextRegionId: UInt = 0
+    private static var nextRegionId: UInt {
+        get {
+            internalNextRegionId += 1
+            return internalNextRegionId
+        }
+    }
+
     @MutatingProperty public let name: String?
+
+    @MutableStructOptional(defaultValue: "Self.nextRegionId") public let id: UInt
 
     public let area: MapArea
     public let elevation: Int
@@ -31,6 +45,55 @@ public struct MapRegionDescription: Codable, Sendable {
         Self.importAssets(over: area, from: other, into: &assetPlacements)
         
         self.init(name: nil, area: area, elevation: other.elevation, renderer: other.renderer, materialOverrides: materialOverrides, assetPlacements: assetPlacements)
+    }
+    
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        name = try container.decodeIfPresent(String.self, forKey: .name)
+        id = try container.decode(UInt.self, forKey: .id)
+        area = try container.decode(MapArea.self, forKey: .area)
+        elevation = try container.decode(Int.self, forKey: .elevation)
+        renderer = try container.decodeIfPresent(String.self, forKey: .renderer)
+        materialOverrides = try container.decodeIfPresent([String: [CustomSettings?]].self, forKey: .materialOverrides)
+        assetPlacements = try container.decode([AssetPlacementDescription].self, forKey: .assetPlacements)
+
+        version = 0
+        Self.internalNextRegionId = max(id, Self.internalNextRegionId)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        if let name {
+            try container.encode(name, forKey: .name)
+        }
+        try container.encode(id, forKey: .id)
+        try container.encode(area, forKey: .area)
+        try container.encode(elevation, forKey: .elevation)
+        if let renderer {
+            try container.encode(renderer, forKey: .renderer)
+        }
+        if let materialOverrides {
+            try container.encode(materialOverrides, forKey: .materialOverrides)
+        }
+        try container.encode(assetPlacements, forKey: .assetPlacements)
+    }
+
+    public func checkLocationOccupancy(mapPosition: MapPosition, footprint: SIMD2<UInt32>) throws {
+        guard area.contains(mapPosition: mapPosition) else {
+            throw MapRegionErrors.assetOutside
+        }
+
+        let localCoords = area.convert(fromMapPosition: mapPosition)
+        let minimalFootprint = localCoords &+ IntPoint.one
+        guard minimalFootprint.x >= footprint.x, minimalFootprint.y >= footprint.y else {
+            throw MapRegionErrors.assetTooCloseToRegionBorder
+        }
+
+        let assetArea = MapArea(x: mapPosition.x - Int(footprint.x), y: mapPosition.y - Int(footprint.y), width: Int(footprint.x), height: Int(footprint.y))
+        guard isFreeOfAsset(mapArea: assetArea) else {
+            throw MapRegionErrors.otherAssetInTheWay
+        }
     }
     
     public func isFreeOfAsset(mapArea: MapArea) -> Bool {
@@ -103,17 +166,18 @@ public struct MapRegionDescription: Codable, Sendable {
         return MapRegionDescription(name: nil, area: unwrappedNewArea, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: [])
     }
     
-    public func elevated(by relativeElevation: Int) -> MapRegionDescription {
-        guard relativeElevation != 0 else { return self }
+    public func elevated(by relativeElevation: Int) -> MapRegionDescription? {
+        let newElevation = max(0, elevation + relativeElevation)
+        guard elevation != newElevation else { return nil }
+        
         let newAssetPlacements = changeAssetPlacementsElevation(placements: assetPlacements, relativeElevation: relativeElevation)
-        let newElevation = elevation + relativeElevation
-        return MapRegionDescription(name: name, area: area, elevation: newElevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+        return MapRegionDescription(name: name, area: area, elevation: newElevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version + 1)
     }
     
     public func withAssetPlacement(added newAssetPlacement: AssetPlacementDescription) -> MapRegionDescription {
         var newAssetPlacements = assetPlacements;
         newAssetPlacements.append(newAssetPlacement)
-        return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+        return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version)
     }
     
     public func withAssetPlacement(updated updatedAssetPlacement: AssetPlacementDescription) -> MapRegionDescription {
@@ -122,7 +186,7 @@ public struct MapRegionDescription: Codable, Sendable {
             if placement.id == updatedAssetPlacement.id {
                 var newAssetPlacements = assetPlacements
                 newAssetPlacements[i] = updatedAssetPlacement
-                return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+                return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version)
             }
         }
         return self
@@ -131,11 +195,55 @@ public struct MapRegionDescription: Codable, Sendable {
     public func withAssetPlacement(removed assetPlacementId: UUID) -> MapRegionDescription? {
         let newAssetPlacements = assetPlacements.compactMap { $0.id != assetPlacementId ? $0 : nil }
         if newAssetPlacements.count != assetPlacements.count {
-            return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+            return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version)
         }
         return nil
     }
     
+    public func subdivide(subArea: MapArea) -> (mainSubdivision: MapRegionDescription, otherSubdivisions: [MapRegionDescription])? {
+        guard let intersection = area.intersection(subArea) else {
+            return nil
+        }
+        
+        let hasLeftSubdiv = intersection.minX > area.minX
+        let hasRightSubdiv = intersection.maxX < area.maxX
+        let hasBottomSubdiv = intersection.minY > area.minY
+        let hasTopSubdiv = intersection.maxY < area.maxY
+        
+        let mainSubdivDescription = MapRegionDescription(byExporting: intersection, from: self)
+
+        var otherSubdivisions = [MapRegionDescription]()
+
+        if hasLeftSubdiv {
+            var area = area
+            area.width = intersection.minX - area.minX
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: self)
+            otherSubdivisions.append(otherSubdivDescription)
+        }
+        
+        if hasRightSubdiv {
+            var area = area
+            area.width = area.maxX - intersection.maxX
+            area.x = intersection.maxX
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: self)
+            otherSubdivisions.append(otherSubdivDescription)
+        }
+        
+        if hasTopSubdiv {
+            let area = MapArea(x: intersection.minX, y: intersection.maxY, width: intersection.width, height: area.maxY - intersection.maxY)
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: self)
+            otherSubdivisions.append(otherSubdivDescription)
+        }
+        
+        if hasBottomSubdiv {
+            let area = MapArea(x: intersection.minX, y: area.minY, width: intersection.width, height: intersection.minY - area.minY)
+            let otherSubdivDescription = MapRegionDescription(byExporting: area, from: self)
+            otherSubdivisions.append(otherSubdivDescription)
+        }
+        
+        return (mainSubdivDescription, otherSubdivisions)
+    }
+
     private static func importMaterialOverrides(over area: MapArea, from region: MapRegionDescription, into existingMaterialOverrides: inout [String: [CustomSettings?]]?) {
         let relativeArea = region.area.relative(to: area)
         importMaterialOverrides(over: area, for: MaterialOverrideContext.ground, from: region, in: relativeArea, into: &existingMaterialOverrides)
@@ -186,12 +294,39 @@ public struct MapRegionDescription: Codable, Sendable {
         }
     }
     
+    public static func == (lhs: MapRegionDescription, rhs: MapRegionDescription) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    public static func < (lhs: MapRegionDescription, rhs: MapRegionDescription) -> Bool {
+        let lhsArea = lhs.area
+        let rhsArea = rhs.area
+        
+        let regionsOverlapOnX = (lhsArea.maxX > rhsArea.minX && lhsArea.minX < rhsArea.maxX)
+        let regionsOverlapOnY = (lhsArea.maxY > rhsArea.minY && lhsArea.minY < rhsArea.maxY)
+        
+        var result: Bool
+        if regionsOverlapOnX {
+            result = lhsArea.minY < rhsArea.minY
+        }
+        else if regionsOverlapOnY {
+            result = lhsArea.minX < rhsArea.minX
+        }
+        else {
+            result = (lhsArea.minX + lhsArea.minY) < (rhsArea.minX + rhsArea.minY)
+        }
+        return result
+    }
+
+    static func resetInternalRegionId() {
+        Self.internalNextRegionId = 0
+    }
 }
 
 fileprivate func changeAssetPlacementsElevation(placements: [AssetPlacementDescription], relativeElevation: Int) -> [AssetPlacementDescription] {
     placements.map { item in
         if item.mapPosition.elevation != nil {
-            return item.with(newPosition: item.mapPosition.with(relativeElevation: relativeElevation))
+            return item.mutated(withMapPosition: item.mapPosition.with(relativeElevation: relativeElevation))
         }
         return item
     }

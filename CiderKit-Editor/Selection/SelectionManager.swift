@@ -26,8 +26,6 @@ class SelectionManager: NSResponder {
 
     private var selectionModel: SelectionModel { editorGameView.selectionModel }
     
-    private var editableSubscription: AnyCancellable? = nil
-    
     private var notificationTask: Task<Void, Never>? = nil
     
     var currentToolMode: ToolMode = .select {
@@ -166,14 +164,6 @@ class SelectionManager: NSResponder {
                 currentActiveTool?.linkedSelectable = selectable
             }
         }
-        
-        editableSubscription?.cancel()
-        if let editableComponent = (selectable as? GKComponent)?.entity?.component(ofType: EditableComponent.self) {
-            editableSubscription = editableComponent.objectWillChange.sink { self.editorGameView.mutableMap?.dirty = true }
-        }
-        else if let editorMapCellComponent = (selectable as? EditorMapCellComponent) {
-            editableSubscription = editorMapCellComponent.objectWillChange.sink { self.editorGameView.mutableMap?.dirty = true }
-        }
     }
     
     override func mouseMoved(with event: NSEvent) {
@@ -225,14 +215,15 @@ class SelectionManager: NSResponder {
                 selectionModel.setHoverable(nil)
             }
             deselect()
-            currentSelectable.erase()
+            Task {
+                await currentSelectable.erase()
+            }
         }
     }
     
     func deselect() {
         selectionModel.setSelectable(nil)
         disableAllTools()
-        editableSubscription?.cancel()
     }
     
     private func initTools() {
