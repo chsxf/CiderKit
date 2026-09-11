@@ -1,7 +1,9 @@
 import Foundation
+import CiderKitMacros
 
+@MutableStruct(initAccessLevel: .internal)
 public struct MapDescription: Codable, Sendable {
-    let regions: [MapRegionDescription]
-    let lighting: LightingDescription
-    let renderers: [String:CellRendererDescription]
+    @MutatingProperty let regions: [MapRegionDescription]
+    @MutatingProperty let lighting: LightingDescription
+    @MutatingProperty let renderers: [String:CellRendererDescription]
 }
