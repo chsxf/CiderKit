@@ -74,11 +74,13 @@ class MapCellInspector: BaseTypedInspectorView<EditorMapCellComponent>, NSTextFi
     }
 
     func controlTextDidChange(_ obj: Notification) {
-        if let inspectedObject, let regionDescription = inspectedObject.region?.regionDescription {
-            isEditing = true
-            MapModel.shared.rename(regionId: regionDescription.id, to: nameField.stringValue)
-            isEditing = false
-            inspectedObject.objectWillChange.send()
+        Task {
+            if let inspectedObject, let regionDescription = inspectedObject.region?.regionDescription {
+                isEditing = true
+                await MapModel.shared.rename(regionId: regionDescription.id, to: nameField.stringValue)
+                isEditing = false
+                inspectedObject.objectWillChange.send()
+            }
         }
     }
 

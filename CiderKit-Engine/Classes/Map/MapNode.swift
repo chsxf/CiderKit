@@ -24,7 +24,7 @@ open class MapNode: SKNode {
     public private(set) var assetEntities: [GKEntity] = []
     public let assetComponentSystem: GKComponentSystem<AssetComponent>
     
-    private var nodesByRegionId = [Int:MapRegionNode]()
+    private var nodesByRegionId = [UInt:MapRegionNode]()
     private var orderedRegionNodes = [MapRegionNode]()
     
     public init(with model: MapModel) {
@@ -204,7 +204,7 @@ open class MapNode: SKNode {
     public final func addAsset(_ asset: AssetLocator, named: String, at position: MapPosition, horizontallyFlipped: Bool) async throws -> AssetInstance? {
         guard
             let regionNode = regionNode(at: position),
-            let placementDescription = await MapModel.shared.addAsset(asset, named: named, atMapPosition: position, horizontallyFlipped: horizontallyFlipped)
+            let placementDescription = try await MapModel.shared.addAsset(asset, named: named, atMapPosition: position, horizontallyFlipped: horizontallyFlipped)
         else {
             return nil
         }

@@ -14,7 +14,7 @@ public struct AmbientLightDescription: LightDescriptor {
     }
     
     public init(color: CGColor) {
-        self.color = color;
+        self.color = color.toRGB() ?? CGColor(red: 0, green: 0, blue: 0, alpha: 0);
     }
     
     public init(from container: KeyedDecodingContainer<LightDescriptorCodingKeys>) throws {

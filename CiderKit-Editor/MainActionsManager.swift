@@ -139,7 +139,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         
         if let validURL = selectedURL {
             do {
-                let mapDescription = await MapModel.shared.toMapDescription()
+                let mapDescription = await MapModel.shared.currentMapDescription
                 try EditorFunctions.save(mapDescription, to: validURL, prettyPrint: true)
                 currentMapURL = validURL
                 await MainActor.run {

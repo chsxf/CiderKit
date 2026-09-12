@@ -10,8 +10,8 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
         case rightElevation = "r"
     }
 
-    private static var internalNextRegionId: Int = 0
-    private static var nextRegionId: Int {
+    private static var internalNextRegionId: UInt = 0
+    private static var nextRegionId: UInt {
         get {
             internalNextRegionId += 1
             return internalNextRegionId
@@ -20,8 +20,8 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
     
     @MutatingProperty public let name: String?
 
-    @MutableStructOptional(defaultValue: "Self.nextRegionId") public let id: Int
-    
+    @MutableStructOptional(defaultValue: "Self.nextRegionId") public let id: UInt
+
     public let area: MapArea
     public let elevation: Int
     

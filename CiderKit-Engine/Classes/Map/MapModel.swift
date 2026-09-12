@@ -100,20 +100,23 @@ public actor MapModel: GlobalActor {
         return false
     }
     
-    fileprivate func changeElevation(area: MapArea?, createIfNotApplied: Bool, changeFunc: (MapRegionDescription) -> MapRegionDescription?) {
+    fileprivate func changeElevation(area: MapArea?, createIfNotApplied: Bool, changeFunc: (MapRegionDescription) -> MapRegionDescription?) async {
+        var hasChanged = false
         var appliedOnRegion = false
-        var needsRebuilding = false
+        var needsSorting = false
+
+        var modifiedRegions = workingMapDescription.regions
 
         var regionsToRemove = [MapRegionDescription]()
         var newRegions = [MapRegionDescription]()
 
-        for i in 0..<workingMapDescription.regions.count {
-            let regionDescription = workingMapDescription.regions[i]
+        for i in 0..<modifiedRegions.count {
+            let regionDescription = modifiedRegions[i]
             if area == nil || area!.contains(absolute: regionDescription.area) {
                 appliedOnRegion = true
                 if let newRegionDescription = changeFunc(regionDescription) {
-                    mapDescription.regions[i] = newRegionDescription
-                    needsRebuilding = true
+                    modifiedRegions[i] = newRegionDescription
+                    hasChanged = true
                 }
                 break
             }
@@ -129,9 +132,10 @@ public actor MapModel: GlobalActor {
                 }
                 newRegions.append(subdivisions.mainSubdivision)
                 if let newRegionDescription = changeFunc(subdivisions.mainSubdivision) {
-                    mapDescription.regions[i] = newRegionDescription
+                    modifiedRegions[i] = newRegionDescription
                 }
-                needsRebuilding = true
+                hasChanged = true
+                needsSorting = true
                 break
             }
         }
@@ -139,29 +143,34 @@ public actor MapModel: GlobalActor {
         if let area, !appliedOnRegion, createIfNotApplied {
             let newDescription = MapRegionDescription(area: area, elevation: 1, renderer: nil)
             newRegions.append(newDescription)
-            needsRebuilding = true
+            hasChanged = true
+            needsSorting = true
         }
 
         let hasRegionsToRemove = !regionsToRemove.isEmpty
         let hasNewRegions = !newRegions.isEmpty
         if hasRegionsToRemove || hasNewRegions {
             if hasRegionsToRemove {
-                regions.removeAll { outerRegionDescription in
+                modifiedRegions.removeAll { outerRegionDescription in
                     regionsToRemove.contains { innerRegionDescription in
                         outerRegionDescription.id == innerRegionDescription.id
                     }
                 }
             }
             if hasNewRegions {
-                regions.append(contentsOf: newRegions)
+                modifiedRegions.append(contentsOf: newRegions)
             }
-            if mergeRegions() {
-                needsRebuilding = true
+            if Self.merge(regions: &modifiedRegions) {
+                needsSorting = true
             }
         }
 
-        if needsRebuilding {
-            sortRegions()
+        if needsSorting {
+            modifiedRegions.sort(by: <)
+        }
+
+        if hasChanged {
+            await pushNewMapVersion(workingMapDescription.mutated(withRegions: modifiedRegions))
         }
     }
     
@@ -195,12 +204,12 @@ public actor MapModel: GlobalActor {
         return result
     }
     
-    public func increaseElevation(area: MapArea?) {
-        changeElevation(area: area, createIfNotApplied: true) { $0.elevated(by: 1) }
+    public func increaseElevation(area: MapArea?) async {
+        await changeElevation(area: area, createIfNotApplied: true) { $0.elevated(by: 1) }
     }
     
-    public func decreaseElevation(area: MapArea?) {
-        changeElevation(area: area, createIfNotApplied: false) { $0.elevated(by: -1) }
+    public func decreaseElevation(area: MapArea?) async {
+        await changeElevation(area: area, createIfNotApplied: false) { $0.elevated(by: -1) }
     }
 
     public func getAssetPlacement(withId id: UUID) -> AssetPlacementDescription? {
