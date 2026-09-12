@@ -7,10 +7,10 @@ public actor MapModel: GlobalActor {
     public static let shared = MapModel()
 
     @MainActor
-    public private(set) var currentMapDescription: MapDescription = MapDescription()
+    public private(set) static var latestMapDescription: MapDescription = MapDescription()
 
     @MainActor
-    public private(set) var currentMapVersion: UInt64 = 0
+    public private(set) static var latestMapVersion: UInt64 = 0
 
     internal var cellRenderers: [String: CellRendererDescription]
 
@@ -40,7 +40,7 @@ public actor MapModel: GlobalActor {
 
     public func clear() async {
         workingMapDescription = MapDescription()
-        await pushNewMapVersion(workingMapDescription)
+        await pushNewMapVersion(workingMapDescription, resetVersion: true)
     }
 
     public func regionAt(mapX x: Int, y: Int) -> MapRegionDescription? {
@@ -263,11 +263,11 @@ public actor MapModel: GlobalActor {
         return false
     }
 
-    private func pushNewMapVersion(_ newMapDescription: MapDescription) async {
+    private func pushNewMapVersion(_ newMapDescription: MapDescription, resetVersion: Bool = false) async {
         workingMapDescription = newMapDescription
         await MainActor.run {
-            self.currentMapDescription = newMapDescription
-            self.currentMapVersion += 1
+            Self.latestMapDescription = newMapDescription
+            Self.latestMapVersion = resetVersion ? 1 : (Self.latestMapVersion + 1)
         }
     }
 
