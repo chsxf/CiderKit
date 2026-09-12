@@ -60,7 +60,8 @@ open class MapNode: SKNode {
             orderedRegionNodes.removeAll()
             
             var idsToRemove = Array(nodesByRegionId.keys)
-            
+
+            /*
             for region in model.regions {
                 if idsToRemove.contains(region.id) {
                     idsToRemove.removeAll { $0 == region.id }
@@ -75,13 +76,14 @@ open class MapNode: SKNode {
                     orderedRegionNodes.append(node)
                 }
             }
-            
+            */
+
             for idToRemove in idsToRemove {
                 if let node = nodesByRegionId.removeValue(forKey: idToRemove) {
                     node.removeFromParent()
                 }
             }
-            
+
             orderedRegionNodes.forEach { $0.build() }
             
             updateRegionsZPosition()

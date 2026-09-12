@@ -6,57 +6,54 @@ public actor MapModel: GlobalActor {
 
     public static let shared = MapModel()
 
-    public private(set) var regions = [MapRegionDescription]()
+    @MainActor
+    public private(set) var currentMapDescription: MapDescription = MapDescription()
+
+    @MainActor
+    public private(set) var currentMapVersion: UInt64 = 0
 
     internal var cellRenderers: [String: CellRendererDescription]
 
     public var ambientLight: AmbientLight
     public var lights: [any LightImplementation]
 
+    private var workingMapDescription: MapDescription
+
     private init() {
+        workingMapDescription = MapDescription()
+
         cellRenderers = [:]
         ambientLight = AmbientLight()
         lights = []
     }
 
-    public func match(mapDescription: MapDescription) {
-        cellRenderers = mapDescription.renderers
+    public func match(mapDescription: MapDescription) async {
+        workingMapDescription = mapDescription
 
-        ambientLight.match(description: mapDescription.lighting.ambientLight)
-        lights = mapDescription.lighting.lights.map { $0.toImplementation() }
-        
-        regions = mapDescription.regions
-        sortRegions()
+        cellRenderers = workingMapDescription.renderers
+
+        ambientLight.match(description: workingMapDescription.lighting.ambientLight)
+        lights = workingMapDescription.lighting.lights.map { $0.toImplementation() }
+
+        await pushNewMapVersion(mapDescription)
     }
 
-    public func clear() {
-        cellRenderers.removeAll()
-        ambientLight.reset()
-        lights.removeAll()
-        regions.removeAll()
+    public func clear() async {
+        workingMapDescription = MapDescription()
+        await pushNewMapVersion(workingMapDescription)
     }
 
-    public func sortRegions() {
-        regions.sort(by: <)
+    public func regionAt(mapX x: Int, y: Int) -> MapRegionDescription? {
+        workingMapDescription.regions.first(where: { $0.area.contains(mapX: x, y: y) })
     }
-
-    public func toMapDescription() -> MapDescription {
-        MapDescription(
-            regions: regions,
-            lighting: LightingDescription(ambientLight: ambientLight.description, lights: lights.map { $0.description }),
-            renderers: cellRenderers
-        )
-    }
-
-    public func regionAt(mapX x: Int, y: Int) -> MapRegionDescription? { regions.first(where: { $0.area.contains(mapX: x, y: y) }) }
 
     public func regionAt(mapPosition position: MapPosition) -> MapRegionDescription? { regionAt(mapX: position.x, y: position.y) }
 
-    public func rename(regionId: Int, to newName: String) {
-        regions = regions.map { regionDescription in
+    public func rename(regionId: Int, to newName: String) async {
+        await pushNewMapVersion(workingMapDescription.mutated(withRegions: workingMapDescription.regions.map { regionDescription in
             guard regionDescription.id == regionId else { return regionDescription }
             return regionDescription.mutated(withName: newName)
-        }
+        }))
     }
     
     public func hasCell(forMapX x: Int, y: Int) -> Bool { regionAt(mapX: x, y: y) != nil }
@@ -110,12 +107,12 @@ public actor MapModel: GlobalActor {
         var regionsToRemove = [MapRegionDescription]()
         var newRegions = [MapRegionDescription]()
 
-        for i in 0..<regions.count {
-            let regionDescription = regions[i]
+        for i in 0..<workingMapDescription.regions.count {
+            let regionDescription = workingMapDescription.regions[i]
             if area == nil || area!.contains(absolute: regionDescription.area) {
                 appliedOnRegion = true
                 if let newRegionDescription = changeFunc(regionDescription) {
-                    regions[i] = newRegionDescription
+                    mapDescription.regions[i] = newRegionDescription
                     needsRebuilding = true
                 }
                 break
@@ -132,7 +129,7 @@ public actor MapModel: GlobalActor {
                 }
                 newRegions.append(subdivisions.mainSubdivision)
                 if let newRegionDescription = changeFunc(subdivisions.mainSubdivision) {
-                    regions[i] = newRegionDescription
+                    mapDescription.regions[i] = newRegionDescription
                 }
                 needsRebuilding = true
                 break
@@ -168,13 +165,13 @@ public actor MapModel: GlobalActor {
         }
     }
     
-    fileprivate func mergeRegions() -> Bool {
+    fileprivate static func merge(regions: inout [MapRegionDescription]) -> Bool {
         guard regions.count > 1 else {
             return false
         }
         
         var result = false
-        
+
         var regionsHaveChanged: Bool
         repeat {
             regionsHaveChanged = false
@@ -194,7 +191,7 @@ public actor MapModel: GlobalActor {
                 i += 1
             }
         } while regionsHaveChanged
-        
+
         return result
     }
     
@@ -207,7 +204,7 @@ public actor MapModel: GlobalActor {
     }
 
     public func getAssetPlacement(withId id: UUID) -> AssetPlacementDescription? {
-        for region in regions {
+        for region in workingMapDescription.regions {
             if let placement = region.assetPlacements.first(where: { $0.id == id }) {
                 return placement
             }
@@ -216,18 +213,21 @@ public actor MapModel: GlobalActor {
     }
 
     @discardableResult
-    public func addAsset(_ asset: AssetLocator, named name: String, atMapPosition mapPosition: MapPosition, horizontallyFlipped: Bool) throws -> AssetPlacementDescription? {
+    public func addAsset(_ asset: AssetLocator, named name: String, atMapPosition mapPosition: MapPosition, horizontallyFlipped: Bool) async throws -> AssetPlacementDescription? {
         var footprint = asset.assetDescription!.footprint
         if horizontallyFlipped {
             footprint.flip()
         }
-        
+
+        var regions = workingMapDescription.regions
+
         for i in 0..<regions.count {
             let region = regions[i]
             
             if try region.isLocationValidAndFreeOfAssets(mapPosition: mapPosition, footprint: footprint) {
                 let placement = AssetPlacementDescription(id: UUID(), assetLocator: asset, horizontallyFlipped: horizontallyFlipped, position: mapPosition, name: name)
                 regions[i] = region.withAssetPlacement(added: placement)
+                await pushNewMapVersion(workingMapDescription.mutated(withRegions: regions))
                 return placement
             }
         }
@@ -235,19 +235,31 @@ public actor MapModel: GlobalActor {
         return nil
     }
     
-    public func update(assetPlacement: AssetPlacementDescription) {
-        regions = regions.map { $0.withAssetPlacement(updated: assetPlacement) }
+    public func update(assetPlacement: AssetPlacementDescription) async {
+        await pushNewMapVersion(workingMapDescription.mutated(withRegions: workingMapDescription.regions.map {
+            $0.withAssetPlacement(updated: assetPlacement)
+        }))
     }
     
     @discardableResult
-    public func removeAsset(withId placementId: UUID) -> Bool {
+    public func removeAsset(withId placementId: UUID) async -> Bool {
+        var regions = workingMapDescription.regions
         for i in 0..<regions.count {
             if let newRegion = regions[i].withAssetPlacement(removed: placementId) {
                 regions[i] = newRegion
+                await pushNewMapVersion(workingMapDescription.mutated(withRegions: regions))
                 return true
             }
         }
         return false
+    }
+
+    private func pushNewMapVersion(_ newMapDescription: MapDescription) async {
+        workingMapDescription = newMapDescription
+        await MainActor.run {
+            self.currentMapDescription = newMapDescription
+            self.currentMapVersion += 1
+        }
     }
 
 }
