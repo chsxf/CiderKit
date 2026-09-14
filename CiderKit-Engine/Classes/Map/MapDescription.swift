@@ -1,7 +1,7 @@
 import Foundation
 import CiderKitMacros
 
-@MutableStruct(initAccessLevel: .internal)
+@MutableStruct(initAccessLevel: .internal, versioned: .internal)
 public struct MapDescription: Codable, Sendable {
     @MutatingProperty let regions: [MapRegionDescription]
     @MutatingProperty let lighting: LightingDescription
@@ -11,5 +11,6 @@ public struct MapDescription: Codable, Sendable {
         regions = []
         lighting = LightingDescription()
         renderers = [:]
+        version = 0
     }
 }

@@ -1,7 +1,7 @@
 import SpriteKit
 import CiderKitMacros
 
-@MutableStruct
+@MutableStruct(versioned: .internal)
 public struct AmbientLightDescription: LightDescriptor {
     public static let AMBIENT_LIGHT_UUID = "11111111-1111-1111-1111-111111111111"
     
@@ -15,11 +15,13 @@ public struct AmbientLightDescription: LightDescriptor {
     
     public init(color: CGColor) {
         self.color = color.toRGB() ?? CGColor(red: 0, green: 0, blue: 0, alpha: 0);
+        version = 0
     }
     
     public init(from container: KeyedDecodingContainer<LightDescriptorCodingKeys>) throws {
         let colorComponents = try container.decode(SIMD3<Float>.self, forKey: .color)
         color = CGColor(red: CGFloat(colorComponents.x), green: CGFloat(colorComponents.y), blue: CGFloat(colorComponents.z), alpha: 1)
+        version = 0
     }
     
     public func encode(to encoder: Encoder) throws {

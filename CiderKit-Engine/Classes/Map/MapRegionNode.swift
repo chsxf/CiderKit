@@ -132,7 +132,7 @@ public class MapRegionNode : SKNode {
         regionDescription.assetPlacements.forEach {
             var newItem = $0
             if newItem.mapPosition.elevation == nil {
-                newItem = newItem.with(newPosition: newItem.mapPosition.with(elevation: regionDescription.elevation))
+                newItem = newItem.mutated(withMapPosition: newItem.mapPosition.with(elevation: regionDescription.elevation))
             }
             self.instantiateAsset(placement: AssetPlacement(description: newItem))
         }

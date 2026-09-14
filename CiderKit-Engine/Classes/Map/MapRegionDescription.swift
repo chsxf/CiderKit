@@ -1,7 +1,7 @@
 import Foundation
 import CiderKitMacros
 
-@MutableStruct
+@MutableStruct(versioned: .internal)
 public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable {
 
     private enum MaterialOverrideContext: String {
@@ -138,13 +138,13 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
         guard elevation != newElevation else { return nil }
         
         let newAssetPlacements = changeAssetPlacementsElevation(placements: assetPlacements, relativeElevation: relativeElevation)
-        return MapRegionDescription(name: name, area: area, elevation: newElevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+        return MapRegionDescription(name: name, area: area, elevation: newElevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version + 1)
     }
     
     public func withAssetPlacement(added newAssetPlacement: AssetPlacementDescription) -> MapRegionDescription {
         var newAssetPlacements = assetPlacements;
         newAssetPlacements.append(newAssetPlacement)
-        return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+        return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version)
     }
     
     public func withAssetPlacement(updated updatedAssetPlacement: AssetPlacementDescription) -> MapRegionDescription {
@@ -153,7 +153,7 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
             if placement.id == updatedAssetPlacement.id {
                 var newAssetPlacements = assetPlacements
                 newAssetPlacements[i] = updatedAssetPlacement
-                return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+                return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version)
             }
         }
         return self
@@ -162,7 +162,7 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
     public func withAssetPlacement(removed assetPlacementId: UUID) -> MapRegionDescription? {
         let newAssetPlacements = assetPlacements.compactMap { $0.id != assetPlacementId ? $0 : nil }
         if newAssetPlacements.count != assetPlacements.count {
-            return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements)
+            return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version)
         }
         return nil
     }
@@ -290,7 +290,7 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
 fileprivate func changeAssetPlacementsElevation(placements: [AssetPlacementDescription], relativeElevation: Int) -> [AssetPlacementDescription] {
     placements.map { item in
         if item.mapPosition.elevation != nil {
-            return item.with(newPosition: item.mapPosition.with(relativeElevation: relativeElevation))
+            return item.mutated(withMapPosition: item.mapPosition.with(relativeElevation: relativeElevation))
         }
         return item
     }

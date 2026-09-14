@@ -1,6 +1,8 @@
 import Foundation
 import CoreGraphics
+import CiderKitMacros
 
+@MutableStruct
 struct LightingDescription: Codable, Sendable {
 
     enum LightDescriptionDecodingError: Error {
@@ -12,7 +14,7 @@ struct LightingDescription: Codable, Sendable {
         case lights
     }
 
-    let ambientLight: AmbientLightDescription
+    @MutatingProperty let ambientLight: AmbientLightDescription
     let lights: [any LightDescriptor]
 
     init(ambientLight: AmbientLightDescription? = nil, lights: [any LightDescriptor] = []) {

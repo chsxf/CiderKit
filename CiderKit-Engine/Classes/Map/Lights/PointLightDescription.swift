@@ -1,7 +1,7 @@
 import SpriteKit
 import CiderKitMacros
 
-@MutableStruct
+@MutableStruct(versioned: .internal)
 public struct PointLightDescription: LightDescriptor {
 
     @MutableStruct
@@ -29,6 +29,7 @@ public struct PointLightDescription: LightDescriptor {
         name = ""
         position = WorldPosition()
         falloff = Falloff(near: 0, far: 5, exponent: 0.5)
+        version = 0
     }
     
     public init(from container: KeyedDecodingContainer<LightDescriptorCodingKeys>) throws {
@@ -46,6 +47,8 @@ public struct PointLightDescription: LightDescriptor {
         let far = (try? container.decode(Float.self, forKey: .falloffFar)) ?? 1
         let exponent = (try? container.decode(Float.self, forKey: .falloffExponent)) ?? 1
         falloff = Falloff(near: near, far: far, exponent: exponent)
+
+        version = 0
     }
     
     public func encode(to encoder: Encoder) throws {

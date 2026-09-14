@@ -1,16 +1,12 @@
 import Combine
 import CoreGraphics
 
+private typealias MapDescriptionStream = (stream: AsyncStream<MapDescription>, continuation: AsyncStream<MapDescription>.Continuation)
+
 @globalActor
 public actor MapModel: GlobalActor {
 
     public static let shared = MapModel()
-
-    @MainActor
-    public private(set) static var latestMapDescription: MapDescription = MapDescription()
-
-    @MainActor
-    public private(set) static var latestMapVersion: UInt64 = 0
 
     internal var cellRenderers: [String: CellRendererDescription]
 
@@ -18,6 +14,9 @@ public actor MapModel: GlobalActor {
     public var lights: [any LightImplementation]
 
     private var workingMapDescription: MapDescription
+
+    private var updateStreams = [MapDescriptionStream]()
+    public var updateStream: AsyncStream<MapDescription> { makeUpdateStream() }
 
     private init() {
         workingMapDescription = MapDescription()
@@ -40,7 +39,7 @@ public actor MapModel: GlobalActor {
 
     public func clear() async {
         workingMapDescription = MapDescription()
-        await pushNewMapVersion(workingMapDescription, resetVersion: true)
+        await pushNewMapVersion(workingMapDescription)
     }
 
     public func regionAt(mapX x: Int, y: Int) -> MapRegionDescription? {
@@ -234,7 +233,7 @@ public actor MapModel: GlobalActor {
             let region = regions[i]
             
             if try region.isLocationValidAndFreeOfAssets(mapPosition: mapPosition, footprint: footprint) {
-                let placement = AssetPlacementDescription(id: UUID(), assetLocator: asset, horizontallyFlipped: horizontallyFlipped, position: mapPosition, name: name)
+                let placement = AssetPlacementDescription(id: UUID(), assetLocator: asset, name: name, mapPosition: mapPosition, horizontallyFlipped: horizontallyFlipped, interactive: false)
                 regions[i] = region.withAssetPlacement(added: placement)
                 await pushNewMapVersion(workingMapDescription.mutated(withRegions: regions))
                 return placement
@@ -263,12 +262,15 @@ public actor MapModel: GlobalActor {
         return false
     }
 
-    private func pushNewMapVersion(_ newMapDescription: MapDescription, resetVersion: Bool = false) async {
+    private func pushNewMapVersion(_ newMapDescription: MapDescription) async {
         workingMapDescription = newMapDescription
-        await MainActor.run {
-            Self.latestMapDescription = newMapDescription
-            Self.latestMapVersion = resetVersion ? 1 : (Self.latestMapVersion + 1)
-        }
+        updateStreams.forEach { $0.continuation.yield(newMapDescription) }
+    }
+
+    private func makeUpdateStream() -> AsyncStream<MapDescription> {
+        let streamData = AsyncStream<MapDescription>.makeStream(bufferingPolicy: .bufferingNewest(0))
+        updateStreams.append(streamData)
+        return streamData.stream
     }
 
 }

@@ -1,7 +1,7 @@
 import SpriteKit
 import CiderKitMacros
 
-@MutableStruct
+@MutableStruct(versioned: .internal)
 public struct DirectionalLightDescription: LightDescriptor {
     @MutableStructOptional(defaultValue: "UUID()") public let id: UUID
     public let type: String = "directional"
@@ -19,6 +19,7 @@ public struct DirectionalLightDescription: LightDescriptor {
         name = ""
         position = WorldPosition()
         orientation = SIMD2()
+        version = 0
     }
     
     public init(name: String, color: CGColor, position: SIMD3<Float>, orientation: SIMD2<Float>) {
@@ -28,6 +29,7 @@ public struct DirectionalLightDescription: LightDescriptor {
         self.name = name
         self.position = position
         self.orientation = orientation
+        version = 0
     }
 
     public init(from container: KeyedDecodingContainer<LightDescriptorCodingKeys>) throws {
@@ -41,6 +43,8 @@ public struct DirectionalLightDescription: LightDescriptor {
 
         position = try container.decode(WorldPosition.self, forKey: .position)
         orientation = try container.decode(SIMD2<Float>.self, forKey: .orientation)
+
+        version = 0
     }
     
     public func encode(to encoder: any Encoder) throws {
