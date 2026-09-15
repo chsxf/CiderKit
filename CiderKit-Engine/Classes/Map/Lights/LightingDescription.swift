@@ -2,7 +2,7 @@ import Foundation
 import CoreGraphics
 import CiderKitMacros
 
-@MutableStruct
+@MutableStruct(versioned: .internal)
 struct LightingDescription: Codable, Sendable {
 
     enum LightDescriptionDecodingError: Error {
@@ -15,11 +15,12 @@ struct LightingDescription: Codable, Sendable {
     }
 
     @MutatingProperty let ambientLight: AmbientLightDescription
-    let lights: [any LightDescriptor]
+    @MutatingProperty(accessLevel: .private) let lights: [any LightDescriptor]
 
     init(ambientLight: AmbientLightDescription? = nil, lights: [any LightDescriptor] = []) {
         self.ambientLight = ambientLight ?? AmbientLightDescription(color: CGColor.white)
         self.lights = lights
+        version = 0
     }
 
     init(from decoder: any Decoder) throws {
@@ -42,6 +43,8 @@ struct LightingDescription: Codable, Sendable {
             }
         }
         lights = lightsBuffer
+
+        version = 0
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -52,6 +55,26 @@ struct LightingDescription: Codable, Sendable {
         for light in lights {
             try lightsContainer.encode(light)
         }
+    }
+
+    func add(light: any LightDescriptor) -> Self {
+        guard lights.contains(where: { $0.id == light.id }) == false else {
+            return self
+        }
+
+        var newLights = lights
+        newLights.append(light)
+        return mutated(withLights: newLights)
+    }
+
+    func removeLight(by id: UUID) -> Self {
+        var newLights = lights
+        let countBefore = newLights.count
+        newLights.removeAll { $0.id == id }
+        if newLights.count != countBefore {
+            return mutated(withLights: newLights)
+        }
+        return self
     }
 
 }

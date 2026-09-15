@@ -42,58 +42,29 @@ public actor MapModel: GlobalActor {
         await pushNewMapVersion(workingMapDescription)
     }
 
-    public func regionAt(mapX x: Int, y: Int) -> MapRegionDescription? {
-        workingMapDescription.regions.first(where: { $0.area.contains(mapX: x, y: y) })
-    }
-
-    public func regionAt(mapPosition position: MapPosition) -> MapRegionDescription? { regionAt(mapX: position.x, y: position.y) }
-
-    public func rename(regionId: Int, to newName: String) async {
+    public func renameRegion(by id: Int, to newName: String) async {
         await pushNewMapVersion(workingMapDescription.mutated(withRegions: workingMapDescription.regions.map { regionDescription in
-            guard regionDescription.id == regionId else { return regionDescription }
+            guard regionDescription.id == id else { return regionDescription }
             return regionDescription.mutated(withName: newName)
         }))
     }
-    
-    public func hasCell(forMapX x: Int, y: Int) -> Bool { regionAt(mapX: x, y: y) != nil }
 
-    func getLeftVisibleElevation(forX x: Int, y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
-        guard
-            let cellElevation = getCellElevation(forX: x, y: y),
-            let leftCellElevation = getCellElevation(forX: x, y: y + 1)
-        else {
-            return defaultElevation
+    public func add(light: any LightDescriptor) async {
+        let lightingVersionBefore = workingMapDescription.lighting.version
+        let newLightingDescription = workingMapDescription.lighting.add(light: light)
+        if lightingVersionBefore != newLightingDescription.version {
+            let newMapDescription = workingMapDescription.mutated(withLighting: newLightingDescription)
+            await pushNewMapVersion(newMapDescription)
         }
-
-        let diff = cellElevation - leftCellElevation
-        return Swift.max(diff, 0)
-    }
-
-    func getRightVisibleElevation(forX x: Int, y: Int, usingDefaultElevation defaultElevation: Int) -> Int {
-        guard
-            let cellElevation = getCellElevation(forX: x, y: y),
-            let rightCellElevation = getCellElevation(forX: x + 1, y: y)
-        else {
-            return defaultElevation
-        }
-
-        let diff = cellElevation - rightCellElevation
-        return Swift.max(diff, 0)
-    }
-
-    func getCellElevation(forX x: Int, y: Int) -> Int? {
-        regionAt(mapX: x, y: y)?.elevation
-    }
-
-    public func add(light: any LightImplementation) {
-        lights.append(light)
     }
 
     @discardableResult
-    public func remove(light: any LightImplementation) -> Bool {
-        let countBefore = lights.count
-        lights.removeAll { $0 === light }
-        if countBefore != lights.count {
+    public func remove(light: any LightDescriptor) async -> Bool {
+        let lightingVersionBefore = workingMapDescription.lighting.version
+        let newLightingDescription = workingMapDescription.lighting.removeLight(by: light.id)
+        if lightingVersionBefore != newLightingDescription.version {
+            let newMapDescription = workingMapDescription.mutated(withLighting: newLightingDescription)
+            await pushNewMapVersion(newMapDescription)
             return true
         }
         return false
@@ -209,15 +180,6 @@ public actor MapModel: GlobalActor {
     
     public func decreaseElevation(area: MapArea?) async {
         await changeElevation(area: area, createIfNotApplied: false) { $0.elevated(by: -1) }
-    }
-
-    public func getAssetPlacement(withId id: UUID) -> AssetPlacementDescription? {
-        for region in workingMapDescription.regions {
-            if let placement = region.assetPlacements.first(where: { $0.id == id }) {
-                return placement
-            }
-        }
-        return nil
     }
 
     @discardableResult

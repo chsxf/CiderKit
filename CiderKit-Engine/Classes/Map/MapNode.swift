@@ -18,8 +18,7 @@ open class MapNode: SKNode {
     nonisolated public static let yVector = SIMD2(Float(-MapNode.halfWidth), Float(-MapNode.halfHeight))
     nonisolated public static let zVector = SIMD2(0, Float(MapNode.elevationHeight))
 
-    public private(set) weak var model: MapModel? = nil
-    private var modelCancellable: AnyCancellable!
+    public private(set) var mapDescription: MapDescription? = nil
 
     public private(set) var assetEntities: [GKEntity] = []
     public let assetComponentSystem: GKComponentSystem<AssetComponent>
@@ -27,14 +26,10 @@ open class MapNode: SKNode {
     private var nodesByRegionId = [UInt:MapRegionNode]()
     private var orderedRegionNodes = [MapRegionNode]()
     
-    public init(with model: MapModel) {
-        self.model = model
+    public override init() {
         assetComponentSystem = GKComponentSystem(componentClass: AssetComponent.self)
         
         super.init()
-        
-        registerCellRenderers()
-        rebuildRegionNodes()
         
         zPosition = 2
     }
@@ -43,11 +38,16 @@ open class MapNode: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
 
-    open func onModelChanged(_ changedModel: MapModel) { }
+    public func match(mapDescription: MapDescription) {
+        self.mapDescription = mapDescription
+
+        registerCellRenderers()
+        rebuildRegionNodes()
+    }
 
     private func registerCellRenderers() {
-        if let model {
-            for (name, rendererDescription) in model.cellRenderers {
+        if let mapDescription {
+            for (name, rendererDescription) in mapDescription.renderers {
                 let renderer = CellRenderer(from: rendererDescription)
                 try! CellRenderers.register(cellRenderer: renderer, named: name)
             }
@@ -55,14 +55,13 @@ open class MapNode: SKNode {
     }
     
     open func rebuildRegionNodes() {
-        if let model {
+        if let mapDescription {
             orderedRegionNodes.forEach { $0.dismantle() }
             orderedRegionNodes.removeAll()
             
             var idsToRemove = Array(nodesByRegionId.keys)
 
-            /*
-            for region in model.regions {
+            for region in mapDescription.regions {
                 if idsToRemove.contains(region.id) {
                     idsToRemove.removeAll { $0 == region.id }
                 }
@@ -76,7 +75,6 @@ open class MapNode: SKNode {
                     orderedRegionNodes.append(node)
                 }
             }
-            */
 
             for idToRemove in idsToRemove {
                 if let node = nodesByRegionId.removeValue(forKey: idToRemove) {
@@ -99,13 +97,15 @@ open class MapNode: SKNode {
     }
     
     public func regionNode(atMapX x: Int, y: Int) -> MapRegionNode? {
-        if let region = model?.regionAt(mapX: x, y: y) {
+        if let region = mapDescription?.regionAt(mapX: x, y: y) {
             return nodesByRegionId[region.id]
         }
         return nil
     }
 
-    public func regionNode(at position: MapPosition) -> MapRegionNode? { regionNode(atMapX: position.x, y: position.y) }
+    public func regionNode(at position: MapPosition) -> MapRegionNode? {
+        regionNode(atMapX: position.x, y: position.y)
+    }
 
     public func lookForMapCellEntity(at position: MapPosition) -> GKEntity? {
         if let regionNode = regionNode(at: position) {
