@@ -39,6 +39,10 @@ open class MapNode: SKNode {
     }
 
     public func match(mapDescription: MapDescription) {
+        guard self.mapDescription == nil || self.mapDescription!.id != mapDescription.id || self.mapDescription!.version != mapDescription.version else {
+            return
+        }
+
         self.mapDescription = mapDescription
 
         registerCellRenderers()
@@ -82,8 +86,8 @@ open class MapNode: SKNode {
                 }
             }
 
-            orderedRegionNodes.forEach { $0.build() }
-            
+            orderedRegionNodes.forEach { $0.build(in: &mapDescription) }
+
             updateRegionsZPosition()
         }
     }

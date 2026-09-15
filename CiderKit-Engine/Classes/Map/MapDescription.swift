@@ -3,11 +3,13 @@ import CiderKitMacros
 
 @MutableStruct(initAccessLevel: .internal, versioned: .internal)
 public struct MapDescription: Codable, Sendable {
+    @MutableStructOptional(defaultValue: "UUID()") let id: UUID
     @MutatingProperty let regions: [MapRegionDescription]
     @MutatingProperty let lighting: LightingDescription
     @MutatingProperty let renderers: [String:CellRendererDescription]
 
     init() {
+        id = UUID()
         regions = []
         lighting = LightingDescription()
         renderers = [:]

@@ -7,7 +7,7 @@ open class GameView: LitSceneView {
     public typealias GameViewPointerEventData = (eventData: PointerEventData, sender: GameView)
     public typealias GameViewKeyEventData = (eventData: KeyEventData, sender: GameView)
 
-    public private(set) var map: MapNode?
+    public let map: MapNode
     public let mapOverlay: SKNode
 
 #if os(macOS)
@@ -44,6 +44,9 @@ open class GameView: LitSceneView {
     private var backdropPointerUp: AnyCancellable?
     private var backdropPointerMoved: AnyCancellable?
 
+    private var mapDescriptionUpdateListenerTask: Task<Void, Never>? = nil
+    private var latestMapDescription: MapDescription? = nil
+
     public override init(frame frameRect: CGRect) {
         let defaultStyleSheetURL = CiderKitEngine.bundle.url(forResource: "Default Style Sheet", withExtension: "ckcss")!
         let styleSheet = try! CKUIStyleSheet(contentsOf: defaultStyleSheetURL)
@@ -64,6 +67,8 @@ open class GameView: LitSceneView {
 
         keyPressed = AsyncPublisher(keyPressedSubject)
 
+        map = Self.mapNode()
+
         super.init(frame: frameRect)
 
         showsFPS = true
@@ -83,33 +88,47 @@ open class GameView: LitSceneView {
         camera.addChild(eventBackdropNode)
         camera.addChild(uiOverlayCanvas)
 
-        map = nil
         litNodesRoot.addChild(mapOverlay)
 
         backdropPointerDown = eventBackdropNode.pointerDown.sink { self.pointerDownSubject.send(($0.eventData, self)) }
         backdropPointerUp = eventBackdropNode.pointerUp.sink { self.pointerUpSubject.send(($0.eventData, self)) }
         backdropPointerMoved = eventBackdropNode.pointerMoved.sink { self.pointerMovedSubject.send(($0.eventData, self)) }
+
+        mapDescriptionUpdateListenerTask = setupMapDescriptionUpdateListener()
     }
-    
+
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public func removePreviousMapNodes() {
-        for i in stride(from: litNodesRoot.children.count - 1, through: 0, by: -1) {
-            if let previousMapNode = litNodesRoot.children[i] as? MapNode {
-                previousMapNode.removeFromParent()
+    deinit {
+        mapDescriptionUpdateListenerTask?.cancel()
+    }
+
+    private func setupMapDescriptionUpdateListener() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await newMapDescription in await MapModel.shared.updateStream {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.latestMapDescription = newMapDescription
+                        }
+                    }
+                }
             }
         }
     }
 
-    open func mapNode(from model: MapModel) -> MapNode {
-        removePreviousMapNodes()
-        map = MapNode(with: model)
-        return map!
+    open class func mapNode() -> MapNode {
+        MapNode()
     }
 
     open override func update(_ currentTime: TimeInterval, for scene: SKScene) {
+        if let latestMapDescription {
+            map.match(mapDescription: latestMapDescription)
+        }
+
         super.update(currentTime, for: scene)
         
 #if os(macOS)
@@ -134,18 +153,18 @@ open class GameView: LitSceneView {
         var minVector = WorldPosition(Float.infinity, Float.infinity, 0)
         var maxVector = WorldPosition(-Float.infinity, -Float.infinity, 0)
 
-        /*
-        for region in MapModel.shared.regions {
-            let area = region.area
+        if let mapDescription = map.mapDescription {
+            for region in mapDescription.regions {
+                let area = region.area
 
-            minVector.x = min(minVector.x, Float(area.minX))
-            minVector.y = min(minVector.y, Float(area.minY))
+                minVector.x = min(minVector.x, Float(area.minX))
+                minVector.y = min(minVector.y, Float(area.minY))
 
-            maxVector.x = max(maxVector.x, Float(area.maxX))
-            maxVector.y = max(maxVector.y, Float(area.maxY))
-            maxVector.z = max(maxVector.z, Float(region.elevation + 1))
+                maxVector.x = max(maxVector.x, Float(area.maxX))
+                maxVector.y = max(maxVector.y, Float(area.maxY))
+                maxVector.z = max(maxVector.z, Float(region.elevation + 1))
+            }
         }
-        */
 
         return matrix_float3x3(minVector, maxVector, SIMD3())
     }
@@ -185,7 +204,7 @@ open class GameView: LitSceneView {
             }
 
             let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
-            return map?.raycastMapCell(at: locationInScene)
+            return map.raycastMapCell(at: locationInScene)
         }.value
     }
 
@@ -199,7 +218,7 @@ open class GameView: LitSceneView {
             }
 
             let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
-            return map?.raycastAsset(at: locationInScene)
+            return map.raycastAsset(at: locationInScene)
         }.value
     }
 

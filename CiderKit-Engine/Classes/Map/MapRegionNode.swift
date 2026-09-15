@@ -3,8 +3,8 @@ import GameplayKit
 
 public class MapRegionNode : SKNode {
     
-    public private(set) var regionDescription: MapRegionDescription
-    
+    public let regionDescription: MapRegionDescription
+
     public private(set) var cellEntities: [GKEntity] = []
     public private(set) var assetInstances: [AssetInstance] = []
     
@@ -17,7 +17,7 @@ public class MapRegionNode : SKNode {
         super.init()
     }
 
-    func build() {
+    func build(in mapDescriptionRef: UnsafePointer<MapDescription>) {
         let rendererName = regionDescription.renderer ?? "default_cell"
         let renderer = try! CellRenderers[rendererName]
         
@@ -52,7 +52,7 @@ public class MapRegionNode : SKNode {
                 if renderer.leftElevationMaterialResetPolicy == .resetWithEachCell {
                     leftElevationMaterial.reset()
                 }
-                let leftElevationCount = MapModel.shared.getLeftVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
+                let leftElevationCount = mapDescriptionRef.pointee.getLeftVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<leftElevationCount {
                     if renderer.leftElevationMaterialResetPolicy == .resetAlways {
                         leftElevationMaterial.reset()
@@ -78,7 +78,7 @@ public class MapRegionNode : SKNode {
                 if renderer.rightElevationMaterialResetPolicy == .resetWithEachCell {
                     rightElevationMaterial.reset()
                 }
-                let rightElevationCount = MapModel.shared.getRightVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
+                let rightElevationCount = mapDescriptionRef.pointee.getRightVisibleElevation(forX: mapX, y: mapY, usingDefaultElevation: regionDescription.elevation)
                 for i in 0..<rightElevationCount {
                     if renderer.rightElevationMaterialResetPolicy == .resetAlways {
                         rightElevationMaterial.reset()
