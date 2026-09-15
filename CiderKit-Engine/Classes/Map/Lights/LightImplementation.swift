@@ -16,6 +16,6 @@ public protocol LightImplementation: AnyObject {
 
 public extension LightImplementation {
 
-    var colorVector: SIMD3<Float> { description.colorVector }
+    var colorVector: SIMD3<Float> { description.colorComponents }
 
 }

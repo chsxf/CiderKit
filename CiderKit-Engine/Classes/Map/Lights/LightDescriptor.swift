@@ -19,7 +19,7 @@ public protocol LightDescriptor: Encodable, Sendable, Identifiable {
 
 public extension LightDescriptor {
     
-    var colorVector: SIMD3<Float> {
+    var colorComponents: SIMD3<Float> {
         get {
             let cmpts = color.components!
             return SIMD3(Float(cmpts[0]), Float(cmpts[1]), Float(cmpts[2]))

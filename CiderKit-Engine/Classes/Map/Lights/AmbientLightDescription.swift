@@ -28,7 +28,7 @@ public struct AmbientLightDescription: LightDescriptor {
         var container = encoder.container(keyedBy: LightDescriptorCodingKeys.self)
 
         try container.encode(type, forKey: .type)
-        try container.encode(colorVector, forKey: .color)
+        try container.encode(colorComponents, forKey: .color)
     }
     
     public func toImplementation() -> some LightImplementation {

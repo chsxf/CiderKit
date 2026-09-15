@@ -56,7 +56,7 @@ public struct PointLightDescription: LightDescriptor {
         
         try container.encode(id, forKey: .id)
         try container.encode(type, forKey: .type)
-        try container.encode(colorVector, forKey: .color)
+        try container.encode(colorComponents, forKey: .color)
 
         try container.encode(enabled, forKey: .enabled)
         try container.encode(name, forKey: .name)

@@ -28,7 +28,7 @@ public class PointLight: BaseLight<PointLightDescription>, NamedObject {
         if !description.enabled {
             falloffVector.y = 0
         }
-        return matrix_float3x3([description.colorVector, description.position, falloffVector])
+        return matrix_float3x3([description.colorComponents, description.position, falloffVector])
     }
     
     public subscript(dynamicMember member: KeyPath<PointLightDescription, PointLightDescription.Falloff>) -> PointLightDescription.Falloff {

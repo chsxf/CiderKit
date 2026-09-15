@@ -30,7 +30,7 @@ public class DirectionalLight: BaseLight<DirectionalLightDescription>, NamedObje
         direction = declinationQuaternion.act(direction)
         direction = rightAscensionQuaternion.act(direction)
         
-        return matrix_float3x3([description.colorVector, direction, SIMD3(0, description.enabled ? 1 : 0, 0)])
+        return matrix_float3x3([description.colorComponents, direction, SIMD3(0, description.enabled ? 1 : 0, 0)])
     }
     
 }
