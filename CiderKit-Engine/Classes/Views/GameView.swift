@@ -4,13 +4,31 @@ import Combine
 
 public extension Notification.Name {
     static let addUiElementRequested: Self = .init(rawValue: "addUiElementRequested")
+    static let addAssetInstanceRequested: Self = .init(rawValue: "addAssetInstanceRequested")
+
+    static let mapCellPickRequested: Self = .init(rawValue: "mapCellPickRequested")
+    static let mapCellPicked: Self = .init(rawValue: "mapCellPicked")
+
+    static let assetPickRequeted: Self = .init(rawValue: "assetPickRequested")
+    static let assetPicked: Self = .init(rawValue: "assetPicked")
+
+    static let pointerDown: Self = .init(rawValue: "pointerDown")
+    static let pointerUp: Self = .init(rawValue: "pointerUp")
+    static let pointerMoved: Self = .init(rawValue: "pointerMoved")
+
+    static let keyPressed: Self = .init(rawValue: "keyPressed")
 }
 
 open class GameView: LitSceneView {
 
+    public nonisolated static let eventDataUserInfo = "eventData"
+    public nonisolated static let newElement = "newElement"
+    public nonisolated static let pickedMapCell = "pickedMapCell"
+    public nonisolated static let pickedAsset = "pickedAsset"
+
     public typealias GameViewPointerEventData = (eventData: PointerEventData, sender: GameView)
     public typealias GameViewKeyEventData = (eventData: KeyEventData, sender: GameView)
-
+    
     public let map: MapNode
     public let mapOverlay: SKNode
 
@@ -34,16 +52,6 @@ open class GameView: LitSceneView {
     open override var preferredSceneWidth: Int { Project.current?.settings.targetResolutionWidth ?? super.preferredSceneWidth }
     open override var preferredSceneHeight: Int { Project.current?.settings.targetResolutionHeight ?? super .preferredSceneHeight }
     
-    private let pointerDownSubject = PassthroughSubject<GameViewPointerEventData, Never>()
-    public let pointerDown: AsyncPublisher<PassthroughSubject<GameViewPointerEventData, Never>>
-    private let pointerUpSubject = PassthroughSubject<GameViewPointerEventData, Never>()
-    public let pointerUp: AsyncPublisher<PassthroughSubject<GameViewPointerEventData, Never>>
-    private let pointerMovedSubject = PassthroughSubject<GameViewPointerEventData, Never>()
-    public let pointerMoved: AsyncPublisher<PassthroughSubject<GameViewPointerEventData, Never>>
-
-    private let keyPressedSubject = PassthroughSubject<GameViewKeyEventData, Never>()
-    public let keyPressed: AsyncPublisher<PassthroughSubject<GameViewKeyEventData, Never>>
-
     private var backdropPointerDown: AnyCancellable?
     private var backdropPointerUp: AnyCancellable?
     private var backdropPointerMoved: AnyCancellable?
@@ -64,12 +72,6 @@ open class GameView: LitSceneView {
 
         mapOverlay = SKNode()
         mapOverlay.zPosition = 100
-
-        pointerDown = AsyncPublisher(pointerDownSubject)
-        pointerUp = AsyncPublisher(pointerUpSubject)
-        pointerMoved = AsyncPublisher(pointerMovedSubject)
-
-        keyPressed = AsyncPublisher(keyPressedSubject)
 
         map = Self.mapNode()
 
@@ -95,9 +97,9 @@ open class GameView: LitSceneView {
         litNodesRoot.addChild(map)
         litNodesRoot.addChild(mapOverlay)
 
-        backdropPointerDown = eventBackdropNode.pointerDown.sink { self.pointerDownSubject.send(($0.eventData, self)) }
-        backdropPointerUp = eventBackdropNode.pointerUp.sink { self.pointerUpSubject.send(($0.eventData, self)) }
-        backdropPointerMoved = eventBackdropNode.pointerMoved.sink { self.pointerMovedSubject.send(($0.eventData, self)) }
+        backdropPointerDown = eventBackdropNode.pointerDown.sink { NotificationCenter.default.post(name: .pointerDown, object: self, userInfo: [Self.eventDataUserInfo: $0.eventData]) }
+        backdropPointerUp = eventBackdropNode.pointerUp.sink { NotificationCenter.default.post(name: .pointerUp, object: self, userInfo: [Self.eventDataUserInfo: $0.eventData]) }
+        backdropPointerMoved = eventBackdropNode.pointerMoved.sink { NotificationCenter.default.post(name: .pointerMoved, object: self, userInfo: [Self.eventDataUserInfo: $0.eventData]) }
 
         asyncListenerTask = setupAsyncListeners()
     }
@@ -123,10 +125,37 @@ open class GameView: LitSceneView {
                 }
 
                 group.addTask {
-                    for await newUINode in NotificationCenter.default.notifications(named: .addUiElementRequested).compactMap({ $0.object as? SKNode }) {
+                    for await newUINode in NotificationCenter.default.notifications(named: .addUiElementRequested).compactMap({ $0.userInfo?[Self.newElement] as? SKNode }) {
                         try Task.checkCancellation()
                         await MainActor.run {
                             self.uiOverlayCanvas.addChild(newUINode)
+                        }
+                    }
+                }
+
+                group.addTask {
+                    for await newAssetInstanceNode in NotificationCenter.default.notifications(named: .addAssetInstanceRequested).compactMap({ $0.userInfo?[Self.newElement] as? SKNode }) {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.mapOverlay.addChild(newAssetInstanceNode)
+                        }
+                    }
+                }
+
+                group.addTask {
+                    for await _ in NotificationCenter.default.notifications(named: .mapCellPickRequested) {
+                        try Task.checkCancellation()
+                        if let pickedCell = await self.pickMapCell() {
+                            NotificationCenter.default.post(name: .mapCellPicked, object: self, userInfo: [Self.pickedMapCell: pickedCell])
+                        }
+                    }
+                }
+
+                group.addTask {
+                    for await _ in NotificationCenter.default.notifications(named: .assetPickRequeted) {
+                        try Task.checkCancellation()
+                        if let pickedAsset = await self.pickAsset() {
+                            NotificationCenter.default.post(name: .assetPicked, object: self, userInfo: [Self.pickedAsset: pickedAsset])
                         }
                     }
                 }
@@ -204,36 +233,54 @@ open class GameView: LitSceneView {
     }
 
     open override func keyDown(with event: NSEvent) {
-        keyPressedSubject.send((KeyEventData(with: event), self))
+        NotificationCenter.default.post(name: .keyPressed, object: self, userInfo: [Self.eventDataUserInfo: KeyEventData(with: event)])
     }
 #endif // os(macOS)
 
-    public func pickMapCell() async -> MapCellComponent? {
-        return await Task {
-            var pointerUpEventData: PointerEventData? = nil
+    private func pickMapCell() async -> MapCellComponent? {
+        var pointerUpEventData: PointerEventData? = nil
 
-            for await (eventData, _) in pointerUp {
-                pointerUpEventData = eventData
-                break
-            }
+        for await eventData in NotificationCenter.default.notifications(named: .pointerUp).map({ $0.userInfo?[Self.eventDataUserInfo] as? PointerEventData }) {
+            pointerUpEventData = eventData
+            break
+        }
 
-            let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
-            return map.raycastMapCell(at: locationInScene)
-        }.value
+        let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
+        return map.raycastMapCell(at: locationInScene)
     }
 
-    public func pickAsset() async -> AssetComponent? {
-        return await Task {
-            var pointerUpEventData: PointerEventData? = nil
+    private func pickAsset() async -> AssetComponent? {
+        var pointerUpEventData: PointerEventData? = nil
 
-            for await (eventData, _) in pointerUp {
-                pointerUpEventData = eventData
-                break
-            }
+        for await eventData in NotificationCenter.default.notifications(named: .pointerUp).map({ $0.userInfo?[Self.eventDataUserInfo] as? PointerEventData }) {
+            pointerUpEventData = eventData
+            break
+        }
 
-            let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
-            return map.raycastAsset(at: locationInScene)
-        }.value
+        let locationInScene = gameScene.convertPoint(fromView: pointerUpEventData!.pointInView)
+        return map.raycastAsset(at: locationInScene)
+    }
+
+    public nonisolated static func notificationToPointerEventData(_ notif: NotificationCenter.Notifications.Element) -> GameViewPointerEventData? {
+        guard
+            let gameView = notif.object as? GameView,
+            let eventData = notif.userInfo?[GameView.eventDataUserInfo] as? PointerEventData
+        else {
+            return nil
+        }
+
+        return (eventData, gameView)
+    }
+
+    public nonisolated static func notificationToKeyEventData(_ notif: NotificationCenter.Notifications.Element) -> GameViewKeyEventData? {
+        guard
+            let gameView = notif.object as? GameView,
+            let eventData = notif.userInfo?[GameView.eventDataUserInfo] as? KeyEventData
+        else {
+            return nil
+        }
+
+        return (eventData, gameView)
     }
 
 }
