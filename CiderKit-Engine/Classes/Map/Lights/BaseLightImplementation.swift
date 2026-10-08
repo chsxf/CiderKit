@@ -21,7 +21,7 @@ public class BaseLightImplementation<T: LightDescriptor>: LightImplementation, O
         self.description = description
     }
     
-    public func match(description: T) {
+    open func match(description: T) {
         if self.description.id != description.id || self.description.version != description.version {
             self.description = description
         }

@@ -41,7 +41,7 @@ public class LightingImplementation {
     }
 
     private func makeEventStream(_ array: inout [LightEventStream]) -> AsyncStream<any LightImplementation> {
-        let streamData = AsyncStream<any LightImplementation>.makeStream(bufferingPolicy: .bufferingNewest(0))
+        let streamData = AsyncStream<any LightImplementation>.makeStream(bufferingPolicy: .unbounded)
         array.append(streamData)
         return streamData.stream
     }
