@@ -191,9 +191,6 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
                 }
                 if let confirmedMapURLToLoad = mapURLToLoad {
                     Task {
-                        await MapModel.shared.clear()
-                        currentMapURL = nil
-
                         do {
                             let mapDescription: MapDescription = try Functions.load(confirmedMapURLToLoad)
                             await MapModel.shared.match(mapDescription: mapDescription)

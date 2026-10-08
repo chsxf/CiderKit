@@ -1,7 +1,7 @@
 import SpriteKit
 import CiderKitMacros
 
-@MutableStruct(versioned: .internal)
+@MutableStruct(versioned: .public)
 public struct AmbientLightDescription: LightDescriptor {
     public static let AMBIENT_LIGHT_UUID = "11111111-1111-1111-1111-111111111111"
     public static let ambientLightUUID = UUID(uuidString: Self.AMBIENT_LIGHT_UUID)!

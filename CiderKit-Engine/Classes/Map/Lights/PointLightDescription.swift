@@ -1,7 +1,7 @@
 import SpriteKit
 import CiderKitMacros
 
-@MutableStruct(versioned: .internal)
+@MutableStruct(versioned: .public)
 public struct PointLightDescription: LightDescriptor {
 
     @MutableStruct

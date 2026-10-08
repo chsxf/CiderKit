@@ -22,7 +22,9 @@ public class BaseLightImplementation<T: LightDescriptor>: LightImplementation, O
     }
     
     public func match(description: T) {
-        self.description = description
+        if self.description.id != description.id || self.description.version != description.version {
+            self.description = description
+        }
     }
     
     public func reset() {

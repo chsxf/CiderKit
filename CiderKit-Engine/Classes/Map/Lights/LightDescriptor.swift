@@ -3,7 +3,9 @@ import SpriteKit
 public protocol LightDescriptor: Encodable, Sendable, Identifiable {
     
     associatedtype Implementation: LightImplementation
-    
+
+    var version: UInt { get }
+
     var id: UUID { get }
     var type: String { get }
     var color: CGColor { get }

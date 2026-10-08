@@ -1,7 +1,7 @@
 import SpriteKit
 import CiderKitMacros
 
-@MutableStruct(versioned: .internal)
+@MutableStruct(versioned: .public)
 public struct DirectionalLightDescription: LightDescriptor {
     @MutableStructOptional(defaultValue: "UUID()") public let id: UUID
     public let type: String = "directional"
