@@ -25,4 +25,16 @@ public extension SIMD3<Float> {
         self.init(Float(x), Float(y), Float(z))
     }
 
+    func with(x: Float) -> Self {
+        .init(x, self.y, self.z)
+    }
+
+    func with(y: Float) -> Self {
+        .init(self.x, y, self.z)
+    }
+
+    func with(z: Float) -> Self {
+        .init(self.x, self.y, z)
+    }
+
 }
