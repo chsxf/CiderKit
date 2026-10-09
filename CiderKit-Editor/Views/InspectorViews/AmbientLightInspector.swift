@@ -26,10 +26,13 @@ class AmbientLightInspector: BaseTypedInspectorView<AmbientLight>, LabelledColor
     }
     
     func labelledColorWell(_ colorWell: LabelledColorWell, colorChanged color: CGColor) {
-        if let inspectedObject {
-            isEditing = true
-            inspectedObject.color = color.toRGB()!
-            isEditing = false
+        if let inspectedObject, let rgbColor = color.toRGB() {
+            Task {
+                self.isEditing = true
+                let newLight = inspectedObject.description.mutated(withColor: rgbColor)
+                await MapModel.shared.update(light: newLight)
+                self.isEditing = false
+            }
         }
     }
     

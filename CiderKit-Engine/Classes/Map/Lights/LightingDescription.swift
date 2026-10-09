@@ -78,12 +78,20 @@ struct LightingDescription: Codable, Sendable {
     }
 
     func update(light newLight: any LightDescriptor) -> Self {
-        for i in 0..<lights.count {
-            let existingLight = lights[i]
-            if newLight.id == existingLight.id && newLight.version != existingLight.version {
-                var newLights = lights
-                newLights[i] = newLight
-                return mutated(withLights: newLights)
+        if newLight.id == AmbientLightDescription.ambientLightUUID {
+            if newLight.version != ambientLight.version {
+                let newAmbientLight = newLight as! AmbientLightDescription
+                return mutated(withAmbientLight: newAmbientLight)
+            }
+        }
+        else {
+            for i in 0..<lights.count {
+                let existingLight = lights[i]
+                if newLight.id == existingLight.id && newLight.version != existingLight.version {
+                    var newLights = lights
+                    newLights[i] = newLight
+                    return mutated(withLights: newLights)
+                }
             }
         }
         return self
