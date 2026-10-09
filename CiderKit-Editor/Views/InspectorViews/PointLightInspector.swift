@@ -80,9 +80,12 @@ class PointLightInspector: BaseNamedInspectorView<PointLight>, FloatFieldDelegat
     @objc
     private func onEnabledToggled() {
         if let inspectedObject {
-            isEditing = true
-            inspectedObject.enabled = enabledCheckbox.state == .on
-            isEditing = false
+            Task {
+                self.isEditing = true
+                let newLight = inspectedObject.description.mutated(withEnabled: enabledCheckbox.state == .on)
+                await MapModel.shared.update(light: newLight)
+                self.isEditing = false
+            }
         }
     }
     

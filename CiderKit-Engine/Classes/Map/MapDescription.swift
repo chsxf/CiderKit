@@ -1,7 +1,7 @@
 import Foundation
 import CiderKitMacros
 
-@MutableStruct(initAccessLevel: .internal, versioned: .internal)
+@MutableStruct(initAccessLevel: .internal, versioned: .public)
 public struct MapDescription: Codable, Sendable {
     private enum CodingKeys: String, CodingKey {
         case id
@@ -10,7 +10,7 @@ public struct MapDescription: Codable, Sendable {
         case renderers
     }
 
-    @MutableStructOptional(defaultValue: "UUID()") let id: UUID
+    @MutableStructOptional(defaultValue: "UUID()") public let id: UUID
     @MutatingProperty let regions: [MapRegionDescription]
     @MutatingProperty let lighting: LightingDescription
     @MutatingProperty let renderers: [String:CellRendererDescription]

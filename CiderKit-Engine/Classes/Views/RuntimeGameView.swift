@@ -113,7 +113,7 @@ open class RuntimeGameView: LitSceneView {
                     for await newMapDescription in await MapModel.shared.updateStream {
                         try Task.checkCancellation()
                         await MainActor.run {
-                            self.latestMapDescription = SendableRef(newMapDescription)
+                            self.set(newMapDescription: SendableRef(newMapDescription))
                         }
                     }
                 }
@@ -155,6 +155,10 @@ open class RuntimeGameView: LitSceneView {
                 }
             }
         }
+    }
+
+    open func set(newMapDescription: SendableRef<MapDescription>) {
+        self.latestMapDescription = newMapDescription
     }
 
     open class func mapNode() -> MapNode {

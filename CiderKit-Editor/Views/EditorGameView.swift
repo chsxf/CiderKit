@@ -3,6 +3,10 @@ import SpriteKit
 import GameplayKit
 import CiderKit_Engine
 
+extension Notification.Name {
+    static let mapDirtyStatusChanged = Self.init(rawValue: "mapDirtyStatusChanged")
+}
+
 class EditorGameView: RuntimeGameView {
     
     private(set) var worldGrid: WorldGrid!
@@ -25,6 +29,16 @@ class EditorGameView: RuntimeGameView {
     private var notificationTask: Task<Void, Never>? = nil
     
     var hoverableEntities: HoverableSequence { HoverableSequence(worldGrid.hoverableEntities, mutableMap.hoverableEntities, lightEntities) }
+
+    public private(set) var previousMapDescription: SendableRef<MapDescription>? = nil
+
+    public private(set) var dirty = false {
+        didSet {
+            if dirty != oldValue {
+                NotificationCenter.default.post(Notification(name: .mapDirtyStatusChanged))
+            }
+        }
+    }
 
     override init(frame frameRect: CGRect) {
         lightIconsRoot = SKNode()
@@ -94,7 +108,22 @@ class EditorGameView: RuntimeGameView {
             }
         }
     }
-    
+
+    override func set(newMapDescription: SendableRef<MapDescription>) {
+        super.set(newMapDescription: newMapDescription)
+
+        if let previousMapDescription {
+            if previousMapDescription.id != newMapDescription.id {
+                dirty = false
+            }
+            else if previousMapDescription.version != newMapDescription.version {
+                dirty = true
+            }
+        }
+
+        previousMapDescription = newMapDescription
+    }
+
     private func updateViewFrustrum() {
         if let camera = scene?.camera {
             viewFrustrumShape?.removeFromParent()
@@ -272,7 +301,6 @@ class EditorGameView: RuntimeGameView {
     func addAsset(_ asset: AssetLocator, atMapPosition position: MapPosition, horizontallyFlipped: Bool) async {
         do {
             try await mutableMap?.addAsset(asset, named: "", at: position, horizontallyFlipped: horizontallyFlipped)
-            mutableMap?.dirty = true
         }
         catch MapRegionErrors.assetTooCloseToRegionBorder {
             let alert = NSAlert()

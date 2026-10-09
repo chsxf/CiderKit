@@ -91,7 +91,7 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
         guard let gameView else { return true }
         
         var shouldSave = false
-        if await gameView.mutableMap?.dirty ?? false {
+        if await gameView.dirty {
             let modalResult = await MainActor.run {
                 let alert = NSAlert()
                 alert.messageText = "Would you like to save the current map?"
@@ -121,8 +121,6 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
 
     @discardableResult
     private func saveCurrentMap(forceFileSelection: Bool = false) async -> Bool {
-        guard let gameView else { return false }
-        
         var selectedURL: URL? = currentMapURL
         if forceFileSelection {
             selectedURL = nil
@@ -146,9 +144,6 @@ final class MainActionsManager : NSObject, NSToolbarItemValidation {
                 let mapDescription = await MapModel.shared.workingMapDescription
                 try EditorFunctions.save(mapDescription, to: validURL, prettyPrint: true)
                 currentMapURL = validURL
-                await MainActor.run {
-                    gameView.mutableMap?.dirty = false
-                }
                 return true
             }
             catch {

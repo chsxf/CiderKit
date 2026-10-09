@@ -60,7 +60,19 @@ public actor MapModel: GlobalActor {
         }
         return false
     }
-    
+
+    @discardableResult
+    public func update(light newLight: any LightDescriptor) async -> Bool {
+        let lightingVersionBefore = workingMapDescription.lighting.version
+        let newLightingDescription = workingMapDescription.lighting.update(light: newLight)
+        if lightingVersionBefore != newLightingDescription.version {
+            let newMapDescription = workingMapDescription.mutated(withLighting: newLightingDescription)
+            await pushNewMapVersion(newMapDescription)
+            return true
+        }
+        return false
+    }
+
     fileprivate func changeElevation(area: MapArea?, createIfNotApplied: Bool, changeFunc: (MapRegionDescription) -> MapRegionDescription?) async {
         var hasChanged = false
         var appliedOnRegion = false

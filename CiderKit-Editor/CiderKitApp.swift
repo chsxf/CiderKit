@@ -136,7 +136,7 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKV
     @MainActor
     func updateWindowTitle() {
         var title = "\(CiderKitApp.appName) - \(actionsManager.currentMapURL?.lastPathComponent ?? "Untitled")"
-        if gameView.mutableMap?.dirty ?? false {
+        if gameView.dirty {
             title += " *"
         }
         window.title = title

@@ -2,21 +2,9 @@ import Foundation
 import CiderKit_Engine
 import GameplayKit
 
-extension Notification.Name {
-    static let mapDirtyStatusChanged = Self.init(rawValue: "mapDirtyStatusChanged")
-}
-
 class EditorMapNode: MapNode {
 
     private var notificationTask: Task<Void, Never>? = nil
-    
-    var dirty: Bool = false {
-        didSet {
-            if dirty != oldValue {
-                NotificationCenter.default.post(Notification(name: .mapDirtyStatusChanged))
-            }
-        }
-    }
     
     private(set) var hoverableEntities: [GKEntity] = []
     
@@ -79,15 +67,12 @@ class EditorMapNode: MapNode {
                 assetNode?.removeFromParent()
 
                 await MapModel.shared.removeAsset(withId: assetComponent.placement.id)
-
-                dirty = true
             }
         }
     }
     
     private func assetPlacementModified(assetComponent: EditorAssetComponent) async {
         await MapModel.shared.update(assetPlacement: assetComponent.placement.toDescription())
-        dirty = true
     }
     
     override func createAssetEntity(assetInstance: AssetInstance) -> GKEntity {
