@@ -62,6 +62,8 @@ class BaseInspectorView: NSView {
         if updatableObject != nil {
             notificationTask = setupNotificationTask()
         }
+
+        updateContent()
     }
     
     func dispose() {

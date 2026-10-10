@@ -33,6 +33,7 @@ public extension LightImplementation {
         }
 
         match(description: castDescription)
+        notifyUpdate()
         return true
     }
 
