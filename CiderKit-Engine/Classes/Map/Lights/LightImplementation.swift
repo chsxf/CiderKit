@@ -4,8 +4,8 @@ public enum LightImplementationErrors: Error {
     case invalidCast(from: String, to: String)
 }
 
-public protocol LightImplementation: AnyObject {
-    
+public protocol LightImplementation: UpdatableObject {
+
     associatedtype Description: LightDescriptor
     
     var description: Description { get }

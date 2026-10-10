@@ -1,9 +1,9 @@
 import AppKit
-import Combine
+import CiderKit_Engine
 
-class BaseTypedInspectorView<InspectedType : ObservableObject> : BaseInspectorView {
+class BaseTypedInspectorView<InspectedType: UpdatableObject> : BaseInspectorView {
 
-    var inspectedObject: InspectedType? { observableObject as? InspectedType }
+    var inspectedObject: InspectedType? { updatableObject as? InspectedType }
 
     override init(stackedViews: [NSView]) {
         super.init(stackedViews: stackedViews)

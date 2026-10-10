@@ -1,18 +1,11 @@
 import AppKit
-import Combine
+import CiderKit_Engine
 
 class BaseInspectorView: NSView {
     
-    private(set) var observableObject: AnyObject? = nil {
-        didSet {
-            if observableObject == nil {
-                observableObjectChanged?.cancel()
-                observableObjectChanged = nil
-            }
-            updateContent()
-        }
-    }
-    private var observableObjectChanged: AnyCancellable? = nil
+    private(set) var updatableObject: any UpdatableObject? = nil
+
+    private var notificationTask: Task<Void, Never>? = nil
 
     var isEditing = false
     
@@ -34,26 +27,47 @@ class BaseInspectorView: NSView {
             NSLayoutConstraint(item: stack, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0)
         ])
     }
-    
+
+    deinit {
+        notificationTask?.cancel()
+    }
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    final func setObservableObject<T>(_ observable: T?) where T: ObservableObject {
-        guard observableObject !== observable else { return }
-        
-        observableObject = observable
-        if let observable = observable {
-            observableObjectChanged = observable.objectWillChange.sink { _ in
-                if !self.isEditing {
-                    self.updateContent()
+
+    func setupNotificationTask() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    if let updatableObject = await self.updatableObject {
+                        for await _ in updatableObject.updated {
+                            try Task.checkCancellation()
+                            await MainActor.run {
+                                self.updateContent()
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+
+    final func setUpdatableObject(_ updatable: any UpdatableObject?) {
+        guard updatableObject !== updatable else { return }
+        
+        updatableObject = updatable
+        notificationTask?.cancel()
+        notificationTask = nil
+        if updatableObject != nil {
+            notificationTask = setupNotificationTask()
+        }
+    }
     
     func dispose() {
-        observableObject = nil
+        updatableObject = nil
+        notificationTask?.cancel()
+        notificationTask = nil
     }
     
     func updateContent() { }

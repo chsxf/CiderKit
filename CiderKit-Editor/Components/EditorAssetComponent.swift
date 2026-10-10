@@ -1,7 +1,6 @@
 import Foundation
 import GameplayKit
 import CiderKit_Engine
-import Combine
 
 extension Notification.Name {
     
@@ -14,13 +13,11 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     public let placement: AssetPlacement
 
     fileprivate var assetInstance: AssetInstance? {
-        if placementChangeCancellable != nil {
-            return entity?.component(ofType: AssetComponent.self)?.assetInstance
-        }
+//        if placementChangeCancellable != nil {
+//            return entity?.component(ofType: AssetComponent.self)?.assetInstance
+//        }
         return nil
     }
-
-    fileprivate var placementChangeCancellable: AnyCancellable?
 
     let supportedToolModes: ToolMode = .erase
     
@@ -28,7 +25,7 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     
     var inspectorView: BaseInspectorView? {
         let view = InspectorViewFactory.getView(forClass: Self.self, generator: { AssetInspector() })
-        view.setObservableObject(placement)
+        view.setUpdatableObject(placement)
         return view
     }
     
@@ -37,15 +34,15 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
 
         super.init()
         
-        placementChangeCancellable = placement.objectWillChange.sink {
-            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
-                editableComponent.invalidate()
-                DispatchQueue.main.async {
-                    self.assetInstance?.updateAll(applyDefaults: true)
-                    NotificationCenter.default.post(name: .assetPlacementModified, object: self)
-                }
-            }
-        }
+//        placementChangeCancellable = placement.objectWillChange.sink {
+//            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
+//                editableComponent.invalidate()
+//                DispatchQueue.main.async {
+//                    self.assetInstance?.updateAll(applyDefaults: true)
+//                    NotificationCenter.default.post(name: .assetPlacementModified, object: self)
+//                }
+//            }
+//        }
     }
     
     required init?(coder: NSCoder) {
@@ -79,8 +76,8 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     }
 
     func unlink() {
-        placementChangeCancellable?.cancel()
-        placementChangeCancellable = nil
+//        placementChangeCancellable?.cancel()
+//        placementChangeCancellable = nil
     }
 
     class func prepareEntity(_ assetComponentEntity: GKEntity) -> GKEntity {

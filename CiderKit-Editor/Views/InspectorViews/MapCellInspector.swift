@@ -79,7 +79,7 @@ class MapCellInspector: BaseTypedInspectorView<EditorMapCellComponent>, NSTextFi
                 isEditing = true
                 await MapModel.shared.renameRegion(by: regionDescription.id, to: nameField.stringValue)
                 isEditing = false
-                inspectedObject.objectWillChange.send()
+                inspectedObject.notifyUpdate()
             }
         }
     }

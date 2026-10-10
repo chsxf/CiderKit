@@ -1,13 +1,10 @@
 import Foundation
 import GameplayKit
 import CiderKit_Engine
-import Combine
 
 class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDelegate, BaseLightComponent {
 
     let lightImplementation: DirectionalLight
-    
-    var lightImplementationChangeCancellable: AnyCancellable?
     
     let supportedToolModes: ToolMode = [.move, .erase]
     
@@ -15,27 +12,45 @@ class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDeleg
     
     var inspectorView: BaseInspectorView? {
         let view = InspectorViewFactory.getView(forClass: Self.self, generator: { DirectionalLightInspector() })
-        view.setObservableObject(lightImplementation)
+        view.setUpdatableObject(lightImplementation)
         return view
     }
-    
+
     fileprivate var lightNode: DirectionalLightNode? { entity?.component(ofType: GKSKNodeComponent.self)?.node as? DirectionalLightNode }
-    
+    fileprivate var notificationTask: Task<Void, Never>? = nil
+
     fileprivate init(from lightImplementation: DirectionalLight) {
         self.lightImplementation = lightImplementation
         super.init()
         
-        lightImplementationChangeCancellable = self.lightImplementation.objectWillChange.sink {
-            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
-                editableComponent.invalidate()
-            }
-        }
+        notificationTask = setupNotifications()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    deinit {
+        notificationTask?.cancel()
+    }
+
+    fileprivate func setupNotifications() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await _ in self.lightImplementation.updated {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
+                                editableComponent.invalidate()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     func contains(sceneCoordinates: ScenePosition) -> Bool {
         guard let lightNode = lightNode else { return false }
         let frame = lightNode.calculateAccumulatedFrame()

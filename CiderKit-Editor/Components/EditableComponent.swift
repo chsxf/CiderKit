@@ -6,9 +6,9 @@ enum EditableComponentStatus {
     case deleted
 }
 
-class EditableComponent: GKComponent, ObservableObject {
+class EditableComponent: GKComponent {
     
-    @Published private(set) var status: EditableComponentStatus = .valid
+    private(set) var status: EditableComponentStatus = .valid
     
     private let delegate: EditableComponentDelegate
     

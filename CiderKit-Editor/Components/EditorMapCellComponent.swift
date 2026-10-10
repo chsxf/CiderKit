@@ -3,8 +3,13 @@ import CiderKit_Engine
 import SpriteKit
 import GameplayKit
 
-class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
-    
+class EditorMapCellComponent: MapCellComponent, Selectable, UpdatableObject {
+
+    typealias MapCellEventData = (stream: AsyncStream<Void>, continuation: AsyncStream<Void>.Continuation)
+
+    private var updateStreams = [MapCellEventData]()
+    var updated: AsyncStream<Void> { Self.makeStream(streamArray: &updateStreams) }
+
     private static var selectionShape: SKShapeNode!
     private static var hoveringShape: SKShapeNode!
     
@@ -16,10 +21,14 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
     
     var inspectorView: BaseInspectorView? {
         let view = InspectorViewFactory.getView(forClass: Self.self, generator: { MapCellInspector() })
-        view.setObservableObject(self)
+        view.setUpdatableObject(self)
         return view
     }
-    
+
+    deinit {
+        updateStreams.forEach { $0.continuation.finish() }
+    }
+
     func highlight() {
         guard let node = entity?.component(ofType: GKSKNodeComponent.self)?.node else {
             return
@@ -70,5 +79,15 @@ class EditorMapCellComponent: MapCellComponent, Selectable, ObservableObject {
         hoveringShape.isHidden = true
         container.addChild(hoveringShape)
     }
-    
+
+    func notifyUpdate() {
+        updateStreams.forEach { $0.continuation.yield() }
+    }
+
+    private static func makeStream(streamArray: inout [MapCellEventData]) -> AsyncStream<Void> {
+        let streamData = AsyncStream<Void>.makeStream(bufferingPolicy: .unbounded)
+        streamArray.append(streamData)
+        return streamData.stream
+    }
+
 }

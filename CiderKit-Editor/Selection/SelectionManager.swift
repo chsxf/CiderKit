@@ -169,10 +169,10 @@ class SelectionManager: NSResponder {
         
         editableSubscription?.cancel()
         if let editableComponent = (selectable as? GKComponent)?.entity?.component(ofType: EditableComponent.self) {
-            editableSubscription = editableComponent.objectWillChange.sink {  }
+//            editableSubscription = editableComponent.objectWillChange.sink {  }
         }
         else if let editorMapCellComponent = (selectable as? EditorMapCellComponent) {
-            editableSubscription = editorMapCellComponent.objectWillChange.sink {  }
+//            editableSubscription = editorMapCellComponent.objectWillChange.sink {  }
         }
     }
     

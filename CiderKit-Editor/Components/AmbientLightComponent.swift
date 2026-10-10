@@ -1,36 +1,52 @@
 import GameplayKit
 import CiderKit_Engine
-import Combine
 
 class AmbientLightComponent: GKComponent, Selectable, EditableComponentDelegate {
     
     let lightImplementation: AmbientLight
     
-    var lightImplementationChangeCancellable: AnyCancellable?
-    
     var inspectableDescription: String { "Ambient Light" }
     
     var inspectorView: BaseInspectorView? {
         let view = InspectorViewFactory.getView(forClass: Self.self, generator: { AmbientLightInspector() })
-        view.setObservableObject(lightImplementation)
+        view.setUpdatableObject(lightImplementation)
         return view
     }
-    
+
+    fileprivate var notificationTask: Task<Void, Never>? = nil
+
     fileprivate init(from lightImplementation: AmbientLight) {
         self.lightImplementation = lightImplementation
         super.init()
         
-        lightImplementationChangeCancellable = self.lightImplementation.objectWillChange.sink {
-            if let editable = self.entity?.component(ofType: EditableComponent.self) {
-                editable.invalidate()
-            }
-        }
+        notificationTask = setupNotifications()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    deinit {
+        notificationTask?.cancel()
+    }
+
+    private func setupNotifications() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await _ in self.lightImplementation.updated {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
+                                editableComponent.invalidate()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     func highlight() { }
     
     func deemphasize() { }
