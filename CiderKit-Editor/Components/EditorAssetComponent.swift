@@ -12,15 +12,12 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     
     public let placement: AssetPlacement
 
-    fileprivate var assetInstance: AssetInstance? {
-//        if placementChangeCancellable != nil {
-//            return entity?.component(ofType: AssetComponent.self)?.assetInstance
-//        }
-        return nil
-    }
+    fileprivate var assetInstance: AssetInstance? { entity?.component(ofType: AssetComponent.self)?.assetInstance }
 
     let supportedToolModes: ToolMode = .erase
-    
+
+    private var notificationTask: Task<Void, Never>? = nil
+
     var inspectableDescription: String { "Asset" }
     
     var inspectorView: BaseInspectorView? {
@@ -33,22 +30,37 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         self.placement = placement
 
         super.init()
-        
-//        placementChangeCancellable = placement.objectWillChange.sink {
-//            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
-//                editableComponent.invalidate()
-//                DispatchQueue.main.async {
-//                    self.assetInstance?.updateAll(applyDefaults: true)
-//                    NotificationCenter.default.post(name: .assetPlacementModified, object: self)
-//                }
-//            }
-//        }
+
+        notificationTask = setupNotifications()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    deinit {
+        notificationTask?.cancel()
+    }
+
+    func setupNotifications() -> Task<Void, Never> {
+        Task {
+            await withThrowingTaskGroup { group in
+                group.addTask {
+                    for await _ in self.placement.updated {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {
+                                editableComponent.invalidate()
+                                self.assetInstance?.updateAll(applyDefaults: true)
+                                NotificationCenter.default.post(name: .assetPlacementModified, object: self)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     func highlight() {
         NotificationCenter.default.post(name: .selectableHighlighted, object: assetInstance)
     }
@@ -76,8 +88,8 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
     }
 
     func unlink() {
-//        placementChangeCancellable?.cancel()
-//        placementChangeCancellable = nil
+        notificationTask?.cancel()
+        notificationTask = nil
     }
 
     class func prepareEntity(_ assetComponentEntity: GKEntity) -> GKEntity {
