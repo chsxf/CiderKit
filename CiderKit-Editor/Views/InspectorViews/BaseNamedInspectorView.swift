@@ -36,10 +36,12 @@ class BaseNamedInspectorView<InspectedType : ObservableObject & NamedObject> : B
     }
 
     func controlTextDidChange(_ obj: Notification) {
-        if var inspectedObject {
-            isEditing = true
-            inspectedObject.name = objectNameField.stringValue
-            isEditing = false
+        if let inspectedObject {
+            Task {
+                isEditing = true
+                await inspectedObject.rename(objectNameField.stringValue)
+                isEditing = false
+            }
         }
     }
 

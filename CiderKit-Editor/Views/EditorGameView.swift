@@ -98,6 +98,15 @@ class EditorGameView: RuntimeGameView {
                 }
 
                 group.addTask {
+                    for await lightImplementation in await self.lighting.lightUpdated {
+                        try Task.checkCancellation()
+                        await MainActor.run {
+                            self.update(light: lightImplementation)
+                        }
+                    }
+                }
+
+                group.addTask {
                     for await lightImplementation in await self.lighting.lightRemoved {
                         try Task.checkCancellation()
                         await MainActor.run {
@@ -276,16 +285,36 @@ class EditorGameView: RuntimeGameView {
         editableComponents.addComponent(foundIn: lightEntity)
     }
 
-    private func remove(light: any LightImplementation) {
+    private func update(light: any LightImplementation) {
         if light is PointLight {
-            remove(light: PointLight.self, with: PointLightComponent.self)
+            update(light: light, with: PointLightComponent.self)
         }
         else if light is DirectionalLight {
-            remove(light: DirectionalLight.self, with: DirectionalLightComponent.self)
+            update(light: light, with: DirectionalLightComponent.self)
         }
     }
 
-    private func remove<ComponentType, LightType>(light: LightType.Type, with componentType: ComponentType.Type) where ComponentType: GKComponent & BaseLightComponent, LightType: LightImplementation {
+    private func update<ComponentType>(light: any LightImplementation, with componentType: ComponentType.Type) where ComponentType: GKComponent & BaseLightComponent & EditableComponentDelegate {
+        guard
+            let lightEntity = lightEntities.first(where: { $0.component(ofType: componentType)?.lightImplementation === light }),
+            let component = lightEntity.component(ofType: componentType.self)
+        else {
+            return
+        }
+
+        component.validate()
+    }
+
+    private func remove(light: any LightImplementation) {
+        if light is PointLight {
+            remove(light: light, with: PointLightComponent.self)
+        }
+        else if light is DirectionalLight {
+            remove(light: light.self, with: DirectionalLightComponent.self)
+        }
+    }
+
+    private func remove<ComponentType>(light: any LightImplementation, with componentType: ComponentType.Type) where ComponentType: GKComponent & BaseLightComponent {
         guard
             let lightEntity = lightEntities.first(where: { $0.component(ofType: componentType)?.lightImplementation === light }),
             let sknodeComponent = lightEntity.component(ofType: GKSKNodeComponent.self)

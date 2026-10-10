@@ -24,7 +24,11 @@ public final class AssetPlacement: Identifiable, ObservableObject, NamedObject {
         self.horizontallyFlipped = horizontallyFlipped
         interactive = false
     }
-    
+
+    public func rename(_ newName: String) async {
+        name = newName
+    }
+
     public func toDescription() -> AssetPlacementDescription {
         AssetPlacementDescription(id: id,
                                   assetLocator: assetLocator,

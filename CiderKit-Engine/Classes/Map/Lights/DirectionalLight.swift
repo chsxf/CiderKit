@@ -2,26 +2,19 @@ import SpriteKit
 
 public class DirectionalLight: BaseLightImplementation<DirectionalLightDescription>, NamedObject {
     
-    public var enabled: Bool {
-        get { description.enabled }
-        set { description = description.mutated(withEnabled: newValue) }
+    public var enabled: Bool { description.enabled }
+    public var name: String { description.name }
+    public var position: WorldPosition { description.position }
+    public var orientation: SIMD2<Float> { description.orientation }
+
+    public func rename(_ newName: String) async {
+        let previousDescriptionVersion = description.version
+        let newDescription = description.mutated(withName: newName)
+        if previousDescriptionVersion != newDescription.version {
+            await MapModel.shared.update(light: newDescription)
+        }
     }
-    
-    public var name: String {
-        get { description.name }
-        set { description = description.mutated(withName: newValue) }
-    }
-    
-    public var position: WorldPosition {
-        get { description.position }
-        set { description = description.mutated(withPosition: newValue) }
-    }
-    
-    public var orientation: SIMD2<Float> {
-        get { description.orientation }
-        set { description = description.mutated(withOrientation: newValue) }
-    }
-    
+
     public override var matrix: matrix_float3x3 {
         let declinationQuaternion = simd_quatf(angle: -description.orientation.x, axis: SIMD3(0, 1, 0))
         let rightAscensionQuaternion = simd_quatf(angle: description.orientation.y, axis: SIMD3(0, 0, 1))

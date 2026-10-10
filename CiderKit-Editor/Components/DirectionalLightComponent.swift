@@ -88,10 +88,10 @@ class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDeleg
         
         return true
     }
-    
+
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) {
-        lightImplementation.position += WorldPosition(x: Float(x), y: Float(y), z: Float(z))
-        entity?.component(ofType: EditableComponent.self)?.invalidate()
+//        lightImplementation.position += WorldPosition(x: Float(x), y: Float(y), z: Float(z))
+//        entity?.component(ofType: EditableComponent.self)?.invalidate()
     }
     
 }

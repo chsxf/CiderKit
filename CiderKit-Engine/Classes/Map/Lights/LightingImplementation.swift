@@ -9,6 +9,9 @@ public class LightingImplementation {
     private var lightAddedStreams = [LightEventStream]()
     public var lightAdded: AsyncStream<any LightImplementation> { makeEventStream(&lightAddedStreams) }
 
+    private var lightUpdatedStreams = [LightEventStream]()
+    public var lightUpdated: AsyncStream<any LightImplementation> { makeEventStream(&lightUpdatedStreams) }
+
     private var lightRemovedStreams = [LightEventStream]()
     public var lightRemoved: AsyncStream<any LightImplementation> { makeEventStream(&lightRemovedStreams) }
 
@@ -30,7 +33,9 @@ public class LightingImplementation {
 
         for lightDescription in description.lights {
             if let existingLight = lights.first(where: { $0.description.id == lightDescription.id }) {
-                try existingLight.match(genericDescription: lightDescription)
+                if try existingLight.match(genericDescription: lightDescription) {
+                    notify(lightUpdatedStreams, with: existingLight)
+                }
             }
             else {
                 let newLight = lightDescription.toImplementation()
