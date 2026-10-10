@@ -225,7 +225,9 @@ class SelectionManager: NSResponder {
                 selectionModel.setHoverable(nil)
             }
             deselect()
-            currentSelectable.erase()
+            Task {
+                await currentSelectable.erase()
+            }
         }
     }
     

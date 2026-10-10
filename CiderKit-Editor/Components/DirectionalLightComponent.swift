@@ -90,8 +90,11 @@ class DirectionalLightComponent: GKComponent, Selectable, EditableComponentDeleg
     }
 
     func dragBy(x: CGFloat, y: CGFloat, z: CGFloat) {
-//        lightImplementation.position += WorldPosition(x: Float(x), y: Float(y), z: Float(z))
-//        entity?.component(ofType: EditableComponent.self)?.invalidate()
+        Task {
+            let newPosition = lightImplementation.position + WorldPosition(x: Float(x), y: Float(y), z: Float(z))
+            let newDescription = lightImplementation.description.mutated(withPosition: newPosition)
+            await MapModel.shared.update(light: newDescription)
+        }
     }
     
 }
