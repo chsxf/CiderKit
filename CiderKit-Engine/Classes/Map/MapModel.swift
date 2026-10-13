@@ -211,9 +211,19 @@ public actor MapModel: GlobalActor {
     }
     
     public func update(assetPlacement: AssetPlacementDescription) async {
-        await pushNewMapVersion(workingMapDescription.mutated(withRegions: workingMapDescription.regions.map {
-            $0.withAssetPlacement(updated: assetPlacement)
-        }))
+        for i in 0..<workingMapDescription.regions.count {
+            let region = workingMapDescription.regions[i]
+            if region.contains(assetPlacement: assetPlacement.id) {
+                let previousVersion = region.version
+                let newRegion = region.withAssetPlacement(updated: assetPlacement)
+                if previousVersion != newRegion.version {
+                    var newRegions = workingMapDescription.regions
+                    newRegions[i] = newRegion
+                    await pushNewMapVersion(workingMapDescription.mutated(withRegions: newRegions))
+                    return
+                }
+            }
+        }
     }
     
     @discardableResult

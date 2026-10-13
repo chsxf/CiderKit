@@ -177,7 +177,7 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
     public func withAssetPlacement(added newAssetPlacement: AssetPlacementDescription) -> MapRegionDescription {
         var newAssetPlacements = assetPlacements;
         newAssetPlacements.append(newAssetPlacement)
-        return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version)
+        return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version + 1)
     }
     
     public func withAssetPlacement(updated updatedAssetPlacement: AssetPlacementDescription) -> MapRegionDescription {
@@ -186,7 +186,7 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
             if placement.id == updatedAssetPlacement.id {
                 var newAssetPlacements = assetPlacements
                 newAssetPlacements[i] = updatedAssetPlacement
-                return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version)
+                return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version + 1)
             }
         }
         return self
@@ -195,11 +195,15 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
     public func withAssetPlacement(removed assetPlacementId: UUID) -> MapRegionDescription? {
         let newAssetPlacements = assetPlacements.compactMap { $0.id != assetPlacementId ? $0 : nil }
         if newAssetPlacements.count != assetPlacements.count {
-            return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version)
+            return MapRegionDescription(name: name, area: area, elevation: elevation, renderer: renderer, materialOverrides: materialOverrides, assetPlacements: newAssetPlacements, version: version + 1)
         }
         return nil
     }
-    
+
+    public func contains(assetPlacement assetPlacementId: UUID) -> Bool {
+        assetPlacements.contains { $0.id == assetPlacementId }
+    }
+
     public func subdivide(subArea: MapArea) -> (mainSubdivision: MapRegionDescription, otherSubdivisions: [MapRegionDescription])? {
         guard let intersection = area.intersection(subArea) else {
             return nil
