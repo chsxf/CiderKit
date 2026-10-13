@@ -94,7 +94,7 @@ open class MapNode: SKNode {
             addChild(regionNode)
         }
 
-        orderedRegionNodes.forEach { $0.build(in: mapDescription) }
+        orderedRegionNodes.forEach { build(regionNode: $0, in: mapDescription) }
 
         updateRegionsZPosition()
     }
@@ -134,14 +134,14 @@ open class MapNode: SKNode {
             if let existingRegionNode = regionNode {
                 if existingRegionNode.regionDescription.version != region.version {
                     dismantle(regionNode: existingRegionNode, detach: false)
-                    existingRegionNode.build(in: mapDescription)
+                    build(regionNode: existingRegionNode, in: mapDescription)
                 }
             }
             else {
                 regionNode = MapRegionNode(for: region)
                 nodesByRegionId[region.id] = regionNode!
                 addChild(regionNode!)
-                regionNode!.build(in: mapDescription)
+                build(regionNode: regionNode!, in: mapDescription)
             }
 
             if orderHasChanged {
@@ -152,6 +152,18 @@ open class MapNode: SKNode {
         // Reordering if necessary
         if orderHasChanged {
             updateRegionsZPosition()
+        }
+    }
+
+    open func build(regionNode: MapRegionNode, in map: SendableRef<MapDescription>) {
+        regionNode.build(in: map)
+
+        let regionDescription = regionNode.regionDescription
+        for assetPlacementDescription in regionDescription.assetPlacements {
+            let fixedAssetPlacementDescription = assetPlacementDescription.mapPosition.elevation != nil ? assetPlacementDescription : assetPlacementDescription.mutated(withMapPosition: assetPlacementDescription.mapPosition.with(elevation: regionDescription.elevation))
+            if let (instance, _) = instantiateAsset(placement: AssetPlacement(description: fixedAssetPlacementDescription)) {
+                regionNode.add(assetInstance: instance)
+            }
         }
     }
 

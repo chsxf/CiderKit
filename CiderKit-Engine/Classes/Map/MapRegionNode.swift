@@ -128,14 +128,6 @@ public class MapRegionNode : SKNode {
                 cellEntities.append(entity)
             }
         }
-
-        regionDescription.assetPlacements.forEach {
-            var newItem = $0
-            if newItem.mapPosition.elevation == nil {
-                newItem = newItem.mutated(withMapPosition: newItem.mapPosition.with(elevation: regionDescription.elevation))
-            }
-            self.instantiateAsset(placement: AssetPlacement(description: newItem))
-        }
     }
 
     func dismantle(detach: Bool = true) {
@@ -149,16 +141,6 @@ public class MapRegionNode : SKNode {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    @discardableResult
-    private func instantiateAsset(placement: AssetPlacement) -> AssetInstance? {
-        if let (instance, _) = map?.instantiateAsset(placement: placement) {
-            addChild(instance.node!)
-            assetInstances.append(instance)
-            return instance
-        }
-        return nil
     }
 
     public func add(assetInstance: AssetInstance) {
