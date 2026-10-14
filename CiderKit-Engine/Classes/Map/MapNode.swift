@@ -168,6 +168,14 @@ open class MapNode: SKNode {
     }
 
     open func dismantle(regionNode: MapRegionNode, detach: Bool = true) {
+        assetEntities.removeAll { assetEntity in
+            if let assetComponent = assetEntity.component(ofType: AssetComponent.self), regionNode.regionDescription.contains(assetPlacement: assetComponent.placement.id) {
+                assetComponentSystem.removeComponent(foundIn: assetEntity)
+                return true
+            }
+            return false
+        }
+
         regionNode.dismantle(detach: detach)
     }
 

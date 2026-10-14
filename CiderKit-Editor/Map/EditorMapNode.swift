@@ -32,12 +32,20 @@ class EditorMapNode: MapNode {
     }
     
     override func dismantle(regionNode: MapRegionNode, detach: Bool = true) {
-        super.dismantle(regionNode: regionNode, detach: detach)
+        hoverableEntities.removeAll {
+            if let editorMCC = $0.component(ofType: EditorMapCellComponent.self) {
+                return editorMCC.region == regionNode
+            }
 
-        cleanHoverableEntities {
-            guard let editorMCC = $0.component(ofType: EditorMapCellComponent.self) else { return false }
-            return editorMCC.region == regionNode
+            if let editorAssetComponent = $0.component(ofType: EditorAssetComponent.self), regionNode.regionDescription.contains(assetPlacement: editorAssetComponent.placement.id) {
+                editorAssetComponent.unlink()
+                return true
+            }
+
+            return false
         }
+
+        super.dismantle(regionNode: regionNode, detach: detach)
     }
 
     override func mapCellEntity(node: SKNode, for region: MapRegionNode, atMapPosition position: MapPosition) -> GKEntity {
@@ -51,7 +59,7 @@ class EditorMapNode: MapNode {
     }
     
     func removeHoverableMapCellEntities() {
-        cleanHoverableEntities { $0.component(ofType: EditorMapCellComponent.self) != nil }
+        hoverableEntities.removeAll { $0.component(ofType: EditorMapCellComponent.self) != nil }
     }
 
     @objc
@@ -61,7 +69,7 @@ class EditorMapNode: MapNode {
                 NotificationCenter.default.removeObserver(self, name: .selectableErased, object: assetComponent)
 
                 let entity = assetComponent.entity!
-                cleanHoverableEntities { $0 === entity }
+                hoverableEntities.removeAll { $0 === entity }
 
                 let assetNode = assetComponent.entity!.component(ofType: GKSKNodeComponent.self)?.node
                 assetNode?.removeFromParent()
@@ -86,18 +94,7 @@ class EditorMapNode: MapNode {
 
     override func remove(assetInstance: AssetInstance) async {
         await super.remove(assetInstance: assetInstance)
-        cleanHoverableEntities { $0.component(ofType: AssetComponent.self)?.assetInstance === assetInstance }
-    }
-
-    private func cleanHoverableEntities(where predicate: (GKEntity) -> Bool) {
-        hoverableEntities.removeAll {
-            let editorAssetComponent = $0.component(ofType: EditorAssetComponent.self)
-            if predicate($0) {
-                editorAssetComponent?.unlink()
-                return true
-            }
-            return false
-        }
+        hoverableEntities.removeAll { $0.component(ofType: AssetComponent.self)?.assetInstance === assetInstance }
     }
 
 }
