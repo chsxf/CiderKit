@@ -23,11 +23,11 @@ public struct AssetPlacementDescription: Codable, Identifiable, Sendable {
     public let serializationVersion: Int = AssetPlacementDescription.SERIALIZATION_VERSION
     public let id: UUID
     public let assetLocator: AssetLocator
-    public let name: String
+    @MutatingProperty public let name: String
     @MutatingProperty public let mapPosition: MapPosition
-    public let horizontallyFlipped: Bool
-    public let interactive: Bool
-    
+    @MutatingProperty public let horizontallyFlipped: Bool
+    @MutatingProperty public let interactive: Bool
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         

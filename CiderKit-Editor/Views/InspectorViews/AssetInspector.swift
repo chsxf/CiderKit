@@ -62,18 +62,26 @@ class AssetInspector: BaseNamedInspectorView<AssetPlacement> {
     @objc
     private func onHorizontallyFlippedToggled() {
         if let inspectedObject {
-            isEditing = true
-            inspectedObject.horizontallyFlipped = horizontallyFlippedCheckbox.state == .on
-            isEditing = false
+            Task {
+                isEditing = true
+                let isFlipped = horizontallyFlippedCheckbox.state == .on
+                let newDescription = inspectedObject.toDescription().mutated(withHorizontallyFlipped: isFlipped)
+                await MapModel.shared.update(assetPlacement: newDescription)
+                isEditing = false
+            }
         }
     }
     
     @objc
     private func onInteractiveToggled() {
         if let inspectedObject {
-            isEditing = true
-            inspectedObject.interactive = interactiveCheckbox.state == .on
-            isEditing = false
+            Task {
+                isEditing = true
+                let isInteractive = interactiveCheckbox.state == .on
+                let newDescription = inspectedObject.toDescription().mutated(withInteractive: isInteractive)
+                await MapModel.shared.update(assetPlacement: newDescription)
+                isEditing = false
+            }
         }
     }
     

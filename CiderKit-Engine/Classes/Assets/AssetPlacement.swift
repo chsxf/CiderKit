@@ -35,7 +35,8 @@ public final class AssetPlacement: Identifiable, UpdatableObject, NamedObject {
     }
 
     public func rename(_ newName: String) async {
-        name = newName
+        let newDescription = toDescription().mutated(withName: newName)
+        await MapModel.shared.update(assetPlacement: newDescription)
     }
 
     public func toDescription() -> AssetPlacementDescription {
