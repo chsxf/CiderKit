@@ -133,8 +133,13 @@ open class MapNode: SKNode {
             var regionNode = nodesByRegionId[region.id]
             if let existingRegionNode = regionNode {
                 if existingRegionNode.regionDescription.version != region.version {
-                    dismantle(regionNode: existingRegionNode, detach: false)
-                    build(regionNode: existingRegionNode, in: mapDescription)
+                    if existingRegionNode.regionDescription.area != region.area {
+                        dismantle(regionNode: existingRegionNode, detach: false)
+                        build(regionNode: existingRegionNode, in: mapDescription)
+                    }
+                    else {
+                        match(regionNode: existingRegionNode, withNewDescription: region, in: mapDescription)
+                    }
                 }
             }
             else {
@@ -153,6 +158,10 @@ open class MapNode: SKNode {
         if orderHasChanged {
             updateRegionsZPosition()
         }
+    }
+
+    open func match(regionNode: MapRegionNode, withNewDescription newMapDescription: MapRegionDescription, in map: SendableRef<MapDescription>) {
+        regionNode.match(regionDescription: newMapDescription, in: map)
     }
 
     open func build(regionNode: MapRegionNode, in map: SendableRef<MapDescription>) {
