@@ -141,13 +141,15 @@ public final actor CiderKitEngine {
             }
         }
     }
-    
+
+    @MainActor
     public static func registerBuiltinFeatures() {
         AssetAnimationTrackTypeRegistry.registerBuiltinTypes()
         AssetElementTypeRegistry.registerBuiltinTypes()
         registerDefaultMaterialsAndRenderers()
     }
-    
+
+    @MainActor
     private static func registerDefaultMaterialsAndRenderers() {
         let url = CiderKitEngine.bundle.url(forResource: "Default Materials", withExtension: "ckmatdb")
         let materialRegistryDescription: MaterialRegistryDescription = try! Functions.load(url!)
