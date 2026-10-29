@@ -10,7 +10,8 @@ fileprivate struct FontDescriptor: Hashable {
     let isBold: Bool
 }
 
-final actor FontHelpers {
+@MainActor
+final class FontHelpers {
 
     fileprivate static var fonts: [FontDescriptor: String] = [:]
     
