@@ -5,7 +5,8 @@ public enum CellRenderersError: Error {
     case notRegistered
 }
 
-final public actor CellRenderers {
+@MainActor
+public final class CellRenderers {
 
     private static var renderers: [String: CellRenderer] = [:]
     
