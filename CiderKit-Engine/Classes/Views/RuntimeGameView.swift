@@ -110,6 +110,15 @@ open class RuntimeGameView: LitSceneView {
         Task {
             await withThrowingTaskGroup { group in
                 group.addTask {
+                    while !(await MainActor.run { self.trackingAreaManager.isReady }) {
+                        try Task.checkCancellation()
+                        await Task.yield()
+                    }
+
+                    await MainActor.run { self.eventBackdropNode.registerTrackingArea() }
+                }
+
+                group.addTask {
                     for await newMapDescription in await MapModel.shared.updateStream {
                         try Task.checkCancellation()
                         await MainActor.run {

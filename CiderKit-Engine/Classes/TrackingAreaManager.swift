@@ -8,6 +8,7 @@ public extension Notification.Name {
     
 }
 
+@MainActor
 public final class TrackingAreaManager {
     
     fileprivate struct TrackingAreaData {
@@ -26,9 +27,9 @@ public final class TrackingAreaManager {
     
     private var forceInvalidation = false
 
-    private static var listeningToRegistrations: Bool = false
-    private static var listeningToUnregistrations: Bool = false
-    public static var isReady: Bool { listeningToRegistrations && listeningToUnregistrations }
+    private var listeningToRegistrations: Bool = false
+    private var listeningToUnregistrations: Bool = false
+    public var isReady: Bool { listeningToRegistrations && listeningToUnregistrations }
     
     public init(scene: SKScene) {
         self.scene = scene;
@@ -44,18 +45,18 @@ public final class TrackingAreaManager {
         Task {
             await withThrowingTaskGroup { group in
                 group.addTask {
-                    Self.listeningToRegistrations = true
+                    await MainActor.run { self.listeningToRegistrations = true }
                     for await node in NotificationCenter.default.notifications(named: .trackingAreaRegistrationRequested).compactMap({ $0.object as? SKNode }) {
                         try Task.checkCancellation()
-                        self.register(node: node)
+                        await MainActor.run { self.register(node: node) }
                     }
                 }
                 
                 group.addTask {
-                    Self.listeningToUnregistrations = true
+                    await MainActor.run { self.listeningToUnregistrations = true }
                     for await node in NotificationCenter.default.notifications(named: .trackingAreaUnregistrationRequested).compactMap({ $0.object as? SKNode }) {
                         try Task.checkCancellation()
-                        self.unregister(node: node)
+                        await MainActor.run { self.unregister(node: node) }
                     }
                 }
                 
@@ -66,7 +67,7 @@ public final class TrackingAreaManager {
                             break
                         }
                         try await Task.sleep(nanoseconds: 100_000_000)
-                        self.forceInvalidation = true
+                        await MainActor.run { self.forceInvalidation = true }
                     }
                 }
             }
