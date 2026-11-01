@@ -56,7 +56,7 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl, CKUIInteractabl
         self.init(identifier: identifier, classes: classes, style: style, customData: [Self.imageCustomData: texture])
     }
     
-    public required init(type: String = "button", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: any Sendable]? = nil) {
+    public required init(type: String = "button", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: Any]? = nil) {
         super.init(type: type, identifier: identifier, classes: classes, style: style, customData: customData)
 
         var shouldBeEnabled = true
@@ -81,7 +81,7 @@ public final class CKUIButton : CKUIContainer, CKUILabelControl, CKUIInteractabl
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override class func parseCustomData(_ customData: [String : String]) throws -> [String : any Sendable] {
+    public override class func parseCustomData(_ customData: [String : String]) throws -> [String : Any] {
         var parsedCustomData = try super.parseCustomData(customData)
 
         guard let text = customData[Self.textCustomData] else {

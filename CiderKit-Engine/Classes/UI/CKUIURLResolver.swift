@@ -1,10 +1,11 @@
 import Foundation
 import SpriteKit
 
-public final actor CKUIURLResolver {
+@MainActor
+public final class CKUIURLResolver {
 
     private static var resolvedTextures: [URL: SKTexture] = [:]
-    
+
     public static func resolveTexture(url: URL) -> SKTexture {
         if let previouslyResolvedTexture = resolvedTextures[url] {
             return previouslyResolvedTexture

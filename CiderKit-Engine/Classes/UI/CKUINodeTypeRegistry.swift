@@ -1,4 +1,5 @@
-public final actor CKUINodeTypeRegistry {
+@MainActor
+public final class CKUINodeTypeRegistry {
 
     fileprivate struct NodeTypeRegistrationData {
         let typeRepresentation: String

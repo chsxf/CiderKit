@@ -81,10 +81,9 @@ fileprivate final class ParserDelegate: NSObject, XMLParserDelegate {
 }
 
 @globalActor
-final actor CKUILoader {
+final actor CKUILoader: GlobalActor {
 
-    static var shared: CKUILoader = CKUILoader()
-    typealias ActorType = CKUILoader
+    static let shared = CKUILoader()
 
     static func loadNodeDescriptors(contentsOf url: URL) async throws -> [NodeDescriptor] {
         guard let parser = XMLParser(contentsOf: url) else {

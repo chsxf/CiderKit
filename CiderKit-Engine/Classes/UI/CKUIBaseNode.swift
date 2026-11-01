@@ -1,7 +1,7 @@
 import SpriteKit
 import CiderKit_CSS
 
-open class CKUIBaseNode : SKNode, CSSConsumer {
+open class CKUIBaseNode : SKNode, @MainActor CSSConsumer {
     
     public var styleSheet: CKUIStyleSheet? {
         guard let parentUINode = parent as? CKUIBaseNode else { return nil }
@@ -71,7 +71,7 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
     
     public var ancestor: CSSConsumer? { parent as? CSSConsumer }
     
-    public required init(type: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: any Sendable]? = nil) {
+    public required init(type: String, identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: Any]? = nil) {
         self.type = type
         self.identifier = identifier
         self.classes = classes
@@ -84,8 +84,8 @@ open class CKUIBaseNode : SKNode, CSSConsumer {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public class func parseCustomData(_ customData: [String: String]) throws -> [String: any Sendable] {
-        [String: any Sendable]()
+    public class func parseCustomData(_ customData: [String: String]) throws -> [String: Any] {
+        [String: Any]()
     }
 
     open func updateLayout() { }

@@ -8,7 +8,7 @@ open class CKUIContainer : CKUIBaseNode {
     
     private var borderImageURL: URL? = nil
     
-    public required init(type: String = "container", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: any Sendable]? = nil) {
+    public required init(type: String = "container", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: Any]? = nil) {
         backgroundImage = SKSpriteNode(texture: nil, color: SKColor.white, size: CGSize())
         backgroundImage.zPosition = -1
         
@@ -23,7 +23,7 @@ open class CKUIContainer : CKUIBaseNode {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override class func parseCustomData(_ customData: [String : String]) throws -> [String : any Sendable] {
+    public override class func parseCustomData(_ customData: [String: String]) throws -> [String: Any] {
         try super.parseCustomData(customData)
     }
 

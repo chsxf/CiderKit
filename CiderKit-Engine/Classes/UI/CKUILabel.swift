@@ -11,14 +11,14 @@ public final class CKUILabel : CKUIBaseNode, CKUILabelControl {
         self.init(identifier: identifier, classes: classes, style: style, customData: ["text": text])
     }
     
-    public required init(type: String = "lebel", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: any Sendable]? = nil) {
+    public required init(type: String = "lebel", identifier: String? = nil, classes: [String]? = nil, style: CKUIStyle? = nil, customData: [String: Any]? = nil) {
         super.init(type: type, identifier: identifier, classes: classes, style: style, customData: customData)
         
         label = Self.initLabel(text: customData![Self.textCustomData] as! String)
         addChild(label!)
     }
 
-    public override class func parseCustomData(_ customData: [String : String]) throws -> [String : any Sendable] {
+    public override class func parseCustomData(_ customData: [String: String]) throws -> [String: Any] {
         guard let text = customData[Self.textCustomData] else {
             throw CKUILoaderErrors.missingCustomData(name: Self.textCustomData)
         }
