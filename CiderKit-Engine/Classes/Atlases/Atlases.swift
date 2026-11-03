@@ -1,22 +1,27 @@
 import Foundation
 import SpriteKit
+import os
 
 enum AtlasesError: Error {
     case alreadyRegistered
     case unknownAtlas
 }
 
-final public actor Atlases {
+public final class Atlases {
     
     public static let MAIN_ATLAS_KEY = "main"
-    
-    public private(set) static var loadedAtlases: [String: Atlas] = [:]
-    
+
+    private static let internalLoadedAtlases: OSAllocatedUnfairLock<[String: Atlas]> = OSAllocatedUnfairLock(initialState: [:])
+    public static var loadedAtlases: [String: Atlas] { internalLoadedAtlases.withLock { $0 } }
+
     static var main: Atlas? { try? self[MAIN_ATLAS_KEY] }
 
     public static func load(atlases: [String: AtlasLocator]) throws {
+        let previousLoadedAtlases = loadedAtlases
+
+        var newAtlases = [String: Atlas]()
         for (name, locator) in atlases {
-            if loadedAtlases[name] != nil {
+            if previousLoadedAtlases[name] != nil {
                 throw AtlasesError.alreadyRegistered
             }
             
@@ -32,19 +37,29 @@ final public actor Atlases {
                     }
                     
                     let variantAtlas = Atlas(named: name, from: description, in: locator.bundle, variant: variantKey)
-                    loadedAtlases[fullVariantKey] = variantAtlas
-                    
+                    newAtlases[fullVariantKey] = variantAtlas
+
                     atlas = atlas.with(newVariant: variantAtlas, for: variantKey)
                 }
             }
             
-            loadedAtlases[name] = atlas
+            newAtlases[name] = atlas
+        }
+
+        let atlasesToMerge = newAtlases
+        internalLoadedAtlases.withLock { state in
+            for (name, atlas) in atlasesToMerge {
+                state[name] = atlas
+            }
         }
     }
     
     public static func load(atlases: [String: URL], withTexturesDirectoryURL directoryURL: URL) throws {
+        let previousLoadedAtlases = loadedAtlases
+
+        var newAtlases = [String: Atlas]()
         for (name, url) in atlases {
-            if loadedAtlases[name] != nil {
+            if previousLoadedAtlases[name] != nil {
                 throw AtlasesError.alreadyRegistered
             }
             
@@ -55,18 +70,25 @@ final public actor Atlases {
                 for (variantKey, _) in variants {
                     let fullVariantKey = "\(name)~\(variantKey)"
                     
-                    if loadedAtlases[fullVariantKey] != nil {
+                    if previousLoadedAtlases[fullVariantKey] != nil {
                         throw AtlasesError.alreadyRegistered
                     }
                     
                     let variantAtlas = Atlas(named: name, from: description, withTextureDirectoryURL: directoryURL, variant: variantKey)
-                    loadedAtlases[fullVariantKey] = variantAtlas
-                    
+                    newAtlases[fullVariantKey] = variantAtlas
+
                     atlas = atlas.with(newVariant: variantAtlas, for: variantKey)
                 }
             }
             
-            loadedAtlases[name] = atlas
+            newAtlases[name] = atlas
+        }
+
+        let atlasesToMerge = newAtlases
+        internalLoadedAtlases.withLock { state in
+            for (name, atlas) in atlasesToMerge {
+                state[name] = atlas
+            }
         }
     }
     
