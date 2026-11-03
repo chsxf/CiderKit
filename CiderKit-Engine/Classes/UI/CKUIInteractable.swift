@@ -1,5 +1,6 @@
 fileprivate let disabledPseudoClass = "disabled"
 
+@MainActor
 public protocol CKUIInteractable { }
 
 public extension CKUIInteractable where Self: CKUIBaseNode {

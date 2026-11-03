@@ -4,6 +4,7 @@ import AppKit
 import UIKit
 #endif
 
+@MainActor
 public struct PointerEventData {
 
     public let mouseButtonIndex: Int

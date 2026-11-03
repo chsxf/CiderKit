@@ -23,11 +23,13 @@ open class MapCellComponent: GKComponent
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    @MainActor
     public func contains(sceneCoordinates: ScenePosition) -> Bool {
         getContainedWorldPosition(sceneCoordinates: sceneCoordinates) != nil
     }
 
+    @MainActor
     public func getContainedWorldPosition(sceneCoordinates: ScenePosition) -> WorldPosition? {
         guard let node = entity?.component(ofType: GKSKNodeComponent.self)?.node else {
             return nil
