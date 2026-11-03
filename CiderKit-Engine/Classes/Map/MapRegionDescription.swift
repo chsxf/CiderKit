@@ -1,5 +1,6 @@
 import Foundation
 import CiderKitMacros
+import os
 
 @MutableStruct(versioned: .internal)
 public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable {
@@ -14,11 +15,14 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
         case rightElevation = "r"
     }
 
-    private static var internalNextRegionId: UInt = 0
+    private static let internalNextRegionId: OSAllocatedUnfairLock<UInt> = OSAllocatedUnfairLock(initialState: 0)
     private static var nextRegionId: UInt {
         get {
-            internalNextRegionId += 1
-            return internalNextRegionId
+            let newId = internalNextRegionId.withLock { state in
+                state += 1
+                return state
+            }
+            return newId
         }
     }
 
@@ -59,7 +63,11 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
         assetPlacements = try container.decode([AssetPlacementDescription].self, forKey: .assetPlacements)
 
         version = 0
-        Self.internalNextRegionId = max(id, Self.internalNextRegionId)
+
+        let decodedId = id
+        Self.internalNextRegionId.withLock { state in
+            state = max(decodedId, state)
+        }
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -323,7 +331,9 @@ public struct MapRegionDescription: Codable, Sendable, Identifiable, Comparable 
     }
 
     static func resetInternalRegionId() {
-        Self.internalNextRegionId = 0
+        Self.internalNextRegionId.withLock { state in
+            state = 0
+        }
     }
 }
 
