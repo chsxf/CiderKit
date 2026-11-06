@@ -79,7 +79,7 @@ class EditorGameView: RuntimeGameView {
         Task {
             await withThrowingTaskGroup { group in
                 group.addTask {
-                    for await _ in NotificationCenter.default.notifications(named: ProjectManager.projectOpened) {
+                    for await _ in NotificationCenter.default.notifications(named: .projectOpened) {
                         try Task.checkCancellation()
                         await MainActor.run {
                             self.updateViewFrustrum()
@@ -89,28 +89,28 @@ class EditorGameView: RuntimeGameView {
                 }
 
                 group.addTask {
-                    for await lightImplementation in await self.lighting.lightAdded {
+                    for await lightId in await self.lighting.lightAdded {
                         try Task.checkCancellation()
                         await MainActor.run {
-                            self.setup(light: lightImplementation)
+                            self.setup(lightId: lightId)
                         }
                     }
                 }
 
                 group.addTask {
-                    for await lightImplementation in await self.lighting.lightUpdated {
+                    for await lightId in await self.lighting.lightUpdated {
                         try Task.checkCancellation()
                         await MainActor.run {
-                            self.update(light: lightImplementation)
+                            self.update(lightId: lightId)
                         }
                     }
                 }
 
                 group.addTask {
-                    for await lightImplementation in await self.lighting.lightRemoved {
+                    for await lightId in await self.lighting.lightRemoved {
                         try Task.checkCancellation()
                         await MainActor.run {
-                            self.remove(light: lightImplementation)
+                            self.remove(lightId: lightId)
                         }
                     }
                 }
@@ -272,7 +272,11 @@ class EditorGameView: RuntimeGameView {
         selectionManager?.showTools()
     }
     
-    func setup(light: any LightImplementation) {
+    func setup(lightId: UUID) {
+        guard let light = lighting[lightId] else {
+            return
+        }
+
         if let pointLight = light as? PointLight {
             setup(lightEntity: PointLightComponent.entity(from: pointLight))
         }
@@ -289,7 +293,11 @@ class EditorGameView: RuntimeGameView {
         editableComponents.addComponent(foundIn: lightEntity)
     }
 
-    private func update(light: any LightImplementation) {
+    private func update(lightId: UUID) {
+        guard let light = lighting[lightId] else {
+            return
+        }
+
         if light is PointLight {
             update(light: light, with: PointLightComponent.self)
         }
@@ -309,18 +317,16 @@ class EditorGameView: RuntimeGameView {
         component.validate()
     }
 
-    private func remove(light: any LightImplementation) {
-        if light is PointLight {
-            remove(light: light, with: PointLightComponent.self)
-        }
-        else if light is DirectionalLight {
-            remove(light: light.self, with: DirectionalLightComponent.self)
-        }
-    }
-
-    private func remove<ComponentType>(light: any LightImplementation, with componentType: ComponentType.Type) where ComponentType: GKComponent & BaseLightComponent {
+    private func remove(lightId: UUID) {
         guard
-            let lightEntity = lightEntities.first(where: { $0.component(ofType: componentType)?.lightImplementation === light }),
+            let lightEntity = lightEntities.first(where: { potentialEntity in
+                for component in potentialEntity.components {
+                    if let lightComponent = component as? (any BaseLightComponent), lightComponent.lightImplementation.id == lightId {
+                        return true
+                    }
+                }
+                return false
+            }),
             let sknodeComponent = lightEntity.component(ofType: GKSKNodeComponent.self)
         else {
             return

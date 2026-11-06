@@ -1,19 +1,23 @@
 @MainActor
-public class LightingImplementation {
+public final class LightingImplementation {
 
-    private typealias LightEventStream = (stream: AsyncStream<any LightImplementation>, continuation: AsyncStream<any LightImplementation>.Continuation)
+    private typealias LightEventStream = (stream: AsyncStream<UUID>, continuation: AsyncStream<UUID>.Continuation)
 
     public private(set) var ambientLight = AmbientLight()
     public private(set) var lights: [any LightImplementation] = []
 
     private var lightAddedStreams = [LightEventStream]()
-    public var lightAdded: AsyncStream<any LightImplementation> { makeEventStream(&lightAddedStreams) }
+    public var lightAdded: AsyncStream<UUID> { makeEventStream(&lightAddedStreams) }
 
     private var lightUpdatedStreams = [LightEventStream]()
-    public var lightUpdated: AsyncStream<any LightImplementation> { makeEventStream(&lightUpdatedStreams) }
+    public var lightUpdated: AsyncStream<UUID> { makeEventStream(&lightUpdatedStreams) }
 
     private var lightRemovedStreams = [LightEventStream]()
-    public var lightRemoved: AsyncStream<any LightImplementation> { makeEventStream(&lightRemovedStreams) }
+    public var lightRemoved: AsyncStream<UUID> { makeEventStream(&lightRemovedStreams) }
+
+    public subscript(identifier: UUID) -> any LightImplementation? {
+        lights.first { $0.id == identifier }
+    }
 
     deinit {
         lightAddedStreams.forEach { $0.continuation.finish() }
@@ -45,14 +49,14 @@ public class LightingImplementation {
         }
     }
 
-    private func makeEventStream(_ array: inout [LightEventStream]) -> AsyncStream<any LightImplementation> {
-        let streamData = AsyncStream<any LightImplementation>.makeStream(bufferingPolicy: .unbounded)
+    private func makeEventStream(_ array: inout [LightEventStream]) -> AsyncStream<UUID> {
+        let streamData = AsyncStream<UUID>.makeStream(bufferingPolicy: .unbounded)
         array.append(streamData)
         return streamData.stream
     }
 
     private func notify(_ array: [LightEventStream], with implementation: any LightImplementation) {
-        array.forEach { $0.continuation.yield(implementation) }
+        array.forEach { $0.continuation.yield(implementation.id) }
     }
 
 }

@@ -4,10 +4,10 @@ public enum LightImplementationErrors: Error {
     case invalidCast(from: String, to: String)
 }
 
-public protocol LightImplementation: UpdatableObject {
+public protocol LightImplementation: UpdatableObject, Identifiable {
 
     associatedtype Description: LightDescriptor
-    
+
     var description: Description { get }
     var matrix: matrix_float3x3 { get }
 
@@ -22,6 +22,8 @@ public protocol LightImplementation: UpdatableObject {
 public extension LightImplementation {
 
     var colorVector: SIMD3<Float> { description.colorComponents }
+
+    var id: UUID { description.id }
 
     func match(genericDescription: any LightDescriptor) throws -> Bool {
         guard genericDescription.id != description.id || genericDescription.version != description.version else {
