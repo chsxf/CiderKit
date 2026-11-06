@@ -1,16 +1,18 @@
-final actor AssetAnimationTrackTypeRegistry {
+import os
 
-    private static var registry: [String: AssetAnimationTrackType] = [:]
+final class AssetAnimationTrackTypeRegistry {
+
+    private static let registry: OSAllocatedUnfairLock<[String: AssetAnimationTrackType]> = OSAllocatedUnfairLock(initialState: [:])
 
     public static func register(_ trackType: AssetAnimationTrackType) throws {
-        if registry[trackType.name] != nil {
+        if registry.withLock({ $0[trackType.name] }) != nil {
             throw AssetAnimationTrackTypeErrors.alreadyRegistered
         }
-        registry[trackType.name] = trackType
+        registry.withLock { $0[trackType.name] = trackType }
     }
 
     public static func get(registered name: String) -> AssetAnimationTrackType? {
-        return registry[name]
+        return registry.withLock({ $0[name] })
     }
 
     public static func registerBuiltinTypes() {
