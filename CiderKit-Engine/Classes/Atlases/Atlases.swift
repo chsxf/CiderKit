@@ -113,5 +113,14 @@ public final class Atlases {
             return try variant[locator.spriteName]
         }
     }
-    
+
+    public static func preload(atlases: [String: String], relativeURL: URL, texturesRelativeURL: URL) throws {
+        var atlasURLsByName = [String:URL]()
+        for (name, fileName) in atlases {
+            atlasURLsByName[name] = URL(fileURLWithPath: "\(fileName).ckatlas", relativeTo: relativeURL)
+        }
+
+        try Atlases.load(atlases: atlasURLsByName, withTexturesDirectoryURL: texturesRelativeURL)
+    }
+
 }

@@ -41,8 +41,6 @@ open class Project {
         }
         
         try initAssetDatabases()
-        try preloadAtlases()
-        try preloadMaterialDatabases()
     }
     
     private func initAssetDatabases() throws {
@@ -96,29 +94,14 @@ open class Project {
         }
     }
     
-    private func preloadAtlases() throws {
-        var atlasURLsByName = [String:URL]()
-        for (name, fileName) in settings.preloadedAtlases {
-            atlasURLsByName[name] = URL(fileURLWithPath: "\(fileName).ckatlas", relativeTo: atlasesDirectoryURL)
-        }
-        
-        try Atlases.load(atlases: atlasURLsByName, withTexturesDirectoryURL: texturesDirectoryURL)
-    }
-    
-    private func preloadMaterialDatabases() throws {
-        for fileName in settings.preloadedMaterialDatabases {
-            let url = URL(fileURLWithPath: "\(fileName).ckmatdb", relativeTo: materialDatabasesDirectoryURL)
-            let materialRegistryDescription: MaterialRegistryDescription = try Functions.load(url)
-            try MaterialRegistry.register(from: materialRegistryDescription)
-        }
-    }
-    
     public func assetDatabase(forId id: String) -> AssetDatabase? {
         assetDatabases[id]
     }
     
-    open class func open(at url: URL) throws {
-        current = try Project(projectRoot: url)
+    open class func open(at url: URL) throws -> Project {
+        let loadedProject = try Project(projectRoot: url)
+        current = loadedProject
+        return loadedProject
     }
     
 }

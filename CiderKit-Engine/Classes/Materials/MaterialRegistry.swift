@@ -31,4 +31,12 @@ public final class MaterialRegistry {
         return material.clone(withOverrides: overrides)
     }
 
+    public static func preload(materialDatabases: [String], relativeURL: URL) throws {
+        for fileName in materialDatabases {
+            let url = URL(fileURLWithPath: "\(fileName).ckmatdb", relativeTo: relativeURL)
+            let materialRegistryDescription: MaterialRegistryDescription = try Functions.load(url)
+            try MaterialRegistry.register(from: materialRegistryDescription)
+        }
+    }
+
 }

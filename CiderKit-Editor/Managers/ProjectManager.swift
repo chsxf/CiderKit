@@ -12,10 +12,13 @@ struct RecentProject: Identifiable {
     let url: URL
 }
 
+public extension NSNotification.Name {
+    static let projectClosed = Self.init(rawValue: "ckProjectClosed")
+    static let projectOpened = Self.init(rawValue: "ckProjectOpened")
+}
+
+@MainActor
 class ProjectManager: ObservableObject {
-    public static let projectClosed = NSNotification.Name(rawValue: "ckProjectClosed")
-    public static let projectOpened = NSNotification.Name(rawValue: "ckProjectOpened")
-    
     @Published var recentProjects: [RecentProject]
     
     fileprivate static var singleInstance: ProjectManager? = nil
@@ -40,11 +43,14 @@ class ProjectManager: ObservableObject {
     }
     
     class func openProject(at url: URL) throws {
-        NotificationCenter.default.post(name: Self.projectClosed, object: nil)
+        NotificationCenter.default.post(name: .projectClosed, object: nil)
         
-        try Project.open(at: url)
-        
-        NotificationCenter.default.post(name: Self.projectOpened, object: nil)
+        let project = try Project.open(at: url)
+
+        try Atlases.preload(atlases: project.settings.preloadedAtlases, relativeURL: project.atlasesDirectoryURL, texturesRelativeURL: project.texturesDirectoryURL)
+        try MaterialRegistry.preload(materialDatabases: project.settings.preloadedMaterialDatabases, relativeURL: project.materialDatabasesDirectoryURL)
+
+        NotificationCenter.default.post(name: .projectOpened, object: nil)
         
         var found = false
         for recent in Self.default.recentProjects {
