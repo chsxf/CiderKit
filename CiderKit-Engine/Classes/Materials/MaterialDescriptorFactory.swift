@@ -4,7 +4,8 @@ public enum MaterialDescriptorFactoryErrors: Error {
     case instantiationFailed
 }
 
-public final actor MaterialDescriptorFactory {
+@MainActor
+public final class MaterialDescriptorFactory {
 
     private static var descriptorByTypeName: [String: MaterialDescriptor.Type] = [:]
 

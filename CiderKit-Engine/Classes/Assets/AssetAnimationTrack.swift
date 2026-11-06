@@ -170,7 +170,8 @@ public final class AssetAnimationTrack: Codable {
             key1.frame < key2.frame
         }
     }
-    
+
+    @MainActor
     public func toSKAction(with expectedDuration: TimeInterval, for elementInstance: TransformAssetElementInstance) -> SKAction? {
         guard
             let firstKey,

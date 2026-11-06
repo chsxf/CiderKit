@@ -1,5 +1,6 @@
 import SpriteKit
 
+@MainActor
 open class TransformAssetElementInstance {
     
     public let uuid = UUID()

@@ -224,7 +224,8 @@ public class TransformAssetElement : Hashable, Codable {
             }
         }
     }
-    
+
+    @MainActor
     public func instantiate() -> TransformAssetElementInstance {
         TransformAssetElementInstance(element: self)
     }

@@ -110,7 +110,8 @@ final class CiderKitApp: NSObject, NSApplicationDelegate, NSToolbarDelegate, SKV
             }
         }
     }
-    
+
+    @MainActor
     private func openProjectManagerView() -> Void {
         let windowRect = CGRect(x: 0, y: 0, width: 640, height: 360)
         let pmWindow = NSWindow(contentRect: windowRect, styleMask: [.titled], backing: .buffered, defer: false)

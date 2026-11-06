@@ -104,6 +104,7 @@ public class AssetDescription: Identifiable, Codable, ObservableObject {
         }
     }
 
+    @MainActor
     public func instantiate() -> AssetInstance {
         AssetInstance(assetDescription: self, horizontallyFlipped: false)
     }

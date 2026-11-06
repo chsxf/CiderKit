@@ -3,7 +3,7 @@ import CiderKit_Engine
 import SpriteKit
 import GameplayKit
 
-class EditorMapCellComponent: MapCellComponent, Selectable, UpdatableObject {
+class EditorMapCellComponent: MapCellComponent, @MainActor Selectable, UpdatableObject {
 
     typealias MapCellEventData = (stream: AsyncStream<Void>, continuation: AsyncStream<Void>.Continuation)
 

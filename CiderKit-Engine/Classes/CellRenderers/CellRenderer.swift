@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 public struct CellRenderer {
     
     private let groundMaterialName: String

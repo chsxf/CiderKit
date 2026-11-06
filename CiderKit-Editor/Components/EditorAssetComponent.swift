@@ -8,7 +8,8 @@ extension Notification.Name {
     
 }
 
-class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
+@MainActor
+class EditorAssetComponent: GKComponent, @MainActor Selectable, @MainActor EditableComponentDelegate {
     
     public let placement: AssetPlacement
 
@@ -46,7 +47,8 @@ class EditorAssetComponent: GKComponent, Selectable, EditableComponentDelegate {
         Task {
             await withThrowingTaskGroup { group in
                 group.addTask {
-                    for await _ in self.placement.updated {
+                    let stream = await MainActor.run { self.placement.updated }
+                    for await _ in stream {
                         try Task.checkCancellation()
                         await MainActor.run {
                             if let editableComponent = self.entity?.component(ofType: EditableComponent.self) {

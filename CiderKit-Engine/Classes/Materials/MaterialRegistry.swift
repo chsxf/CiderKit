@@ -3,9 +3,8 @@ public enum MaterialsError: Error {
     case notRegistered
 }
 
-public final actor MaterialRegistry {
-
-    public static let shared = MaterialRegistry()
+@MainActor
+public final class MaterialRegistry {
 
     private static var materials: [String: BaseMaterial] = [:]
 

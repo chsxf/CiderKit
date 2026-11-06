@@ -1,5 +1,6 @@
 import GameplayKit
 
+@MainActor
 public class AssetComponent: GKComponent {
     
     public let placement: AssetPlacement

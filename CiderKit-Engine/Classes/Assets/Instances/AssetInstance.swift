@@ -103,9 +103,12 @@ open class AssetInstance : TransformAssetElementInstance {
         return Task {
             await withThrowingTaskGroup { group in
                 group.addTask {
-                    for await _ in self.placement.updated {
+                    let stream = await MainActor.run { self.placement.updated }
+                    for await _ in stream {
                         try Task.checkCancellation()
-                        self.currentWorldPosition = self.placement.mapPosition.worldPosition
+                        await MainActor.run {
+                            self.currentWorldPosition = self.placement.mapPosition.worldPosition
+                        }
                     }
                 }
             }
