@@ -7,8 +7,9 @@ enum UberShaderShadeMode: Int {
     case normals = 2
 }
 
-public final actor CiderKitEngine {
-    
+@MainActor
+public final class CiderKitEngine {
+
     enum ShaderUniformName: String {
         case shadeMode = "u_shadeMode"
         case textureSize = "u_tex_size"
@@ -53,6 +54,7 @@ public final actor CiderKitEngine {
     public static var bundle: Bundle { Bundle(for: Self.self) }
 
     private static var _clearTexture: SKTexture? = nil
+
     public static var clearTexture: SKTexture {
         if _clearTexture == nil {
             let dimension = 128
@@ -61,8 +63,9 @@ public final actor CiderKitEngine {
         }
         return _clearTexture!
     }
-    
+
     private static var _lightModelFinalGatheringShader: SKShader? = nil
+
     public static var lightModelFinalGatheringShader: SKShader {
         if _lightModelFinalGatheringShader == nil {
             let source = try! String(contentsOf: bundle.url(forResource: "LightModelFinalGathering", withExtension: "fsh")!, encoding: .utf8)
@@ -93,9 +96,9 @@ public final actor CiderKitEngine {
         }
         return _lightModelFinalGatheringShader!
     }
-    
+
     public private(set) static var uberShaderInstances: [String:SKShader] = [:]
-    
+
     public static func instantianteUberShader(for atlas: Atlas) -> SKShader {
         if let uberShader = uberShaderInstances[atlas.name] {
             return uberShader
@@ -142,14 +145,12 @@ public final actor CiderKitEngine {
         }
     }
 
-    @MainActor
     public static func registerBuiltinFeatures() {
         AssetAnimationTrackTypeRegistry.registerBuiltinTypes()
         AssetElementTypeRegistry.registerBuiltinTypes()
         registerDefaultMaterialsAndRenderers()
     }
 
-    @MainActor
     private static func registerDefaultMaterialsAndRenderers() {
         let url = CiderKitEngine.bundle.url(forResource: "Default Materials", withExtension: "ckmatdb")
         let materialRegistryDescription: MaterialRegistryDescription = try! Functions.load(url!)
