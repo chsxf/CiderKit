@@ -9,21 +9,21 @@ public enum AssetElementTypeRegistryErrors: Error {
 
 public final class AssetElementTypeRegistry {
 
-    private static let registry: OSAllocatedUnfairLock<[String: TransformAssetElement.Type]> = OSAllocatedUnfairLock(initialState: [:])
+    private static let registry: OSAllocatedUnfairLock<[String: any AssetElement.Type]> = OSAllocatedUnfairLock(initialState: [:])
 
-    public static var allRegistered: [TransformAssetElement.Type] {
+    public static var allRegistered: [any AssetElement.Type] {
         let values = registry.withLock { return $0.values }
-        return [TransformAssetElement.Type](values)
+        return [any AssetElement.Type](values)
     }
 
-    public static func register(type: TransformAssetElement.Type, named name: String) throws {
+    public static func register(type: any AssetElement.Type, named name: String) throws {
         guard registry.withLock({ $0[name] }) == nil else {
             throw AssetElementTypeRegistryErrors.alreadyRegisterd
         }
         registry.withLock { $0[name] = type }
     }
     
-    static func get(named name: String) throws -> TransformAssetElement.Type {
+    static func get(named name: String) throws -> any AssetElement.Type {
         guard let type = registry.withLock({ $0[name] }) else {
             throw AssetElementTypeRegistryErrors.unknownType(name: name)
         }
