@@ -7,40 +7,58 @@ extension AssetElementCodingKeys {
     
 }
 
-public class ReferenceAssetElement : TransformAssetElement {
-    
+public struct ReferenceAssetElement: AssetElement {
+
     private static let assetLocatorDescriptionKey = "asset-locator-description"
-    
-    public override var type: String { "reference" }
-    
-    public override class var typeLabel: String { "Reference Element" }
-    
+
+    public let parent: SendableMutableRef<any AssetElement?> = SendableMutableRef(nil)
+
+    public var uuid: UUID
+
+    public var name: String
+    public var visible: Bool
+    public var worldOffset: WorldPosition
+    public var horizontallyFlipped: Bool
+
+    public var children: [SendableMutableRef<any AssetElement>]
+
+    public var type: String { "reference" }
+    public static var typeLabel: String { "Reference Element" }
+
     public var assetLocator: AssetLocator?
     
     public var animationName: String?
     
-    public required init(name: String) {
-        super.init(name: name)
-        
+    public init(name: String) {
+        uuid = UUID()
+        self.name = name
+
+        visible = true
+        worldOffset = WorldPosition()
+        horizontallyFlipped = false
+
+        children = []
+
         assetLocator = nil
         animationName = nil
     }
     
-    public required convenience init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: AssetElementCodingKeys.self)
         try self.init(from: container)
     }
     
-    public required init(from container: KeyedDecodingContainer<AssetElementCodingKeys>) throws {
-        try super.init(from: container)
-        
+    public init(from container: KeyedDecodingContainer<AssetElementCodingKeys>) throws {
         assetLocator = try container.decodeIfPresent(AssetLocator.self, forKey: .reference)
         animationName = try container.decodeIfPresent(String.self, forKey: .animationName)
+
+        (uuid, name, visible, worldOffset, horizontallyFlipped, children) = try Self.decodeBaseProperties(from: container)
+        setParentForChildren()
     }
     
-    public override func encode(to container: inout KeyedEncodingContainer<AssetElementCodingKeys>) throws {
-        try super.encode(to: &container)
-        
+    public func encode(to container: inout KeyedEncodingContainer<AssetElementCodingKeys>) throws {
+        try (self as (any AssetElement)).encode(to: &container)
+
         if let assetLocator {
             try container.encode(assetLocator, forKey: .reference)
         }
@@ -50,7 +68,7 @@ public class ReferenceAssetElement : TransformAssetElement {
         }
     }
     
-    public override func instantiate() -> TransformAssetElementInstance {
+    public func instantiate() -> TransformAssetElementInstance {
         ReferenceAssetElementInstance(element: self)
     }
 }

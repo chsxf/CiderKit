@@ -87,11 +87,6 @@ public struct SpriteAssetElement: AssetElement {
         colorBlend = 0
     }
     
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: AssetElementCodingKeys.self)
-        try encode(to: &container)
-    }
-
     public func encode(to container: inout KeyedEncodingContainer<AssetElementCodingKeys>) throws {
         try (self as (any AssetElement)).encode(to: &container)
 

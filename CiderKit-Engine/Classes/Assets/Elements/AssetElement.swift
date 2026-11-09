@@ -54,6 +54,11 @@ public extension AssetElement {
         [ .xWorldOffset, .yWorldOffset, .zWorldOffset ]
     }
 
+    subscript(trackType: AssetAnimationTrackType) -> Any? {
+        get { get(baseTrackType: trackType) }
+        set { set(baseTrackType: trackType, value: newValue) }
+    }
+
     func get(baseTrackType trackType: AssetAnimationTrackType) -> Any? {
         switch trackType {
         case .visibility:
@@ -188,6 +193,11 @@ public extension AssetElement {
         }
 
         return (uuid, name, visible, worldOffset, horizontallyFlipped, children)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: AssetElementCodingKeys.self)
+        try encode(to: &container)
     }
 
     func encode(to container: inout KeyedEncodingContainer<AssetElementCodingKeys>) throws {

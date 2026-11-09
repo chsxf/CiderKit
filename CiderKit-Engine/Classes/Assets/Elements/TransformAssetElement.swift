@@ -36,11 +36,6 @@ public struct TransformAssetElement: AssetElement {
     public var type: String { "transform" }
     public static var typeLabel: String { "Transform Element" }
 
-    public subscript(trackType: AssetAnimationTrackType) -> Any? {
-        get { get(baseTrackType: trackType) }
-        set { set(baseTrackType: trackType, value: newValue) }
-    }
-
     public var eligibleTrackTypes: [AssetAnimationTrackType] {
         [ .xWorldOffset, .yWorldOffset, .zWorldOffset, .visibility ]
     }
@@ -65,11 +60,6 @@ public struct TransformAssetElement: AssetElement {
         setParentForChildren()
     }
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: AssetElementCodingKeys.self)
-        try encode(to: &container)
-    }
-    
     @MainActor
     public func instantiate() -> TransformAssetElementInstance {
         TransformAssetElementInstance(element: self)
