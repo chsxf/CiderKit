@@ -27,13 +27,24 @@ extension AssetAnimationTrackType {
     
 }
 
-public class SpriteAssetElement : TransformAssetElement {
-    
+public struct SpriteAssetElement: AssetElement {
+
     enum CGColorCodingKeys: String, CodingKey {
         case colorSpaceName = "csn"
         case components = "cmp"
     }
     
+    public let parent: SendableMutableRef<any AssetElement?> = SendableMutableRef(nil)
+
+    public var uuid: UUID
+
+    public var name: String
+    public var visible: Bool
+    public var worldOffset: WorldPosition
+    public var horizontallyFlipped: Bool
+
+    public var children: [SendableMutableRef<any AssetElement>]
+
     public var volumeWorldOffset: WorldPosition
     public var volumeWorldSize: WorldPosition
 
@@ -43,36 +54,47 @@ public class SpriteAssetElement : TransformAssetElement {
     public var color: CGColor
     public var colorBlend: Float
     
-    public override var type: String { "sprite" }
-    
-    public override class var typeLabel: String { "Sprite Element" }
-    
-    public override var eligibleTrackTypes: [AssetAnimationTrackType] {
-        var trackTypes = super.eligibleTrackTypes
+    public var type: String { "sprite" }
+    public static var typeLabel: String { "Sprite Element" }
+
+    public var eligibleTrackTypes: [AssetAnimationTrackType] {
+        var trackTypes = (self as (any AssetElement)).eligibleTrackTypes
         trackTypes.append(contentsOf: [.xVolumeWorldOffset, .yVolumeWorldOffset, .zVolumeWorldOffset, .xVolumeWorldSize, .yVolumeWorldSize, .zVolumeWorldSize, .sprite, .xAnchorPoint, .yAnchorPoint, .color, .colorBlendFactor])
         return trackTypes
     }
     
-    public override var combinedTrackTypes: [AssetAnimationTrackType] {
-        var combinedTrackTypes = super.combinedTrackTypes
+    public var combinedTrackTypes: [AssetAnimationTrackType] {
+        var combinedTrackTypes = (self as (any AssetElement)).combinedTrackTypes
         combinedTrackTypes.append(contentsOf: [.xVolumeWorldOffset, .yVolumeWorldOffset, .zVolumeWorldOffset, .xVolumeWorldSize, .yVolumeWorldSize, .zVolumeWorldSize, .xAnchorPoint, .yAnchorPoint ])
         return combinedTrackTypes
     }
     
-    public required init(name: String) {
+    public init(name: String) {
+        uuid = UUID()
+        self.name = name
+
+        visible = true
+        worldOffset = WorldPosition()
+        horizontallyFlipped = false
+
+        children = []
+
         volumeWorldOffset = WorldPosition()
         volumeWorldSize = WorldPosition(1, 1, 1)
         spriteLocator = nil
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         color = SKColor.white.cgColor
         colorBlend = 0
-        
-        super.init(name: name)
     }
     
-    public override func encode(to container: inout KeyedEncodingContainer<AssetElementCodingKeys>) throws {
-        try super.encode(to: &container)
-        
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: AssetElementCodingKeys.self)
+        try encode(to: &container)
+    }
+
+    public func encode(to container: inout KeyedEncodingContainer<AssetElementCodingKeys>) throws {
+        try (self as (any AssetElement)).encode(to: &container)
+
         try container.encode(volumeWorldOffset, forKey: .volumeWorldOffset)
         try container.encode(volumeWorldSize, forKey: .volumeWorldSize)
         
@@ -92,12 +114,12 @@ public class SpriteAssetElement : TransformAssetElement {
         try container.encode(colorBlend, forKey: .colorBlend)
     }
     
-    public required convenience init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: AssetElementCodingKeys.self)
         try self.init(from: container)
     }
     
-    public required init(from container: KeyedDecodingContainer<AssetElementCodingKeys>) throws {
+    public init(from container: KeyedDecodingContainer<AssetElementCodingKeys>) throws {
         volumeWorldOffset = try container.decode(WorldPosition.self, forKey: .volumeWorldOffset)
         volumeWorldSize = try container.decode(WorldPosition.self, forKey: .volumeWorldSize)
 
@@ -120,10 +142,11 @@ public class SpriteAssetElement : TransformAssetElement {
             colorBlend = 0
         }
 
-        try super.init(from: container)
+        (uuid, name, visible, worldOffset, horizontallyFlipped, children) = try Self.decodeBaseProperties(from: container)
+        setParentForChildren()
     }
     
-    public override subscript(trackType: AssetAnimationTrackType) -> Any? {
+    public subscript(trackType: AssetAnimationTrackType) -> Any? {
         get {
             switch trackType {
             case .xVolumeWorldOffset:
@@ -149,7 +172,7 @@ public class SpriteAssetElement : TransformAssetElement {
             case .colorBlendFactor:
                 return colorBlend
             default:
-                return super[trackType]
+                return get(baseTrackType: trackType)
             }
         }
         
@@ -194,13 +217,13 @@ public class SpriteAssetElement : TransformAssetElement {
                 case .colorBlendFactor:
                     colorBlend = value as! Float
                 default:
-                    super[trackType] = value
+                    set(baseTrackType: trackType, value: value)
                 }
             }
         }
     }
 
-    public override func instantiate() -> TransformAssetElementInstance {
+    public func instantiate() -> TransformAssetElementInstance {
         SpriteAssetElementInstance(element: self)
     }
     

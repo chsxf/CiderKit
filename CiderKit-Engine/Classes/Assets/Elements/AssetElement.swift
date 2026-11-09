@@ -1,3 +1,12 @@
+public typealias AssetElementBaseProperties = (
+    uuid: UUID,
+    name: String,
+    visible: Bool,
+    worldOffset: WorldPosition,
+    horizontallyFlipped: Bool,
+    children: [SendableMutableRef<any AssetElement>]
+)
+
 public protocol AssetElement: Sendable, Hashable, Codable {
 
     associatedtype InstanceType
@@ -27,6 +36,8 @@ public protocol AssetElement: Sendable, Hashable, Codable {
 
 public extension AssetElement {
 
+    var isRoot: Bool { parent.ref == nil }
+
     var absoluteWorldOffset: WorldPosition {
         var result = worldOffset
         if let parentRef = parent.ref {
@@ -35,53 +46,64 @@ public extension AssetElement {
         return result
     }
 
-    subscript(trackType: AssetAnimationTrackType) -> Any? {
-        get {
+    var eligibleTrackTypes: [AssetAnimationTrackType] {
+        [ .xWorldOffset, .yWorldOffset, .zWorldOffset, .visibility ]
+    }
+
+    var combinedTrackTypes: [AssetAnimationTrackType] {
+        [ .xWorldOffset, .yWorldOffset, .zWorldOffset ]
+    }
+
+    func get(baseTrackType trackType: AssetAnimationTrackType) -> Any? {
+        switch trackType {
+        case .visibility:
+            return visible
+        case .xWorldOffset:
+            return worldOffset.x
+        case .yWorldOffset:
+            return worldOffset.y
+        case .zWorldOffset:
+            return worldOffset.z
+        default:
+            return nil
+        }
+    }
+
+    mutating func set(baseTrackType trackType: AssetAnimationTrackType, value: Any?) {
+        if let value {
             switch trackType {
             case .visibility:
-                return visible
+                visible = value as! Bool
             case .xWorldOffset:
-                return worldOffset.x
-            case .yWorldOffset:
-                return worldOffset.y
-            case .zWorldOffset:
-                return worldOffset.z
-            default:
-                return nil
-            }
-        }
-
-        set(value) {
-            if let value {
-                switch trackType {
-                case .visibility:
-                    visible = value as! Bool
-                case .xWorldOffset:
-                    if value is CGFloat {
-                        worldOffset.x = Float(value as! CGFloat)
-                    }
-                    else if value is Float {
-                        worldOffset.x = value as! Float
-                    }
-                case .yWorldOffset:
-                    if value is CGFloat {
-                        worldOffset.y = Float(value as! CGFloat)
-                    }
-                    else if value is Float {
-                        worldOffset.y = value as! Float
-                    }
-                case .zWorldOffset:
-                    if value is CGFloat {
-                        worldOffset.z = Float(value as! CGFloat)
-                    }
-                    else if value is Float {
-                        worldOffset.z = value as! Float
-                    }
-                default:
-                    break
+                if value is CGFloat {
+                    worldOffset.x = Float(value as! CGFloat)
                 }
+                else if value is Float {
+                    worldOffset.x = value as! Float
+                }
+            case .yWorldOffset:
+                if value is CGFloat {
+                    worldOffset.y = Float(value as! CGFloat)
+                }
+                else if value is Float {
+                    worldOffset.y = value as! Float
+                }
+            case .zWorldOffset:
+                if value is CGFloat {
+                    worldOffset.z = Float(value as! CGFloat)
+                }
+                else if value is Float {
+                    worldOffset.z = value as! Float
+                }
+            default:
+                break
             }
         }
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: AssetElementCodingKeys.self)
+        try self.init(from: container)
     }
 
     mutating func setParentForChildren() {
@@ -143,6 +165,47 @@ public extension AssetElement {
 
     static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.uuid == rhs.uuid
+    }
+
+    static func decodeBaseProperties(from container: KeyedDecodingContainer<AssetElementCodingKeys>) throws -> AssetElementBaseProperties {
+        let uuid = try container.decode(UUID.self, forKey: .uuid)
+        let name = try container.decode(String.self, forKey: .name)
+
+        let visible = (try container.decodeIfPresent(Bool.self, forKey: .visible)) ?? true
+        let worldOffset = try container.decode(WorldPosition.self, forKey: .worldOffset)
+        let horizontallyFlipped = (try container.decodeIfPresent(Bool.self, forKey: .horizontallyFlipped)) ?? false
+
+        var children = [SendableMutableRef<any AssetElement>]()
+        if var childrenSubContainer = try? container.nestedUnkeyedContainer(forKey: .children) {
+            while !childrenSubContainer.isAtEnd {
+                let childContainer = try childrenSubContainer.nestedContainer(keyedBy: AssetElementCodingKeys.self)
+                let childTypeName = try childContainer.decode(String.self, forKey: .type)
+                let childType = try AssetElementTypeRegistry.get(named: childTypeName)
+                let child = try childType.init(from: childContainer)
+                let childRef = SendableMutableRef(child)
+                children.append(childRef)
+            }
+        }
+
+        return (uuid, name, visible, worldOffset, horizontallyFlipped, children)
+    }
+
+    func encode(to container: inout KeyedEncodingContainer<AssetElementCodingKeys>) throws {
+        try container.encode(uuid, forKey: .uuid)
+
+        try container.encode(name, forKey: .name)
+        try container.encode(type, forKey: .type)
+
+        try container.encode(visible, forKey: .visible)
+        try container.encode(worldOffset, forKey: .worldOffset)
+        try container.encode(horizontallyFlipped, forKey: .horizontallyFlipped)
+
+        if !children.isEmpty {
+            var subContainer = container.nestedUnkeyedContainer(forKey: .children)
+            for child in children {
+                try subContainer.encode(child.ref)
+            }
+        }
     }
 
 }
