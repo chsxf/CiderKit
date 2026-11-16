@@ -1,8 +1,8 @@
 import SpriteKit
 
-public final class ReferenceAssetElementInstance: TransformAssetElementInstance {
-    
-    public let referenceElement: ReferenceAssetElement
+public final class ReferenceAssetElementInstance: BaseAssetElementInstance<ReferenceAssetElement> {
+
+    public let referenceElement: SendableRef<ReferenceAssetElement>
     
     public private(set) var referencedAssetInstance: AssetInstance? = nil
     
@@ -16,7 +16,7 @@ public final class ReferenceAssetElementInstance: TransformAssetElementInstance 
         return referencedAnimationName
     }
     
-    public init(element: ReferenceAssetElement) {
+    public override init(element: SendableRef<ReferenceAssetElement>) {
         referenceElement = element
         
         super.init(element: element)

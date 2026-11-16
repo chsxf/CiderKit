@@ -80,7 +80,7 @@ open class AssetInstance : TransformAssetElementInstance {
         currentAnimationName = OverridableValue(nil)
         currentFrame = OverridableValue(0)
 
-        super.init(element: assetDescription.rootElement)
+        super.init(element: SendableRef(assetDescription.rootElement))
         
         createNode(atWorldPosition: worldPosition)
         node!.zPosition = 1

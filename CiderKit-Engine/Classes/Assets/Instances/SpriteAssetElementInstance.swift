@@ -1,8 +1,8 @@
 import SpriteKit
 
-open class SpriteAssetElementInstance: TransformAssetElementInstance {
+open class SpriteAssetElementInstance: BaseAssetElementInstance<SpriteAssetElement> {
     
-    public let spriteElement: SpriteAssetElement
+    public let spriteElement: SendableRef<SpriteAssetElement>
     
     private var spriteNode: SKSpriteNode? = nil
     
@@ -26,7 +26,7 @@ open class SpriteAssetElementInstance: TransformAssetElementInstance {
         return AssetBoundingBox(min: position, size: WorldPosition(sizeAndFlip))
     }
     
-    public init(element: SpriteAssetElement) {
+    public override init(element: SendableRef<SpriteAssetElement>) {
         spriteElement = element
         
         currentVolumeWorldOffset = OverridableValue(element.volumeWorldOffset)
